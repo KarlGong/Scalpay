@@ -4,47 +4,42 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ScalpayApi.Data;
+using ScalpayApi.Enums;
 using ScalpayApi.Models;
 
 namespace ScalpayApi.Services
 {
     public class AddProjectParams
     {
-        public string Key { get; set; }
+        public string ProjectKey { get; set; }
         
         public string Name { get; set; }
         
         public string Description { get; set; }
-        
-        public string URL { get; set; }
         
         public bool IsActive { get; set; }
     }
     
     public class UpdateProjectParams
     {
-        public int Id { get; set; }
-        
-        public string Key { get; set; }
+        public string ProjectKey { get; set; }
         
         public string Name { get; set; }
         
         public string Description { get; set; }
-        
-        public string URL { get; set; }
         
         public bool IsActive { get; set; }
     }
 
     public interface IProjectService
     {
-        Task<List<Project>> GetAllAsync();
+        Task<Project> GetProjectAsync(string projectKey);
 
-        Task<Project> GetAsync(int id);
+        Task<Project> AddProjectAsync(AddProjectParams ps);
 
-        Task<Project> AddAsync(AddProjectParams ps);
-
-        Task<Project> UpdateAsync(UpdateProjectParams ps);
+        Task<Project> UpdateProjectAsync(UpdateProjectParams ps);
+        
+        Task<List<Item>> GetItems(string projectKey, ItemType itemType);
     }
 
     public class ProjectService: IProjectService
@@ -58,17 +53,12 @@ namespace ScalpayApi.Services
             _mapper = mapper;
         }
 
-        public async Task<List<Project>> GetAllAsync()
+        public async Task<Project> GetProjectAsync(string projectKey)
         {
-            return await _context.Projects.OrderBy(p => p.Name).ToListAsync();
+            return await _context.Projects.SingleAsync(p => p.ProjectKey == projectKey);
         }
 
-        public async Task<Project> GetAsync(int id)
-        {
-            return await _context.Projects.SingleAsync(p => p.Id == id);
-        }
-
-        public async Task<Project> AddAsync(AddProjectParams ps)
+        public async Task<Project> AddProjectAsync(AddProjectParams ps)
         {
             var project = _mapper.Map<Project>(ps);
             
@@ -79,15 +69,23 @@ namespace ScalpayApi.Services
             return project;
         }
 
-        public async Task<Project> UpdateAsync(UpdateProjectParams ps)
+        public async Task<Project> UpdateProjectAsync(UpdateProjectParams ps)
         {
-            var previousProject = await GetAsync(ps.Id);
+            var previousProject = await GetProjectAsync(ps.ProjectKey);
 
             _mapper.Map(ps, previousProject);
 
             await _context.SaveChangesAsync();
 
             return previousProject;
+        }
+        
+        public async Task<List<Item>> GetItems(string projectKey, ItemType itemType)
+        {
+            return await _context.Items
+                .Include(i => i.Project)
+                .Where(i => i.Project.ProjectKey == projectKey && i.Type == itemType)
+                .ToListAsync();
         }
     }
 }

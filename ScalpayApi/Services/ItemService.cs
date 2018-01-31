@@ -11,24 +11,20 @@ namespace ScalpayApi.Services
 {
     public class AddItemParams
     {
-        public string Key { get; set; }
+        public string ProjectKey { get; set; }
+        
+        public string ItemKey { get; set; }
 
         public string Name { get; set; }
         
         public string Description { get; set; }
         
         public ItemType Type { get; set; }
-        
-        public int ProjectId { get; set; }
-        
-        public int? ParentFolderId { get; set; }
     }
     
     public class UpdateItemParams
     {
-        public int Id { get; set; }
-        
-        public string Key { get; set; }
+        public string ItemKey { get; set; }
 
         public string Name { get; set; }
         
@@ -37,15 +33,13 @@ namespace ScalpayApi.Services
 
     public interface IItemService
     {
-        Task<Item> GetAsync(int id);
+        Task<Item> GetItemAsync(string itemKey);
 
         Task<Item> AddItemAsync(AddItemParams ps);
 
         Task<Item> UpdateItemAsync(UpdateItemParams ps);
 
-        Task DeleteAsync(int id);
-        
-        Task<List<Item>> GetItems(int projectId, int? parentFolderId);
+        Task DeleteItemAsync(string itemKey);
     }
 
     public class ItemService: IItemService
@@ -54,20 +48,25 @@ namespace ScalpayApi.Services
 
         private readonly IMapper _mapper;
 
-        public ItemService(ScalpayDbContext context, IMapper mapper)
+        private readonly ProjectService _projectService;
+
+        public ItemService(ScalpayDbContext context, IMapper mapper, ProjectService projectService)
         {
             _context = context;
             _mapper = mapper;
+            _projectService = projectService;
         }
 
-        public async Task<Item> GetAsync(int id)
+        public async Task<Item> GetItemAsync(string itemKey)
         {
-            return await _context.Items.SingleAsync(i => i.Id == id);
+            return await _context.Items.SingleAsync(i => i.ItemKey == itemKey);
         }
 
         public async Task<Item> AddItemAsync(AddItemParams ps)
         {
             var item = _mapper.Map<Item>(ps);
+
+            item.ProjectId = (await _projectService.GetProjectAsync(ps.ProjectKey)).Id;
 
             await _context.Items.AddAsync(item);
 
@@ -78,7 +77,7 @@ namespace ScalpayApi.Services
 
         public async Task<Item> UpdateItemAsync(UpdateItemParams ps)
         {
-            var previousItem = await GetAsync(ps.Id);
+            var previousItem = await GetItemAsync(ps.ItemKey);
 
             _mapper.Map(ps, previousItem);
 
@@ -87,19 +86,11 @@ namespace ScalpayApi.Services
             return previousItem;
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteItemAsync(string itemKey)
         {
-            _context.Items.Remove(await GetAsync(id));
+            _context.Items.Remove(await GetItemAsync(itemKey));
 
             await _context.SaveChangesAsync();
-        }
-
-        public async Task<List<Item>> GetItems(int projectId, int? parentFolderId)
-        {
-            return await _context.Items
-                .Where(i => i.ProjectId == projectId && i.ParentFolderId == parentFolderId)
-                .OrderBy(i => i.Name)
-                .ToListAsync();
         }
     }
 }

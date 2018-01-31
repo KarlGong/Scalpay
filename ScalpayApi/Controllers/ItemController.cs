@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ScalpayApi.Enums;
 using ScalpayApi.Models;
 using ScalpayApi.Services;
 
@@ -16,10 +17,10 @@ namespace ScalpayApi.Controllers
             _service = service;
         }
 
-        [HttpGet("{id}")]
-        public async Task<Item> GetItem([FromRoute] int id)
+        [HttpGet("{itemKey}")]
+        public async Task<Item> GetItem([FromRoute] string itemKey)
         {
-            return await _service.GetAsync(id);
+            return await _service.GetItemAsync(itemKey);
         }
 
         [HttpPut]
@@ -28,23 +29,17 @@ namespace ScalpayApi.Controllers
             return await _service.AddItemAsync(ps);
         }
 
-        [HttpPost("{id}")]
-        public async Task<Item> UpdateItem([FromRoute] int id, UpdateItemParams ps)
+        [HttpPost("{itemKey}")]
+        public async Task<Item> UpdateItem([FromRoute] string itemKey, UpdateItemParams ps)
         {
-            ps.Id = id;
+            ps.ItemKey = itemKey;
             return await _service.UpdateItemAsync(ps);
         }
 
-        [HttpDelete("{id}")]
-        public async Task DeleteItem([FromRoute] int id)
+        [HttpDelete("{itemKey}")]
+        public async Task DeleteItem([FromRoute] string itemKey)
         {
-            await _service.DeleteAsync(id);
-        }
-
-        [HttpGet]
-        public async Task<List<Item>> GetItems([FromQuery] int projectId, [FromQuery] int? parentFolderId)
-        {
-            return await _service.GetItems(projectId, parentFolderId);
+            await _service.DeleteItemAsync(itemKey);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using ScalpayApi.Enums;
 using ScalpayApi.Models;
 using ScalpayApi.Services;
 
@@ -18,29 +19,29 @@ namespace ScalpayApi.Controllers
             _service = service;
         }
 
-        [HttpGet]
-        public async Task<List<Project>> GetAllProjects()
+        [HttpGet("{projectKey}")]
+        public async Task<Project> GetProject([FromRoute] string projectKey)
         {
-            return await _service.GetAllAsync();
-        }
-
-        [HttpGet("{id}")]
-        public async Task<Project> GetProject([FromRoute] int id)
-        {
-            return await _service.GetAsync(id);
+            return await _service.GetProjectAsync(projectKey);
         }
 
         [HttpPut]
         public async Task<Project> AddProject([FromBody] AddProjectParams ps)
         {
-            return await _service.AddAsync(ps);
+            return await _service.AddProjectAsync(ps);
         }
 
-        [HttpPost("{id}")]
-        public async Task<Project> UpdateProject([FromRoute] int id, [FromBody] UpdateProjectParams ps)
+        [HttpPost("{projectKey}")]
+        public async Task<Project> UpdateProject([FromRoute] string projectKey, [FromBody] UpdateProjectParams ps)
         {
-            ps.Id = id;
-            return await _service.UpdateAsync(ps);
+            ps.ProjectKey = projectKey;
+            return await _service.UpdateProjectAsync(ps);
+        }
+
+        [HttpGet("{projectKey}/items")]
+        public async Task<List<Item>> GetItems([FromRoute] string projectKey, [FromQuery] ItemType itemType)
+        {
+            return await _service.GetItems(projectKey, itemType);
         }
     }
 }

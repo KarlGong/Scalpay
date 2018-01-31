@@ -8,11 +8,15 @@ namespace ScalpayApi.Data
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
+            builder.HasAlternateKey(u => u.UserName);
+            
             builder.Property(u => u.UserName).IsRequired();
             
             builder.Property(u => u.Password).IsRequired();
 
             builder.Property(u => u.FullName).IsRequired();
+            
+            builder.Property(u => u.Email).IsRequired();
 
             builder.Property(u => u.InsertTime).ValueGeneratedOnAdd();
 

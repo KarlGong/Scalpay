@@ -1,0 +1,17 @@
+{
+    "presets": [
+        "react",
+        "env"
+    ],
+    "plugins": [
+        "transform-decorators-legacy",
+        "react-hot-loader/babel",
+        [
+            "import",
+            {
+                "libraryName": "antd",
+                "style": true
+            }
+        ]
+    ]
+}

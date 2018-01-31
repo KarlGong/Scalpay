@@ -1,0 +1,48 @@
+
+@font-face {font-family: "anticon";
+  src: url('iconfont.eot?t=1502789345630'); /* IE9*/
+  src: url('iconfont.eot?t=1502789345630#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff?t=1502789345630') format('woff'), /* chrome, firefox */
+  url('iconfont.ttf?t=1502789345630') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+  url('iconfont.svg?t=1502789345630#anticon') format('svg'); /* iOS 4.1- */
+}
+
+.anticon {
+  font-family:"anticon" !important;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.anticon-project:before { content: "\ea06"; }
+
+.anticon-insert-table:before { content: "\e91e"; }
+
+.anticon-editor-code:before { content: "\ea77"; }
+
+.anticon-paste:before { content: "\ee27"; }
+
+.anticon-case:before { content: "\e307"; }
+
+.anticon-delete-column:before { content: "\e7f5"; }
+
+.anticon-delete-row:before { content: "\e7f4"; }
+
+.anticon-insert-column:before { content: "\e753"; }
+
+.anticon-insert-row:before { content: "\e754"; }
+
+.anticon-editor-b:before { content: "\ea05"; }
+
+.anticon-editor-i:before { content: "\ea04"; }
+
+.anticon-editor-ul:before { content: "\ea03"; }
+
+.anticon-editor-ol:before { content: "\ea02"; }
+
+.anticon-editor-quote:before { content: "\ea01"; }
+
+.anticon-delete-table:before { content: "\ea1b"; }
+
+.anticon-editor-underline:before { content: "\ea00"; }
+

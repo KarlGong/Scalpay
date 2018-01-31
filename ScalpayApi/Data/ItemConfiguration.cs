@@ -8,13 +8,19 @@ namespace ScalpayApi.Data
     {
         public void Configure(EntityTypeBuilder<Item> builder)
         {
-            builder.Property(i => i.Key).IsRequired();
+            builder.HasAlternateKey(i => i.ItemKey);
+            
+            builder.Property(i => i.ItemKey).IsRequired();
             
             builder.Property(i => i.Name).IsRequired();
+            
+            builder.Property(i => i.Type).IsRequired();
 
             builder.Property(i => i.InsertTime).ValueGeneratedOnAdd();
 
             builder.Property(i => i.UpdateTime).ValueGeneratedOnAddOrUpdate();
+            
+            builder.Property(i => i.Project).IsRequired();
         }
     }
 }
