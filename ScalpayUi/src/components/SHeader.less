@@ -1,0 +1,32 @@
+@header-height: 42px;
+
+.header {
+  height: @header-height;
+  background-color: #fff;
+
+  .menu {
+    line-height: 40px;
+    float: left
+  }
+
+  .right {
+    height: @header-height;
+    float: right;
+
+    > * {
+      display: table-cell;
+      padding: 0 8px;
+      height: @header-height;
+      line-height: @header-height;
+      vertical-align: middle;
+    }
+
+    .item {
+      cursor: pointer;
+
+      &:hover {
+        background-color: #e6f7ff;
+      }
+    }
+  }
+}
