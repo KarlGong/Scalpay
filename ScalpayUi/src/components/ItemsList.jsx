@@ -2,7 +2,7 @@ import {Layout, Menu, Input, Icon, Form, Select, Radio, Card} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked, runInAction, action} from "mobx";
-import "~/components/ItemsList.less";
+import "./ItemsList.less";
 
 @observer
 export default class ItemsList extends Component {
@@ -30,7 +30,7 @@ export default class ItemsList extends Component {
                 </Radio.Group>
             </div>
             <div className="list">
-                {["aaa", "bbb","aaa", "bbb","aaa", "bbb","aaa", "bbb"].map(i => <div className="item">
+                {["aaa", "bbb","aaa1", "bbb1","aaa2", "bbb2","aaa3", "bbb3"].map(i => <div className="item" key={i}>
                     {i}
                 </div>)
                 }

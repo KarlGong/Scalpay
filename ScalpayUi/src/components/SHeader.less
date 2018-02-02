@@ -2,6 +2,7 @@
 
 .header {
   height: @header-height;
+  padding: 0 15px;
   background-color: #fff;
   border-bottom: #dadada 1px solid;
 
@@ -15,14 +16,14 @@
   }
 
   .right {
-    height: @header-height;
+    height: @header-height - 1px;
     float: right;
 
     > * {
       display: table-cell;
       padding: 0 8px;
-      height: @header-height;
-      line-height: @header-height;
+      height: @header-height - 1px;
+      line-height: @header-height - 1px;
       vertical-align: middle;
     }
 

@@ -1,14 +1,15 @@
 import React from "react";
+import { IndexRoute, browserHistory, Router, Route, Link } from "react-router";
 import {render} from "react-dom";
 import {AppContainer} from "react-hot-loader";
 import {observable} from "mobx";
 import {Layout, Menu, AutoComplete, Input, Icon, Badge, Dropdown, notification} from "antd";
 import axios from "axios";
-import SHeader from "~/components/SHeader";
-import SFooter from "~/components/SFooter";
+import App from "~/routes/App";
 import ItemsPage from "~/routes/ItemsPage";
+import ProjectsPage from "~/routes/ProjectsPage";
+import ProfilePage from "~/routes/ProfilePage";
 import "./assets/fonts/extra-iconfont/iconfont.css";
-import "./index.less";
 
 axios.interceptors.response.use(function (response) {
     return response;
@@ -23,13 +24,14 @@ axios.interceptors.response.use(function (response) {
 
 render(
     <AppContainer>
-        <Layout>
-            <SHeader />
-            <Layout style={{minHeight: "calc(100% - 88px)"}}>
-                <ItemsPage/>
-            </Layout>
-            <SFooter/>
-        </Layout>
+        <Router history={browserHistory}>
+            <Route path="/" component={App}>
+                <IndexRoute component={ItemsPage} />
+                <Route path="items" component={ItemsPage} />
+                <Route path="projects" component={ProjectsPage} />
+                <Route path="profile" component={ProfilePage} />
+            </Route>
+        </Router>
     </AppContainer>,
     document.getElementById("app")
 );

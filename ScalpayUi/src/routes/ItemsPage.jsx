@@ -4,7 +4,7 @@ import React, {Component} from "react";
 import ItemsList from "~/components/ItemsList";
 import SplitPane from "react-split-pane";
 import {observer} from "mobx-react";
-import "~/routes/ItemsPage.less";
+import "./ItemsPage.less";
 
 @observer
 export default class ItemsPage extends Component {

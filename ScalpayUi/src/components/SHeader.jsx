@@ -1,6 +1,7 @@
 import {Layout, Menu, AutoComplete, Input, Icon, Badge, Dropdown, Avatar} from "antd";
 import React, {Component} from "react";
-import "~/components/SHeader.less";
+import { IndexRoute, hashHistory, Router, Route, Link } from "react-router";
+import "./SHeader.less";
 
 export default class SHeader extends Component {
     render = () => {
@@ -11,11 +12,12 @@ export default class SHeader extends Component {
                 mode="horizontal"
                 defaultSelectedKeys={["items"]}
             >
-                <Menu.Item key="items">Items</Menu.Item>
-                <Menu.Item key="items1">Items1</Menu.Item>
+                <Menu.Item key="items">
+                    <Link to="/items">Item</Link>
+                </Menu.Item>
             </Menu>
             <div className="right">
-                <span >
+                <span>
                     <Input placeholder="Search by item key" suffix={<Icon type="search"/>}/>
                 </span>
                 <span className="item">
@@ -26,7 +28,7 @@ export default class SHeader extends Component {
 
                 <Dropdown overlay={<Menu>
                     <Menu.Item key="0">
-                        <a href="/projects">Manage Projects</a>
+                        <Link to="/projects">Manage Projects</Link>
                     </Menu.Item>
                 </Menu>} trigger={["click"]} placement="bottomRight">
                         <span className="item">
@@ -36,7 +38,7 @@ export default class SHeader extends Component {
 
                 <Dropdown overlay={<Menu>
                     <Menu.Item key="0">
-                        <a href="/profile">Profile</a>
+                        <Link to="/profile">Profile</Link>
                     </Menu.Item>
                     <Menu.Divider/>
                     <Menu.Item key="1">
@@ -44,8 +46,9 @@ export default class SHeader extends Component {
                     </Menu.Item>
                 </Menu>} trigger={["click"]} placement="bottomRight">
                         <span className="item">
-                            <Avatar size="small" style={{ backgroundColor: "#87d068" }} icon="user" />
-                            <span> Karl Gong</span>
+                            <Avatar size="small" style={{backgroundColor: "#87d068"}} icon="user"/>
+                            &nbsp;
+                            <span>Karl Gong</span>
                         </span>
                 </Dropdown>
             </div>
