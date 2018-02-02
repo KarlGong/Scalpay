@@ -8,7 +8,7 @@ import SHeader from "~/components/SHeader";
 import SFooter from "~/components/SFooter";
 import ItemsPage from "~/routes/ItemsPage";
 import "./assets/fonts/extra-iconfont/iconfont.css";
-import "./index.css";
+import "./index.less";
 
 axios.interceptors.response.use(function (response) {
     return response;
@@ -25,7 +25,7 @@ render(
     <AppContainer>
         <Layout>
             <SHeader />
-            <Layout style={{minHeight: "calc(100% - 87px)"}}>
+            <Layout style={{minHeight: "calc(100% - 88px)"}}>
                 <ItemsPage/>
             </Layout>
             <SFooter/>

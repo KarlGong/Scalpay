@@ -1,0 +1,32 @@
+.items-list {
+  .filter {
+    padding: 18px;
+    background-color: #fff;
+    border-bottom: #dadada 1px solid;
+
+    .project {
+      width: 215px;
+      display: block;
+    }
+
+    .type {
+      margin-top: 10px;
+      display: block;
+    }
+  }
+
+  .list {
+    padding: 18px;
+    height: calc(~"100% - 198px");
+    overflow: auto;
+
+    .item {
+      cursor: pointer;
+      padding: 4px;
+
+        &:hover {
+          background-color: #e6f7ff;
+        }
+    }
+  }
+}
