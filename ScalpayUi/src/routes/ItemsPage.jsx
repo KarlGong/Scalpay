@@ -11,7 +11,7 @@ export default class ItemsPage extends Component {
     @observable size = parseInt(localStorage.getItem("Scalpay-Items-LeftPane-Width")) || 256;
 
     render = () => {
-        return <Layout>
+        return <Layout className="items-page">
             <SplitPane split="vertical" minSize={256} maxSize={1000} defaultSize={this.size}
                        pane2Style={{width: "calc(100% - " + (this.size + 1) + "px)"}} // consider width of resizer
                        onChange={size => this.size = size}

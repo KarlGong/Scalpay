@@ -13,7 +13,7 @@ export default class SHeader extends Component {
                 defaultSelectedKeys={["items"]}
             >
                 <Menu.Item key="items">
-                    <Link to="/items">Item</Link>
+                    <Link to="items">Items</Link>
                 </Menu.Item>
             </Menu>
             <div className="right">
@@ -28,7 +28,7 @@ export default class SHeader extends Component {
 
                 <Dropdown overlay={<Menu>
                     <Menu.Item key="0">
-                        <Link to="/projects">Manage Projects</Link>
+                        <Link to="projects">Manage Projects</Link>
                     </Menu.Item>
                 </Menu>} trigger={["click"]} placement="bottomRight">
                         <span className="item">
@@ -38,11 +38,11 @@ export default class SHeader extends Component {
 
                 <Dropdown overlay={<Menu>
                     <Menu.Item key="0">
-                        <Link to="/profile">Profile</Link>
+                        <Link to="profile">Profile</Link>
                     </Menu.Item>
                     <Menu.Divider/>
                     <Menu.Item key="1">
-                        <a href="/profile">Logout</a>
+                        <a href="profile">Logout</a>
                     </Menu.Item>
                 </Menu>} trigger={["click"]} placement="bottomRight">
                         <span className="item">
