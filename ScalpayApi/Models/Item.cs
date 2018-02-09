@@ -5,8 +5,6 @@ namespace ScalpayApi.Models
 {
     public class Item
     {
-        public int Id { get; set; }
-        
         public string ItemKey { get; set; }
 
         public string Name { get; set; }
@@ -19,7 +17,7 @@ namespace ScalpayApi.Models
         
         public DateTime UpdateTime { get; set; }
         
-        public int ProjectId { get; set; }
+        public string ProjectKey { get; set; }
         
         public Project Project { get; set; }
     }

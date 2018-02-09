@@ -4,19 +4,23 @@ using ScalpayApi.Models;
 
 namespace ScalpayApi.Data
 {
-    public class UserConfiguration: IEntityTypeConfiguration<User>
+    public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasAlternateKey(u => u.UserName);
-            
-            builder.Property(u => u.UserName).IsRequired();
-            
+            builder.HasKey(u => u.UserName);
+
+            builder.Property(u => u.Email).IsRequired();
+
             builder.Property(u => u.Password).IsRequired();
 
             builder.Property(u => u.FullName).IsRequired();
-            
-            builder.Property(u => u.Email).IsRequired();
+
+            builder.Property(u => u.ApiKey).IsRequired();
+
+            builder.Property(u => u.PrivilegesInt).HasColumnName("Privileges").IsRequired();
+
+            builder.Ignore(u => u.Privileges);
 
             builder.Property(u => u.InsertTime).ValueGeneratedOnAdd();
 

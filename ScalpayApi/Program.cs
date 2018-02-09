@@ -19,6 +19,11 @@ namespace ScalpayApi
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseConfiguration(new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: true)
+                    .Build()
+                )
                 .UseStartup<Startup>()
                 .Build();
     }
