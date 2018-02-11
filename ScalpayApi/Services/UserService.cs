@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -10,13 +11,21 @@ using ScalpayApi.Models;
 
 namespace ScalpayApi.Services
 {
-    public class UserCriteria
+    public class UserCriteria : Criteria<User>
     {
         public string ApiKey { get; set; }
 
         public string Username { get; set; }
 
         public string Password { get; set; }
+
+        public override Expression<Func<User, bool>> ToWherePredicate()
+        {
+            return u =>
+                (ApiKey == null || ApiKey == u.ApiKey)
+                && (Username == null || Username == u.Username)
+                && (Password == null || Password == u.Password);
+        }
     }
 
     public class AddUserParams
@@ -28,7 +37,7 @@ namespace ScalpayApi.Services
         public string Password { get; set; }
 
         public string FullName { get; set; }
-        
+
         public List<Privilege> Privileges { get; set; }
     }
 
@@ -52,7 +61,7 @@ namespace ScalpayApi.Services
         Task<User> GetUserAsync(string username);
 
         Task<List<User>> GetUsersAsync(UserCriteria criteria);
-        
+
         Task<List<User>> GetUsersAsync();
 
         Task<User> GenerateNewApiKeyAsync(User user);
@@ -78,10 +87,7 @@ namespace ScalpayApi.Services
 
         public async Task<User> GetUserAsync(UserCriteria criteria)
         {
-            return await _context.Users.SingleOrDefaultAsync(u =>
-                (criteria.ApiKey == null || criteria.ApiKey == u.ApiKey)
-                && (criteria.Username == null || criteria.Username == u.Username)
-                && (criteria.Password == null || criteria.Password == u.Password));
+            return await _context.Users.SingleOrDefaultAsync(criteria.ToWherePredicate());
         }
 
         public async Task<User> GetUserAsync(string username)
@@ -94,10 +100,7 @@ namespace ScalpayApi.Services
 
         public async Task<List<User>> GetUsersAsync(UserCriteria criteria)
         {
-            return await _context.Users.Where(u =>
-                (criteria.ApiKey == null || criteria.ApiKey == u.ApiKey)
-                && (criteria.Username == null || criteria.Username == u.Username)
-                && (criteria.Password == null || criteria.Password == u.Password)).ToListAsync();
+            return await _context.Users.Where(criteria.ToWherePredicate()).ToListAsync();
         }
 
         public async Task<List<User>> GetUsersAsync()

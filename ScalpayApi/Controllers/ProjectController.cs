@@ -23,9 +23,9 @@ namespace ScalpayApi.Controllers
 
         [HttpGet]
         [Authorization(Privilege.ProjectViewAll)]
-        public async Task<List<Project>> GetProjects()
+        public async Task<List<Project>> GetProjects([FromQuery] ProjectCriteria criteria)
         {
-            return await _projectService.GetProjectsAsync();
+            return await _projectService.GetProjectsAsync(criteria);
         }
 
         [HttpGet("{projectKey}")]
@@ -52,13 +52,10 @@ namespace ScalpayApi.Controllers
 
         [HttpGet("{projectKey}/items")]
         [Authorization(Privilege.ItemViewAll)]
-        public async Task<List<Item>> GetItems([FromRoute] string projectKey, [FromQuery] ItemType itemType)
+        public async Task<List<Item>> GetItems([FromRoute] string projectKey, [FromQuery] ItemCriteria criteria)
         {
-            return await _itemService.GetItemsAsync(new ItemCriteria()
-            {
-                ProjectKey = projectKey,
-                ItemType = itemType
-            });
+            criteria.ProjectKey = projectKey;
+            return await _itemService.GetItemsAsync(criteria);
         }
 
         [HttpDelete("{projectKey}")]

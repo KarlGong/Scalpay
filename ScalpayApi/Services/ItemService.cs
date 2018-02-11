@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -9,13 +11,21 @@ using ScalpayApi.Models;
 
 namespace ScalpayApi.Services
 {
-    public class ItemCriteria
+    public class ItemCriteria : Criteria<Item>
     {
         public string ItemKey { get; set; }
-        
+
         public string ProjectKey { get; set; }
 
         public ItemType? ItemType { get; set; }
+
+        public override Expression<Func<Item, bool>> ToWherePredicate()
+        {
+            return i =>
+                (ItemKey == null || ItemKey == i.ItemKey)
+                && (ProjectKey == null || ProjectKey == i.Project.ProjectKey)
+                && (ItemType == null || ItemType == i.Type);
+        }
     }
 
     public class AddItemParams
@@ -69,10 +79,7 @@ namespace ScalpayApi.Services
 
         public async Task<Item> GetItemAsync(ItemCriteria criteria)
         {
-            return await _context.Items.Include(i => i.Project).SingleOrDefaultAsync(i =>
-                (criteria.ItemKey == null || criteria.ItemKey == i.ItemKey)
-                && (criteria.ProjectKey == null || criteria.ProjectKey == i.Project.ProjectKey)
-                && (criteria.ItemType == null || criteria.ItemType == i.Type));
+            return await _context.Items.Include(i => i.Project).SingleOrDefaultAsync(criteria.ToWherePredicate());
         }
 
         public async Task<Item> GetItemAsync(string itemKey)
@@ -85,10 +92,7 @@ namespace ScalpayApi.Services
 
         public async Task<List<Item>> GetItemsAsync(ItemCriteria criteria)
         {
-            return await _context.Items.Include(i => i.Project).Where(i =>
-                (criteria.ItemKey == null || criteria.ItemKey == i.ItemKey)
-                && (criteria.ProjectKey == null || criteria.ProjectKey == i.Project.ProjectKey)
-                && (criteria.ItemType == null || criteria.ItemType == i.Type)).ToListAsync();
+            return await _context.Items.Include(i => i.Project).Where(criteria.ToWherePredicate()).ToListAsync();
         }
 
         public async Task<Item> AddItemAsync(AddItemParams ps)

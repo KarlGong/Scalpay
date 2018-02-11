@@ -26,7 +26,7 @@ export default class LoginPage extends Component {
                 <Form className="login-form">
                     <Form.Item validateStatus={this.validator.getResult("username").status}
                                help={this.validator.getResult("username").message}>
-                        <Input prefix={<Icon type="user" style={{color: "rgba(0,0,0,.25)"}}/>} placeholder="username"
+                        <Input prefix={<Icon type="user" className="input-icon"/>} placeholder="username"
                                onChange={(e) => {
                                    this.user.username = e.target.value;
                                    this.validator.resetResult("username");
@@ -34,7 +34,7 @@ export default class LoginPage extends Component {
                     </Form.Item>
                     <Form.Item validateStatus={this.validator.getResult("password").status}
                                help={this.validator.getResult("password").message}>
-                        <Input prefix={<Icon type="lock" style={{color: "rgba(0,0,0,.25)"}}/>} type="password"
+                        <Input prefix={<Icon type="lock" className="input-icon"/>} type="password"
                                placeholder="Password"
                                onChange={(e) => {
                                    this.user.password = e.target.value;
@@ -44,8 +44,9 @@ export default class LoginPage extends Component {
                     </Form.Item>
                     <Form.Item>
                         <Checkbox checked={true}>Remember me</Checkbox>
-                        <a className="login-form-forgot" href="">Forgot password</a>
-                        <Button type="primary" loading={this.loading} className="login-form-button" onClick={this.onSubmit}>
+                        <a className="forgot" href="">Forgot password</a>
+                        <Button type="primary" loading={this.loading} className="login-button"
+                                onClick={this.onSubmit}>
                             Log in
                         </Button>
                     </Form.Item>

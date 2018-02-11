@@ -23,9 +23,9 @@ namespace ScalpayApi.Controllers
 
         [HttpGet]
         [Authorization(Privilege.UserViewAll)]
-        public async Task<List<UserDTO>> GetUsers()
+        public async Task<List<UserDTO>> GetUsers([FromQuery] UserCriteria criteria)
         {
-            return _mapper.Map<List<UserDTO>>(await _service.GetUsersAsync());
+            return _mapper.Map<List<UserDTO>>(await _service.GetUsersAsync(criteria));
         }
 
         [HttpGet("{username}")]

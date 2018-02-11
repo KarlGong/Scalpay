@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -9,9 +11,19 @@ using ScalpayApi.Models;
 
 namespace ScalpayApi.Services
 {
-    public class ProjectCriteria
+    public class ProjectCriteria : Criteria<Project>
     {
         public string ProjectKey { get; set; }
+
+        public string PartialText { get; set; }
+
+        public override Expression<Func<Project, bool>> ToWherePredicate()
+        {
+            return p =>
+                (ProjectKey == null || ProjectKey == p.ProjectKey)
+                && (PartialText == null || p.ProjectKey.Contains(PartialText)
+                    || p.Name.Contains(PartialText) || p.Description.Contains(PartialText));
+        }
     }
 
     public class AddProjectParams
@@ -39,7 +51,7 @@ namespace ScalpayApi.Services
         Task<Project> GetProjectAsync(string projectKey);
 
         Task<List<Project>> GetProjectsAsync(ProjectCriteria criteria);
-        
+
         Task<List<Project>> GetProjectsAsync();
 
         Task<Project> AddProjectAsync(AddProjectParams ps);
@@ -62,9 +74,7 @@ namespace ScalpayApi.Services
 
         public async Task<Project> GetProjectAsync(ProjectCriteria criteria)
         {
-            return await _context.Projects.SingleOrDefaultAsync(p =>
-                criteria.ProjectKey == null || criteria.ProjectKey == p.ProjectKey
-            );
+            return await _context.Projects.SingleOrDefaultAsync(criteria.ToWherePredicate());
         }
 
         public async Task<Project> GetProjectAsync(string projectKey)
@@ -77,9 +87,7 @@ namespace ScalpayApi.Services
 
         public async Task<List<Project>> GetProjectsAsync(ProjectCriteria criteria)
         {
-            return await _context.Projects.Where(p =>
-                criteria.ProjectKey == null || criteria.ProjectKey == p.ProjectKey
-            ).ToListAsync();
+            return await _context.Projects.Where(criteria.ToWherePredicate()).ToListAsync();
         }
 
         public async Task<List<Project>> GetProjectsAsync()

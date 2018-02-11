@@ -60,8 +60,7 @@ export default class SHeader extends Component {
                     </Menu>} trigger={["click"]} placement="bottomRight">
                         <span className="item">
                             <Avatar size="small" style={{backgroundColor: "#87d068"}} icon="user"/>
-                            &nbsp;
-                            <span>{auth.user.fullName}</span>
+                            <span style={{marginLeft: "5px"}}>{auth.user.fullName}</span>
                         </span>
                     </Dropdown>
                     : null}

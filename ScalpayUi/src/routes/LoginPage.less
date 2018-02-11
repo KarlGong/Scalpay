@@ -1,6 +1,6 @@
 .login-page {
   display: flex;
-  justify-content: center;
+  //justify-content: center;
   align-items: center;
 
   .ant-input-affix-wrapper .ant-input {
@@ -8,17 +8,23 @@
   }
 
   .login-form {
-    margin-top: -10%;
+    margin-top: 160px;
     width: 380px;
     height: 280px;
     padding: 40px;
     border: 1px #dadada solid;
     border-radius: 10px;
-  }
-  .login-form-forgot {
-    float: right;
-  }
-  .login-form-button {
-    width: 100%;
+
+    .input-icon {
+      color: rgba(0, 0, 0, .25)
+    }
+
+    .forgot {
+      float: right;
+    }
+
+    .login-button {
+      width: 100%;
+    }
   }
 }

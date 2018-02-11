@@ -1,5 +1,5 @@
 import {observable} from "mobx";
-import axios from "axios/index";
+import axios from "axios";
 
 class Auth {
     @observable user = null;
