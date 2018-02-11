@@ -1,9 +1,19 @@
-import {Layout, Menu, AutoComplete, Input, Icon, Badge, Dropdown, Avatar} from "antd";
+import {Layout, Menu, AutoComplete, Input, Icon, Badge, Dropdown, Avatar, Spin} from "antd";
 import React, {Component} from "react";
-import { IndexRoute, hashHistory, Router, Route, Link } from "react-router";
+import {observable} from "mobx";
+import {observer} from "mobx-react";
+import axios from "axios";
+import auth from "~/utils/auth";
+import {IndexRoute, hashHistory, Router, Route, Link} from "react-router";
 import "./SHeader.less";
+import PropTypes from "prop-types";
 
+@observer
 export default class SHeader extends Component {
+    static contextTypes = {
+        router: PropTypes.object.isRequired
+    };
+
     render = () => {
         return <Layout.Header className="header">
             <div className="logo"/>
@@ -35,22 +45,26 @@ export default class SHeader extends Component {
                             <Icon type="setting" style={{fontSize: "18px"}}/>
                         </span>
                 </Dropdown>
-
-                <Dropdown overlay={<Menu>
-                    <Menu.Item key="0">
-                        <Link to="profile">Profile</Link>
-                    </Menu.Item>
-                    <Menu.Divider/>
-                    <Menu.Item key="1">
-                        <a href="profile">Logout</a>
-                    </Menu.Item>
-                </Menu>} trigger={["click"]} placement="bottomRight">
+                {auth.user ?
+                    <Dropdown overlay={<Menu>
+                        <Menu.Item key="0">
+                            <Link to="profile">Profile</Link>
+                        </Menu.Item>
+                        <Menu.Divider/>
+                        <Menu.Item key="1">
+                            <a onClick={() => {
+                                auth.logout();
+                                this.context.router.push("/login");
+                            }}>Logout</a>
+                        </Menu.Item>
+                    </Menu>} trigger={["click"]} placement="bottomRight">
                         <span className="item">
                             <Avatar size="small" style={{backgroundColor: "#87d068"}} icon="user"/>
                             &nbsp;
-                            <span>Karl Gong</span>
+                            <span>{auth.user.fullName}</span>
                         </span>
-                </Dropdown>
+                    </Dropdown>
+                    : null}
             </div>
         </Layout.Header>
     }

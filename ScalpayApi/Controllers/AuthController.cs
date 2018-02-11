@@ -44,14 +44,6 @@ namespace ScalpayApi.Controllers
             return _mapper.Map<UserDTO>(user);
         }
 
-        [HttpGet("current")]
-        [Authorization]
-        public async Task<UserDTO> GetCurrentUser()
-        {
-            return _mapper.Map<UserDTO>(
-                await _service.GetUserAsync(_httpContext.User.FindFirstValue("UserName")));
-        }
-
         [HttpGet("newApiKey")]
         [Authorization]
         public async Task<UserDTO> GenerateNewKey()
