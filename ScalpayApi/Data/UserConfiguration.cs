@@ -8,7 +8,7 @@ namespace ScalpayApi.Data
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(u => u.UserName);
+            builder.HasKey(u => u.Username);
 
             builder.Property(u => u.Email).IsRequired();
 

@@ -28,11 +28,11 @@ namespace ScalpayApi.Controllers
             return _mapper.Map<List<UserDTO>>(await _service.GetUsersAsync());
         }
 
-        [HttpGet("{userName}")]
+        [HttpGet("{username}")]
         [Authorization(Privilege.UserView)]
-        public async Task<UserDTO> GetUser([FromRoute] string userName)
+        public async Task<UserDTO> GetUser([FromRoute] string username)
         {
-            var user = await _service.GetUserAsync(userName);
+            var user = await _service.GetUserAsync(username);
 
             return _mapper.Map<UserDTO>(user);
         }
@@ -46,21 +46,21 @@ namespace ScalpayApi.Controllers
             return _mapper.Map<UserDTO>(user);
         }
 
-        [HttpPost("{userName}")]
+        [HttpPost("{username}")]
         [Authorization(Privilege.UserEdit)]
-        public async Task<UserDTO> UpdateUser([FromRoute] string userName, [FromBody] UpdateUserParams ps)
+        public async Task<UserDTO> UpdateUser([FromRoute] string username, [FromBody] UpdateUserParams ps)
         {
-            ps.UserName = userName;
+            ps.Username = username;
             var user = await _service.UpdateUserAsync(ps);
 
             return _mapper.Map<UserDTO>(user);
         }
 
-        [HttpDelete("{userName}")]
+        [HttpDelete("{username}")]
         [Authorization(Privilege.UserDelete)]
-        public async Task DeleteUser([FromRoute] string userName)
+        public async Task DeleteUser([FromRoute] string username)
         {
-            await _service.DeleteUserAsync(userName);
+            await _service.DeleteUserAsync(username);
         }
     }
 }

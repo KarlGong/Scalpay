@@ -14,7 +14,7 @@ namespace ScalpayApi.Controllers
 {
     public class LoginParams
     {
-        public string UserName { get; set; }
+        public string Username { get; set; }
         public string Password { get; set; }
     }
 
@@ -37,7 +37,7 @@ namespace ScalpayApi.Controllers
         {
             var user = await _service.GetUserAsync(new UserCriteria()
             {
-                UserName = ps.UserName,
+                Username = ps.Username,
                 Password = ps.Password
             });
 
@@ -49,7 +49,7 @@ namespace ScalpayApi.Controllers
         public async Task<UserDTO> GenerateNewKey()
         {
             var user = await _service.GenerateNewApiKeyAsync(
-                await _service.GetUserAsync(_httpContext.User.FindFirstValue("UserName")));
+                await _service.GetUserAsync(_httpContext.User.FindFirstValue("Username")));
 
             return _mapper.Map<UserDTO>(user);
         }

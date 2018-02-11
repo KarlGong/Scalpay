@@ -14,14 +14,14 @@ namespace ScalpayApi.Services
     {
         public string ApiKey { get; set; }
 
-        public string UserName { get; set; }
+        public string Username { get; set; }
 
         public string Password { get; set; }
     }
 
     public class AddUserParams
     {
-        public string UserName { get; set; }
+        public string Username { get; set; }
 
         public string Email { get; set; }
 
@@ -34,7 +34,7 @@ namespace ScalpayApi.Services
 
     public class UpdateUserParams
     {
-        public string UserName { get; set; }
+        public string Username { get; set; }
 
         public string Email { get; set; }
 
@@ -49,7 +49,7 @@ namespace ScalpayApi.Services
     {
         Task<User> GetUserAsync(UserCriteria criteria);
 
-        Task<User> GetUserAsync(string userName);
+        Task<User> GetUserAsync(string username);
 
         Task<List<User>> GetUsersAsync(UserCriteria criteria);
         
@@ -61,7 +61,7 @@ namespace ScalpayApi.Services
 
         Task<User> UpdateUserAsync(UpdateUserParams ps);
 
-        Task DeleteUserAsync(string userName);
+        Task DeleteUserAsync(string username);
     }
 
     public class UserService : IUserService
@@ -80,15 +80,15 @@ namespace ScalpayApi.Services
         {
             return await _context.Users.SingleOrDefaultAsync(u =>
                 (criteria.ApiKey == null || criteria.ApiKey == u.ApiKey)
-                && (criteria.UserName == null || criteria.UserName == u.UserName)
+                && (criteria.Username == null || criteria.Username == u.Username)
                 && (criteria.Password == null || criteria.Password == u.Password));
         }
 
-        public async Task<User> GetUserAsync(string userName)
+        public async Task<User> GetUserAsync(string username)
         {
             return await GetUserAsync(new UserCriteria()
             {
-                UserName = userName
+                Username = username
             });
         }
 
@@ -96,7 +96,7 @@ namespace ScalpayApi.Services
         {
             return await _context.Users.Where(u =>
                 (criteria.ApiKey == null || criteria.ApiKey == u.ApiKey)
-                && (criteria.UserName == null || criteria.UserName == u.UserName)
+                && (criteria.Username == null || criteria.Username == u.Username)
                 && (criteria.Password == null || criteria.Password == u.Password)).ToListAsync();
         }
 
@@ -129,7 +129,7 @@ namespace ScalpayApi.Services
 
         public async Task<User> UpdateUserAsync(UpdateUserParams ps)
         {
-            var user = await GetUserAsync(ps.UserName);
+            var user = await GetUserAsync(ps.Username);
 
             _mapper.Map(user, ps);
 
@@ -138,9 +138,9 @@ namespace ScalpayApi.Services
             return user;
         }
 
-        public async Task DeleteUserAsync(string userName)
+        public async Task DeleteUserAsync(string username)
         {
-            _context.Users.Remove(await GetUserAsync(userName));
+            _context.Users.Remove(await GetUserAsync(username));
 
             await _context.SaveChangesAsync();
         }

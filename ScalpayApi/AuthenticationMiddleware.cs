@@ -41,7 +41,7 @@ namespace ScalpayApi
                 {
                     var claims = new List<Claim>
                     {
-                        new Claim("UserName", user.UserName),
+                        new Claim("Username", user.Username),
                         new Claim("Email", user.Email),
                         new Claim("FullName", user.FullName)
                     };

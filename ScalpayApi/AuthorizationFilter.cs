@@ -27,9 +27,9 @@ namespace ScalpayApi
                 if (action.MethodInfo.GetCustomAttribute(typeof(AuthorizationAttribute)) is AuthorizationAttribute
                     attribute)
                 {
-                    var userName = context.HttpContext.User.FindFirstValue("UserName");
+                    var username = context.HttpContext.User.FindFirstValue("Username");
 
-                    var user = await _service.GetUserAsync(userName);
+                    var user = await _service.GetUserAsync(username);
 
                     if (user.Privileges.Intersect(attribute.Privileges).Count() != attribute.Privileges.Count())
                     {

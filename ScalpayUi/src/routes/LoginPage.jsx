@@ -13,9 +13,9 @@ export default class LoginPage extends Component {
         router: PropTypes.object.isRequired
     };
 
-    user = {userName: null, password: null};
+    user = {username: null, password: null};
     validator = new Validator(this.user, {
-        userName: {required: true},
+        username: {required: true},
         password: {required: true}
     });
     @observable loading = false;
@@ -24,13 +24,13 @@ export default class LoginPage extends Component {
         return (
             <Layout className="login-page">
                 <Form className="login-form">
-                    <Form.Item validateStatus={this.validator.getResult("userName").status}
-                               help={this.validator.getResult("userName").message}>
-                        <Input prefix={<Icon type="user" style={{color: "rgba(0,0,0,.25)"}}/>} placeholder="Username"
+                    <Form.Item validateStatus={this.validator.getResult("username").status}
+                               help={this.validator.getResult("username").message}>
+                        <Input prefix={<Icon type="user" style={{color: "rgba(0,0,0,.25)"}}/>} placeholder="username"
                                onChange={(e) => {
-                                   this.user.userName = e.target.value;
-                                   this.validator.resetResult("userName");
-                               }} onBlur={() => this.validator.validate("userName")}/>
+                                   this.user.username = e.target.value;
+                                   this.validator.resetResult("username");
+                               }} onBlur={() => this.validator.validate("username")}/>
                     </Form.Item>
                     <Form.Item validateStatus={this.validator.getResult("password").status}
                                help={this.validator.getResult("password").message}>
@@ -57,7 +57,7 @@ export default class LoginPage extends Component {
     onSubmit = () => {
         this.validator.validateAll(() => {
             this.loading = true;
-            auth.login(this.user.userName, this.user.password)
+            auth.login(this.user.username, this.user.password)
                 .then(() => this.context.router.push(this.context.router.location.query.returnUrl || "/"))
                 .finally(() => this.loading = false);
         });
