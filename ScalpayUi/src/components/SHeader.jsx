@@ -4,6 +4,7 @@ import {observable} from "mobx";
 import {observer} from "mobx-react";
 import axios from "axios";
 import auth from "~/utils/auth";
+import {Privilege} from "~/utils/store";
 import {IndexRoute, hashHistory, Router, Route, Link} from "react-router";
 import "./SHeader.less";
 import PropTypes from "prop-types";
@@ -37,9 +38,18 @@ export default class SHeader extends Component {
                 </span>
 
                 <Dropdown overlay={<Menu>
-                    <Menu.Item key="0">
-                        <Link to="projects">Manage Projects</Link>
-                    </Menu.Item>
+                    {auth.hasPrivileges(Privilege.ProjectViewAll)?
+                        <Menu.Item key="0">
+                            <Link to="projects">View Projects</Link>
+                        </Menu.Item>
+                        : null
+                    }
+                    {auth.hasPrivileges(Privilege.UserViewAll)?
+                        <Menu.Item key="1">
+                            <Link to="project">View Users</Link>
+                        </Menu.Item>
+                        : null
+                    }
                 </Menu>} trigger={["click"]} placement="bottomRight">
                         <span className="item">
                             <Icon type="setting" style={{fontSize: "18px"}}/>

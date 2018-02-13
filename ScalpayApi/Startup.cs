@@ -37,7 +37,7 @@ namespace ScalpayApi
                 options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter(true));
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter(false));
                 }
             );
 

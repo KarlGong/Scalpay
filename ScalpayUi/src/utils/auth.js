@@ -1,5 +1,6 @@
 import {observable} from "mobx";
 import axios from "axios";
+import {Privilege} from "~/utils/store";
 
 class Auth {
     @observable user = null;
@@ -22,6 +23,10 @@ class Auth {
         this.user = null;
         localStorage.removeItem("Scalpay-User");
     };
+
+    hasPrivileges = (...privileges) => {
+        return privileges.every(ele => this.user.privileges.indexOf(ele) > -1);
+    }
 }
 
 const auth = new Auth();

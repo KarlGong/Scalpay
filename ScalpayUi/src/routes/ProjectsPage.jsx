@@ -1,13 +1,20 @@
-import {Layout, Menu, Input, Icon, List, Button} from "antd";
+import {Layout, Menu, Input, Icon, List, Button, Modal, message} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked, runInAction, action} from "mobx";
 import axios from "axios";
+import auth from "~/utils/auth";
+import {Privilege} from "~/utils/store";
 import "./ProjectsPage.less";
 import PageWrapper from "~/layouts/PageWrapper";
+import PropTypes from "prop-types";
 
 @observer
 export default class ProjectsPage extends Component {
+    static contextTypes = {
+        router: PropTypes.object.isRequired
+    };
+
     @observable loading = false;
     @observable projects = [];
     searchText = null;
@@ -18,30 +25,41 @@ export default class ProjectsPage extends Component {
 
     render = () => {
         return <PageWrapper className="projects-page">
-                <List
-                    className="list"
-                    loading={this.loading}
-                    itemLayout="horizontal"
-                    dataSource={this.projects}
-                    header={<span>
-                        <Input style={{width: "250px"}} placeholder="By key/name/description"
-                               onChange={(e) => this.searchText = e.target.value}
-                        onKeyUp={(e) => e.keyCode === 13 && this.searchProjects()}/>
-                        <Button style={{marginLeft: "10px"}} type="primary"
-                                onClick={() => this.searchProjects()}>Search</Button>
-                        <Button style={{float: "right"}}>Add Project</Button>
+            <List
+                className="list"
+                loading={this.loading}
+                itemLayout="horizontal"
+                dataSource={this.projects}
+                header={<span>
+                            <Input style={{width: "250px"}} placeholder="By key/name/description"
+                                   onChange={(e) => this.searchText = e.target.value}
+                                   onKeyUp={(e) => e.keyCode === 13 && this.searchProjects()}/>
+                            <Button style={{marginLeft: "10px"}} type="primary"
+                                    onClick={() => this.searchProjects()}>Search</Button>
+                    {auth.hasPrivileges(Privilege.ProjectAdd) ?
+                        <Button style={{float: "right"}} onClick={() => this.addProject()}>Add Project</Button>
+                        : null
+                    }
                     </span>}
-                    renderItem={item => (
-                        <List.Item actions={[<a>edit</a>, <a className="delete">delete</a>]}>
-                            <List.Item.Meta
-                                title={<a>{item.name}</a>}
-                                description={item.description}
-                            />
-                            <div>{item.projectKey}</div>
-                        </List.Item>
-                    )}
-                >
-                </List>
+                renderItem={project => {
+                    let actions = [];
+                    if (auth.hasPrivileges(Privilege.ProjectEdit))
+                        actions.push(<a className="edit" onClick={() => this.editProject(project)}>edit</a>);
+                    if (auth.hasPrivileges(Privilege.ProjectDelete))
+                        actions.push(<a className="delete" onClick={() => this.deleteProject(project)}>delete</a>);
+
+                    return <List.Item actions={actions}>
+                        <List.Item.Meta
+                            title={auth.hasPrivileges(Privilege.ProjectView) ?
+                                <a onClick={() => this.viewProject(project)}>project.name</a>
+                                : "project.name"}
+                            description={project.description}
+                        />
+                        <div>{project.projectKey}</div>
+                    </List.Item>
+                }}
+            >
+            </List>
         </PageWrapper>
     };
 
@@ -54,5 +72,38 @@ export default class ProjectsPage extends Component {
         })
             .then(response => this.projects = response.data)
             .finally(() => this.loading = false);
-    }
+    };
+
+    addProject = () => {
+        this.context.router.push("/projects/add");
+    };
+
+    viewProject = (project) => {
+        this.context.router.push("/projects/" + project.projectKey);
+    };
+
+    editProject = (project) => {
+        this.context.router.push("/projects/" + project.projectKey + "/edit");
+    };
+
+    deleteProject = (project) => {
+        Modal.confirm({
+            title: "Are you sure to delete this project?",
+            content: "All the items under this project will also be deleted.",
+            okText: "Delete Project",
+            okType: "danger",
+            cancelText: "Cancel",
+            onOk: () => {
+                const hide = message.loading("Deleting project...", 0);
+                axios.delete("/api/projects/" + project.projectKey)
+                    .then(() => {
+                        hide();
+                        message.success("The project is deleted successfully!");
+                        this.searchProjects();
+                    })
+            },
+        });
+
+
+    };
 }
