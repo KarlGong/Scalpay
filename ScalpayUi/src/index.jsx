@@ -8,6 +8,7 @@ import axios from "axios";
 import auth from "~/utils/auth";
 import App from "~/routes/App";
 import ItemsPage from "~/routes/ItemsPage";
+import ProjectPage from "~/routes/ProjectPage";
 import ProjectsPage from "~/routes/ProjectsPage";
 import ProfilePage from "~/routes/ProfilePage";
 import LoginPage from "~/routes/LoginPage";
@@ -51,7 +52,12 @@ render(
                 <IndexRedirect to="items"/>
                 <Route path="login" component={LoginPage} onEnter={checkAuth}/>
                 <Route path="items" component={ItemsPage} onEnter={requireAuth}/>
-                <Route path="projects" component={ProjectsPage} onEnter={requireAuth}/>
+                <Route path="projects" onEnter={requireAuth}>
+                    <IndexRoute component={ProjectsPage}/>
+                    <Route path="add" component={ProjectPage} mode="add"/>
+                    <Route path=":projectKey/edit" component={ProjectPage} mode="edit"/>
+                    <Route path=":projectKey" component={ProjectPage} mode="view"/>
+                </Route>
                 <Route path="profile" component={ProfilePage} onEnter={requireAuth}/>
             </Route>
         </Router>

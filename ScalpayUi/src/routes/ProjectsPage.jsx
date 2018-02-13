@@ -7,13 +7,9 @@ import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
 import "./ProjectsPage.less";
 import PageWrapper from "~/layouts/PageWrapper";
-import PropTypes from "prop-types";
 
 @observer
 export default class ProjectsPage extends Component {
-    static contextTypes = {
-        router: PropTypes.object.isRequired
-    };
 
     @observable loading = false;
     @observable projects = [];
@@ -75,15 +71,15 @@ export default class ProjectsPage extends Component {
     };
 
     addProject = () => {
-        this.context.router.push("/projects/add");
+        this.props.router.push("/projects/add");
     };
 
     viewProject = (project) => {
-        this.context.router.push("/projects/" + project.projectKey);
+        this.props.router.push("/projects/" + project.projectKey);
     };
 
     editProject = (project) => {
-        this.context.router.push("/projects/" + project.projectKey + "/edit");
+        this.props.router.push("/projects/" + project.projectKey + "/edit");
     };
 
     deleteProject = (project) => {

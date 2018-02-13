@@ -1,5 +1,5 @@
 export const Privilege = {
-    ProjectViewAll: "projectViewAll",
+    ProjectViewAll: "ProjectViewAll",
     ProjectView: "ProjectView",
     ProjectAdd: "ProjectAdd",
     ProjectEdit: "ProjectEdit",

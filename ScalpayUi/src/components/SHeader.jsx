@@ -7,13 +7,9 @@ import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
 import {IndexRoute, hashHistory, Router, Route, Link} from "react-router";
 import "./SHeader.less";
-import PropTypes from "prop-types";
 
 @observer
 export default class SHeader extends Component {
-    static contextTypes = {
-        router: PropTypes.object.isRequired
-    };
 
     render = () => {
         return <Layout.Header className="header">
@@ -46,7 +42,7 @@ export default class SHeader extends Component {
                     }
                     {auth.hasPrivileges(Privilege.UserViewAll)?
                         <Menu.Item key="1">
-                            <Link to="project">View Users</Link>
+                            <Link to="users">View Users</Link>
                         </Menu.Item>
                         : null
                     }
@@ -64,7 +60,7 @@ export default class SHeader extends Component {
                         <Menu.Item key="1">
                             <a onClick={() => {
                                 auth.logout();
-                                this.context.router.push("/login");
+                                this.props.router.push("/login");
                             }}>Logout</a>
                         </Menu.Item>
                     </Menu>} trigger={["click"]} placement="bottomRight">

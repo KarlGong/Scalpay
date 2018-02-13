@@ -1,6 +1,5 @@
 import {Layout, Menu, Input, Icon, Form, Button, Checkbox} from "antd";
 import React, {Component} from "react";
-import PropTypes from "prop-types";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked, runInAction, action} from "mobx";
 import auth from "~/utils/auth";
@@ -9,9 +8,6 @@ import Validator from "~/utils/Validator";
 
 @observer
 export default class LoginPage extends Component {
-    static contextTypes = {
-        router: PropTypes.object.isRequired
-    };
 
     user = {username: null, password: null};
     validator = new Validator(this.user, {
@@ -59,7 +55,7 @@ export default class LoginPage extends Component {
         this.validator.validateAll(() => {
             this.loading = true;
             auth.login(this.user.username, this.user.password)
-                .then(() => this.context.router.push(this.context.router.location.query.returnUrl || "/"))
+                .then(() => this.props.router.push(this.props.router.location.query.returnUrl || "/"))
                 .finally(() => this.loading = false);
         });
     }
