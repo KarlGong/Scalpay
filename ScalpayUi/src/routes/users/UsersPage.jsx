@@ -85,7 +85,7 @@ export default class UsersPage extends Component {
     deleteUser = (user) => {
         Modal.confirm({
             title: "Are you sure to delete this user?",
-            content: "All the data of this user will also be deleted.",
+            content: "All the data of this user will be deleted.",
             okText: "Delete User",
             okType: "danger",
             cancelText: "Cancel",

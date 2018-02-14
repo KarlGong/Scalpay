@@ -24,7 +24,7 @@ namespace ScalpayApi.Models
                 return Enum.GetValues(typeof(Privilege)).Cast<Privilege>().Where(
                     p => (PrivilegesInt & (int) p) != 0).ToList();
             }
-            set { PrivilegesInt = Privileges.Sum(p => (int) p); }
+            set { PrivilegesInt = value.Sum(p => (int) p); }
         }
 
         public int PrivilegesInt { get; set; }

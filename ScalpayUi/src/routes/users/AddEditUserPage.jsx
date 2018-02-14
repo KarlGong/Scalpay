@@ -1,4 +1,4 @@
-import {Layout, Menu, Input, Icon, Form, Spin, Button, message} from "antd";
+import {Layout, Menu, Input, Icon, Form, Spin, Button, message, Checkbox, Row, Col, Divider} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked, runInAction, action} from "mobx";
@@ -13,7 +13,12 @@ import "./AddEditUserPage.less";
 
 @observer
 export default class AddEditUserPage extends Component {
-    @observable user = {username: null, fullName: null, email: null};
+    @observable user = {
+        username: null,
+        fullName: null,
+        email: null,
+        privileges: [Privilege.ProjectViewAll, Privilege.ProjectView, Privilege.ItemViewAll, Privilege.ItemView, Privilege.UserView]
+    };
     validator = new Validator(this.user, {
         username: {required: true},
         fullName: {required: true},
@@ -35,8 +40,8 @@ export default class AddEditUserPage extends Component {
 
     render = () => {
         const formItemLayout = {
-            labelCol: {span: 10},
-            wrapperCol: {span: 8},
+            labelCol: {span: 8},
+            wrapperCol: {span: 10},
         };
 
         return <PageWrapper className="add-edit-user-page">
@@ -76,15 +81,53 @@ export default class AddEditUserPage extends Component {
                                    this.validator.resetResult("email");
                                }} onBlur={() => this.validator.validate("email")}/>
                     </Form.Item>
+                    <Form.Item label="Privileges" {...formItemLayout}>
+                        <Checkbox.Group
+                            key={this.loading}
+                            defaultValue={untracked(() => toJS(this.user.privileges))}
+                            onChange={e => this.user.privileges = e}>
+                            <Divider style={{fontSize: "12px"}}>Projects</Divider>
+                            <Row>
+                                <Col span={8}><Checkbox value={Privilege.ProjectViewAll}>View All
+                                    Projects</Checkbox></Col>
+                                <Col span={8}><Checkbox value={Privilege.ProjectView}>View Project</Checkbox></Col>
+                                <Col span={8}>&nbsp;</Col>
+                                <Col span={8}><Checkbox value={Privilege.ProjectAdd}>Add Project</Checkbox></Col>
+                                <Col span={8}><Checkbox value={Privilege.ProjectEdit}>Edit Project</Checkbox></Col>
+                                <Col span={8}><Checkbox value={Privilege.ProjectDelete} style={{color: "#f00"}}>Delete
+                                    Project</Checkbox></Col>
+                            </Row>
+                            <Divider style={{fontSize: "12px"}}>Items</Divider>
+                            <Row>
+                                <Col span={8}><Checkbox value={Privilege.ItemViewAll}>View All Items</Checkbox></Col>
+                                <Col span={8}><Checkbox value={Privilege.ItemView}>View Item</Checkbox></Col>
+                                <Col span={8}>&nbsp;</Col>
+                                <Col span={8}><Checkbox value={Privilege.ItemAdd}>Add Item</Checkbox></Col>
+                                <Col span={8}><Checkbox value={Privilege.ItemEdit}>Edit Item</Checkbox></Col>
+                                <Col span={8}><Checkbox value={Privilege.ItemDelete} style={{color: "#f00"}}>Delete
+                                    Item</Checkbox></Col>
+                            </Row>
+                            <Divider style={{fontSize: "12px"}}>Users</Divider>
+                            <Row>
+                                <Col span={8}><Checkbox value={Privilege.UserViewAll}>View All Users</Checkbox></Col>
+                                <Col span={8}><Checkbox value={Privilege.UserView}>View User</Checkbox></Col>
+                                <Col span={8}>&nbsp;</Col>
+                                <Col span={8}><Checkbox value={Privilege.UserAdd}>Add User</Checkbox></Col>
+                                <Col span={8}><Checkbox value={Privilege.UserEdit}>Edit User</Checkbox></Col>
+                                <Col span={8}><Checkbox value={Privilege.UserDelete} style={{color: "#f00"}}>Delete
+                                    User</Checkbox></Col>
+                            </Row>
+                        </Checkbox.Group>
+                    </Form.Item>
                     <Form.Item wrapperCol={{span: 4, offset: 14}}>
-                        <span>
-                            <Button style={{marginRight: "10px"}} onClick={() => this.goBack()}>Cancel</Button>
-                            {
-                                this.props.route.mode === "add" ?
-                                    <Button type="primary" onClick={() => this.addUser()}>Save</Button> :
-                                    <Button type="primary" onClick={() => this.updateUser()}>Update</Button>
-                            }
-                        </span>
+                                <span>
+                                <Button style={{marginRight: "10px"}} onClick={() => this.goBack()}>Cancel</Button>
+                                    {
+                                        this.props.route.mode === "add" ?
+                                            <Button type="primary" onClick={() => this.addUser()}>Save</Button> :
+                                            <Button type="primary" onClick={() => this.updateUser()}>Update</Button>
+                                    }
+                                </span>
                     </Form.Item>
                 </Form>
             </Spin>
