@@ -15,14 +15,14 @@ namespace ScalpayApi.Services
     {
         public string ProjectKey { get; set; }
 
-        public string PartialText { get; set; }
+        public string SearchText { get; set; }
 
         public override Expression<Func<Project, bool>> ToWherePredicate()
         {
             return p =>
                 (ProjectKey == null || ProjectKey == p.ProjectKey)
-                && (PartialText == null || p.ProjectKey.Contains(PartialText)
-                    || p.Name.Contains(PartialText) || p.Description.Contains(PartialText));
+                && (SearchText == null || p.ProjectKey.Contains(SearchText)
+                    || p.Name.Contains(SearchText) || p.Description.Contains(SearchText));
         }
     }
 

@@ -11,6 +11,7 @@ import ItemsPage from "~/routes/ItemsPage";
 import ViewProjectPage from "~/routes/projects/ViewProjectPage";
 import AddEditProjectPage from "~/routes/projects/AddEditProjectPage";
 import ProjectsPage from "~/routes/projects/ProjectsPage";
+import UsersPage from "~/routes/users/UsersPage";
 import ProfilePage from "~/routes/ProfilePage";
 import LoginPage from "~/routes/LoginPage";
 import "./assets/fonts/extra-iconfont/iconfont.css";
@@ -59,7 +60,9 @@ render(
                     <Route path=":projectKey/edit" component={AddEditProjectPage} mode="edit"/>
                     <Route path=":projectKey" component={ViewProjectPage} />
                 </Route>
-                <Route path="profile" component={ProfilePage} onEnter={requireAuth}/>
+                <Route path="users" onEnter={requireAuth}>
+                    <IndexRoute component={UsersPage}/>
+                </Route>
             </Route>
         </Router>
     </AppContainer>,

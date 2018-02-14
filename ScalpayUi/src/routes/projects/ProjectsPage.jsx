@@ -63,7 +63,7 @@ export default class ProjectsPage extends Component {
         this.loading = true;
         axios.get("/api/projects", {
             params: {
-                partialText: this.searchText
+                searchText: this.searchText
             }
         })
             .then(response => this.projects = response.data)
