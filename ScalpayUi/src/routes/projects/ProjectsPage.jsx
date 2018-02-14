@@ -96,7 +96,7 @@ export default class ProjectsPage extends Component {
                         hide();
                         message.success("The project is deleted successfully!");
                         this.searchProjects();
-                    })
+                    }, () => hide());
             },
         });
 

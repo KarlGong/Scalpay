@@ -96,7 +96,7 @@ export default class UsersPage extends Component {
                         hide();
                         message.success("The user is deleted successfully!");
                         this.searchUsers();
-                    })
+                    }, () => hide());
             },
         });
 

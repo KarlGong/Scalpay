@@ -58,7 +58,7 @@ export default class SHeader extends Component {
                 {auth.user ?
                     <Dropdown overlay={<Menu>
                         <Menu.Item key="0">
-                            <Link to="profile">Profile</Link>
+                            <Link to={"/users/" + auth.user.username}>Profile</Link>
                         </Menu.Item>
                         <Menu.Divider/>
                         <Menu.Item key="1">

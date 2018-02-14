@@ -77,8 +77,8 @@ export default class ViewProjectPage extends Component {
                     .then(() => {
                         hide();
                         message.success("The project is deleted successfully!");
-                        this.props.router.push("/projects");
-                    })
+                        this.props.router.goBack();
+                    }, () => hide());
             },
         });
     }

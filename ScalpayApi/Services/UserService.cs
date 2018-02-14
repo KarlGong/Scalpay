@@ -38,8 +38,6 @@ namespace ScalpayApi.Services
 
         public string Email { get; set; }
 
-        public string Password { get; set; }
-
         public string FullName { get; set; }
 
         public List<Privilege> Privileges { get; set; }
@@ -50,8 +48,6 @@ namespace ScalpayApi.Services
         public string Username { get; set; }
 
         public string Email { get; set; }
-
-        public string Password { get; set; }
 
         public string FullName { get; set; }
 
@@ -125,6 +121,8 @@ namespace ScalpayApi.Services
         {
             var user = _mapper.Map<User>(ps);
 
+            user.Password = "1";
+            
             user.ApiKey = Guid.NewGuid().ToString();
 
             await _context.Users.AddAsync(user);
@@ -138,7 +136,7 @@ namespace ScalpayApi.Services
         {
             var user = await GetUserAsync(ps.Username);
 
-            _mapper.Map(user, ps);
+            _mapper.Map(ps, user);
 
             await _context.SaveChangesAsync();
 

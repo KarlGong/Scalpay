@@ -97,7 +97,7 @@ export default class AddEditProjectPage extends Component {
                     hide();
                     message.success("The project is added successfully!");
                     this.goBack();
-                })
+                }, () => hide());
         });
     };
 
@@ -109,7 +109,7 @@ export default class AddEditProjectPage extends Component {
                     hide();
                     message.success("The project is updated successfully!");
                     this.goBack();
-                })
+                }, () => hide());
         });
     };
 
