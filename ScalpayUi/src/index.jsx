@@ -8,8 +8,9 @@ import axios from "axios";
 import auth from "~/utils/auth";
 import App from "~/routes/App";
 import ItemsPage from "~/routes/ItemsPage";
-import ProjectPage from "~/routes/ProjectPage";
-import ProjectsPage from "~/routes/ProjectsPage";
+import ViewProjectPage from "~/routes/projects/ViewProjectPage";
+import AddEditProjectPage from "~/routes/projects/AddEditProjectPage";
+import ProjectsPage from "~/routes/projects/ProjectsPage";
 import ProfilePage from "~/routes/ProfilePage";
 import LoginPage from "~/routes/LoginPage";
 import "./assets/fonts/extra-iconfont/iconfont.css";
@@ -29,7 +30,7 @@ axios.interceptors.response.use(
 const requireAuth = (nextState, replace) => {
     if (!auth.user) {
         replace({
-            pathname: "login",
+            pathname: "/login",
             query: {
                 returnUrl: nextState.location.pathname
             }
@@ -54,9 +55,9 @@ render(
                 <Route path="items" component={ItemsPage} onEnter={requireAuth}/>
                 <Route path="projects" onEnter={requireAuth}>
                     <IndexRoute component={ProjectsPage}/>
-                    <Route path="add" component={ProjectPage} mode="add"/>
-                    <Route path=":projectKey/edit" component={ProjectPage} mode="edit"/>
-                    <Route path=":projectKey" component={ProjectPage} mode="view"/>
+                    <Route path="add" component={AddEditProjectPage} mode="add"/>
+                    <Route path=":projectKey/edit" component={AddEditProjectPage} mode="edit"/>
+                    <Route path=":projectKey" component={ViewProjectPage} />
                 </Route>
                 <Route path="profile" component={ProfilePage} onEnter={requireAuth}/>
             </Route>

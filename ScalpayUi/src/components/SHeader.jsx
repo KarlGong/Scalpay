@@ -7,9 +7,13 @@ import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
 import {IndexRoute, hashHistory, Router, Route, Link} from "react-router";
 import "./SHeader.less";
+import PropTypes from "prop-types"
 
 @observer
 export default class SHeader extends Component {
+    static propTypes = {
+        router: PropTypes.object.isRequired,
+    };
 
     render = () => {
         return <Layout.Header className="header">
@@ -20,7 +24,7 @@ export default class SHeader extends Component {
                 defaultSelectedKeys={["items"]}
             >
                 <Menu.Item key="items">
-                    <Link to="items">Items</Link>
+                    <Link to="/items">Items</Link>
                 </Menu.Item>
             </Menu>
             <div className="right">
@@ -36,13 +40,13 @@ export default class SHeader extends Component {
                 <Dropdown overlay={<Menu>
                     {auth.hasPrivileges(Privilege.ProjectViewAll)?
                         <Menu.Item key="0">
-                            <Link to="projects">View Projects</Link>
+                            <Link to="/projects">View Projects</Link>
                         </Menu.Item>
                         : null
                     }
                     {auth.hasPrivileges(Privilege.UserViewAll)?
                         <Menu.Item key="1">
-                            <Link to="users">View Users</Link>
+                            <Link to="/users">View Users</Link>
                         </Menu.Item>
                         : null
                     }

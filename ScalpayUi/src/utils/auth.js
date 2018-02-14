@@ -25,7 +25,7 @@ class Auth {
     };
 
     hasPrivileges = (...privileges) => {
-        return privileges.every(ele => this.user.privileges.indexOf(ele) > -1);
+        return this.user && privileges.every(ele => this.user.privileges.indexOf(ele) > -1);
     }
 }
 
