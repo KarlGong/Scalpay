@@ -17,7 +17,7 @@ export default class AddEditUserPage extends Component {
         username: null,
         fullName: null,
         email: null,
-        privileges: [Privilege.ProjectViewAll, Privilege.ProjectView, Privilege.ItemViewAll, Privilege.ItemView, Privilege.UserView]
+        privileges: []
     };
     validator = new Validator(this.user, {
         username: {required: true},
@@ -88,10 +88,6 @@ export default class AddEditUserPage extends Component {
                             onChange={e => this.user.privileges = e}>
                             <Divider style={{fontSize: "12px"}}>Projects</Divider>
                             <Row>
-                                <Col span={8}><Checkbox value={Privilege.ProjectViewAll}>View All
-                                    Projects</Checkbox></Col>
-                                <Col span={8}><Checkbox value={Privilege.ProjectView}>View Project</Checkbox></Col>
-                                <Col span={8}>&nbsp;</Col>
                                 <Col span={8}><Checkbox value={Privilege.ProjectAdd}>Add Project</Checkbox></Col>
                                 <Col span={8}><Checkbox value={Privilege.ProjectEdit}>Edit Project</Checkbox></Col>
                                 <Col span={8}><Checkbox value={Privilege.ProjectDelete} style={{color: "#f00"}}>Delete
@@ -99,9 +95,6 @@ export default class AddEditUserPage extends Component {
                             </Row>
                             <Divider style={{fontSize: "12px"}}>Items</Divider>
                             <Row>
-                                <Col span={8}><Checkbox value={Privilege.ItemViewAll}>View All Items</Checkbox></Col>
-                                <Col span={8}><Checkbox value={Privilege.ItemView}>View Item</Checkbox></Col>
-                                <Col span={8}>&nbsp;</Col>
                                 <Col span={8}><Checkbox value={Privilege.ItemAdd}>Add Item</Checkbox></Col>
                                 <Col span={8}><Checkbox value={Privilege.ItemEdit}>Edit Item</Checkbox></Col>
                                 <Col span={8}><Checkbox value={Privilege.ItemDelete} style={{color: "#f00"}}>Delete
@@ -109,13 +102,7 @@ export default class AddEditUserPage extends Component {
                             </Row>
                             <Divider style={{fontSize: "12px"}}>Users</Divider>
                             <Row>
-                                <Col span={8}><Checkbox value={Privilege.UserViewAll}>View All Users</Checkbox></Col>
-                                <Col span={8}><Checkbox value={Privilege.UserView}>View User</Checkbox></Col>
-                                <Col span={8}>&nbsp;</Col>
-                                <Col span={8}><Checkbox value={Privilege.UserAdd}>Add User</Checkbox></Col>
-                                <Col span={8}><Checkbox value={Privilege.UserEdit}>Edit User</Checkbox></Col>
-                                <Col span={8}><Checkbox value={Privilege.UserDelete} style={{color: "#f00"}}>Delete
-                                    User</Checkbox></Col>
+                                <Col span={8}><Checkbox value={Privilege.UserManage}>Manage Users</Checkbox></Col>
                             </Row>
                         </Checkbox.Group>
                     </Form.Item>

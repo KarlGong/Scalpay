@@ -46,9 +46,7 @@ export default class ProjectsPage extends Component {
 
                     return <List.Item actions={actions}>
                         <List.Item.Meta
-                            title={auth.hasPrivileges(Privilege.ProjectView) ?
-                                <a onClick={() => this.viewProject(project)}>{project.name}</a>
-                                : project.name}
+                            title={<a onClick={() => this.viewProject(project)}>{project.name}</a>}
                             description={project.description}
                         />
                         <div>{project.projectKey}</div>

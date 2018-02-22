@@ -19,7 +19,7 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpGet("{itemKey}")]
-        [Authorization(Privilege.ItemView)]
+        [Authorization]
         public async Task<Item> GetItem([FromRoute] string itemKey)
         {
             return await _service.GetItemAsync(itemKey);

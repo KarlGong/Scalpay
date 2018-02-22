@@ -22,14 +22,14 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpGet]
-        [Authorization(Privilege.UserViewAll)]
+        [Authorization(Privilege.UserManage)]
         public async Task<List<UserDTO>> GetUsers([FromQuery] UserCriteria criteria)
         {
             return _mapper.Map<List<UserDTO>>(await _service.GetUsersAsync(criteria));
         }
 
         [HttpGet("{username}")]
-        [Authorization(Privilege.UserView)]
+        [Authorization]
         public async Task<UserDTO> GetUser([FromRoute] string username)
         {
             var user = await _service.GetUserAsync(username);
@@ -38,7 +38,7 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpPut]
-        [Authorization(Privilege.UserAdd)]
+        [Authorization(Privilege.UserManage)]
         public async Task<UserDTO> AddUser([FromBody] AddUserParams ps)
         {
             var user = await _service.AddUserAsync(ps);
@@ -47,7 +47,7 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpPost("{username}")]
-        [Authorization(Privilege.UserEdit)]
+        [Authorization(Privilege.UserManage)]
         public async Task<UserDTO> UpdateUser([FromRoute] string username, [FromBody] UpdateUserParams ps)
         {
             ps.Username = username;
@@ -57,7 +57,7 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpDelete("{username}")]
-        [Authorization(Privilege.UserDelete)]
+        [Authorization(Privilege.UserManage)]
         public async Task DeleteUser([FromRoute] string username)
         {
             await _service.DeleteUserAsync(username);

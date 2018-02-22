@@ -12,7 +12,7 @@ using ScalpayApi.Services;
 
 namespace ScalpayApi.Controllers
 {
-    public class LoginParams
+    public class SignInParams
     {
         public string Username { get; set; }
         public string Password { get; set; }
@@ -33,7 +33,7 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpPost("signIn")]
-        public async Task<UserDTO> SignIn([FromBody] LoginParams ps)
+        public async Task<UserDTO> SignIn([FromBody] SignInParams ps)
         {
             var user = await _service.GetUserAsync(new UserCriteria()
             {

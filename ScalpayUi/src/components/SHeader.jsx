@@ -38,13 +38,10 @@ export default class SHeader extends Component {
                 </span>
 
                 <Dropdown overlay={<Menu>
-                    {auth.hasPrivileges(Privilege.ProjectViewAll)?
-                        <Menu.Item key="0">
-                            <Link to="/projects">View Projects</Link>
-                        </Menu.Item>
-                        : null
-                    }
-                    {auth.hasPrivileges(Privilege.UserViewAll)?
+                    <Menu.Item key="0">
+                        <Link to="/projects">View Projects</Link>
+                    </Menu.Item>
+                    {auth.hasPrivileges(Privilege.UserManage) ?
                         <Menu.Item key="1">
                             <Link to="/users">View Users</Link>
                         </Menu.Item>

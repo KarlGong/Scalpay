@@ -27,28 +27,18 @@ export default class UsersPage extends Component {
                 itemLayout="horizontal"
                 dataSource={this.users}
                 header={<span>
-                            <Input style={{width: "250px"}} placeholder="By username/full name/email"
-                                   onChange={(e) => this.searchText = e.target.value}
-                                   onKeyUp={(e) => e.keyCode === 13 && this.searchUsers()}/>
-                            <Button style={{marginLeft: "10px"}} type="primary"
-                                    onClick={() => this.searchUsers()}>Search</Button>
-                    {auth.hasPrivileges(Privilege.UserAdd) ?
+                        <Input style={{width: "250px"}} placeholder="By username/full name/email"
+                               onChange={(e) => this.searchText = e.target.value}
+                               onKeyUp={(e) => e.keyCode === 13 && this.searchUsers()}/>
+                        <Button style={{marginLeft: "10px"}} type="primary"
+                                onClick={() => this.searchUsers()}>Search</Button>
                         <Button style={{float: "right"}} onClick={() => this.addUser()}>Add User</Button>
-                        : null
-                    }
                     </span>}
                 renderItem={user => {
-                    let actions = [];
-                    if (auth.hasPrivileges(Privilege.UserEdit))
-                        actions.push(<a className="edit" onClick={() => this.editUser(user)}>edit</a>);
-                    if (auth.hasPrivileges(Privilege.UserDelete))
-                        actions.push(<a className="delete" onClick={() => this.deleteUser(user)}>delete</a>);
-
-                    return <List.Item actions={actions}>
+                    return <List.Item actions={[<a className="edit" onClick={() => this.editUser(user)}>edit</a>,
+                        <a className="delete" onClick={() => this.deleteUser(user)}>delete</a>]}>
                         <List.Item.Meta
-                            title={auth.hasPrivileges(Privilege.UserView) ?
-                                <a onClick={() => this.viewUser(user)}>{user.fullName}</a>
-                                : user.fullName}
+                            title={<a onClick={() => this.viewUser(user)}>{user.fullName}</a>}
                             description={user.email}
                         />
                         <div>{user.username}</div>

@@ -31,11 +31,11 @@ export default class ViewUserPage extends Component {
 
         return <PageWrapper className="view-user-page">
             <div className="command-bar">
-                {auth.hasPrivileges(Privilege.UserEdit) ?
-                    <Button className="command" onClick={() => this.editUser()}>Edit</Button>
-                    : null}
-                {auth.hasPrivileges(Privilege.UserDelete) ?
-                    <Button type="danger" className="command" onClick={() => this.deleteUser()}>Delete</Button>
+                {auth.hasPrivileges(Privilege.UserManage) ?
+                    <div>
+                        <Button className="command" onClick={() => this.editUser()}>Edit</Button>
+                        <Button type="danger" className="command" onClick={() => this.deleteUser()}>Delete</Button>
+                    </div>
                     : null}
             </div>
             <Spin spinning={this.loading}>
