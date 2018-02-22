@@ -9,9 +9,9 @@ import PropTypes from "prop-types";
 
 @observer
 export default class PageWrapper extends Component {
-    static propTypes = {
-        style: PropTypes.object,
-        className: PropTypes.string
+    static defaultProps = {
+        style: null,
+        className: null
     };
 
     render = () => {

@@ -17,8 +17,12 @@ import "./assets/fonts/extra-iconfont/iconfont.css";
 import global from "./global";
 
 
-const requireAuth = (nextState, replace) => {
-    if (!auth.user) {
+const checkAuth = (nextState, replace) => {
+    if (nextState.location.pathname === "/login" && auth.user) {
+        replace({
+            pathname: nextState.location.query.returnUrl || "/"
+        })
+    } else if (nextState.location.pathname !== "/login" && !auth.user) {
         replace({
             pathname: "/login",
             query: {
@@ -28,28 +32,20 @@ const requireAuth = (nextState, replace) => {
     }
 };
 
-const checkAuth = (nextState, replace) => {
-    if (auth.user) {
-        replace({
-            pathname: nextState.location.query.returnUrl || "/"
-        })
-    }
-};
-
 render(
     <AppContainer>
         <Router history={global.history}>
-            <Route path="/" component={App}>
+            <Route path="/" component={App} onEnter={checkAuth}>
                 <IndexRedirect to="items"/>
-                <Route path="login" component={LoginPage} onEnter={checkAuth}/>
-                <Route path="items" component={ItemsPage} onEnter={requireAuth}/>
-                <Route path="projects" onEnter={requireAuth}>
+                <Route path="login" component={LoginPage}/>
+                <Route path="items" component={ItemsPage}/>
+                <Route path="projects">
                     <IndexRoute component={ProjectsPage}/>
-                    <Route path=":projectKey" component={ViewProjectPage} />
+                    <Route path=":projectKey" component={ViewProjectPage}/>
                 </Route>
-                <Route path="users" onEnter={requireAuth}>
+                <Route path="users">
                     <IndexRoute component={UsersPage}/>
-                    <Route path=":username" component={ViewUserPage} />
+                    <Route path=":username" component={ViewUserPage}/>
                 </Route>
             </Route>
         </Router>

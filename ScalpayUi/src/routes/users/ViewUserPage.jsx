@@ -36,7 +36,7 @@ export default class ViewUserPage extends Component {
                 {auth.hasPrivileges(Privilege.UserManage) ?
                     <div>
                         <Button className="command" onClick={() => this.editUser()}>Edit</Button>
-                        <Button type="dashed" className="command" onClick={() => this.deleteUser()}>Delete</Button>
+                        <Button type="danger" className="command" onClick={() => this.deleteUser()}>Delete</Button>
                     </div>
                     : null}
             </div>
