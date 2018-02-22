@@ -1,4 +1,4 @@
-import {Layout, Menu, AutoComplete, Input, Icon, Badge, Dropdown, Avatar, Spin} from "antd";
+import {Layout, Menu, AutoComplete, Input, Icon, Badge, Dropdown, Avatar, Spin, Button} from "antd";
 import React, {Component} from "react";
 import {observable} from "mobx";
 import {observer} from "mobx-react";
@@ -8,6 +8,7 @@ import {Privilege} from "~/utils/store";
 import {IndexRoute, hashHistory, Router, Route, Link} from "react-router";
 import "./SHeader.less";
 import global from "~/global";
+import logo from "~/assets/imgs/logo.png";
 
 @observer
 export default class SHeader extends Component {
@@ -15,26 +16,26 @@ export default class SHeader extends Component {
     render = () => {
         return <Layout.Header className="header">
             <div className="wrapper">
-                <div className="logo"/>
-                <Menu
-                    className="menu"
-                    mode="horizontal"
-                    defaultSelectedKeys={["items"]}
-                >
-                    <Menu.Item key="items">
-                        <Link to="/items">Items</Link>
-                    </Menu.Item>
-                </Menu>
+                <div className="left">
+                    <div className="logo item">
+                        <Link to="/"><img src={logo} /></Link>
+                    </div>
+                    <div className="item menu">
+                        <span onClick={() => global.history.push("/items")}>Items</span>
+                    </div>
+                    <div className="item">
+                        <Button type="primary">Create</Button>
+                    </div>
+                </div>
                 <div className="right">
-                <span>
-                    <Input placeholder="Search" suffix={<Icon type="search"/>}/>
-                </span>
                     <span className="item">
-                    <Badge dot>
-                        <Icon type="bell" style={{fontSize: "18px"}}/>
-                    </Badge>
-                </span>
-
+                        <Input placeholder="Search" suffix={<Icon type="search"/>}/>
+                    </span>
+                    <span className="item dropdown">
+                        <Badge dot>
+                            <Icon type="bell" style={{fontSize: "18px"}}/>
+                        </Badge>
+                    </span>
                     <Dropdown overlay={<Menu>
                         <Menu.Item key="0">
                             <Link to="/projects">View Projects</Link>
@@ -46,7 +47,7 @@ export default class SHeader extends Component {
                             : null
                         }
                     </Menu>} trigger={["click"]} placement="bottomRight">
-                        <span className="item">
+                        <span className="item dropdown">
                             <Icon type="setting" style={{fontSize: "18px"}}/>
                         </span>
                     </Dropdown>
@@ -63,7 +64,7 @@ export default class SHeader extends Component {
                                 }}>Logout</a>
                             </Menu.Item>
                         </Menu>} trigger={["click"]} placement="bottomRight">
-                        <span className="item">
+                        <span className="item dropdown">
                             <Avatar size="small" style={{backgroundColor: "#87d068"}} icon="user"/>
                             <span style={{marginLeft: "5px"}}>{auth.user.fullName}</span>
                         </span>

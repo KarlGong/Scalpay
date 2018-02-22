@@ -10,33 +10,40 @@
     width: 1200px;
     margin: 0 auto;
 
-    .menu {
-      line-height: 40px;
+    .left {
+      height: @header-height - 1px;
       float: left;
 
-      &.ant-menu-horizontal {
-        border-bottom: none !important;
-      }
+
     }
 
     .right {
       height: @header-height - 1px;
       float: right;
+    }
 
-      > * {
-        display: table-cell;
-        padding: 0 8px;
-        height: @header-height - 1px;
-        line-height: @header-height - 1px;
-        vertical-align: middle;
+    .item {
+      display: table-cell;
+      padding: 0 8px;
+      height: @header-height - 1px;
+      line-height: @header-height - 1px;
+      vertical-align: middle;
+    }
+
+    .dropdown {
+      cursor: pointer;
+
+      &:hover {
+        background-color: #e6f7ff;
       }
+    }
 
-      .item {
-        cursor: pointer;
+    .menu {
+      cursor: pointer;
+      font-size: 16px;
 
-        &:hover {
-          background-color: #e6f7ff;
-        }
+      &:hover {
+        color: #1890ff;
       }
     }
   }
