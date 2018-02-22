@@ -9,6 +9,8 @@ import PageWrapper from "~/layouts/PageWrapper";
 import moment from "moment";
 import Validator from "~/utils/Validator";
 import "./ViewProjectPage.less";
+import global from "~/global";
+import deleteProjectModal from "~/modals/deleteProjectModal";
 
 @observer
 export default class ViewProjectPage extends Component {
@@ -61,25 +63,10 @@ export default class ViewProjectPage extends Component {
     };
 
     editProject = () => {
-        this.props.router.push("/projects/" + this.project.projectKey + "/edit");
+        global.history.push("/projects/" + this.project.projectKey + "/edit");
     };
 
     deleteProject = () => {
-        Modal.confirm({
-            title: "Are you sure to delete this project?",
-            content: "All the items under this project will also be deleted.",
-            okText: "Delete Project",
-            okType: "danger",
-            cancelText: "Cancel",
-            onOk: () => {
-                const hide = message.loading("Deleting project...", 0);
-                axios.delete("/api/projects/" + this.project.projectKey)
-                    .then(() => {
-                        hide();
-                        message.success("The project is deleted successfully!");
-                        this.props.router.goBack();
-                    }, () => hide());
-            },
-        });
+        deleteProjectModal.open(this.project, (project) => global.history.goBack());
     }
 }

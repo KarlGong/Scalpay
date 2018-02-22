@@ -9,7 +9,7 @@ import "./App.less";
 export default class App extends Component {
     render = () => {
         return <Layout>
-            <SHeader router={this.props.router}/>
+            <SHeader/>
             <Layout style={{minHeight: "calc(100% - 88px)"}}>
                 {this.props.children}
             </Layout>

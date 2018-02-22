@@ -7,13 +7,10 @@ import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
 import {IndexRoute, hashHistory, Router, Route, Link} from "react-router";
 import "./SHeader.less";
-import PropTypes from "prop-types"
+import global from "~/global";
 
 @observer
 export default class SHeader extends Component {
-    static propTypes = {
-        router: PropTypes.object.isRequired,
-    };
 
     render = () => {
         return <Layout.Header className="header">
@@ -29,7 +26,7 @@ export default class SHeader extends Component {
             </Menu>
             <div className="right">
                 <span>
-                    <Input placeholder="Search by item key" suffix={<Icon type="search"/>}/>
+                    <Input placeholder="Search" suffix={<Icon type="search"/>}/>
                 </span>
                 <span className="item">
                     <Badge dot>
@@ -61,7 +58,7 @@ export default class SHeader extends Component {
                         <Menu.Item key="1">
                             <a onClick={() => {
                                 auth.logout();
-                                this.props.router.push("/login");
+                                global.history.push("/login");
                             }}>Logout</a>
                         </Menu.Item>
                     </Menu>} trigger={["click"]} placement="bottomRight">

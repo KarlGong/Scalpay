@@ -21,8 +21,10 @@ namespace ScalpayApi.Services
         {
             return p =>
                 (ProjectKey == null || ProjectKey == p.ProjectKey)
-                && (SearchText == null || p.ProjectKey.Contains(SearchText)
-                    || p.Name.Contains(SearchText) || p.Description.Contains(SearchText));
+                && (SearchText == null
+                    || p.ProjectKey.Contains(SearchText)
+                    || p.Name.Contains(SearchText)
+                    || p.Description.Contains(SearchText));
         }
     }
 

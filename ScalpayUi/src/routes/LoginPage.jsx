@@ -5,6 +5,7 @@ import {observable, toJS, untracked, runInAction, action} from "mobx";
 import auth from "~/utils/auth";
 import "./LoginPage.less";
 import Validator from "~/utils/Validator";
+import global from "~/global";
 
 @observer
 export default class LoginPage extends Component {
@@ -55,7 +56,7 @@ export default class LoginPage extends Component {
         this.validator.validateAll(() => {
             this.loading = true;
             auth.login(this.user.username, this.user.password)
-                .then(() => this.props.router.push(this.props.router.location.query.returnUrl || "/"))
+                .then(() => global.history.push(this.props.router.location.query.returnUrl || "/"))
                 .finally(() => this.loading = false);
         });
     }

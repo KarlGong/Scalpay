@@ -12,34 +12,32 @@ namespace ScalpayApi.Controllers
     [Route("api/projects")]
     public class ProjectController : Controller
     {
-        private readonly IProjectService _projectService;
-        private readonly IItemService _itemService;
+        private readonly IProjectService _service;
 
-        public ProjectController(IProjectService projectService, IItemService itemService)
+        public ProjectController(IProjectService service)
         {
-            _projectService = projectService;
-            _itemService = itemService;
+            _service = service;
         }
 
         [HttpGet]
         [Authorization]
         public async Task<List<Project>> GetProjects([FromQuery] ProjectCriteria criteria)
         {
-            return await _projectService.GetProjectsAsync(criteria);
+            return await _service.GetProjectsAsync(criteria);
         }
 
         [HttpGet("{projectKey}")]
         [Authorization]
         public async Task<Project> GetProject([FromRoute] string projectKey)
         {
-            return await _projectService.GetProjectAsync(projectKey);
+            return await _service.GetProjectAsync(projectKey);
         }
 
         [HttpPut]
         [Authorization(Privilege.ProjectAdd)]
         public async Task<Project> AddProject([FromBody] AddProjectParams ps)
         {
-            return await _projectService.AddProjectAsync(ps);
+            return await _service.AddProjectAsync(ps);
         }
 
         [HttpPost("{projectKey}")]
@@ -47,22 +45,14 @@ namespace ScalpayApi.Controllers
         public async Task<Project> UpdateProject([FromRoute] string projectKey, [FromBody] UpdateProjectParams ps)
         {
             ps.ProjectKey = projectKey;
-            return await _projectService.UpdateProjectAsync(ps);
-        }
-
-        [HttpGet("{projectKey}/items")]
-        [Authorization]
-        public async Task<List<Item>> GetItems([FromRoute] string projectKey, [FromQuery] ItemCriteria criteria)
-        {
-            criteria.ProjectKey = projectKey;
-            return await _itemService.GetItemsAsync(criteria);
+            return await _service.UpdateProjectAsync(ps);
         }
 
         [HttpDelete("{projectKey}")]
         [Authorization(Privilege.ProjectDelete)]
         public async Task DeleteProject([FromRoute] string projectKey)
         {
-            await _projectService.DeleteProjectAsync(projectKey);
+            await _service.DeleteProjectAsync(projectKey);
         }
     }
 }

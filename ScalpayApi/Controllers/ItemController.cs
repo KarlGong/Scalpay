@@ -17,6 +17,13 @@ namespace ScalpayApi.Controllers
         {
             _service = service;
         }
+        
+        [HttpGet]
+        [Authorization]
+        public async Task<List<Item>> GetItems([FromQuery] ItemCriteria criteria)
+        {
+            return await _service.GetItemsAsync(criteria);
+        }
 
         [HttpGet("{itemKey}")]
         [Authorization]

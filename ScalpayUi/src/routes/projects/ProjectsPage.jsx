@@ -7,6 +7,9 @@ import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
 import "./ProjectsPage.less";
 import PageWrapper from "~/layouts/PageWrapper";
+import addProjectModal from "~/modals/addProjectModal";
+import deleteProjectModal from "~/modals/deleteProjectModal";
+import global from "~/global";
 
 @observer
 export default class ProjectsPage extends Component {
@@ -29,7 +32,7 @@ export default class ProjectsPage extends Component {
                 header={<span>
                             <Input style={{width: "250px"}} placeholder="By key/name/description"
                                    onChange={(e) => this.searchText = e.target.value}
-                                   onKeyUp={(e) => e.keyCode === 13 && this.searchProjects()}/>
+                                   onPressEnter={(e) => this.searchProjects()}/>
                             <Button style={{marginLeft: "10px"}} type="primary"
                                     onClick={() => this.searchProjects()}>Search</Button>
                     {auth.hasPrivileges(Privilege.ProjectAdd) ?
@@ -69,35 +72,18 @@ export default class ProjectsPage extends Component {
     };
 
     addProject = () => {
-        this.props.router.push("/projects/add");
+        addProjectModal.open((project) => this.searchProjects());
     };
 
     viewProject = (project) => {
-        this.props.router.push("/projects/" + project.projectKey);
+        global.history.push("/projects/" + project.projectKey);
     };
 
     editProject = (project) => {
-        this.props.router.push("/projects/" + project.projectKey + "/edit");
+        global.history.push("/projects/" + project.projectKey + "/edit");
     };
 
     deleteProject = (project) => {
-        Modal.confirm({
-            title: "Are you sure to delete this project?",
-            content: "All the items under this project will also be deleted.",
-            okText: "Delete Project",
-            okType: "danger",
-            cancelText: "Cancel",
-            onOk: () => {
-                const hide = message.loading("Deleting project...", 0);
-                axios.delete("/api/projects/" + project.projectKey)
-                    .then(() => {
-                        hide();
-                        message.success("The project is deleted successfully!");
-                        this.searchProjects();
-                    }, () => hide());
-            },
-        });
-
-
+        deleteProjectModal.open(project, (project) => this.searchProjects());
     };
 }

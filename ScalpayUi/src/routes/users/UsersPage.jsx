@@ -7,6 +7,9 @@ import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
 import "./UsersPage.less";
 import PageWrapper from "~/layouts/PageWrapper";
+import global from "~/global";
+import addUserModal from "~/modals/addUserModal";
+import deleteUserModal from "~/modals/deleteUserModal";
 
 @observer
 export default class UsersPage extends Component {
@@ -29,7 +32,7 @@ export default class UsersPage extends Component {
                 header={<span>
                         <Input style={{width: "250px"}} placeholder="By username/full name/email"
                                onChange={(e) => this.searchText = e.target.value}
-                               onKeyUp={(e) => e.keyCode === 13 && this.searchUsers()}/>
+                               onPressEnter={(e) => this.searchUsers()}/>
                         <Button style={{marginLeft: "10px"}} type="primary"
                                 onClick={() => this.searchUsers()}>Search</Button>
                         <Button style={{float: "right"}} onClick={() => this.addUser()}>Add User</Button>
@@ -61,35 +64,18 @@ export default class UsersPage extends Component {
     };
 
     addUser = () => {
-        this.props.router.push("/users/add");
+        addUserModal.open(() => this.searchUsers());
     };
 
     viewUser = (user) => {
-        this.props.router.push("/users/" + user.username);
+        global.history.push("/users/" + user.username);
     };
 
     editUser = (user) => {
-        this.props.router.push("/users/" + user.username + "/edit");
+        global.history.push("/users/" + user.username + "/edit");
     };
 
     deleteUser = (user) => {
-        Modal.confirm({
-            title: "Are you sure to delete this user?",
-            content: "All the data of this user will be deleted.",
-            okText: "Delete User",
-            okType: "danger",
-            cancelText: "Cancel",
-            onOk: () => {
-                const hide = message.loading("Deleting user...", 0);
-                axios.delete("/api/users/" + user.username)
-                    .then(() => {
-                        hide();
-                        message.success("The user is deleted successfully!");
-                        this.searchUsers();
-                    }, () => hide());
-            },
-        });
-
-
+        deleteUserModal.open(user, () => this.searchUsers());
     };
 }

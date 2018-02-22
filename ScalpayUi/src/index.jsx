@@ -7,27 +7,15 @@ import {Layout, Menu, AutoComplete, Input, Icon, Badge, Dropdown, notification} 
 import axios from "axios";
 import auth from "~/utils/auth";
 import App from "~/routes/App";
-import ItemsPage from "~/routes/ItemsPage";
+import ItemsPage from "~/routes/items/ItemsPage";
 import ViewProjectPage from "~/routes/projects/ViewProjectPage";
-import AddEditProjectPage from "~/routes/projects/AddEditProjectPage";
 import ProjectsPage from "~/routes/projects/ProjectsPage";
-import AddEditUserPage from "~/routes/users/AddEditUserPage";
 import ViewUserPage from "~/routes/users/ViewUserPage";
 import UsersPage from "~/routes/users/UsersPage";
 import LoginPage from "~/routes/LoginPage";
 import "./assets/fonts/extra-iconfont/iconfont.css";
+import global from "./global";
 
-axios.interceptors.response.use(
-    response => response,
-    error => {
-        notification.error({
-            message: error.message,
-            description: error.response.data,
-            duration: 0,
-        });
-        return Promise.reject(error);
-    }
-);
 
 const requireAuth = (nextState, replace) => {
     if (!auth.user) {
@@ -50,21 +38,17 @@ const checkAuth = (nextState, replace) => {
 
 render(
     <AppContainer>
-        <Router history={browserHistory}>
+        <Router history={global.history}>
             <Route path="/" component={App}>
                 <IndexRedirect to="items"/>
                 <Route path="login" component={LoginPage} onEnter={checkAuth}/>
                 <Route path="items" component={ItemsPage} onEnter={requireAuth}/>
                 <Route path="projects" onEnter={requireAuth}>
                     <IndexRoute component={ProjectsPage}/>
-                    <Route path="add" component={AddEditProjectPage} mode="add"/>
-                    <Route path=":projectKey/edit" component={AddEditProjectPage} mode="edit"/>
                     <Route path=":projectKey" component={ViewProjectPage} />
                 </Route>
                 <Route path="users" onEnter={requireAuth}>
                     <IndexRoute component={UsersPage}/>
-                    <Route path="add" component={AddEditUserPage} mode="add"/>
-                    <Route path=":username/edit" component={AddEditUserPage} mode="edit"/>
                     <Route path=":username" component={ViewUserPage} />
                 </Route>
             </Route>

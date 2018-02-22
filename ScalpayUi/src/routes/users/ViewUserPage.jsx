@@ -9,6 +9,8 @@ import PageWrapper from "~/layouts/PageWrapper";
 import moment from "moment";
 import Validator from "~/utils/Validator";
 import "./ViewUserPage.less";
+import global from "~/global";
+import deleteUserModal from "~/modals/deleteUserModal";
 
 @observer
 export default class ViewUserPage extends Component {
@@ -34,7 +36,7 @@ export default class ViewUserPage extends Component {
                 {auth.hasPrivileges(Privilege.UserManage) ?
                     <div>
                         <Button className="command" onClick={() => this.editUser()}>Edit</Button>
-                        <Button type="danger" className="command" onClick={() => this.deleteUser()}>Delete</Button>
+                        <Button type="dashed" className="command" onClick={() => this.deleteUser()}>Delete</Button>
                     </div>
                     : null}
             </div>
@@ -61,25 +63,10 @@ export default class ViewUserPage extends Component {
     };
 
     editUser = () => {
-        this.props.router.push("/users/" + this.user.username + "/edit");
+        global.history.push("/users/" + this.user.username + "/edit");
     };
 
     deleteUser = () => {
-        Modal.confirm({
-            title: "Are you sure to delete this user?",
-            content: "All the data of this user will be deleted.",
-            okText: "Delete User",
-            okType: "danger",
-            cancelText: "Cancel",
-            onOk: () => {
-                const hide = message.loading("Deleting user...", 0);
-                axios.delete("/api/users/" + this.user.username)
-                    .then(() => {
-                        hide();
-                        message.success("The user is deleted successfully!");
-                        this.props.router.goBack();
-                    }, () => hide());
-            },
-        });
+        deleteUserModal.open(this.user, (user) => global.history.goBack());
     }
 }

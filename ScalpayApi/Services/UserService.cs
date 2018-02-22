@@ -27,8 +27,10 @@ namespace ScalpayApi.Services
                 (ApiKey == null || ApiKey == u.ApiKey)
                 && (Username == null || Username == u.Username)
                 && (Password == null || Password == u.Password)
-                && (SearchText == null || u.Username.Contains(SearchText) || u.FullName.Contains(SearchText) ||
-                    u.Email.Contains(SearchText));
+                && (SearchText == null
+                    || u.Username.Contains(SearchText)
+                    || u.FullName.Contains(SearchText)
+                    || u.Email.Contains(SearchText));
         }
     }
 
@@ -122,7 +124,7 @@ namespace ScalpayApi.Services
             var user = _mapper.Map<User>(ps);
 
             user.Password = "1";
-            
+
             user.ApiKey = Guid.NewGuid().ToString();
 
             await _context.Users.AddAsync(user);
