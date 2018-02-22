@@ -32,7 +32,7 @@ export default class ProjectsPage extends Component {
                 itemLayout="horizontal"
                 dataSource={this.projects}
                 header={<span>
-                            <Input style={{width: "250px"}} placeholder="By key/name/description"
+                            <Input style={{width: "250px"}} placeholder="Search by key/name/description"
                                    onChange={(e) => this.searchText = e.target.value}
                                    onPressEnter={(e) => this.searchProjects()}/>
                             <Button style={{marginLeft: "10px"}} type="primary"

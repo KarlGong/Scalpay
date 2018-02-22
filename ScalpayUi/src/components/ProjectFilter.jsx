@@ -4,44 +4,62 @@ import {observer} from "mobx-react";
 import {observable, toJS, untracked, runInAction, action} from "mobx";
 import axios from "axios";
 import PropTypes from "prop-types";
+import debounce from "lodash.debounce";
 
 @observer
 export default class ProjectFilter extends Component {
     static defaultProps = {
         style: {},
         className: "",
-        onChange: (value) => {}
+        onChange: (value) => {
+        }
     };
 
+    focused = false;
+    lastSearchId = 0;
     @observable projects = [];
-
-    componentDidMount = () => {
-        this.searchProjects();
-    };
+    @observable loading = false;
 
     render = () => {
         return <Select
             allowClear
             showSearch
             className={this.props.className}
+            style={this.props.style}
             placeholder="All Projects"
             dropdownMatchSelectWidth={false}
-            onSearch={this.searchProjects}
+            notFoundContent={this.loading ? <Spin size="small"/> : null}
+            filterOption={false}
+            onSearch={debounce(this.searchProjects, 800)}
             onChange={this.props.onChange}
-            style={this.props.style}
+            onFocus={() => {
+                if (!this.focused) {
+                    this.focused = true;
+                    this.searchProjects()
+                }
+            }}
         >
             {this.projects.map(project =>
-                <Select.Option key={project.projectKey} title={project.projectKey}>{project.name}</Select.Option>
+                <Select.Option key={project.projectKey}>{project.name}</Select.Option>
             )}
         </Select>
     };
 
     searchProjects = (value) => {
+        this.loading = true;
+        this.projects = [];
+        this.lastSearchId += 1;
+        const searchId = this.lastSearchId;
         axios.get("/api/projects", {
             params: {
                 searchText: value || null
             }
         })
-            .then(response => this.projects = response.data);
+            .then(response => {
+                if (searchId === this.lastSearchId) {
+                    this.projects = response.data
+                }
+            })
+            .finally(() => this.loading = false);
     }
 }

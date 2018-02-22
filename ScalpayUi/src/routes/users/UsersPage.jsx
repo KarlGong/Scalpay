@@ -32,7 +32,7 @@ export default class UsersPage extends Component {
                 itemLayout="horizontal"
                 dataSource={this.users}
                 header={<span>
-                        <Input style={{width: "250px"}} placeholder="By username/full name/email"
+                        <Input style={{width: "250px"}} placeholder="Search by username/full name/email"
                                onChange={(e) => this.searchText = e.target.value}
                                onPressEnter={(e) => this.searchUsers()}/>
                         <Button style={{marginLeft: "10px"}} type="primary"
