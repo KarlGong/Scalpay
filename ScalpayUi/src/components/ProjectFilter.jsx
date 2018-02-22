@@ -8,8 +8,8 @@ import PropTypes from "prop-types";
 @observer
 export default class ProjectFilter extends Component {
     static defaultProps = {
-        style: null,
-        className: null,
+        style: {},
+        className: "",
         onChange: (value) => {}
     };
 

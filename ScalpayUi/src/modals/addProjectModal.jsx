@@ -7,6 +7,7 @@ import axios from "axios";
 import Validator from "~/utils/Validator";
 import {IndexRoute, browserHistory, Router, Route, Link} from "react-router";
 import global from "~/global";
+import ProjectInfo from "~/components/ProjectInfo";
 
 
 const target = document.createElement("div");
@@ -88,7 +89,7 @@ class AddProjectModal extends Component {
                     this.loading = false;
                     this.visible = false;
                     message.success(<span>
-                        Project <a onClick={() => global.history.push("/projects/" + project.projectKey)}>{project.name}</a> is added successfully!
+                        Project <ProjectInfo project={project}/> is added successfully!
                     </span>);
                     this.props.onSuccess(project);
                 }, () => this.loading = false);

@@ -6,6 +6,7 @@ import {observable, toJS, untracked, runInAction, action} from "mobx";
 import axios from "axios";
 import Validator from "~/utils/Validator";
 import global from "~/global";
+import ProjectInfo from "~/components/ProjectInfo";
 
 
 const target = document.createElement("div");
@@ -22,7 +23,7 @@ function close() {
 @observer
 class DeleteProjectModal extends Component {
     static defaultProps = {
-        project: null,
+        project: {},
         onSuccess: (project) => {}
     };
 
@@ -52,7 +53,9 @@ class DeleteProjectModal extends Component {
             .then(() => {
                 this.loading = false;
                 this.visible = false;
-                message.success("The project " + this.props.project.name + " is deleted successfully!");
+                message.success(<span>
+                        Project <ProjectInfo project={this.props.project}/> is deleted successfully!
+                    </span>);
                 this.props.onSuccess(this.props.project);
             }, () => this.loading = false);
     };

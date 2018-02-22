@@ -10,6 +10,7 @@ import {render, unmountComponentAtNode} from "react-dom";
 import moment from "moment";
 import Validator from "~/utils/Validator";
 import global from "~/global";
+import UserInfo from "~/components/UserInfo";
 
 
 const target = document.createElement("div");
@@ -26,7 +27,7 @@ function close() {
 @observer
 class AddUserModal extends Component {
     static defaultProps = {
-        onSuccess: (project) => {}
+        onSuccess: (user) => {}
     };
 
     user = {
@@ -122,7 +123,7 @@ class AddUserModal extends Component {
                     this.loading = false;
                     this.visible = false;
                     message.success(<span>
-                        User <a onClick={() => global.history.push("/users/" + user.username)}>{user.fullName}</a> is added successfully!
+                        User <UserInfo user={user}/> is added successfully!
                     </span>);
                     this.props.onSuccess(user);
                 }, () => this.loading = false)

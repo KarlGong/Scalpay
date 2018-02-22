@@ -10,6 +10,7 @@ import PageWrapper from "~/layouts/PageWrapper";
 import addProjectModal from "~/modals/addProjectModal";
 import deleteProjectModal from "~/modals/deleteProjectModal";
 import global from "~/global";
+import ProjectInfo from "~/components/ProjectInfo";
 
 @observer
 export default class ProjectsPage extends Component {
@@ -49,7 +50,7 @@ export default class ProjectsPage extends Component {
 
                     return <List.Item actions={actions}>
                         <List.Item.Meta
-                            title={<a onClick={() => this.viewProject(project)}>{project.name}</a>}
+                            title={<ProjectInfo project={project}/>}
                             description={project.description}
                         />
                         <div>{project.projectKey}</div>
@@ -73,10 +74,6 @@ export default class ProjectsPage extends Component {
 
     addProject = () => {
         addProjectModal.open((project) => this.searchProjects());
-    };
-
-    viewProject = (project) => {
-        global.history.push("/projects/" + project.projectKey);
     };
 
     editProject = (project) => {

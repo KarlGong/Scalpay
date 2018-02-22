@@ -10,6 +10,7 @@ import PageWrapper from "~/layouts/PageWrapper";
 import global from "~/global";
 import addUserModal from "~/modals/addUserModal";
 import deleteUserModal from "~/modals/deleteUserModal";
+import UserInfo from "~/components/UserInfo";
 
 @observer
 export default class UsersPage extends Component {
@@ -41,7 +42,7 @@ export default class UsersPage extends Component {
                     return <List.Item actions={[<a className="edit" onClick={() => this.editUser(user)}>edit</a>,
                         <a className="delete" onClick={() => this.deleteUser(user)}>delete</a>]}>
                         <List.Item.Meta
-                            title={<a onClick={() => this.viewUser(user)}>{user.fullName}</a>}
+                            title={<UserInfo user={user}/>}
                             description={user.email}
                         />
                         <div>{user.username}</div>
@@ -65,10 +66,6 @@ export default class UsersPage extends Component {
 
     addUser = () => {
         addUserModal.open(() => this.searchUsers());
-    };
-
-    viewUser = (user) => {
-        global.history.push("/users/" + user.username);
     };
 
     editUser = (user) => {

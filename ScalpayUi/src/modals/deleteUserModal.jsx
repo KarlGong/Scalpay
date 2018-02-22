@@ -6,6 +6,7 @@ import {observable, toJS, untracked, runInAction, action} from "mobx";
 import axios from "axios";
 import Validator from "~/utils/Validator";
 import global from "~/global";
+import UserInfo from "~/components/UserInfo";
 
 
 const target = document.createElement("div");
@@ -22,8 +23,9 @@ function close() {
 @observer
 class DeleteUserModal extends Component {
     static defaultProps = {
-        user: null,
-        onSuccess: (project) => {}
+        user: {},
+        onSuccess: (user) => {
+        }
     };
 
     @observable loading = false;
@@ -31,7 +33,9 @@ class DeleteUserModal extends Component {
 
     render = () => {
         return <Modal
-            title={<span><Icon type="question-circle" style={{color: "#ff4d4f"}}/> Are you sure to delete this user?</span>}
+            title={<span>
+                <Icon type="question-circle" style={{color: "#ff4d4f"}}/> Are you sure to delete this user?
+            </span>}
             okText="Delete User"
             okType="danger"
             cancelText="Cancel"
@@ -52,7 +56,9 @@ class DeleteUserModal extends Component {
             .then(() => {
                 this.loading = false;
                 this.visible = false;
-                message.success("The user " + this.props.user.fullName + " is deleted successfully!");
+                message.success(<span>
+                        User <UserInfo user={this.props.user}/> is deleted successfully!
+                    </span>);
                 this.props.onSuccess(this.props.user);
             }, () => this.loading = false);
     };
