@@ -18,14 +18,20 @@ export default class SHeader extends Component {
             <div className="wrapper">
                 <div className="left">
                     <div className="logo item">
-                        <Link to="/"><img src={logo} /></Link>
+                        <Link to="/"><img src={logo}/></Link>
                     </div>
                     <div className="item menu">
                         <span onClick={() => global.history.push("/items")}>Items</span>
                     </div>
-                    <div className="item">
-                        <Button type="primary">Create</Button>
+                    <div className="item menu">
+                        <span>Statistics</span>
                     </div>
+                    {auth.hasPrivileges(Privilege.ItemAdd) ?
+                        <div className="item">
+                            <Button type="primary">Create</Button>
+                        </div>
+                        : null
+                    }
                 </div>
                 <div className="right">
                     <span className="item">
