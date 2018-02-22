@@ -10,13 +10,9 @@ export default class Validator {
     @observable results = {};
 
     constructor(subject, descriptor) {
-        this.setSubject(subject);
+        this.subject = subject || {};
         this.descriptor = descriptor;
     }
-
-    setSubject = (subject) => {
-        this.subject = subject || {};
-    };
 
     getResult = (fieldName) => {
         return this.results[fieldName] || Validator.defaultResult;

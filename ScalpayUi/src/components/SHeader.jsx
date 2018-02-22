@@ -14,60 +14,62 @@ export default class SHeader extends Component {
 
     render = () => {
         return <Layout.Header className="header">
-            <div className="logo"/>
-            <Menu
-                className="menu"
-                mode="horizontal"
-                defaultSelectedKeys={["items"]}
-            >
-                <Menu.Item key="items">
-                    <Link to="/items">Items</Link>
-                </Menu.Item>
-            </Menu>
-            <div className="right">
+            <div className="wrapper">
+                <div className="logo"/>
+                <Menu
+                    className="menu"
+                    mode="horizontal"
+                    defaultSelectedKeys={["items"]}
+                >
+                    <Menu.Item key="items">
+                        <Link to="/items">Items</Link>
+                    </Menu.Item>
+                </Menu>
+                <div className="right">
                 <span>
                     <Input placeholder="Search" suffix={<Icon type="search"/>}/>
                 </span>
-                <span className="item">
+                    <span className="item">
                     <Badge dot>
                         <Icon type="bell" style={{fontSize: "18px"}}/>
                     </Badge>
                 </span>
 
-                <Dropdown overlay={<Menu>
-                    <Menu.Item key="0">
-                        <Link to="/projects">View Projects</Link>
-                    </Menu.Item>
-                    {auth.hasPrivileges(Privilege.UserManage) ?
-                        <Menu.Item key="1">
-                            <Link to="/users">View Users</Link>
+                    <Dropdown overlay={<Menu>
+                        <Menu.Item key="0">
+                            <Link to="/projects">View Projects</Link>
                         </Menu.Item>
-                        : null
-                    }
-                </Menu>} trigger={["click"]} placement="bottomRight">
+                        {auth.hasPrivileges(Privilege.UserManage) ?
+                            <Menu.Item key="1">
+                                <Link to="/users">View Users</Link>
+                            </Menu.Item>
+                            : null
+                        }
+                    </Menu>} trigger={["click"]} placement="bottomRight">
                         <span className="item">
                             <Icon type="setting" style={{fontSize: "18px"}}/>
                         </span>
-                </Dropdown>
-                {auth.user ?
-                    <Dropdown overlay={<Menu>
-                        <Menu.Item key="0">
-                            <Link to={"/users/" + auth.user.username}>Profile</Link>
-                        </Menu.Item>
-                        <Menu.Divider/>
-                        <Menu.Item key="1">
-                            <a onClick={() => {
-                                auth.logout();
-                                global.history.push("/login");
-                            }}>Logout</a>
-                        </Menu.Item>
-                    </Menu>} trigger={["click"]} placement="bottomRight">
+                    </Dropdown>
+                    {auth.user ?
+                        <Dropdown overlay={<Menu>
+                            <Menu.Item key="0">
+                                <Link to={"/users/" + auth.user.username}>Profile</Link>
+                            </Menu.Item>
+                            <Menu.Divider/>
+                            <Menu.Item key="1">
+                                <a onClick={() => {
+                                    auth.logout();
+                                    global.history.push("/login");
+                                }}>Logout</a>
+                            </Menu.Item>
+                        </Menu>} trigger={["click"]} placement="bottomRight">
                         <span className="item">
                             <Avatar size="small" style={{backgroundColor: "#87d068"}} icon="user"/>
                             <span style={{marginLeft: "5px"}}>{auth.user.fullName}</span>
                         </span>
-                    </Dropdown>
-                    : null}
+                        </Dropdown>
+                        : null}
+                </div>
             </div>
         </Layout.Header>
     }

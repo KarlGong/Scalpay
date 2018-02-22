@@ -10,6 +10,7 @@ import PageWrapper from "~/layouts/PageWrapper";
 import global from "~/global";
 import addUserModal from "~/modals/addUserModal";
 import deleteUserModal from "~/modals/deleteUserModal";
+import editUserModal from "~/modals/editUserModal";
 import UserInfo from "~/components/UserInfo";
 
 @observer
@@ -69,7 +70,7 @@ export default class UsersPage extends Component {
     };
 
     editUser = (user) => {
-        global.history.push("/users/" + user.username + "/edit");
+        editUserModal.open(user, () => this.searchUsers());
     };
 
     deleteUser = (user) => {

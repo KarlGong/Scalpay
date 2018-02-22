@@ -11,6 +11,7 @@ import Validator from "~/utils/Validator";
 import "./ViewUserPage.less";
 import global from "~/global";
 import deleteUserModal from "~/modals/deleteUserModal";
+import editUserModal from "~/modals/editUserModal";
 
 @observer
 export default class ViewUserPage extends Component {
@@ -19,10 +20,7 @@ export default class ViewUserPage extends Component {
     @observable loading = false;
 
     componentDidMount = () => {
-        this.loading = true;
-        axios.get("/api/users/" + this.props.router.params.username)
-            .then((res) => this.user = res.data)
-            .finally(() => this.loading = false);
+        this.loadUser();
     };
 
     render = () => {
@@ -62,8 +60,15 @@ export default class ViewUserPage extends Component {
         </PageWrapper>
     };
 
+    loadUser = () => {
+        this.loading = true;
+        axios.get("/api/users/" + this.props.router.params.username)
+            .then((res) => this.user = res.data)
+            .finally(() => this.loading = false);
+    };
+
     editUser = () => {
-        global.history.push("/users/" + this.user.username + "/edit");
+        editUserModal.open(this.user, () => this.loadUser());
     };
 
     deleteUser = () => {
