@@ -11,6 +11,7 @@ import Validator from "~/utils/Validator";
 import "./ViewProjectPage.less";
 import global from "~/global";
 import deleteProjectModal from "~/modals/deleteProjectModal";
+import editProjectModal from "~/modals/editProjectModal";
 
 @observer
 export default class ViewProjectPage extends Component {
@@ -19,10 +20,7 @@ export default class ViewProjectPage extends Component {
     @observable loading = false;
 
     componentDidMount = () => {
-        this.loading = true;
-        axios.get("/api/projects/" + this.props.router.params.projectKey)
-            .then((res) => this.project = res.data)
-            .finally(() => this.loading = false);
+        this.loadProject();
     };
 
     render = () => {
@@ -62,8 +60,15 @@ export default class ViewProjectPage extends Component {
         </PageWrapper>
     };
 
+    loadProject = () => {
+        this.loading = true;
+        axios.get("/api/projects/" + this.props.router.params.projectKey)
+            .then((res) => this.project = res.data)
+            .finally(() => this.loading = false);
+    };
+
     editProject = () => {
-        global.history.push("/projects/" + this.project.projectKey + "/edit");
+        editProjectModal.open(this.project, (project) => this.loadProject());
     };
 
     deleteProject = () => {

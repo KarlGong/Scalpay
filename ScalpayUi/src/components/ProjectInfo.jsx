@@ -15,6 +15,7 @@ export default class ProjectInfo extends Component {
     };
 
     render = () => {
-        return <a onClick={() => global.history.push("/projects/" + this.props.project.projectKey)} title={this.props.project.projectKey}>{this.props.project.name}</a>
+        return <a onClick={() => global.history.push("/projects/" + this.props.project.projectKey)}
+                  title={this.props.project.projectKey}>{this.props.project.name}</a>
     }
 }

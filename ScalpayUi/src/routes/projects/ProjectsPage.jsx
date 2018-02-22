@@ -8,6 +8,7 @@ import {Privilege} from "~/utils/store";
 import "./ProjectsPage.less";
 import PageWrapper from "~/layouts/PageWrapper";
 import addProjectModal from "~/modals/addProjectModal";
+import editProjectModal from "~/modals/editProjectModal";
 import deleteProjectModal from "~/modals/deleteProjectModal";
 import global from "~/global";
 import ProjectInfo from "~/components/ProjectInfo";
@@ -77,7 +78,7 @@ export default class ProjectsPage extends Component {
     };
 
     editProject = (project) => {
-        global.history.push("/projects/" + project.projectKey + "/edit");
+        editProjectModal.open(project, (project) => this.searchProjects());
     };
 
     deleteProject = (project) => {

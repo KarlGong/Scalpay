@@ -15,6 +15,7 @@ export default class UserInfo extends Component {
     };
 
     render = () => {
-        return <a onClick={() => global.history.push("/users/" + this.props.user.username)} title={this.props.user.email}>{this.props.user.fullName}</a>
+        return <a onClick={() => global.history.push("/users/" + this.props.user.username)}
+                  title={this.props.user.email}>{this.props.user.fullName}</a>
     }
 }
