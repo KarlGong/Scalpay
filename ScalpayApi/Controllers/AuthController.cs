@@ -45,7 +45,6 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpGet("newApiKey")]
-        [Authorization]
         public async Task<UserDTO> GenerateNewKey()
         {
             var user = await _service.GenerateNewApiKeyAsync(

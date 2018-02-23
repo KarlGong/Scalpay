@@ -29,7 +29,6 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpGet("{username}")]
-        [Authorization]
         public async Task<UserDTO> GetUser([FromRoute] string username)
         {
             var user = await _service.GetUserAsync(username);

@@ -25,21 +25,18 @@ namespace ScalpayApi.Controllers
         }
         
         [HttpGet("config/{itemKey}")]
-        [Authorization]
         public async Task<object> GetConfig([FromRoute] string itemKey, [FromQuery] string p)
         {
             return await Task.FromResult(new object());
         }
         
         [HttpGet("lookup/{itemKey}")]
-        [Authorization]
         public async Task<object> GetLookup([FromRoute] string itemKey)
         {
             return await Task.FromResult(new object());
         }
 
         [HttpGet("word/{itemKey}/{lng}")]
-        [Authorization]
         public async Task<object> GetWord([FromRoute] string itemKey, [FromRoute] string lng)
         {
             return await Task.FromResult(new object());

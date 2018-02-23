@@ -19,14 +19,12 @@ namespace ScalpayApi.Controllers
         }
         
         [HttpGet]
-        [Authorization]
         public async Task<List<Item>> GetItems([FromQuery] ItemCriteria criteria)
         {
             return await _service.GetItemsAsync(criteria);
         }
 
         [HttpGet("{itemKey}")]
-        [Authorization]
         public async Task<Item> GetItem([FromRoute] string itemKey)
         {
             return await _service.GetItemAsync(itemKey);

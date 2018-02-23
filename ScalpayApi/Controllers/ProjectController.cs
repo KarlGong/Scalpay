@@ -20,14 +20,12 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpGet]
-        [Authorization]
         public async Task<List<Project>> GetProjects([FromQuery] ProjectCriteria criteria)
         {
             return await _service.GetProjectsAsync(criteria);
         }
 
         [HttpGet("{projectKey}")]
-        [Authorization]
         public async Task<Project> GetProject([FromRoute] string projectKey)
         {
             return await _service.GetProjectAsync(projectKey);

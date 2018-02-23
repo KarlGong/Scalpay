@@ -12,11 +12,6 @@ namespace ScalpayApi
     {
         public List<Privilege> Privileges { get; set; }
 
-        public AuthorizationAttribute()
-        {
-            Privileges = new List<Privilege>();
-        }
-
         public AuthorizationAttribute(params Privilege[] privileges)
         {
             Privileges = privileges.ToList();
