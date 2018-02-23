@@ -13,6 +13,8 @@ namespace ScalpayApi.Data
             builder.Property(i => i.Name).IsRequired();
             
             builder.Property(i => i.Type).IsRequired();
+            
+            builder.Property(i => i.RulesString).HasColumnName("Rules").IsRequired();
 
             builder.Property(i => i.InsertTime).ValueGeneratedOnAdd();
 

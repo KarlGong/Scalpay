@@ -28,7 +28,7 @@ export default class SHeader extends Component {
                     </div>
                     {auth.hasPrivileges(Privilege.ItemAdd) ?
                         <div className="item">
-                            <Button type="primary">Create</Button>
+                            <Button type="primary">Add</Button>
                         </div>
                         : null
                     }

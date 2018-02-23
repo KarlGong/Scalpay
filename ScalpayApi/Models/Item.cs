@@ -13,6 +13,10 @@ namespace ScalpayApi.Models
         
         public ItemType Type { get; set; }
         
+        public ConfigMode? ConfigMode { get; set; }
+        
+        public string RulesString { get; set; }
+        
         public DateTime InsertTime { get; set; }
         
         public DateTime UpdateTime { get; set; }
