@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ScalpayApi.Core
+namespace ScalpayApi.Services.SExpression
 {
     public class SDuration: SData
     {
@@ -9,6 +9,11 @@ namespace ScalpayApi.Core
         public SDuration(string inner)
         {
             Inner = TimeSpan.Parse(inner);
+        }
+
+        public SDuration(TimeSpan inner)
+        {
+            Inner = inner;
         }
 
     }

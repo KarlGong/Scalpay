@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ScalpayApi.Core
+﻿namespace ScalpayApi.Services.SExpression
 {
     public class SString: SData
     {
