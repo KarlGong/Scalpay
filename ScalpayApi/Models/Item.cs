@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ScalpayApi.Enums;
 
 namespace ScalpayApi.Models
@@ -15,7 +16,9 @@ namespace ScalpayApi.Models
         
         public ConfigMode? ConfigMode { get; set; }
         
-        public string RulesString { get; set; }
+        public string InputDataTypesString { get; set; }
+        
+        public string OutputDataTypesString { get; set; }
         
         public DateTime InsertTime { get; set; }
         
@@ -24,5 +27,7 @@ namespace ScalpayApi.Models
         public string ProjectKey { get; set; }
         
         public Project Project { get; set; }
+        
+        public List<Rule> Rules { get; set; } = new List<Rule>();
     }
 }
