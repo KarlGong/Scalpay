@@ -8,24 +8,21 @@ import Validator from "~/utils/Validator";
 import global from "~/global";
 import UserInfo from "~/components/UserInfo";
 
-
-const target = document.createElement("div");
-document.body.appendChild(target);
-
 function open(user, onSuccess) {
-    render(<DeleteUserModal user={user} onSuccess={onSuccess}/>, target);
-}
-
-function close() {
-    unmountComponentAtNode(target);
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    render(<DeleteUserModal user={user} onSuccess={onSuccess} afterClose={() => {
+        unmountComponentAtNode(target);
+        target.remove()
+    }}/>, target);
 }
 
 @observer
 class DeleteUserModal extends Component {
     static defaultProps = {
         user: {},
-        onSuccess: (user) => {
-        }
+        onSuccess: (user) => {},
+        afterClose: () => {}
     };
 
     @observable loading = false;
@@ -44,7 +41,7 @@ class DeleteUserModal extends Component {
             confirmLoading={this.loading}
             onOk={this.handleOk}
             onCancel={this.handleCancel}
-            afterClose={() => close()}
+            afterClose={() => this.props.afterClose()}
         >
             All the data of this user will be deleted.
         </Modal>

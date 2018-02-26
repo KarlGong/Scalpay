@@ -12,24 +12,21 @@ import Validator from "~/utils/Validator";
 import global from "~/global";
 import UserInfo from "~/components/UserInfo";
 
-
-const target = document.createElement("div");
-document.body.appendChild(target);
-
 function open(user, onSuccess) {
-    render(<EditUserModal user={user} onSuccess={onSuccess}/>, target);
-}
-
-function close() {
-    unmountComponentAtNode(target);
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    render(<EditUserModal user={user} onSuccess={onSuccess} afterClose={() => {
+        unmountComponentAtNode(target);
+        target.remove()
+    }}/>, target);
 }
 
 @observer
 class EditUserModal extends Component {
     static defaultProps = {
         user: {},
-        onSuccess: (user) => {
-        }
+        onSuccess: (user) => {},
+        afterClose: () => {}
     };
 
     @observable user = {
@@ -49,9 +46,7 @@ class EditUserModal extends Component {
     componentDidMount = () => {
         this.loading = true;
         axios.get("/api/users/" + this.props.user.username)
-            .then(res => {
-                Object.assign(this.user, res.data);
-            })
+            .then(res => Object.assign(this.user, res.data))
             .finally(() => this.loading = false);
     };
 
@@ -65,7 +60,7 @@ class EditUserModal extends Component {
             confirmLoading={this.buttonLoading}
             onOk={this.handleOk}
             onCancel={this.handleCancel}
-            afterClose={() => close()}
+            afterClose={() => this.props.afterClose()}
         >
             <Spin spinning={this.loading}>
                 <Form>

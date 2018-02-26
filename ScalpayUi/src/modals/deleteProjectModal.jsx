@@ -8,23 +8,21 @@ import Validator from "~/utils/Validator";
 import global from "~/global";
 import ProjectInfo from "~/components/ProjectInfo";
 
-
-const target = document.createElement("div");
-document.body.appendChild(target);
-
 function open(project, onSuccess) {
-    render(<DeleteProjectModal project={project} onSuccess={onSuccess}/>, target);
-}
-
-function close() {
-    unmountComponentAtNode(target);
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    render(<DeleteProjectModal project={project} onSuccess={onSuccess} afterClose={() => {
+        unmountComponentAtNode(target);
+        target.remove()
+    }}/>, target);
 }
 
 @observer
 class DeleteProjectModal extends Component {
     static defaultProps = {
         project: {},
-        onSuccess: (project) => {}
+        onSuccess: (project) => {},
+        afterClose: () => {}
     };
 
     @observable loading = false;
@@ -41,7 +39,7 @@ class DeleteProjectModal extends Component {
             confirmLoading={this.loading}
             onOk={this.handleOk}
             onCancel={this.handleCancel}
-            afterClose={() => close()}
+            afterClose={() => this.props.afterClose()}
         >
             All the items under this project will also be deleted.
         </Modal>

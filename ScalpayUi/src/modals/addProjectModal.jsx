@@ -10,21 +10,20 @@ import global from "~/global";
 import ProjectInfo from "~/components/ProjectInfo";
 
 
-const target = document.createElement("div");
-document.body.appendChild(target);
-
 function open(onSuccess) {
-    render(<AddProjectModal onSuccess={onSuccess}/>, target);
-}
-
-function close() {
-    unmountComponentAtNode(target);
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    render(<AddProjectModal onSuccess={onSuccess} afterClose={() => {
+        unmountComponentAtNode(target);
+        target.remove()
+    }}/>, target);
 }
 
 @observer
 class AddProjectModal extends Component {
     static defaultProps = {
-        onSuccess: (project) => {}
+        onSuccess: (project) => {},
+        afterClose: () => {}
     };
 
     project = {projectKey: null, name: null, description: null};
@@ -45,7 +44,7 @@ class AddProjectModal extends Component {
             confirmLoading={this.loading}
             onOk={this.handleOk}
             onCancel={this.handleCancel}
-            afterClose={() => close()}
+            afterClose={() => this.props.afterClose()}
         >
             <Form>
                 <Form.Item label="Project Key"

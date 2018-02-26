@@ -12,22 +12,20 @@ import Validator from "~/utils/Validator";
 import global from "~/global";
 import UserInfo from "~/components/UserInfo";
 
-
-const target = document.createElement("div");
-document.body.appendChild(target);
-
 function open(onSuccess) {
-    render(<AddUserModal onSuccess={onSuccess}/>, target);
-}
-
-function close() {
-    unmountComponentAtNode(target);
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    render(<AddUserModal onSuccess={onSuccess} afterClose={() => {
+        unmountComponentAtNode(target);
+        target.remove()
+    }}/>, target);
 }
 
 @observer
 class AddUserModal extends Component {
     static defaultProps = {
-        onSuccess: (user) => {}
+        onSuccess: (user) => {},
+        afterClose: () => {}
     };
 
     user = {
@@ -54,7 +52,7 @@ class AddUserModal extends Component {
             confirmLoading={this.loading}
             onOk={this.handleOk}
             onCancel={this.handleCancel}
-            afterClose={() => close()}
+            afterClose={() => this.props.afterClose()}
         >
             <Form>
                 <Form.Item label="Username"

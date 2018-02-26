@@ -9,24 +9,21 @@ import {IndexRoute, browserHistory, Router, Route, Link} from "react-router";
 import global from "~/global";
 import ProjectInfo from "~/components/ProjectInfo";
 
-
-const target = document.createElement("div");
-document.body.appendChild(target);
-
 function open(project, onSuccess) {
-    render(<EditProjectModal project={project} onSuccess={onSuccess}/>, target);
-}
-
-function close() {
-    unmountComponentAtNode(target);
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    render(<EditProjectModal project={project} onSuccess={onSuccess} afterClose={() => {
+        unmountComponentAtNode(target);
+        target.remove()
+    }}/>, target);
 }
 
 @observer
 class EditProjectModal extends Component {
     static defaultProps = {
         project: {},
-        onSuccess: (project) => {
-        }
+        onSuccess: (project) => {},
+        afterClose: () => {}
     };
 
     @observable project = {projectKey: null, name: null, description: null};
@@ -40,9 +37,7 @@ class EditProjectModal extends Component {
     componentDidMount = () => {
         this.loading = true;
         axios.get("/api/projects/" + this.props.project.projectKey)
-            .then(res => {
-                Object.assign(this.project, res.data);
-            })
+            .then(res => Object.assign(this.project, res.data))
             .finally(() => this.loading = false);
     };
 
@@ -56,7 +51,7 @@ class EditProjectModal extends Component {
             confirmLoading={this.buttonLoading}
             onOk={this.handleOk}
             onCancel={this.handleCancel}
-            afterClose={() => close()}
+            afterClose={() => this.props.afterClose()}
         >
             <Spin spinning={this.loading}>
                 <Form>
