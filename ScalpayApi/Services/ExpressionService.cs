@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using ScalpayApi.Services.SExpression;
 
@@ -9,29 +10,32 @@ namespace ScalpayApi.Services
 {
     public interface IExpressionService
     {
-        SData EvalExpression(JToken exp, Dictionary<string, SData> variables);
+        Task<SData> EvalExpressionAsync(JToken exp, Dictionary<string, SData> variables);
 
-        SData ConvertToSData(JToken value, string dataType);
+        Task<SData> ConvertToSDataAsync(JToken value, string dataType);
     }
 
     public class ExpressionService : IExpressionService
     {
-        public SData EvalExpression(JToken exp, Dictionary<string, SData> variables)
+        public async Task<SData> EvalExpressionAsync(JToken exp, Dictionary<string, SData> variables)
         {
             var type = exp["type"].Value<string>();
             var returnType = exp["return"].Value<string>();
+            SData result;
 
             switch (type)
             {
                 case "Value":
-                    return ConvertToSData(exp["value"], returnType);
+                    result = await ConvertToSDataAsync(exp["value"], returnType);
+                    break;
                 case "Var":
                     if (!variables.TryGetValue(exp["var"].Value<string>(), out var variable))
                     {
                         throw new Exception("Variable " + exp["var"].Value<string>() + " is not existing.");
                     }
 
-                    return variable;
+                    result = variable;
+                    break;
                 case "Func":
                     var method = typeof(SFunctions).GetMethod(exp["name"].Value<string>());
                     if (method == null)
@@ -39,37 +43,54 @@ namespace ScalpayApi.Services
                         throw new Exception(exp["name"].Value<string>() + " is not a valid function name.");
                     }
 
-                    return (SData) method.Invoke(null, exp["args"].Select(a => EvalExpression(a, variables)).ToArray());
+                    var args = exp["args"].Select(a => EvalExpressionAsync(a, variables).Result).ToArray<object>();
+
+                    result = (SData) method.Invoke(null, args);
+                    break;
                 default: throw new Exception(type + " is not a valid expression type.");
             }
+
+            return await Task.FromResult(result);
         }
 
-        public SData ConvertToSData(JToken value, string dataType)
+        public async Task<SData> ConvertToSDataAsync(JToken value, string dataType)
         {
+            SData result;
             switch (dataType)
             {
                 case "Bool":
-                    return new SBool(value.Value<bool>());
+                    result = new SBool(value.Value<bool>());
+                    break;
                 case "DateTime":
-                    return new SDateTime(value.Value<string>());
+                    result = new SDateTime(value.Value<string>());
+                    break;
                 case "Duration":
-                    return new SDuration(value.Value<string>());
+                    result = new SDuration(value.Value<string>());
+                    break;
                 case "Number":
-                    return new SNumber(value.Value<double>());
+                    result = new SNumber(value.Value<double>());
+                    break;
                 case "NumberDict":
-                    return new SNumberDict(value.ToDictionary(i => ((JProperty) i).Name,
+                    result = new SNumberDict(value.ToDictionary(i => ((JProperty) i).Name,
                         i => ((JProperty) i).Value.Value<double>()));
+                    break;
                 case "NumberList":
-                    return new SNumberList(value.Select(i => i.Value<double>()).ToList());
+                    result = new SNumberList(value.Select(i => i.Value<double>()).ToList());
+                    break;
                 case "String":
-                    return new SString(value.Value<string>());
+                    result = new SString(value.Value<string>());
+                    break;
                 case "StringDict":
-                    return new SStringDict(value.ToDictionary(i => ((JProperty) i).Name,
+                    result = new SStringDict(value.ToDictionary(i => ((JProperty) i).Name,
                         i => ((JProperty) i).Value.Value<string>()));
+                    break;
                 case "StringList":
-                    return new SStringList(value.Select(i => i.Value<string>()).ToList());
+                    result = new SStringList(value.Select(i => i.Value<string>()).ToList());
+                    break;
                 default: throw new Exception(dataType + " is not a valid data type.");
             }
+
+            return await Task.FromResult(result);
         }
     }
 }

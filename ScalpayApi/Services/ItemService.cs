@@ -159,20 +159,20 @@ namespace ScalpayApi.Services
 
                 if (dataType == null) continue; // data type not found, since paramter is not decalred in parameter list.
 
-                variables.Add(pair.Name, _expService.ConvertToSData(pair.Value, dataType));
+                variables.Add(pair.Name, await _expService.ConvertToSDataAsync(pair.Value, dataType));
             }
             
             foreach (var rule in item.Rules.Where(r => r.Condition != null).OrderBy(r => r.Order))
             {
-                if (((SBool) _expService.EvalExpression(rule.Condition, variables)).Inner)
+                if (((SBool) await _expService.EvalExpressionAsync(rule.Condition, variables)).Inner)
                 {
-                    return await Task.FromResult(_expService.EvalExpression(rule.Result, variables));
+                    return await _expService.EvalExpressionAsync(rule.Result, variables);
                 }
             }
 
             var defaultRule = item.Rules.Single(r => r.Condition == null);
 
-            return await Task.FromResult(_expService.EvalExpression(defaultRule.Result, variables));
+            return await _expService.EvalExpressionAsync(defaultRule.Result, variables);
         }
     }
 }
