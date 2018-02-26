@@ -9,9 +9,9 @@ class Auth {
         this.user = JSON.parse(localStorage.getItem("Scalpay-User"));
     }
 
-    login = (userName, password) => {
+    login = (username, password) => {
         return axios.post("/api/auth/signIn", {
-            userName,
+            username,
             password
         }).then(response => {
             this.user = response.data;

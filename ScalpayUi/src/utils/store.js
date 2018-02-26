@@ -41,7 +41,21 @@ export const DataType = {
 
 export const Func = {
     Bool: [
-
+        {
+            name: "BoolNot",
+            displayName: "not (Bool)",
+            exp: "not {Bool::0}"
+        },
+        {
+            name: "BoolIsEqualToBool",
+            displayName: "(Bool) is equal to (Bool)",
+            exp: "{Bool::0} = {Bool::1}"
+        },
+        {
+            name: "BoolIsNotEqualToBool",
+            displayName: "(Bool) is not equal to (Bool)",
+            exp: "{Bool::0} != {Bool::1}"
+        }
     ],
     DateTime: [
 
