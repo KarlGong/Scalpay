@@ -10,7 +10,11 @@ namespace ScalpayApi.Data
         {
             builder.HasKey(r => r.Id);
 
-            builder.Property(r => r.ConditionString).HasColumnName("Condition").IsRequired();
+            builder.Ignore(r => r.Condition);
+
+            builder.Property(r => r.ConditionString).HasColumnName("Condition"); // null means default rule
+
+            builder.Ignore(r => r.Result);
 
             builder.Property(r => r.ResultString).HasColumnName("Result").IsRequired();
 

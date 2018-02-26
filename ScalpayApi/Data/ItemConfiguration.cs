@@ -14,9 +14,13 @@ namespace ScalpayApi.Data
 
             builder.Property(i => i.Type).IsRequired();
 
-            builder.Property(i => i.InputDataTypesString).HasColumnName("InputDataTypes").IsRequired();
+            builder.Ignore(i => i.ParamDataType);
 
-            builder.Property(i => i.OutputDataTypesString).HasColumnName("OutputDataTypes").IsRequired();
+            builder.Property(i => i.ParamDataTypeString).HasColumnName("ParamDataType").IsRequired();
+
+            builder.Ignore(i => i.ResultDataType);
+
+            builder.Property(i => i.ResultDataTypeString).HasColumnName("ResultDataType").IsRequired();
 
             builder.Property(i => i.InsertTime).ValueGeneratedOnAdd();
 

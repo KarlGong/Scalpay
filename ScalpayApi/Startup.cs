@@ -57,7 +57,7 @@ namespace ScalpayApi
             services.AddTransient<IItemService, ItemService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IUserService, UserService>();
-            services.AddTransient<ISExpressionService, SExpressionService>();
+            services.AddTransient<IExpressionService, ExpressionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

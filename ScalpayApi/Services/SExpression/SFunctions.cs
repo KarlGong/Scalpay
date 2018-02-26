@@ -7,17 +7,17 @@ namespace ScalpayApi.Services.SExpression
     {
         #region SBool
 
-        public static SBool SBoolNot(SBool b)
+        public static SBool BoolNot(SBool b)
         {
             return new SBool(!b.Inner);
         }
 
-        public static SBool SBoolIsEqualToSBool(SBool b1, SBool b2)
+        public static SBool BoolIsEqualToBool(SBool b1, SBool b2)
         {
             return new SBool(b1.Inner == b2.Inner);
         }
 
-        public static SBool SBoolIsNotEqualToSBool(SBool b1, SBool b2)
+        public static SBool BoolIsNotEqualToBool(SBool b1, SBool b2)
         {
             return new SBool(b1.Inner != b2.Inner);
         }
@@ -26,97 +26,97 @@ namespace ScalpayApi.Services.SExpression
 
         #region SDateTime
 
-        public static SBool SDateTimeIsEqualToSDateTime(SDateTime d1, SDateTime d2)
+        public static SBool DateTimeIsEqualToDateTime(SDateTime d1, SDateTime d2)
         {
             return new SBool(d1.Inner == d2.Inner);
         }
 
-        public static SBool SDateTimeIsNotEqualToSDateTime(SDateTime d1, SDateTime d2)
+        public static SBool DateTimeIsNotEqualToDateTime(SDateTime d1, SDateTime d2)
         {
             return new SBool(d1.Inner != d2.Inner);
         }
 
-        public static SBool SDateTimeIsAfterSDateTime(SDateTime d1, SDateTime d2)
+        public static SBool DateTimeIsAfterDateTime(SDateTime d1, SDateTime d2)
         {
             return new SBool(d1.Inner > d2.Inner);
         }
 
-        public static SBool SDateTimeIsBeforeSDateTime(SDateTime d1, SDateTime d2)
+        public static SBool DateTimeIsBeforDateTime(SDateTime d1, SDateTime d2)
         {
             return new SBool(d1.Inner < d2.Inner);
         }
 
-        public static SBool SDateTimeIsBetweenSDateTimes(SDateTime d, SDateTime start, SDateTime end)
+        public static SBool DateTimeIsBetweenDateTimes(SDateTime d, SDateTime start, SDateTime end)
         {
             return new SBool(d.Inner >= start.Inner && d.Inner <= end.Inner);
         }
 
-        public static SDateTime SDateTimeAddYears(SDateTime d, SNumber n)
+        public static SDateTime DateTimeAddYears(SDateTime d, SNumber n)
         {
             return new SDateTime(d.Inner.AddYears((int) n.Inner));
         }
 
-        public static SDateTime SDateTimeAddMonths(SDateTime d, SNumber n)
+        public static SDateTime DateTimeAddMonths(SDateTime d, SNumber n)
         {
             return new SDateTime(d.Inner.AddMonths((int) n.Inner));
         }
 
-        public static SDateTime SDateTimeAddDays(SDateTime d, SNumber n)
+        public static SDateTime DateTimeAddDays(SDateTime d, SNumber n)
         {
             return new SDateTime(d.Inner.AddDays(n.Inner));
         }
 
-        public static SDateTime SDateTimeAddHours(SDateTime d, SNumber n)
+        public static SDateTime DateTimeAddHours(SDateTime d, SNumber n)
         {
             return new SDateTime(d.Inner.AddHours(n.Inner));
         }
 
-        public static SDateTime SDateTimeAddMinutes(SDateTime d, SNumber n)
+        public static SDateTime DateTimeAddMinutes(SDateTime d, SNumber n)
         {
             return new SDateTime(d.Inner.AddMinutes(n.Inner));
         }
 
-        public static SDateTime SDateTimeAddSeconds(SDateTime d, SNumber n)
+        public static SDateTime DateTimeAddSeconds(SDateTime d, SNumber n)
         {
             return new SDateTime(d.Inner.AddSeconds(n.Inner));
         }
 
-        public static SDateTime SDateTimeAddSDuration(SDateTime d, SDuration du)
+        public static SDateTime DateTimeAddSDuration(SDateTime d, SDuration du)
         {
             return new SDateTime(d.Inner.Add(du.Inner));
         }
 
-        public static SNumber SDateTimeGetYear(SDateTime d)
+        public static SNumber DateTimeGetYear(SDateTime d)
         {
             return new SNumber(d.Inner.Year);
         }
 
-        public static SNumber SDateTimeGetMonth(SDateTime d)
+        public static SNumber DateTimeGetMonth(SDateTime d)
         {
             return new SNumber(d.Inner.Month);
         }
 
-        public static SNumber SDateTimeGetDay(SDateTime d)
+        public static SNumber DateTimeGetDay(SDateTime d)
         {
             return new SNumber(d.Inner.Day);
         }
 
-        public static SNumber SDateTimeGetHour(SDateTime d)
+        public static SNumber DateTimeGetHour(SDateTime d)
         {
             return new SNumber(d.Inner.Hour);
         }
 
-        public static SNumber SDateTimeGetMinute(SDateTime d)
+        public static SNumber DateTimeGetMinute(SDateTime d)
         {
             return new SNumber(d.Inner.Minute);
         }
 
-        public static SNumber SDateTimeGetSecond(SDateTime d)
+        public static SNumber DateTimeGetSecond(SDateTime d)
         {
             return new SNumber(d.Inner.Second);
         }
 
-        public static SDateTime SDateTimeNow()
+        public static SDateTime DateTimeNow()
         {
             return new SDateTime(DateTimeOffset.UtcNow);
         }
@@ -125,37 +125,37 @@ namespace ScalpayApi.Services.SExpression
 
         #region SDuration
 
-        public static SBool SDurationIsEqualToSDuration(SDuration du1, SDuration du2)
+        public static SBool DurationIsEqualToDuration(SDuration du1, SDuration du2)
         {
             return new SBool(du1.Inner == du2.Inner);
         }
 
-        public static SBool SDurationIsNotEqualToSDuration(SDuration du1, SDuration du2)
+        public static SBool DurationIsNotEqualToDuration(SDuration du1, SDuration du2)
         {
             return new SBool(du1.Inner != du2.Inner);
         }
 
-        public static SBool SDurationIsGreaterThenSDuration(SDuration du1, SDuration du2)
+        public static SBool DurationIsGreaterThenDuration(SDuration du1, SDuration du2)
         {
             return new SBool(du1.Inner > du2.Inner);
         }
 
-        public static SBool SDurationIsGreaterThenOrEqualToSDuration(SDuration du1, SDuration du2)
+        public static SBool DurationIsGreaterThenOrEqualToDuration(SDuration du1, SDuration du2)
         {
             return new SBool(du1.Inner >= du2.Inner);
         }
 
-        public static SBool SDurationIsLessThenSDuration(SDuration du1, SDuration du2)
+        public static SBool DurationIsLessThenDuration(SDuration du1, SDuration du2)
         {
             return new SBool(du1.Inner < du2.Inner);
         }
 
-        public static SBool SDurationIsLessThenOrEqualToSDuration(SDuration du1, SDuration du2)
+        public static SBool DurationIsLessThenOrEqualToDuration(SDuration du1, SDuration du2)
         {
             return new SBool(du1.Inner <= du2.Inner);
         }
 
-        public static SDuration SDurationBetweenSDateTimes(SDateTime d1, SDateTime d2)
+        public static SDuration DurationBetweenDateTimes(SDateTime d1, SDateTime d2)
         {
             return new SDuration(d1.Inner - d2.Inner);
         }
@@ -164,67 +164,67 @@ namespace ScalpayApi.Services.SExpression
 
         #region SNumber
 
-        public static SBool SNumberIsEqualToSNumber(SNumber n1, SNumber n2)
+        public static SBool NumberIsEqualToNumber(SNumber n1, SNumber n2)
         {
             return new SBool(n1.Inner == n2.Inner);
         }
 
-        public static SBool SNumberIsNotEqualToSNumber(SNumber n1, SNumber n2)
+        public static SBool NumberIsNotEqualToNumber(SNumber n1, SNumber n2)
         {
             return new SBool(n1.Inner != n2.Inner);
         }
 
-        public static SBool SNumberIsGreaterThenSNumber(SNumber n1, SNumber n2)
+        public static SBool NumberIsGreaterThenNumber(SNumber n1, SNumber n2)
         {
             return new SBool(n1.Inner > n2.Inner);
         }
 
-        public static SBool SNumberIsGreaterThenOrEqualToSNumber(SNumber n1, SNumber n2)
+        public static SBool NumberIsGreaterThenOrEqualToNumber(SNumber n1, SNumber n2)
         {
             return new SBool(n1.Inner >= n2.Inner);
         }
 
-        public static SBool SNumberIsLessThenSNumber(SNumber n1, SNumber n2)
+        public static SBool NumberIsLessThenNumber(SNumber n1, SNumber n2)
         {
             return new SBool(n1.Inner < n2.Inner);
         }
 
-        public static SBool SNumberIsLessThenOrEqualToSNumber(SNumber n1, SNumber n2)
+        public static SBool NumberIsLessThenOrEqualToNumber(SNumber n1, SNumber n2)
         {
             return new SBool(n1.Inner <= n2.Inner);
         }
         
-        public static SBool SNumberIsBetweenSNumbers(SNumber d, SNumber min, SNumber max)
+        public static SBool NumberIsBetweenNumbers(SNumber d, SNumber min, SNumber max)
         {
             return new SBool(d.Inner >= min.Inner && d.Inner <= max.Inner);
         }
 
-        public static SNumber SNumberAddSNumber(SNumber n1, SNumber n2)
+        public static SNumber NumberAddNumber(SNumber n1, SNumber n2)
         {
             return new SNumber(n1.Inner + n2.Inner);
         }
 
-        public static SNumber SNumberMinusSNumber(SNumber n1, SNumber n2)
+        public static SNumber NumberMinusNumber(SNumber n1, SNumber n2)
         {
             return new SNumber(n1.Inner - n2.Inner);
         }
 
-        public static SNumber SNumberMultiplySNumber(SNumber n1, SNumber n2)
+        public static SNumber NumberMultiplyNumber(SNumber n1, SNumber n2)
         {
             return new SNumber(n1.Inner * n2.Inner);
         }
 
-        public static SNumber SNumberDivideSNumber(SNumber n1, SNumber n2)
+        public static SNumber NumberDivideNumber(SNumber n1, SNumber n2)
         {
             return new SNumber(n1.Inner / n2.Inner);
         }
 
-        public static SNumber SNumberAbsolute(SNumber n)
+        public static SNumber NumberAbsolute(SNumber n)
         {
             return new SNumber(Math.Abs(n.Inner));
         }
 
-        public static SNumber SNumberRound(SNumber n, SNumber digits)
+        public static SNumber NumberRound(SNumber n, SNumber digits)
         {
             return new SNumber(Math.Round(n.Inner, (int) digits.Inner));
         }
@@ -233,42 +233,42 @@ namespace ScalpayApi.Services.SExpression
 
         #region SNumberDict
 
-        public static SBool SNumberDictContainsKey(SNumberDict nd, SString s)
+        public static SBool NumberDictContainsKey(SNumberDict nd, SString s)
         {
             return new SBool(nd.Inner.ContainsKey(s.Inner));
         }
 
-        public static SBool SNumberDictContainsValue(SNumberDict nd, SNumber n)
+        public static SBool NumberDictContainsValue(SNumberDict nd, SNumber n)
         {
             return new SBool(nd.Inner.ContainsValue(n.Inner));
         }
 
-        public static SBool SNumberDictDoesNotContainKey(SNumberDict nd, SString s)
+        public static SBool NumberDictDoesNotContainKey(SNumberDict nd, SString s)
         {
             return new SBool(!nd.Inner.ContainsKey(s.Inner));
         }
 
-        public static SBool SNumberDictDoesNotContainValue(SNumberDict nd, SNumber n)
+        public static SBool NumberDictDoesNotContainValue(SNumberDict nd, SNumber n)
         {
             return new SBool(!nd.Inner.ContainsValue(n.Inner));
         }
 
-        public static SBool SNumberDictIsEmpty(SNumberDict nd)
+        public static SBool NumberDictIsEmpty(SNumberDict nd)
         {
             return new SBool(!nd.Inner.Any());
         }
 
-        public static SBool SNumberDictIsNotEmpty(SNumberDict nd)
+        public static SBool NumberDictIsNotEmpty(SNumberDict nd)
         {
             return new SBool(nd.Inner.Any());
         }
 
-        public static SNumber SNumberDictGetCount(SNumberDict nd)
+        public static SNumber NumberDictGetCount(SNumberDict nd)
         {
             return new SNumber(nd.Inner.Count);
         }
 
-        public static SNumber SNumberDictGetValue(SNumberDict nd, SString key)
+        public static SNumber NumberDictGetValue(SNumberDict nd, SString key)
         {
             return new SNumber(nd.Inner[key.Inner]);
         }
@@ -277,52 +277,52 @@ namespace ScalpayApi.Services.SExpression
 
         #region SNumberList
 
-        public static SBool SNumberListContainsSNumber(SNumberList nl, SNumber n)
+        public static SBool NumberListContainsNumber(SNumberList nl, SNumber n)
         {
             return new SBool(nl.Inner.Contains(n.Inner));
         }
 
-        public static SBool SNumberListDoesNotContainSNumber(SNumberList nl, SNumber n)
+        public static SBool NumberListDoesNotContainNumber(SNumberList nl, SNumber n)
         {
             return new SBool(!nl.Inner.Contains(n.Inner));
         }
 
-        public static SBool SNumberListIsEmpty(SNumberList nl)
+        public static SBool NumberListIsEmpty(SNumberList nl)
         {
             return new SBool(!nl.Inner.Any());
         }
 
-        public static SBool SNumberListIsNotEmpty(SNumberList nl)
+        public static SBool NumberListIsNotEmpty(SNumberList nl)
         {
             return new SBool(nl.Inner.Any());
         }
 
-        public static SNumber SNumberListGetCount(SNumberList nl)
+        public static SNumber NumberListGetCount(SNumberList nl)
         {
             return new SNumber(nl.Inner.Count);
         }
 
-        public static SNumber SNumberListGetValue(SNumberList nl, SNumber index)
+        public static SNumber NumberListGetValue(SNumberList nl, SNumber index)
         {
             return new SNumber(nl.Inner[(int) index.Inner]);
         }
 
-        public static SNumber SNumberListSum(SNumberList nl)
+        public static SNumber NumberListSum(SNumberList nl)
         {
             return new SNumber(nl.Inner.Sum());
         }
 
-        public static SNumber SNumberListAvg(SNumberList nl)
+        public static SNumber NumberListAvg(SNumberList nl)
         {
             return new SNumber(nl.Inner.Average());
         }
 
-        public static SNumber SNumberListMax(SNumberList nl)
+        public static SNumber NumberListMax(SNumberList nl)
         {
             return new SNumber(nl.Inner.Max());
         }
 
-        public static SNumber SNumberListMin(SNumberList nl)
+        public static SNumber NumberListMin(SNumberList nl)
         {
             return new SNumber(nl.Inner.Min());
         }
@@ -331,7 +331,7 @@ namespace ScalpayApi.Services.SExpression
 
         #region SString
 
-        public static SBool SStringIsEqualToSString(SString s1, SString s2, SBool ignoringCase)
+        public static SBool StringIsEqualToString(SString s1, SString s2, SBool ignoringCase)
         {
             if (ignoringCase.Inner)
             {
@@ -342,7 +342,7 @@ namespace ScalpayApi.Services.SExpression
             return new SBool(s1.Inner == s2.Inner);
         }
 
-        public static SBool SStringIsNotEqualToSString(SString s1, SString s2, SBool ignoringCase)
+        public static SBool StringIsNotEqualToString(SString s1, SString s2, SBool ignoringCase)
         {
             if (ignoringCase.Inner)
             {
@@ -353,7 +353,7 @@ namespace ScalpayApi.Services.SExpression
             return new SBool(s1.Inner != s2.Inner);
         }
 
-        public static SBool SStringStartsWithSString(SString s1, SString s2, SBool ignoringCase)
+        public static SBool StringStartsWithString(SString s1, SString s2, SBool ignoringCase)
         {
             if (ignoringCase.Inner)
             {
@@ -364,7 +364,7 @@ namespace ScalpayApi.Services.SExpression
             return new SBool(s1.Inner.StartsWith(s2.Inner));
         }
 
-        public static SBool SStringContainsSString(SString s1, SString s2, SBool ignoringCase)
+        public static SBool StringContainsString(SString s1, SString s2, SBool ignoringCase)
         {
             if (ignoringCase.Inner)
             {
@@ -375,32 +375,32 @@ namespace ScalpayApi.Services.SExpression
             return new SBool(s1.Inner.Contains(s2.Inner));
         }
 
-        public static SString SStringToLower(SString s)
+        public static SString StringToLower(SString s)
         {
             return new SString(s.Inner.ToLower());
         }
 
-        public static SString SStringToUpper(SString s)
+        public static SString StringToUpper(SString s)
         {
             return new SString(s.Inner.ToUpper());
         }
 
-        public static SString SStringTrim(SString s)
+        public static SString StringTrim(SString s)
         {
             return new SString(s.Inner.Trim());
         }
 
-        public static SStringList SStringSplit(SString s, SString separator)
+        public static SStringList StringSplit(SString s, SString separator)
         {
             return new SStringList(s.Inner.Split(separator.Inner).ToList());
         }
 
-        public static SString SStringConcatSString(SString s1, SString s2)
+        public static SString StringConcatString(SString s1, SString s2)
         {
             return new SString(s1.Inner + s2.Inner);
         }
 
-        public static SNumber SStringGetLength(SString s)
+        public static SNumber StringGetLength(SString s)
         {
             return new SNumber(s.Inner.Length);
         }
@@ -409,42 +409,42 @@ namespace ScalpayApi.Services.SExpression
 
         #region SStringDict
 
-        public static SBool SStringDictContainsKey(SStringDict sd, SString s)
+        public static SBool StringDictContainsKey(SStringDict sd, SString s)
         {
             return new SBool(sd.Inner.ContainsKey(s.Inner));
         }
 
-        public static SBool SStringDictContainsValue(SStringDict sd, SString s)
+        public static SBool StringDictContainsValue(SStringDict sd, SString s)
         {
             return new SBool(sd.Inner.ContainsValue(s.Inner));
         }
 
-        public static SBool SStringDictDoesNotContainKey(SStringDict sd, SString s)
+        public static SBool StringDictDoesNotContainKey(SStringDict sd, SString s)
         {
             return new SBool(!sd.Inner.ContainsKey(s.Inner));
         }
 
-        public static SBool SStringDictDoesNotContainValue(SStringDict sd, SString s)
+        public static SBool StringDictDoesNotContainValue(SStringDict sd, SString s)
         {
             return new SBool(!sd.Inner.ContainsValue(s.Inner));
         }
 
-        public static SBool SStringDictIsEmpty(SStringDict sd)
+        public static SBool StringDictIsEmpty(SStringDict sd)
         {
             return new SBool(!sd.Inner.Any());
         }
 
-        public static SBool SStringDictIsNotEmpty(SStringDict sd)
+        public static SBool StringDictIsNotEmpty(SStringDict sd)
         {
             return new SBool(sd.Inner.Any());
         }
 
-        public static SNumber SStringDictGetCount(SStringDict sd)
+        public static SNumber StringDictGetCount(SStringDict sd)
         {
             return new SNumber(sd.Inner.Count);
         }
 
-        public static SString SStringDictGetValue(SStringDict sd, SString key)
+        public static SString StringDictGetValue(SStringDict sd, SString key)
         {
             return new SString(sd.Inner[key.Inner]);
         }
@@ -453,32 +453,32 @@ namespace ScalpayApi.Services.SExpression
 
         #region SStringList
 
-        public static SBool SStringListContainsSString(SStringList sl, SString s, SBool ignoringCase)
+        public static SBool StringListContainsString(SStringList sl, SString s, SBool ignoringCase)
         {
             return new SBool(sl.Inner.Any(i => i.Equals(s.Inner, StringComparison.OrdinalIgnoreCase)));
         }
 
-        public static SBool SStringListDoesNotContainSString(SStringList sl, SString s, SBool ignoringCase)
+        public static SBool StringListDoesNotContainString(SStringList sl, SString s, SBool ignoringCase)
         {
             return new SBool(!sl.Inner.Any(i => i.Equals(s.Inner, StringComparison.OrdinalIgnoreCase)));
         }
 
-        public static SBool SStringListIsEmpty(SStringList sl)
+        public static SBool StringListIsEmpty(SStringList sl)
         {
             return new SBool(!sl.Inner.Any());
         }
 
-        public static SBool SStringListIsNotEmpty(SStringList sl)
+        public static SBool StringListIsNotEmpty(SStringList sl)
         {
             return new SBool(sl.Inner.Any());
         }
 
-        public static SNumber SStringListGetCount(SStringList sl)
+        public static SNumber StringListGetCount(SStringList sl)
         {
             return new SNumber(sl.Inner.Count);
         }
 
-        public static SString SStringListGetValue(SStringList sl, SNumber index)
+        public static SString StringListGetValue(SStringList sl, SNumber index)
         {
             return new SString(sl.Inner[(int) index.Inner]);
         }

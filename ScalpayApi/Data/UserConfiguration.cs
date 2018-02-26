@@ -18,9 +18,9 @@ namespace ScalpayApi.Data
 
             builder.Property(u => u.ApiKey).IsRequired();
 
-            builder.Property(u => u.PrivilegesInt).HasColumnName("Privileges").IsRequired();
-
             builder.Ignore(u => u.Privileges);
+            
+            builder.Property(u => u.PrivilegesInt).HasColumnName("Privileges").IsRequired();
 
             builder.Property(u => u.InsertTime).ValueGeneratedOnAdd();
 

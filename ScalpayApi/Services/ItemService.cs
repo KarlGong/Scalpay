@@ -5,9 +5,11 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using ScalpayApi.Data;
 using ScalpayApi.Enums;
 using ScalpayApi.Models;
+using ScalpayApi.Services.SExpression;
 
 namespace ScalpayApi.Services
 {
@@ -77,6 +79,8 @@ namespace ScalpayApi.Services
         Task<Item> UpdateItemAsync(UpdateItemParams ps);
 
         Task DeleteItemAsync(string itemKey);
+
+        Task<SData> EvalItem(string itemKey, JToken parameters);
     }
 
     public class ItemService : IItemService
@@ -85,10 +89,13 @@ namespace ScalpayApi.Services
 
         private readonly IMapper _mapper;
 
-        public ItemService(ScalpayDbContext context, IMapper mapper)
+        private readonly IExpressionService _expService;
+
+        public ItemService(ScalpayDbContext context, IMapper mapper, IExpressionService expService)
         {
             _context = context;
             _mapper = mapper;
+            _expService = expService;
         }
 
         public async Task<Item> GetItemAsync(ItemCriteria criteria)
@@ -136,6 +143,36 @@ namespace ScalpayApi.Services
             _context.Items.Remove(await GetItemAsync(itemKey));
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<SData> EvalItem(string itemKey, JToken parameters)
+        {
+            var item = await GetItemAsync(itemKey);
+            
+            var variables = new Dictionary<string, SData>();
+            
+            foreach (var jToken in parameters)
+            {
+                var pair = (JProperty) jToken;
+
+                var dataType = item.ParamDataType[pair.Name]?.Value<string>();
+
+                if (dataType == null) continue; // data type not found, since paramter is not decalred in parameter list.
+
+                variables.Add(pair.Name, _expService.ConvertToSData(pair.Value, dataType));
+            }
+            
+            foreach (var rule in item.Rules.Where(r => r.Condition != null).OrderBy(r => r.Order))
+            {
+                if (((SBool) _expService.EvalExpression(rule.Condition, variables)).Inner)
+                {
+                    return await Task.FromResult(_expService.EvalExpression(rule.Result, variables));
+                }
+            }
+
+            var defaultRule = item.Rules.Single(r => r.Condition == null);
+
+            return await Task.FromResult(_expService.EvalExpression(defaultRule.Result, variables));
         }
     }
 }

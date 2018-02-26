@@ -39,7 +39,7 @@ namespace ScalpayApi.Controllers
 
         [HttpPost("{itemKey}")]
         [Authorization(Privilege.ItemEdit)]
-        public async Task<Item> UpdateItem([FromRoute] string itemKey, UpdateItemParams ps)
+        public async Task<Item> UpdateItem([FromRoute] string itemKey, [FromBody] UpdateItemParams ps)
         {
             ps.ItemKey = itemKey;
             return await _service.UpdateItemAsync(ps);
