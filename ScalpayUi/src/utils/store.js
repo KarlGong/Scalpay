@@ -14,7 +14,7 @@ export const ItemType = {
     Word: "Word"
 };
 
-export const ConfigMode = {
+export const ItemMode = {
     Property: "Property",
     List: "List",
     Table: "Table",

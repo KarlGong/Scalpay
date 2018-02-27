@@ -48,9 +48,13 @@ namespace ScalpayApi.Services
 
         public ItemType Type { get; set; }
         
-        public ConfigMode? ConfigMode { get; set; }
+        public ItemMode? Mode { get; set; }
         
-        public string RulesString { get; set; }
+        public Dictionary<string, SDataType> ParamsDataTypes { get; set; }
+        
+        public SDataType ResultDataType { get; set; }
+        
+        public List<Rule> Rules { get; set; }
     }
 
     public class UpdateItemParams
@@ -61,9 +65,13 @@ namespace ScalpayApi.Services
 
         public string Description { get; set; }
         
-        public ConfigMode? ConfigMode { get; set; }
+        public ItemMode? Mode { get; set; }
         
-        public string RulesString { get; set; }
+        public Dictionary<string, SDataType> ParamsDataTypes { get; set; }
+        
+        public SDataType ResultDataType { get; set; }
+        
+        public List<Rule> Rules { get; set; }
     }
 
     public interface IItemService

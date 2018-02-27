@@ -15,7 +15,7 @@ namespace ScalpayApi.Models
 
         public ItemType Type { get; set; }
 
-        public ConfigMode? ConfigMode { get; set; }
+        public ItemMode? Mode { get; set; }
 
         public Dictionary<string, SDataType> ParamsDataTypes
         {

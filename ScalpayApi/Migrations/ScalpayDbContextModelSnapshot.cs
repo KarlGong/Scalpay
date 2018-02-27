@@ -26,25 +26,23 @@ namespace ScalpayApi.Migrations
                     b.Property<string>("ItemKey")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("ConfigMode");
-
                     b.Property<string>("Description");
 
                     b.Property<DateTime>("InsertTime")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("Mode");
+
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<string>("ParamDataTypeString")
+                    b.Property<string>("ParamsDataTypesString")
                         .IsRequired()
-                        .HasColumnName("ParamDataType");
+                        .HasColumnName("ParamsDataTypes");
 
                     b.Property<string>("ProjectKey");
 
-                    b.Property<string>("ResultDataTypeString")
-                        .IsRequired()
-                        .HasColumnName("ResultDataType");
+                    b.Property<int>("ResultDataType");
 
                     b.Property<int>("Type");
 

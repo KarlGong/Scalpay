@@ -6,8 +6,9 @@ import axios from "axios";
 import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
 import {IndexRoute, hashHistory, Router, Route, Link} from "react-router";
-import "./SHeader.less";
 import global from "~/global";
+import addItemModal from "~/modals/addItemModal";
+import "./SHeader.less";
 import logo from "~/assets/imgs/logo.png";
 
 @observer
@@ -28,7 +29,7 @@ export default class SHeader extends Component {
                     </div>
                     {auth.hasPrivileges(Privilege.ItemAdd) ?
                         <div className="item">
-                            <Button type="primary">Add</Button>
+                            <Button type="primary" onClick={() => addItemModal.open()}>Add</Button>
                         </div>
                         : null
                     }

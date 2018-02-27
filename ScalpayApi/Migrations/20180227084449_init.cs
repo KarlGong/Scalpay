@@ -49,14 +49,14 @@ namespace ScalpayApi.Migrations
                 columns: table => new
                 {
                     ItemKey = table.Column<string>(nullable: false),
-                    ConfigMode = table.Column<int>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     InsertTime = table.Column<DateTime>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Mode = table.Column<int>(nullable: true),
                     Name = table.Column<string>(nullable: false),
-                    ParamDataType = table.Column<string>(nullable: false),
+                    ParamsDataTypes = table.Column<string>(nullable: false),
                     ProjectKey = table.Column<string>(nullable: true),
-                    ResultDataType = table.Column<string>(nullable: false),
+                    ResultDataType = table.Column<int>(nullable: false),
                     Type = table.Column<int>(nullable: false),
                     UpdateTime = table.Column<DateTime>(nullable: false)
                 },

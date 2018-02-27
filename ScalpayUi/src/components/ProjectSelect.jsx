@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import debounce from "lodash.debounce";
 
 @observer
-export default class ProjectFilter extends Component {
+export default class ProjectSelect extends Component {
     static defaultProps = {
         style: {},
         className: "",
@@ -26,7 +26,6 @@ export default class ProjectFilter extends Component {
             showSearch
             className={this.props.className}
             style={this.props.style}
-            placeholder="All Projects"
             dropdownMatchSelectWidth={false}
             notFoundContent={this.loading ? <Spin size="small"/> : null}
             filterOption={false}
