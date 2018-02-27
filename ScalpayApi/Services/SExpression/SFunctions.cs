@@ -231,50 +231,6 @@ namespace ScalpayApi.Services.SExpression
 
         #endregion
 
-        #region SNumberDict
-
-        public static SBool NumberDictContainsKey(SNumberDict nd, SString s)
-        {
-            return new SBool(nd.Inner.ContainsKey(s.Inner));
-        }
-
-        public static SBool NumberDictContainsValue(SNumberDict nd, SNumber n)
-        {
-            return new SBool(nd.Inner.ContainsValue(n.Inner));
-        }
-
-        public static SBool NumberDictDoesNotContainKey(SNumberDict nd, SString s)
-        {
-            return new SBool(!nd.Inner.ContainsKey(s.Inner));
-        }
-
-        public static SBool NumberDictDoesNotContainValue(SNumberDict nd, SNumber n)
-        {
-            return new SBool(!nd.Inner.ContainsValue(n.Inner));
-        }
-
-        public static SBool NumberDictIsEmpty(SNumberDict nd)
-        {
-            return new SBool(!nd.Inner.Any());
-        }
-
-        public static SBool NumberDictIsNotEmpty(SNumberDict nd)
-        {
-            return new SBool(nd.Inner.Any());
-        }
-
-        public static SNumber NumberDictGetCount(SNumberDict nd)
-        {
-            return new SNumber(nd.Inner.Count);
-        }
-
-        public static SNumber NumberDictGetValue(SNumberDict nd, SString key)
-        {
-            return new SNumber(nd.Inner[key.Inner]);
-        }
-
-        #endregion
-
         #region SNumberList
 
         public static SBool NumberListContainsNumber(SNumberList nl, SNumber n)

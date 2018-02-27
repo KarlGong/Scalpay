@@ -70,10 +70,6 @@ namespace ScalpayApi.Services
                 case "Number":
                     result = new SNumber(value.Value<double>());
                     break;
-                case "NumberDict":
-                    result = new SNumberDict(value.ToDictionary(i => ((JProperty) i).Name,
-                        i => ((JProperty) i).Value.Value<double>()));
-                    break;
                 case "NumberList":
                     result = new SNumberList(value.Select(i => i.Value<double>()).ToList());
                     break;

@@ -32,7 +32,6 @@ export const DataType = {
     DateTime: "DateTime",
     Duration: "Duration",
     Number: "Number",
-    NumberDict: "NumberDict",
     NumberList: "NumberList",
     String: "String",
     StringDict: "StringDict",
@@ -64,9 +63,6 @@ export const Func = {
 
     ],
     Number: [
-
-    ],
-    NumberDict: [
 
     ],
     NumberList: [
