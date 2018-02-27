@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ScalpayApi.Services.SExpression
+namespace ScalpayApi.Services.SExpressions
 {
     public class SDuration: SData
     {

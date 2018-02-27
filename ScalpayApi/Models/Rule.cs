@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace ScalpayApi.Models
@@ -11,20 +12,20 @@ namespace ScalpayApi.Models
 
         public Item Item { get; set; }
 
-        public JToken Condition // null means default rule
+        public SExpression Condition // null means default rule
         {
-            get { return JToken.Parse(ConditionString); }
+            get { return JsonConvert.DeserializeObject<SExpression>(ConditionString); }
 
-            set { ConditionString = value.ToString(); }
+            set { ConditionString = JsonConvert.SerializeObject(value); }
         }
 
         public string ConditionString { get; set; }
 
-        public JToken Result
+        public SExpression Result
         {
-            get { return JToken.Parse(ResultString); }
+            get { return JsonConvert.DeserializeObject<SExpression>(ResultString); }
             
-            set { ResultString = value.ToString(); }
+            set { ResultString = JsonConvert.SerializeObject(value); }
         }
 
         public string ResultString { get; set; }

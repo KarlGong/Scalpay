@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace ScalpayApi.Services.SExpression
+namespace ScalpayApi.Services.SExpressions
 {
     public class SStringDict: SData
     {

@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 using ScalpayApi.Data;
 using ScalpayApi.Enums;
 using ScalpayApi.Models;
-using ScalpayApi.Services.SExpression;
+using ScalpayApi.Services.SExpressions;
 
 namespace ScalpayApi.Services
 {
@@ -80,7 +80,7 @@ namespace ScalpayApi.Services
 
         Task DeleteItemAsync(string itemKey);
 
-        Task<SData> EvalItem(string itemKey, JToken parameters);
+        Task<SData> EvalItem(Item item, Dictionary<string, SData> parameters);
     }
 
     public class ItemService : IItemService
@@ -145,34 +145,19 @@ namespace ScalpayApi.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<SData> EvalItem(string itemKey, JToken parameters)
+        public async Task<SData> EvalItem(Item item, Dictionary<string, SData> parameters)
         {
-            var item = await GetItemAsync(itemKey);
-            
-            var variables = new Dictionary<string, SData>();
-            
-            foreach (var jToken in parameters)
-            {
-                var pair = (JProperty) jToken;
-
-                var dataType = item.ParamDataType[pair.Name]?.Value<string>();
-
-                if (dataType == null) continue; // data type not found, since paramter is not decalred in parameter list.
-
-                variables.Add(pair.Name, await _expService.ConvertToSDataAsync(pair.Value, dataType));
-            }
-            
             foreach (var rule in item.Rules.Where(r => r.Condition != null).OrderBy(r => r.Order))
             {
-                if (((SBool) await _expService.EvalExpressionAsync(rule.Condition, variables)).Inner)
+                if (((SBool) await _expService.EvalExpressionAsync(rule.Condition, parameters)).Inner)
                 {
-                    return await _expService.EvalExpressionAsync(rule.Result, variables);
+                    return await _expService.EvalExpressionAsync(rule.Result, parameters);
                 }
             }
 
             var defaultRule = item.Rules.Single(r => r.Condition == null);
 
-            return await _expService.EvalExpressionAsync(defaultRule.Result, variables);
+            return await _expService.EvalExpressionAsync(defaultRule.Result, parameters);
         }
     }
 }

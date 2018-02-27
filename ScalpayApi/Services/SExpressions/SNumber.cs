@@ -1,4 +1,4 @@
-﻿namespace ScalpayApi.Services.SExpression
+﻿namespace ScalpayApi.Services.SExpressions
 {
     public class SNumber: SData
     {

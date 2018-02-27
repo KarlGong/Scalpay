@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using ScalpayApi.Enums;
 
 namespace ScalpayApi.Models
@@ -17,23 +17,16 @@ namespace ScalpayApi.Models
 
         public ConfigMode? ConfigMode { get; set; }
 
-        public JToken ParamDataType
+        public Dictionary<string, SDataType> ParamsDataTypes
         {
-            get { return JToken.Parse(ParamDataTypeString); }
-            
-            set { ParamDataTypeString = value.ToString(); }
+            get { return JsonConvert.DeserializeObject<Dictionary<string, SDataType>>(ParamsDataTypesString); }
+
+            set { ParamsDataTypesString = JsonConvert.SerializeObject(value); }
         }
 
-        public string ParamDataTypeString { get; set; }
+        public string ParamsDataTypesString { get; set; }
 
-        public JToken ResultDataType
-        {
-            get { return JToken.Parse(ResultDataTypeString); }
-
-            set { ResultDataTypeString = value.ToString(); }
-        }
-
-        public string ResultDataTypeString { get; set; }
+        public SDataType ResultDataType { get; set; }
 
         public DateTime InsertTime { get; set; }
 

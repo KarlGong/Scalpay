@@ -4,86 +4,85 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using ScalpayApi.Services.SExpression;
+using ScalpayApi.Enums;
+using ScalpayApi.Models;
+using ScalpayApi.Services.SExpressions;
 
 namespace ScalpayApi.Services
 {
     public interface IExpressionService
     {
-        Task<SData> EvalExpressionAsync(JToken exp, Dictionary<string, SData> variables);
-
-        Task<SData> ConvertToSDataAsync(JToken value, string dataType);
+        Task<SData> EvalExpressionAsync(SExpression exp, Dictionary<string, SData> variables);
+        
+        Task<SData> ConvertToSDataAsync(JToken value, SDataType dataType);
     }
 
     public class ExpressionService : IExpressionService
     {
-        public async Task<SData> EvalExpressionAsync(JToken exp, Dictionary<string, SData> variables)
+        public async Task<SData> EvalExpressionAsync(SExpression exp, Dictionary<string, SData> variables)
         {
-            var type = exp["type"].Value<string>();
-            var returnType = exp["return"].Value<string>();
-            SData result;
-
-            switch (type)
+            SData result = null;
+            
+            switch (exp.Type)
             {
-                case "Value":
-                    result = await ConvertToSDataAsync(exp["value"], returnType);
+                case SExpressionType.Value:
+                    result = await ConvertToSDataAsync(exp.Value, exp.Return);
                     break;
-                case "Var":
-                    if (!variables.TryGetValue(exp["var"].Value<string>(), out var variable))
+                case SExpressionType.Var:
+                    if (!variables.TryGetValue(exp.Var, out var variable))
                     {
-                        throw new Exception("Variable " + exp["var"].Value<string>() + " is not existing.");
+                        throw new Exception($"Variable {exp.Var} is not existing.");
                     }
 
                     result = variable;
                     break;
-                case "Func":
-                    var method = typeof(SFunctions).GetMethod(exp["name"].Value<string>());
+                case SExpressionType.Func:
+                    var method = typeof(SFunctions).GetMethod(exp.Name);
                     if (method == null)
                     {
-                        throw new Exception(exp["name"].Value<string>() + " is not a valid function name.");
+                        throw new Exception($"{exp.Name} is not a valid function name.");
                     }
 
-                    var args = exp["args"].Select(a => EvalExpressionAsync(a, variables).Result).ToArray<object>();
+                    var args = exp.Args.Select(a => EvalExpressionAsync(a, variables).Result).ToArray<object>();
 
                     result = (SData) method.Invoke(null, args);
                     break;
-                default: throw new Exception(type + " is not a valid expression type.");
             }
 
             return await Task.FromResult(result);
         }
 
-        public async Task<SData> ConvertToSDataAsync(JToken value, string dataType)
+        public async Task<SData> ConvertToSDataAsync(JToken value, SDataType dataType)
         {
-            SData result;
+            SData result = null;
+            
             switch (dataType)
             {
-                case "Bool":
+                case SDataType.Bool:
                     result = new SBool(value.Value<bool>());
                     break;
-                case "DateTime":
+                case SDataType.DateTime:
                     result = new SDateTime(value.Value<string>());
                     break;
-                case "Duration":
+                case SDataType.Duration:
                     result = new SDuration(value.Value<string>());
                     break;
-                case "Number":
+                case SDataType.Number:
                     result = new SNumber(value.Value<double>());
                     break;
-                case "NumberList":
+                case SDataType.NumberList:
                     result = new SNumberList(value.Select(i => i.Value<double>()).ToList());
                     break;
-                case "String":
+                case SDataType.String:
                     result = new SString(value.Value<string>());
                     break;
-                case "StringDict":
+                case SDataType.StringDict:
                     result = new SStringDict(value.ToDictionary(i => ((JProperty) i).Name,
                         i => ((JProperty) i).Value.Value<string>()));
                     break;
-                case "StringList":
+                case SDataType.StringList:
                     result = new SStringList(value.Select(i => i.Value<string>()).ToList());
                     break;
-                default: throw new Exception(dataType + " is not a valid data type.");
             }
 
             return await Task.FromResult(result);
