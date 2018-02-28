@@ -8,12 +8,15 @@ import axios from "axios";
 export default class NumberInput extends Component {
     static defaultProps = {
         style: {},
+        className: "",
         onChange: (value) => {},
         defaultValue: 0
     };
 
     render = () => {
-        return <InputNumber placeholder="Input a Number" style={this.props.style}
+        return <InputNumber placeholder="Input a Number"
+                            style={this.props.style}
+                            className={this.props.className}
                             onChange={this.props.onChange} defaultValue={this.props.defaultValue || 0}
                             step={1}/>
     }

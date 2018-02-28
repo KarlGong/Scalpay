@@ -18,11 +18,12 @@ import StringDictInput from "~/components/item/expression/StringDictInput";
 import StringListInput from "~/components/item/expression/StringListInput";
 import FunctionSelect from "~/components/item/expression/FunctionSelect";
 import VariableSelect from "~/components/item/expression/VariableSelect";
+import "./editExpressionModal.less";
 
-function open(expression, onSuccess) {
+function open(expression, item, onSuccess) {
     const target = document.createElement("div");
     document.body.appendChild(target);
-    render(<EditExpressionModal expression={expression} onSuccess={onSuccess} afterClose={() => {
+    render(<EditExpressionModal expression={expression} item={item} onSuccess={onSuccess} afterClose={() => {
         unmountComponentAtNode(target);
         target.remove()
     }}/>, target);
@@ -31,27 +32,36 @@ function open(expression, onSuccess) {
 @observer
 class EditExpressionModal extends Component {
     static defaultProps = {
-        expression: {},
+        expression: {
+            return: null,
+            type: null,
+            name: null,
+            args: [],
+            value: null,
+            var: null
+        },
+        item: {},
         onSuccess: (project) => {},
         afterClose: () => {}
-    };
-
-    static valueInputDict = {
-        [DataType.Bool] : <BoolSelect/>,
-        [DataType.DateTime]: <DateTimeInput/>,
-        [DataType.Duration]: <DurationInput/>,
-        [DataType.Number]: <NumberInput/>,
-        [DataType.NumberList]: <NumberListInput/>,
-        [DataType.String]: <StringInput/>,
-        [DataType.StringDict]: <StringDictInput/>,
-        [DataType.StringListInput]: <StringListInput/>
     };
 
     @observable visible = true;
 
     render = () => {
+        const valueInput = {
+            [DataType.Bool]: <BoolSelect className="value-input"/>,
+            [DataType.DateTime]: <DateTimeInput className="value-input"/>,
+            [DataType.Duration]: <DurationInput className="value-input"/>,
+            [DataType.Number]: <NumberInput className="value-input"/>,
+            [DataType.NumberList]: <NumberListInput className="value-input"/>,
+            [DataType.String]: <StringInput className="value-input"/>,
+            [DataType.StringDict]: <StringDictInput className="value-input"/>,
+            [DataType.StringListInput]: <StringListInput className="value-input"/>
+        }[this.props.expression.return];
+
         return <Modal
-            title={"Edit Expression - " + this.props.expression.return}
+            title={"Edit Expression - Return Data Type - " + this.props.expression.return}
+            className="edit-expression"
             okText="Ok"
             cancelText="Cancel"
             visible={this.visible}
@@ -60,18 +70,23 @@ class EditExpressionModal extends Component {
             onCancel={this.handleCancel}
             afterClose={() => this.props.afterClose()}
         >
-            <Radio.Group onChange={this.onChange}>
-                <Radio value={ExpType.Value}>
+            <Radio.Group onChange={(e) => this.props.expression.type = e.target.value}>
+                <Radio value={ExpType.Value} className="radio">
                     Value
-                    {EditExpressionModal.valueInputDict[this.props.expression.return]}
+                    {valueInput}
                 </Radio>
-                <Radio value={ExpType.Var}>
+                <Radio value={ExpType.Var} className="radio">
                     Variable
-                    <VariableSelect/>
+                    <VariableSelect
+                        variables={this.props.item.parameterInfos
+                            .filter(p => p.dataType === this.props.expression.return)}
+                        className="var-select"/>
                 </Radio>
-                <Radio value={ExpType.Func}>
+                <Radio value={ExpType.Func} className="radio">
                     Function
-                    <FunctionSelect/>
+                    <FunctionSelect
+                        className="func-select"
+                        returnType={this.props.expression.return}/>
                 </Radio>
             </Radio.Group>
         </Modal>

@@ -10,13 +10,12 @@ export const Privilege = {
 
 export const ItemType = {
     Config: "Config",
-    Lookup: "Lookup",
     Word: "Word"
 };
 
-export const ItemMode = {
-    ConfigProperty: "ConfigProperty",
-    ConfigRaw: "ConfigRaw"
+export const ItemConfigMode = {
+    Property: "Property",
+    Raw: "Raw"
 };
 
 export const ExpType = {

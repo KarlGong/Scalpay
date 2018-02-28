@@ -9,7 +9,9 @@ import {DataType} from "~/utils/store";
 export default class DataTypeSelect extends Component {
     static defaultProps = {
         style: {},
-        className: ""
+        className: "",
+        onChange: (value) => {},
+        defaultValue: null
     };
 
     render = () => {
@@ -17,10 +19,11 @@ export default class DataTypeSelect extends Component {
             allowClear
             showSearch
             dropdownMatchSelectWidth={false}
+            defaultValue={this.props.defaultValue}
             style={this.props.style}
             className={this.props.className}
             placeholder="Data Type"
-            onChange={this.onChange}
+            onChange={this.props.onChange}
         >
             {
                 Object.entries(DataType).map(([name, value]) => {

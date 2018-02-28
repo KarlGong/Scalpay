@@ -7,12 +7,17 @@ import axios from "axios";
 @observer
 export default class DurationInput extends Component {
     static defaultProps = {
+        style: {},
+        className: "",
         onChange: (value) => {},
         defaultValue: ""
     };
 
     render = () => {
-        return <span>
+        return <span
+            style={this.props.style}
+            className={this.props.className}
+        >
             <InputNumber min={0} precision={0} step={1}/> Hours
             <InputNumber min={0} max={59} precision={0} step={10}/> Minutes
             <InputNumber min={0} max={59} precision={0} step={10}/> Seconds

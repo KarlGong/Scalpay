@@ -9,13 +9,18 @@ import StringInput from "./StringInput";
 @observer
 export default class StringDictInput extends Component {
     static defaultProps = {
+        style: {},
+        className: "",
         values: []
     };
 
     @observable values = [];
 
     render = () => {
-        return <DragListView onDragEnd={() => {}}>
+        return <DragListView
+            style={this.props.style}
+            className={this.props.className}
+            onDragEnd={() => {}}>
             {
                 this.values.map((item, index) => {
                     return <div>

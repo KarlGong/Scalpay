@@ -8,19 +8,23 @@ import {Func} from "~/utils/store";
 @observer
 export default class VariableSelect extends Component {
     static defaultProps = {
-        variables: {}
+        style: {},
+        className: "",
+        variables: []
     };
 
     render = () => {
         return <Select
+            style={this.props.style}
+            className={this.props.className}
             showSearch
-            placeholder="Select a Variable"
+            placeholder="Variable"
             dropdownMatchSelectWidth={false}
-            onChange={handleChange}
+            onChange={() => {}}
         >
             {
-                this.props.variables.map((name, returnType) =>
-                    <Select.Option value={name}>{name}</Select.Option>
+                this.props.variables.map((variable) =>
+                    <Select.Option value={variable.name} key={variable.name}>{variable.name}</Select.Option>
                 )
             }
         </Select>

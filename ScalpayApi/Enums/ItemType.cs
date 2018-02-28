@@ -3,7 +3,6 @@
     public enum ItemType
     {
         Config,
-        Lookup,
         Word
     }
 }

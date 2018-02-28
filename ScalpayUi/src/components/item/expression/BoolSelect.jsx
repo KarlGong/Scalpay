@@ -7,12 +7,17 @@ import axios from "axios";
 @observer
 export default class BoolSelect extends Component {
     static defaultProps = {
+        style: {},
+        className: "",
         onChange: (value) => {},
         defaultValue: ""
     };
 
     render = () => {
-        return <Radio.Group defaultValue={this.props.defaultValue} onChange={this.props.onChange()}>
+        return <Radio.Group
+            style={this.props.style}
+            className={this.props.className}
+            defaultValue={this.props.defaultValue} onChange={this.props.onChange()}>
             <Radio.Button value={true}>True</Radio.Button>
             <Radio.Button value={false}>False</Radio.Button>
         </Radio.Group>

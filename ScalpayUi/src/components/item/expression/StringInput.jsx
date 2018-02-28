@@ -8,12 +8,17 @@ import axios from "axios";
 export default class StringInput extends Component {
     static defaultProps = {
         style: {},
+        className: "",
         onChange: (value) => {},
         defaultValue: ""
     };
 
     render = () => {
-        return <Input placeholder="Input a String" style={this.props.style}
-                      onChange={this.props.onChange} defaultValue={this.props.defaultValue || ""}/>
+        return <Input
+            style={this.props.style}
+            className={this.props.className}
+            placeholder="String"
+            onChange={(e) => this.props.onChange(e.target.value)}
+            defaultValue={this.props.defaultValue || ""}/>
     }
 }

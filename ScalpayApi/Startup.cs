@@ -55,6 +55,8 @@ namespace ScalpayApi
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddTransient<IItemService, ItemService>();
+            services.AddTransient<IItemConfigService, ItemConfigService>();
+            services.AddTransient<IItemWordService, ItemWordService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IExpressionService, ExpressionService>();

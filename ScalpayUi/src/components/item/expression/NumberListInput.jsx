@@ -9,6 +9,8 @@ import NumberInput from "./NumberInput";
 @observer
 export default class NumberListInput extends Component {
     static defaultProps = {
+        style: {},
+        className: "",
         values: []
     };
 
@@ -16,7 +18,10 @@ export default class NumberListInput extends Component {
     @observable values = [];
 
     render = () => {
-        return <DragListView onDragEnd={() => {}}>
+        return <DragListView
+            style={this.props.style}
+            className={this.props.className}
+            onDragEnd={() => {}}>
             {
                 this.values.map((item, index) => {
                     return <div>

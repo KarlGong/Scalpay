@@ -12,20 +12,11 @@ namespace ScalpayApi.Data
 
             builder.Property(i => i.Name).IsRequired();
 
-            builder.Property(i => i.Type).IsRequired();
-
-            builder.Ignore(i => i.ParameterInfos);
-
-            builder.Property(i => i.ParameterInfosString).HasColumnName("ParameterInfos").IsRequired();
-
-            builder.Property(i => i.ResultDataType).IsRequired();
+            builder.Ignore(i => i.Type);
 
             builder.Property(i => i.InsertTime).ValueGeneratedOnAdd();
 
             builder.Property(i => i.UpdateTime).ValueGeneratedOnAddOrUpdate();
-
-            builder.HasMany(i => i.Rules).WithOne(r => r.Item).HasForeignKey(r => r.ItemKey)
-                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

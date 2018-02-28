@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
+using Microsoft.EntityFrameworkCore.ValueGeneration;
 using ScalpayApi.Data;
 using ScalpayApi.Enums;
 using System;
@@ -28,23 +29,16 @@ namespace ScalpayApi.Migrations
 
                     b.Property<string>("Description");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired();
+
                     b.Property<DateTime>("InsertTime")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("Mode");
 
                     b.Property<string>("Name")
                         .IsRequired();
 
-                    b.Property<string>("ParameterInfosString")
-                        .IsRequired()
-                        .HasColumnName("ParameterInfos");
-
                     b.Property<string>("ProjectKey");
-
-                    b.Property<int>("ResultDataType");
-
-                    b.Property<int>("Type");
 
                     b.Property<DateTime>("UpdateTime")
                         .ValueGeneratedOnAddOrUpdate();
@@ -54,6 +48,8 @@ namespace ScalpayApi.Migrations
                     b.HasIndex("ProjectKey");
 
                     b.ToTable("Items");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Item");
                 });
 
             modelBuilder.Entity("ScalpayApi.Models.Project", b =>
@@ -137,6 +133,33 @@ namespace ScalpayApi.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("ScalpayApi.Models.ItemConfig", b =>
+                {
+                    b.HasBaseType("ScalpayApi.Models.Item");
+
+                    b.Property<int>("Mode");
+
+                    b.Property<string>("ParameterInfosString")
+                        .IsRequired()
+                        .HasColumnName("ParameterInfos");
+
+                    b.Property<int>("ResultDataType");
+
+                    b.ToTable("ItemConfig");
+
+                    b.HasDiscriminator().HasValue("ItemConfig");
+                });
+
+            modelBuilder.Entity("ScalpayApi.Models.ItemWord", b =>
+                {
+                    b.HasBaseType("ScalpayApi.Models.Item");
+
+
+                    b.ToTable("ItemWord");
+
+                    b.HasDiscriminator().HasValue("ItemWord");
+                });
+
             modelBuilder.Entity("ScalpayApi.Models.Item", b =>
                 {
                     b.HasOne("ScalpayApi.Models.Project", "Project")
@@ -147,7 +170,7 @@ namespace ScalpayApi.Migrations
 
             modelBuilder.Entity("ScalpayApi.Models.Rule", b =>
                 {
-                    b.HasOne("ScalpayApi.Models.Item", "Item")
+                    b.HasOne("ScalpayApi.Models.ItemConfig", "Item")
                         .WithMany("Rules")
                         .HasForeignKey("ItemKey")
                         .OnDelete(DeleteBehavior.Cascade);

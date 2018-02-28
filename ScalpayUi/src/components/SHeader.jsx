@@ -7,7 +7,7 @@ import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
 import {IndexRoute, hashHistory, Router, Route, Link} from "react-router";
 import global from "~/global";
-import addItemModal from "~/modals/addItemModal";
+import addItemConfigModal from "~/modals/addItemConfigModal";
 import "./SHeader.less";
 import logo from "~/assets/imgs/logo.png";
 
@@ -29,7 +29,20 @@ export default class SHeader extends Component {
                     </div>
                     {auth.hasPrivileges(Privilege.ItemAdd) ?
                         <div className="item">
-                            <Button type="primary" onClick={() => addItemModal.open()}>Add</Button>
+                            <Dropdown
+                                trigger={["click"]}
+                                overlay={
+                                    <Menu onClick={(e) => {
+                                        if (e.key === "config") {
+                                            addItemConfigModal.open()
+                                        }
+                                    }}>
+                                        <Menu.Item key="config">Config Item</Menu.Item>
+                                        <Menu.Item key="word">Word Item</Menu.Item>
+                                    </Menu>
+                                }>
+                                <Button type="primary">Add</Button>
+                            </Dropdown>
                         </div>
                         : null
                     }

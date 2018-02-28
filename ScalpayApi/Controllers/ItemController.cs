@@ -11,45 +11,49 @@ namespace ScalpayApi.Controllers
     [Route("api/items")]
     public class ItemController : Controller
     {
-        private readonly IItemService _service;
+        private readonly IItemService _itemService;
+        private readonly IItemConfigService _itemConfigservice;
+        private readonly IItemWordService _itemWordService;
 
-        public ItemController(IItemService service)
+        public ItemController(IItemService itemService, IItemConfigService itemConfigService, IItemWordService itemWordService)
         {
-            _service = service;
+            _itemService = itemService;
+            _itemConfigservice = itemConfigService;
+            _itemWordService = itemWordService;
         }
         
         [HttpGet]
         public async Task<List<Item>> GetItems([FromQuery] ItemCriteria criteria)
         {
-            return await _service.GetItemsAsync(criteria);
+            return await _itemService.GetItemsAsync(criteria);
         }
 
-        [HttpGet("{itemKey}")]
+        [HttpGet("config/{itemKey}")]
         public async Task<Item> GetItem([FromRoute] string itemKey)
         {
-            return await _service.GetItemAsync(itemKey);
+            return await _itemConfigservice.GetItemConfigAsync(itemKey);
         }
 
-        [HttpPut]
+        [HttpPut("config")]
         [Authorization(Privilege.ItemAdd)]
-        public async Task<Item> AddItem([FromBody] AddItemParams ps)
+        public async Task<Item> AddItem([FromBody] AddItemConfigParams ps)
         {
-            return await _service.AddItemAsync(ps);
+            return await _itemConfigservice.AddItemConfigAsync(ps);
         }
 
-        [HttpPost("{itemKey}")]
+        [HttpPost("config/{itemKey}")]
         [Authorization(Privilege.ItemEdit)]
-        public async Task<Item> UpdateItem([FromRoute] string itemKey, [FromBody] UpdateItemParams ps)
+        public async Task<Item> UpdateItem([FromRoute] string itemKey, [FromBody] UpdateItemConfigParams ps)
         {
             ps.ItemKey = itemKey;
-            return await _service.UpdateItemAsync(ps);
+            return await _itemConfigservice.UpdateItemConfigAsync(ps);
         }
 
-        [HttpDelete("{itemKey}")]
+        [HttpDelete("config/{itemKey}")]
         [Authorization(Privilege.ItemDelete)]
         public async Task DeleteItem([FromRoute] string itemKey)
         {
-            await _service.DeleteItemAsync(itemKey);
+            await _itemConfigservice.DeleteItemConfigAsync(itemKey);
         }
     }
 }

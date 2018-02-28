@@ -10,7 +10,7 @@ namespace ScalpayApi.Models
 
         public string ItemKey { get; set; }
 
-        public Item Item { get; set; }
+        public ItemConfig Item { get; set; }
 
         public SExpression Condition // null means default rule
         {
@@ -24,7 +24,7 @@ namespace ScalpayApi.Models
         public SExpression Result
         {
             get { return JsonConvert.DeserializeObject<SExpression>(ResultString); }
-            
+
             set { ResultString = JsonConvert.SerializeObject(value); }
         }
 

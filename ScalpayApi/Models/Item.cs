@@ -13,20 +13,7 @@ namespace ScalpayApi.Models
 
         public string Description { get; set; }
 
-        public ItemType Type { get; set; }
-
-        public ItemMode? Mode { get; set; }
-
-        public List<ParameterInfo> ParameterInfos
-        {
-            get { return JsonConvert.DeserializeObject<List<ParameterInfo>>(ParameterInfosString); }
-
-            set { ParameterInfosString = JsonConvert.SerializeObject(value); }
-        }
-
-        public string ParameterInfosString { get; set; }
-
-        public SDataType ResultDataType { get; set; }
+        public virtual ItemType Type { get; set; }
 
         public DateTime InsertTime { get; set; }
 
@@ -34,8 +21,6 @@ namespace ScalpayApi.Models
 
         public string ProjectKey { get; set; }
 
-        public Project Project { get; set; }
-
-        public List<Rule> Rules { get; set; } = new List<Rule>();
+        public Project Project { get; set; }   
     }
 }
