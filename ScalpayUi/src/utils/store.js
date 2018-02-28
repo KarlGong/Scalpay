@@ -15,10 +15,8 @@ export const ItemType = {
 };
 
 export const ItemMode = {
-    Property: "Property",
-    List: "List",
-    Table: "Table",
-    Raw: "Raw"
+    ConfigProperty: "ConfigProperty",
+    ConfigRaw: "ConfigRaw"
 };
 
 export const ExpType = {

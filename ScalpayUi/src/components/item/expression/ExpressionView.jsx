@@ -23,7 +23,7 @@ export default class ExpressionView extends Component {
                         return <ExpressionView/>
                     })}
                 </span>;
-            default: return null
+            default: return <span>fdafa</span>
         }
     }
 }

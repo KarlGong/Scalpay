@@ -24,6 +24,7 @@ export default class ProjectSelect extends Component {
         return <Select
             allowClear
             showSearch
+            placeholder="Project"
             className={this.props.className}
             style={this.props.style}
             dropdownMatchSelectWidth={false}

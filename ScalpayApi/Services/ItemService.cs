@@ -50,7 +50,7 @@ namespace ScalpayApi.Services
         
         public ItemMode? Mode { get; set; }
         
-        public Dictionary<string, SDataType> ParamsDataTypes { get; set; }
+        public List<ParameterInfo> ParameterInfos { get; set; }
         
         public SDataType ResultDataType { get; set; }
         
@@ -67,7 +67,7 @@ namespace ScalpayApi.Services
         
         public ItemMode? Mode { get; set; }
         
-        public Dictionary<string, SDataType> ParamsDataTypes { get; set; }
+        public List<ParameterInfo> ParameterInfos { get; set; }
         
         public SDataType ResultDataType { get; set; }
         

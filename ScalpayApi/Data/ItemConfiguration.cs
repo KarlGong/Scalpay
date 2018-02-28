@@ -14,9 +14,9 @@ namespace ScalpayApi.Data
 
             builder.Property(i => i.Type).IsRequired();
 
-            builder.Ignore(i => i.ParamsDataTypes);
+            builder.Ignore(i => i.ParameterInfos);
 
-            builder.Property(i => i.ParamsDataTypesString).HasColumnName("ParamsDataTypes").IsRequired();
+            builder.Property(i => i.ParameterInfosString).HasColumnName("ParameterInfos").IsRequired();
 
             builder.Property(i => i.ResultDataType).IsRequired();
 

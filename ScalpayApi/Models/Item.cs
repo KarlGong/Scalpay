@@ -17,14 +17,14 @@ namespace ScalpayApi.Models
 
         public ItemMode? Mode { get; set; }
 
-        public Dictionary<string, SDataType> ParamsDataTypes
+        public List<ParameterInfo> ParameterInfos
         {
-            get { return JsonConvert.DeserializeObject<Dictionary<string, SDataType>>(ParamsDataTypesString); }
+            get { return JsonConvert.DeserializeObject<List<ParameterInfo>>(ParameterInfosString); }
 
-            set { ParamsDataTypesString = JsonConvert.SerializeObject(value); }
+            set { ParameterInfosString = JsonConvert.SerializeObject(value); }
         }
 
-        public string ParamsDataTypesString { get; set; }
+        public string ParameterInfosString { get; set; }
 
         public SDataType ResultDataType { get; set; }
 

@@ -7,11 +7,19 @@ import {DataType} from "~/utils/store";
 
 @observer
 export default class DataTypeSelect extends Component {
+    static defaultProps = {
+        style: {},
+        className: ""
+    };
+
     render = () => {
         return <Select
+            allowClear
             showSearch
-            placeholder="Select a Data Type"
-            optionFilterProp="children"
+            dropdownMatchSelectWidth={false}
+            style={this.props.style}
+            className={this.props.className}
+            placeholder="Data Type"
             onChange={this.onChange}
         >
             {

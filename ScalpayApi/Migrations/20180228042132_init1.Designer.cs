@@ -12,9 +12,10 @@ using System;
 namespace ScalpayApi.Migrations
 {
     [DbContext(typeof(ScalpayDbContext))]
-    partial class ScalpayDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180228042132_init1")]
+    partial class init1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

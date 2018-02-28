@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -28,11 +29,11 @@ namespace ScalpayApi.Controllers
 
             foreach (var pair in parameters)
             {
-                if (!item.ParamsDataTypes.ContainsKey(pair.Key)) continue; // data type not found, since paramter is not decalred in parameter list.
+                var parameterInfo = item.ParameterInfos.SingleOrDefault(p => p.Name == pair.Key);
                 
-                var dataType = item.ParamsDataTypes[pair.Key];
+                if (parameterInfo == null) continue; // data type not found, since paramter is not decalred in parameter list.
 
-                variables.Add(pair.Key, await _expService.ConvertToSDataAsync(pair.Value, dataType));
+                variables.Add(pair.Key, await _expService.ConvertToSDataAsync(pair.Value, parameterInfo.DataType));
             }
             
             return await _itemService.EvalItem(item, variables);
