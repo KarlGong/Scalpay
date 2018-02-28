@@ -39,6 +39,7 @@ class AddItemConfigModal extends Component {
         parameterInfos: [],
         resultDataType: DataType.String,
         rules: [{
+            key: guid(),
             condition: null,
             result: {return: DataType.String}
         }]
@@ -153,6 +154,7 @@ class AddItemConfigModal extends Component {
                                     this.item.resultDataType = value;
                                     this.item.rules.clear();
                                     this.item.rules.push({
+                                        key: guid(),
                                         condition: null,
                                         result: {return: value}
                                     });
@@ -209,6 +211,7 @@ class AddItemConfigModal extends Component {
                             </Col>
                             <Col span={6} className="center">
                                 <ExpressionView
+                                    key={defaultRule.key}
                                     expression={untracked(() => defaultRule.result)}
                                     item={this.item}
                                     onChange={(exp) => defaultRule.result = exp}
