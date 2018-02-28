@@ -17,7 +17,8 @@ export default class NumberInput extends Component {
         return <InputNumber placeholder="Input a Number"
                             style={this.props.style}
                             className={this.props.className}
-                            onChange={this.props.onChange} defaultValue={this.props.defaultValue || 0}
+                            onChange={this.props.onChange}
+                            defaultValue={this.props.defaultValue}
                             step={1}/>
     }
 }

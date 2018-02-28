@@ -10,14 +10,15 @@ export default class BoolSelect extends Component {
         style: {},
         className: "",
         onChange: (value) => {},
-        defaultValue: ""
+        defaultValue: true
     };
 
     render = () => {
         return <Radio.Group
             style={this.props.style}
             className={this.props.className}
-            defaultValue={this.props.defaultValue} onChange={this.props.onChange()}>
+            defaultValue={this.props.defaultValue}
+            onChange={(e) => this.props.onChange(e.target.value)}>
             <Radio.Button value={true}>True</Radio.Button>
             <Radio.Button value={false}>False</Radio.Button>
         </Radio.Group>

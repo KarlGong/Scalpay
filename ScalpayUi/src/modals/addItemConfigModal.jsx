@@ -55,6 +55,9 @@ class AddItemConfigModal extends Component {
             },
         };
 
+        let rules = this.item.rules.filter((rule) => rule.condition !== null);
+        let defaultRule = this.item.rules.filter((rule) => rule.condition === null)[0];
+
         return <Modal
             title="Add Config Item"
             okText="Add Config Item"
@@ -166,15 +169,20 @@ class AddItemConfigModal extends Component {
                                 <b>Result</b>
                             </Col>
                         </Row>
-                        <DragListView onDragEnd={() => {}}>
+                        <DragListView onDragEnd={() => {
+                        }}>
                             {
-                                this.item.rules.filter((rule) => rule.condition !== null).map((rule) => {
+                                rules.map((rule) => {
                                     return <Row key={rule.key} gutter={24} className="rule">
                                         <Col span={18} className="center">
-                                            <ExpressionView expression={rule.condition} item={this.item}/>
+                                            <ExpressionView expression={untracked(() => rule.condition)}
+                                                            item={untracked(() => this.item)}
+                                                            onChange={(exp) => rule.condition = exp}/>
                                         </Col>
                                         <Col span={6} className="center">
-                                            <ExpressionView expression={rule.result} item={this.item}/>
+                                            <ExpressionView expression={untracked(() => rule.result)}
+                                                            item={untracked(() => this.item)}
+                                                            onChange={(exp) => rule.result = exp}/>
                                         </Col>
                                     </Row>
                                 })
@@ -200,8 +208,11 @@ class AddItemConfigModal extends Component {
                                 <b>Default</b>
                             </Col>
                             <Col span={6} className="center">
-                                <ExpressionView expression={this.item.rules.filter(i => i.condition === null)[0].result}
-                                                item={this.item}/>
+                                <ExpressionView
+                                    expression={untracked(() => defaultRule.result)}
+                                    item={this.item}
+                                    onChange={(exp) => defaultRule.result = exp}
+                                />
                             </Col>
                         </Row>
                     </Collapse.Panel>

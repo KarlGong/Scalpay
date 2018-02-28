@@ -47,20 +47,45 @@ class EditExpressionModal extends Component {
 
     @observable visible = true;
 
+    constructor(props) {
+        super(props);
+        this.expression = Object.assign({}, this.props.expression);
+        this.expression.type = this.expression.type || ExpType.Value;
+        if (this.expression.type === ExpType.Value) {
+            const valueDefault = {
+                [DataType.Bool]: true,
+                [DataType.DateTime]: "datetime",
+                [DataType.Duration]: "duration",
+                [DataType.Number]: 0,
+                [DataType.NumberList]: [],
+                [DataType.String]: "",
+                [DataType.StringDict]: {},
+                [DataType.StringListInput]: []
+            };
+            this.expression.value = this.expression.value || valueDefault[this.expression.return]
+        }
+    }
+
     render = () => {
+        const valueInputProps = {
+            className: "value-input",
+            defaultValue: this.expression.value,
+            onChange: (value) => this.expression.value = value
+        };
+
         const valueInput = {
-            [DataType.Bool]: <BoolSelect className="value-input"/>,
-            [DataType.DateTime]: <DateTimeInput className="value-input"/>,
-            [DataType.Duration]: <DurationInput className="value-input"/>,
-            [DataType.Number]: <NumberInput className="value-input"/>,
-            [DataType.NumberList]: <NumberListInput className="value-input"/>,
-            [DataType.String]: <StringInput className="value-input"/>,
-            [DataType.StringDict]: <StringDictInput className="value-input"/>,
-            [DataType.StringListInput]: <StringListInput className="value-input"/>
-        }[this.props.expression.return];
+            [DataType.Bool]: <BoolSelect {...valueInputProps} />,
+            [DataType.DateTime]: <DateTimeInput {...valueInputProps}/>,
+            [DataType.Duration]: <DurationInput {...valueInputProps}/>,
+            [DataType.Number]: <NumberInput {...valueInputProps}/>,
+            [DataType.NumberList]: <NumberListInput {...valueInputProps}/>,
+            [DataType.String]: <StringInput {...valueInputProps}/>,
+            [DataType.StringDict]: <StringDictInput {...valueInputProps}/>,
+            [DataType.StringListInput]: <StringListInput {...valueInputProps}/>
+        }[this.expression.return];
 
         return <Modal
-            title={"Edit Expression - Return Data Type - " + this.props.expression.return}
+            title={"Edit Expression - Return Data Type - " + this.expression.return}
             className="edit-expression"
             okText="Ok"
             cancelText="Cancel"
@@ -70,7 +95,9 @@ class EditExpressionModal extends Component {
             onCancel={this.handleCancel}
             afterClose={() => this.props.afterClose()}
         >
-            <Radio.Group onChange={(e) => this.props.expression.type = e.target.value}>
+            <Radio.Group
+                defaultValue={this.expression.type}
+                onChange={(e) => this.expression.type = e.target.value}>
                 <Radio value={ExpType.Value} className="radio">
                     Value
                     {valueInput}
@@ -79,21 +106,34 @@ class EditExpressionModal extends Component {
                     Variable
                     <VariableSelect
                         variables={this.props.item.parameterInfos
-                            .filter(p => p.dataType === this.props.expression.return)}
+                            .filter(p => p.dataType === this.expression.return)}
                         className="var-select"/>
                 </Radio>
                 <Radio value={ExpType.Func} className="radio">
                     Function
                     <FunctionSelect
                         className="func-select"
-                        returnType={this.props.expression.return}/>
+                        returnType={untracked(() => this.expression.return)}/>
                 </Radio>
             </Radio.Group>
         </Modal>
     };
 
     handleOk = () => {
-
+        let returnExpression = {
+            return: this.expression.return,
+            type: this.expression.type
+        };
+        if (this.expression.type === ExpType.Value) {
+            returnExpression.value = this.expression.value;
+        } else if (this.expression.type === ExpType.Var) {
+            returnExpression.var = this.expression.var;
+        } else if (this.expression.type === ExpType.Func) {
+            returnExpression.name = this.expression.name;
+            returnExpression.args = this.expression.args;
+        }
+        this.props.onSuccess(returnExpression);
+        this.visible = false;
     };
 
     handleCancel = (e) => {
