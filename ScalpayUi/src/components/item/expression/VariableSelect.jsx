@@ -10,17 +10,20 @@ export default class VariableSelect extends Component {
     static defaultProps = {
         style: {},
         className: "",
-        variables: []
+        defaultValue: "",
+        variables: [],
+        onChange: (variableName) => {}
     };
 
     render = () => {
         return <Select
             style={this.props.style}
             className={this.props.className}
+            defaultValue={this.props.defaultValue}
             showSearch
             placeholder="Variable"
             dropdownMatchSelectWidth={false}
-            onChange={() => {}}
+            onChange={this.props.onChange}
         >
             {
                 this.props.variables.map((variable) =>

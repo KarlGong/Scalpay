@@ -14,7 +14,7 @@ export default class NumberInput extends Component {
     };
 
     render = () => {
-        return <InputNumber placeholder="Input a Number"
+        return <InputNumber placeholder="Number"
                             style={this.props.style}
                             className={this.props.className}
                             onChange={this.props.onChange}

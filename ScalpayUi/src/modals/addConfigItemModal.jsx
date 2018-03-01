@@ -41,7 +41,7 @@ class AddConfigItemModal extends Component {
         rules: [{
             key: guid(),
             condition: null,
-            result: {return: DataType.String}
+            result: {returnType: DataType.String}
         }]
     };
     @observable visible = true;
@@ -150,13 +150,13 @@ class AddConfigItemModal extends Component {
                             <Form.Item label="Result Data Type"
                                        {...formItemLayout}
                             >
-                                <DataTypeSelect style={{width: "150px"}} onChange={(value) => {
-                                    this.item.resultDataType = value;
+                                <DataTypeSelect style={{width: "150px"}} onChange={(dataType) => {
+                                    this.item.resultDataType = dataType;
                                     this.item.rules.clear();
                                     this.item.rules.push({
                                         key: guid(),
                                         condition: null,
-                                        result: {return: value}
+                                        result: {returnType: dataType}
                                     });
                                 }}/>
                             </Form.Item>
@@ -197,10 +197,10 @@ class AddConfigItemModal extends Component {
                                             {
                                                 key: guid(),
                                                 condition: {
-                                                    return: DataType.Bool
+                                                    returnType: DataType.Bool
                                                 },
                                                 result: {
-                                                    return: this.item.resultDataType
+                                                    returnType: this.item.resultDataType
                                                 }
                                             })}>Add Rule</Button>
                             </Col>

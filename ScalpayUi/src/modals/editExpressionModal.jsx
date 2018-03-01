@@ -2,12 +2,12 @@ import {Layout, Menu, Input, Icon, Form, Spin, Modal, Button, message, Radio} fr
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {render, unmountComponentAtNode} from "react-dom";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
+import {observable, toJS, untracked, runInAction, action, extendObservable} from "mobx";
 import axios from "axios";
 import Validator from "~/utils/Validator";
 import {IndexRoute, browserHistory, Router, Route, Link} from "react-router";
 import global from "~/global";
-import {ExpType, DataType} from "~/utils/store";
+import {ExpType, DataType, Func} from "~/utils/store";
 import BoolSelect from "~/components/item/expression/BoolSelect";
 import DateTimeInput from "~/components/item/expression/DateTimeInput";
 import DurationInput from "~/components/item/expression/DurationInput";
@@ -18,6 +18,7 @@ import StringDictInput from "~/components/item/expression/StringDictInput";
 import StringListInput from "~/components/item/expression/StringListInput";
 import FunctionSelect from "~/components/item/expression/FunctionSelect";
 import VariableSelect from "~/components/item/expression/VariableSelect";
+import ExpressionView from "~/components/item/expression/ExpressionView";
 import "./editExpressionModal.less";
 
 function open(expression, item, onSuccess) {
@@ -33,10 +34,10 @@ function open(expression, item, onSuccess) {
 class EditExpressionModal extends Component {
     static defaultProps = {
         expression: {
-            return: null,
-            type: null,
-            name: null,
-            args: [],
+            returnType: null,
+            expType: null,
+            funcName: null,
+            funcArgs: [],
             value: null,
             var: null
         },
@@ -49,9 +50,16 @@ class EditExpressionModal extends Component {
 
     constructor(props) {
         super(props);
-        this.expression = Object.assign({}, this.props.expression);
-        this.expression.type = this.expression.type || ExpType.Value;
-        if (this.expression.type === ExpType.Value) {
+        this.expression = observable(Object.assign({
+            returnType: null,
+            expType: null,
+            funcName: null,
+            funcArgs: [],
+            value: null,
+            var: null
+        }, this.props.expression));
+        this.expression.expType = this.expression.expType || ExpType.Value;
+        if (this.expression.expType === ExpType.Value) {
             const valueDefault = {
                 [DataType.Bool]: true,
                 [DataType.DateTime]: "datetime",
@@ -62,13 +70,12 @@ class EditExpressionModal extends Component {
                 [DataType.StringDict]: {},
                 [DataType.StringListInput]: []
             };
-            this.expression.value = this.expression.value || valueDefault[this.expression.return]
+            this.expression.value = this.expression.value || valueDefault[this.expression.returnType]
         }
     }
 
     render = () => {
         const valueInputProps = {
-            className: "value-input",
             defaultValue: this.expression.value,
             onChange: (value) => this.expression.value = value
         };
@@ -77,15 +84,15 @@ class EditExpressionModal extends Component {
             [DataType.Bool]: <BoolSelect {...valueInputProps} />,
             [DataType.DateTime]: <DateTimeInput {...valueInputProps}/>,
             [DataType.Duration]: <DurationInput {...valueInputProps}/>,
-            [DataType.Number]: <NumberInput {...valueInputProps}/>,
+            [DataType.Number]: <NumberInput {...valueInputProps} className="number-input"/>,
             [DataType.NumberList]: <NumberListInput {...valueInputProps}/>,
-            [DataType.String]: <StringInput {...valueInputProps}/>,
+            [DataType.String]: <StringInput {...valueInputProps} className="string-input"/>,
             [DataType.StringDict]: <StringDictInput {...valueInputProps}/>,
             [DataType.StringListInput]: <StringListInput {...valueInputProps}/>
-        }[this.expression.return];
+        }[this.expression.returnType];
 
         return <Modal
-            title={"Edit Expression - Return Data Type - " + this.expression.return}
+            title={"Edit Expression - Return Data Type - " + this.expression.returnType}
             className="edit-expression"
             okText="Ok"
             cancelText="Cancel"
@@ -96,41 +103,65 @@ class EditExpressionModal extends Component {
             afterClose={() => this.props.afterClose()}
         >
             <Radio.Group
-                defaultValue={this.expression.type}
-                onChange={(e) => this.expression.type = e.target.value}>
-                <Radio value={ExpType.Value} className="radio">
-                    Value
-                    {valueInput}
-                </Radio>
-                <Radio value={ExpType.Var} className="radio">
-                    Variable
-                    <VariableSelect
-                        variables={this.props.item.parameterInfos
-                            .filter(p => p.dataType === this.expression.return)}
-                        className="var-select"/>
-                </Radio>
-                <Radio value={ExpType.Func} className="radio">
-                    Function
-                    <FunctionSelect
-                        className="func-select"
-                        returnType={untracked(() => this.expression.return)}/>
-                </Radio>
+                defaultValue={this.expression.expType}
+                onChange={(e) => this.expression.expType = e.target.value}>
+                <Radio value={ExpType.Value}>Value</Radio>
+                <Radio value={ExpType.Var}>Variable</Radio>
+                <Radio value={ExpType.Func}>Function</Radio>
             </Radio.Group>
+            <div className="panel-body">
+                {this.expression.expType === ExpType.Value ? valueInput : null}
+                {this.expression.expType === ExpType.Var ?
+                    <VariableSelect
+                        className="var-select"
+                        variables={this.props.item.parameterInfos
+                            .filter(p => p.dataType === this.expression.returnType)}
+                        defaultValue={this.expression.var}
+                        onChange={(variableName) => this.expression.var = variableName}
+                    />
+                    : null
+                }
+                {this.expression.expType === ExpType.Func ?
+                    <div>
+                        <FunctionSelect
+                            className="func-select"
+                            returnType={untracked(() => this.expression.returnType)}
+                            defaultValue={this.expression.funcName}
+                            onChange={(functionName) => {
+                                this.expression.funcName = functionName;
+                                this.expression.funcArgs = Func[this.expression.returnType][functionName].funcArgs;
+                            }}
+                        />
+                        {
+                            this.expression.funcName ?
+                                <div className="func-exp">
+                                    <ExpressionView
+                                        key={this.expression.funcName}
+                                        expression={this.expression}
+                                        item={this.props.item}
+                                        onChange={(exp) => this.expression = exp}/>
+                                </div>
+                                : null
+                        }
+                    </div>
+                    : null
+                }
+            </div>
         </Modal>
     };
 
     handleOk = () => {
         let returnExpression = {
-            return: this.expression.return,
-            type: this.expression.type
+            returnType: this.expression.returnType,
+            expType: this.expression.expType
         };
-        if (this.expression.type === ExpType.Value) {
+        if (this.expression.expType === ExpType.Value) {
             returnExpression.value = this.expression.value;
-        } else if (this.expression.type === ExpType.Var) {
+        } else if (this.expression.expType === ExpType.Var) {
             returnExpression.var = this.expression.var;
-        } else if (this.expression.type === ExpType.Func) {
-            returnExpression.name = this.expression.name;
-            returnExpression.args = this.expression.args;
+        } else if (this.expression.expType === ExpType.Func) {
+            returnExpression.funcName = this.expression.funcName;
+            returnExpression.funcArgs = this.expression.funcArgs;
         }
         this.props.onSuccess(returnExpression);
         this.visible = false;

@@ -6,14 +6,14 @@ namespace ScalpayApi.Models
 {
     public class SExpression
     {
-        public SDataType Return { get; set; }
+        public SDataType ReturnType { get; set; }
         
-        public SExpressionType Type { get; set; }
+        public SExpressionType ExpType { get; set; }
         
         // Func
-        public string Name { get; set; }
+        public string FuncName { get; set; }
         
-        public List<SExpression> Args { get; set; } = new List<SExpression>();
+        public List<SExpression> FuncArgs { get; set; } = new List<SExpression>();
         
         // Value
         public JToken Value { get; set; }

@@ -10,7 +10,9 @@ export default class FunctionSelect extends Component {
     static defaultProps = {
         style: {},
         className: "",
-        returnType: ""
+        returnType: "",
+        defaultValue: "",
+        onChange: (functionName) => {}
     };
 
     render = () => {
@@ -19,12 +21,14 @@ export default class FunctionSelect extends Component {
             className={this.props.className}
             showSearch
             placeholder="Function"
+            dropdownMatchSelectWidth={false}
             optionFilterProp="children"
-            onChange={() => {}}
+            defaultValue={this.props.defaultValue}
+            onChange={this.props.onChange}
         >
             {
-                Func[this.props.returnType].map((func) => {
-                    return <Select.Option value={func.name} key={func.name}>{func.displayName}</Select.Option>
+                Object.entries(Func[this.props.returnType]).map(([name, func]) => {
+                    return <Select.Option value={name} key={name}>{func.displayName}</Select.Option>
                 })
             }
 

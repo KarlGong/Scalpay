@@ -23,10 +23,10 @@ namespace ScalpayApi.Services
         {
             SData result = null;
             
-            switch (exp.Type)
+            switch (exp.ExpType)
             {
                 case SExpressionType.Value:
-                    result = await ConvertToSDataAsync(exp.Value, exp.Return);
+                    result = await ConvertToSDataAsync(exp.Value, exp.ReturnType);
                     break;
                 case SExpressionType.Var:
                     if (!variables.TryGetValue(exp.Var, out var variable))
@@ -37,13 +37,13 @@ namespace ScalpayApi.Services
                     result = variable;
                     break;
                 case SExpressionType.Func:
-                    var method = typeof(SFunctions).GetMethod(exp.Name);
+                    var method = typeof(SFunctions).GetMethod(exp.FuncName);
                     if (method == null)
                     {
-                        throw new Exception($"{exp.Name} is not a valid function name.");
+                        throw new Exception($"{exp.FuncName} is not a valid function name.");
                     }
 
-                    var args = exp.Args.Select(a => EvalExpressionAsync(a, variables).Result).ToArray<object>();
+                    var args = exp.FuncArgs.Select(a => EvalExpressionAsync(a, variables).Result).ToArray<object>();
 
                     result = (SData) method.Invoke(null, args);
                     break;

@@ -35,43 +35,35 @@ export const DataType = {
     StringList: "StringList"
 };
 
+const boolDefaultExp = {
+    return: "Bool",
+    type: ExpType.Value,
+    value: true
+};
+
 export const Func = {
-    Bool: [
-        {
-            name: "BoolNot",
+    Bool: {
+        "BoolNot": {
             displayName: "not (Bool)",
-            exp: "not {Bool::0}"
+            displayExp: "not {0}",
+            funcArgs: [boolDefaultExp]
         },
-        {
-            name: "BoolIsEqualToBool",
+        "BoolIsEqualToBool": {
             displayName: "(Bool) is equal to (Bool)",
-            exp: "{Bool::0} = {Bool::1}"
+            displayExp: "{0} = {1}",
+            funcArgs: [boolDefaultExp, boolDefaultExp]
         },
-        {
-            name: "BoolIsNotEqualToBool",
+        "BoolIsNotEqualToBool": {
             displayName: "(Bool) is not equal to (Bool)",
-            exp: "{Bool::0} != {Bool::1}"
+            displayExp: "{0} != {1}",
+            funcArgs: [boolDefaultExp, boolDefaultExp]
         }
-    ],
-    DateTime: [
-
-    ],
-    Duration:[
-
-    ],
-    Number: [
-
-    ],
-    NumberList: [
-
-    ],
-    String: [
-
-    ],
-    StringDict: [
-
-    ],
-    StringList:[
-
-    ]
+    },
+    DateTime: {},
+    Duration: {},
+    Number: {},
+    NumberList: {},
+    String: {},
+    StringDict: {},
+    StringList: {}
 };
