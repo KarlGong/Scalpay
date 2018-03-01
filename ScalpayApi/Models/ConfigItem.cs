@@ -4,14 +4,14 @@ using ScalpayApi.Enums;
 
 namespace ScalpayApi.Models
 {
-    public class ItemConfig : Item
+    public class ConfigItem : Item
     {
         public override ItemType Type
         {
             get { return ItemType.Config; }
         }
 
-        public ItemConfigMode Mode { get; set; }
+        public ConfigItemMode Mode { get; set; }
 
         public List<ParameterInfo> ParameterInfos
         {

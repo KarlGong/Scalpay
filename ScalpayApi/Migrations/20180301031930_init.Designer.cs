@@ -13,7 +13,7 @@ using System;
 namespace ScalpayApi.Migrations
 {
     [DbContext(typeof(ScalpayDbContext))]
-    [Migration("20180228084826_init")]
+    [Migration("20180301031930_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -134,7 +134,7 @@ namespace ScalpayApi.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ScalpayApi.Models.ItemConfig", b =>
+            modelBuilder.Entity("ScalpayApi.Models.ConfigItem", b =>
                 {
                     b.HasBaseType("ScalpayApi.Models.Item");
 
@@ -146,19 +146,19 @@ namespace ScalpayApi.Migrations
 
                     b.Property<int>("ResultDataType");
 
-                    b.ToTable("ItemConfig");
+                    b.ToTable("ConfigItem");
 
-                    b.HasDiscriminator().HasValue("ItemConfig");
+                    b.HasDiscriminator().HasValue("ConfigItem");
                 });
 
-            modelBuilder.Entity("ScalpayApi.Models.ItemWord", b =>
+            modelBuilder.Entity("ScalpayApi.Models.WordItem", b =>
                 {
                     b.HasBaseType("ScalpayApi.Models.Item");
 
 
-                    b.ToTable("ItemWord");
+                    b.ToTable("WordItem");
 
-                    b.HasDiscriminator().HasValue("ItemWord");
+                    b.HasDiscriminator().HasValue("WordItem");
                 });
 
             modelBuilder.Entity("ScalpayApi.Models.Item", b =>
@@ -171,7 +171,7 @@ namespace ScalpayApi.Migrations
 
             modelBuilder.Entity("ScalpayApi.Models.Rule", b =>
                 {
-                    b.HasOne("ScalpayApi.Models.ItemConfig", "Item")
+                    b.HasOne("ScalpayApi.Models.ConfigItem", "ConfigItem")
                         .WithMany("Rules")
                         .HasForeignKey("ItemKey")
                         .OnDelete(DeleteBehavior.Cascade);

@@ -10,7 +10,7 @@ using ScalpayApi.Services.SExpressions;
 
 namespace ScalpayApi.Services
 {   
-    public class AddItemConfigParams
+    public class AddConfigItemParams
     {
         public string ProjectKey { get; set; }
 
@@ -20,7 +20,7 @@ namespace ScalpayApi.Services
 
         public string Description { get; set; }
 
-        public ItemConfigMode Mode { get; set; }
+        public ConfigItemMode Mode { get; set; }
         
         public List<ParameterInfo> ParameterInfos { get; set; }
         
@@ -29,7 +29,7 @@ namespace ScalpayApi.Services
         public List<Rule> Rules { get; set; }
     }
 
-    public class UpdateItemConfigParams
+    public class UpdateConfigItemParams
     {
         public string ItemKey { get; set; }
 
@@ -37,7 +37,7 @@ namespace ScalpayApi.Services
 
         public string Description { get; set; }
         
-        public ItemConfigMode Mode { get; set; }
+        public ConfigItemMode Mode { get; set; }
         
         public List<ParameterInfo> ParameterInfos { get; set; }
         
@@ -46,51 +46,51 @@ namespace ScalpayApi.Services
         public List<Rule> Rules { get; set; }
     }
     
-    public interface IItemConfigService
+    public interface IConfigItemService
     {
-        Task<ItemConfig> GetItemConfigAsync(string itemKey);
+        Task<ConfigItem> GetConfigItemAsync(string itemKey);
 
-        Task<ItemConfig> AddItemConfigAsync(AddItemConfigParams ps);
+        Task<ConfigItem> AddConfigItemAsync(AddConfigItemParams ps);
 
-        Task<ItemConfig> UpdateItemConfigAsync(UpdateItemConfigParams ps);
+        Task<ConfigItem> UpdateConfigItemAsync(UpdateConfigItemParams ps);
 
-        Task DeleteItemConfigAsync(string itemKey);
+        Task DeleteConfigItemAsync(string itemKey);
 
-        Task<SData> EvalItemConfig(ItemConfig item, Dictionary<string, SData> parameters);
+        Task<SData> EvalConfigItem(ConfigItem configItem, Dictionary<string, SData> parameters);
     }
     
-    public class ItemConfigService :IItemConfigService
+    public class ConfigItemService :IConfigItemService
     {
         private readonly ScalpayDbContext _context;
         private readonly IMapper _mapper;
         private readonly IExpressionService _expService;
         
-        public ItemConfigService(ScalpayDbContext context, IMapper mapper, IExpressionService expService)
+        public ConfigItemService(ScalpayDbContext context, IMapper mapper, IExpressionService expService)
         {
             _context = context;
             _mapper = mapper;
             _expService = expService;
         }
         
-        public async Task<ItemConfig> GetItemConfigAsync(string itemKey)
+        public async Task<ConfigItem> GetConfigItemAsync(string itemKey)
         {
-            return await _context.ItemConfigs.Include(i => i.Project).SingleOrDefaultAsync(i => i.ItemKey == itemKey);
+            return await _context.ConfigItems.Include(i => i.Project).SingleOrDefaultAsync(i => i.ItemKey == itemKey);
         }
 
-        public async Task<ItemConfig> AddItemConfigAsync(AddItemConfigParams ps)
+        public async Task<ConfigItem> AddConfigItemAsync(AddConfigItemParams ps)
         {
-            var item = _mapper.Map<ItemConfig>(ps);
+            var item = _mapper.Map<ConfigItem>(ps);
 
-            await _context.ItemConfigs.AddAsync(item);
+            await _context.ConfigItems.AddAsync(item);
 
             await _context.SaveChangesAsync();
 
             return item;
         }
 
-        public async Task<ItemConfig> UpdateItemConfigAsync(UpdateItemConfigParams ps)
+        public async Task<ConfigItem> UpdateConfigItemAsync(UpdateConfigItemParams ps)
         {
-            var previousItem = await GetItemConfigAsync(ps.ItemKey);
+            var previousItem = await GetConfigItemAsync(ps.ItemKey);
 
             _mapper.Map(ps, previousItem);
 
@@ -99,16 +99,16 @@ namespace ScalpayApi.Services
             return previousItem;
         }
 
-        public async Task DeleteItemConfigAsync(string itemKey)
+        public async Task DeleteConfigItemAsync(string itemKey)
         {
-            _context.ItemConfigs.Remove(await GetItemConfigAsync(itemKey));
+            _context.ConfigItems.Remove(await GetConfigItemAsync(itemKey));
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task<SData> EvalItemConfig(ItemConfig item, Dictionary<string, SData> parameters)
+        public async Task<SData> EvalConfigItem(ConfigItem configItem, Dictionary<string, SData> parameters)
         {
-            foreach (var rule in item.Rules.Where(r => r.Condition != null).OrderBy(r => r.Order))
+            foreach (var rule in configItem.Rules.Where(r => r.Condition != null).OrderBy(r => r.Order))
             {
                 if (((SBool) await _expService.EvalExpressionAsync(rule.Condition, parameters)).Inner)
                 {
@@ -116,7 +116,7 @@ namespace ScalpayApi.Services
                 }
             }
 
-            var defaultRule = item.Rules.Single(r => r.Condition == null);
+            var defaultRule = configItem.Rules.Single(r => r.Condition == null);
 
             return await _expService.EvalExpressionAsync(defaultRule.Result, parameters);
         }

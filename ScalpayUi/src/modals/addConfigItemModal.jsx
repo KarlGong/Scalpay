@@ -5,25 +5,25 @@ import {observable, toJS, untracked, runInAction, action} from "mobx";
 import axios from "axios";
 import {render, unmountComponentAtNode} from "react-dom";
 import ProjectSelect from "~/components/ProjectSelect";
-import {DataType, ItemType, ItemConfigMode} from "~/utils/store";
+import {DataType, ItemType, ConfigItemMode} from "~/utils/store";
 import ItemTypeSelect from "~/components/ItemTypeSelect";
 import DataTypeSelect from "~/components/DataTypeSelect";
 import ExpressionView from "~/components/item/expression/ExpressionView";
 import DragListView from "react-drag-listview";
 import guid from "~/utils/guid";
-import "./addItemConfigModal.less";
+import "./addConfigItemModal.less";
 
 function open(expression, onSuccess) {
     const target = document.createElement("div");
     document.body.appendChild(target);
-    render(<AddItemConfigModal expression={expression} onSuccess={onSuccess} afterClose={() => {
+    render(<AddConfigItemModal expression={expression} onSuccess={onSuccess} afterClose={() => {
         unmountComponentAtNode(target);
         target.remove()
     }}/>, target);
 }
 
 @observer
-class AddItemConfigModal extends Component {
+class AddConfigItemModal extends Component {
     static defaultProps = {
         onSuccess: (project) => {},
         afterClose: () => {}
@@ -35,7 +35,7 @@ class AddItemConfigModal extends Component {
         name: null,
         description: null,
         type: null,
-        mode: ItemConfigMode.Property,
+        mode: ConfigItemMode.Property,
         parameterInfos: [],
         resultDataType: DataType.String,
         rules: [{
@@ -76,8 +76,8 @@ class AddItemConfigModal extends Component {
                     <Radio.Group
                         onChange={(value) => this.item.mode = value}
                         defaultValue={this.item.mode}>
-                        <Radio.Button value={ItemConfigMode.Property}>Property</Radio.Button>
-                        <Radio.Button value={ItemConfigMode.Raw}>Raw</Radio.Button>
+                        <Radio.Button value={ConfigItemMode.Property}>Property</Radio.Button>
+                        <Radio.Button value={ConfigItemMode.Raw}>Raw</Radio.Button>
                     </Radio.Group>
                 </div>
                 <Collapse

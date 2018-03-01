@@ -11,19 +11,19 @@ namespace ScalpayApi.Controllers
     [Route("api/eval")]
     public class EvalController: Controller
     {
-        private readonly IItemConfigService _itemConfigService;
+        private readonly IConfigItemService _configItemService;
         private readonly IExpressionService _expService;
 
-        public EvalController(IItemConfigService itemConfigService, IExpressionService expService)
+        public EvalController(IConfigItemService configItemService, IExpressionService expService)
         {
-            _itemConfigService = itemConfigService;
+            _configItemService = configItemService;
             _expService = expService;
         }
         
         [HttpPost("config/{itemKey}")]
         public async Task<SData> EvalItem([FromRoute] string itemKey, [FromBody] Dictionary<string, JToken> parameters)
         {
-            var item = await _itemConfigService.GetItemConfigAsync(itemKey);
+            var item = await _configItemService.GetConfigItemAsync(itemKey);
             
             var variables = new Dictionary<string, SData>();
 
@@ -36,7 +36,7 @@ namespace ScalpayApi.Controllers
                 variables.Add(pair.Key, await _expService.ConvertToSDataAsync(pair.Value, parameterInfo.DataType));
             }
             
-            return await _itemConfigService.EvalItemConfig(item, variables);
+            return await _configItemService.EvalConfigItem(item, variables);
         }
     }
 }

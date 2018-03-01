@@ -2,7 +2,7 @@
 
 namespace ScalpayApi.Models
 {
-    public class ItemWord : Item
+    public class WordItem : Item
     {
         public override ItemType Type
         {

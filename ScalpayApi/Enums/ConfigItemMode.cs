@@ -1,6 +1,6 @@
 ﻿namespace ScalpayApi.Enums
 {
-    public enum ItemConfigMode
+    public enum ConfigItemMode
     {
         Property,
         Raw

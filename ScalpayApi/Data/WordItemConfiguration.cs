@@ -4,9 +4,9 @@ using ScalpayApi.Models;
 
 namespace ScalpayApi.Data
 {
-    public class ItemWordConfiguration : IEntityTypeConfiguration<ItemWord>
+    public class WordItemConfiguration : IEntityTypeConfiguration<WordItem>
     {
-        public void Configure(EntityTypeBuilder<ItemWord> builder)
+        public void Configure(EntityTypeBuilder<WordItem> builder)
         {
         }
     }

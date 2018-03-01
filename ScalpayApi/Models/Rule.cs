@@ -10,7 +10,7 @@ namespace ScalpayApi.Models
 
         public string ItemKey { get; set; }
 
-        public ItemConfig Item { get; set; }
+        public ConfigItem ConfigItem { get; set; }
 
         public SExpression Condition // null means default rule
         {

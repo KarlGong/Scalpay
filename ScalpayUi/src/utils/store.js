@@ -13,7 +13,7 @@ export const ItemType = {
     Word: "Word"
 };
 
-export const ItemConfigMode = {
+export const ConfigItemMode = {
     Property: "Property",
     Raw: "Raw"
 };

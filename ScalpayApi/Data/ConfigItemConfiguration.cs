@@ -4,9 +4,9 @@ using ScalpayApi.Models;
 
 namespace ScalpayApi.Data
 {
-    public class ItemConfigConfiguration : IEntityTypeConfiguration<ItemConfig>
+    public class ConfigItemConfiguration : IEntityTypeConfiguration<ConfigItem>
     {
-        public void Configure(EntityTypeBuilder<ItemConfig> builder)
+        public void Configure(EntityTypeBuilder<ConfigItem> builder)
         {
             builder.Property(i => i.Mode).IsRequired();
             
@@ -16,7 +16,7 @@ namespace ScalpayApi.Data
 
             builder.Property(i => i.ResultDataType).IsRequired();
 
-            builder.HasMany(i => i.Rules).WithOne(r => r.Item).HasForeignKey(r => r.ItemKey)
+            builder.HasMany(i => i.Rules).WithOne(r => r.ConfigItem).HasForeignKey(r => r.ItemKey)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

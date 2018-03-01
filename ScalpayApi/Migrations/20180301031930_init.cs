@@ -48,6 +48,9 @@ namespace ScalpayApi.Migrations
                 name: "Items",
                 columns: table => new
                 {
+                    Mode = table.Column<int>(nullable: true),
+                    ParameterInfos = table.Column<string>(nullable: true),
+                    ResultDataType = table.Column<int>(nullable: true),
                     ItemKey = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     Discriminator = table.Column<string>(nullable: false),
@@ -55,10 +58,7 @@ namespace ScalpayApi.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: false),
                     ProjectKey = table.Column<string>(nullable: true),
-                    UpdateTime = table.Column<DateTime>(nullable: false),
-                    Mode = table.Column<int>(nullable: true),
-                    ParameterInfos = table.Column<string>(nullable: true),
-                    ResultDataType = table.Column<int>(nullable: true)
+                    UpdateTime = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
