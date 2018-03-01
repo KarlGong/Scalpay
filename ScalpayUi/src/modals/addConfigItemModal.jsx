@@ -177,14 +177,18 @@ class AddConfigItemModal extends Component {
                                 rules.map((rule) => {
                                     return <Row key={rule.key} gutter={24} className="rule">
                                         <Col span={18} className="center">
-                                            <ExpressionView expression={untracked(() => rule.condition)}
-                                                            item={untracked(() => this.item)}
-                                                            onChange={(exp) => rule.condition = exp}/>
+                                            <ExpressionView
+                                                allowEdit
+                                                expression={untracked(() => rule.condition)}
+                                                item={untracked(() => this.item)}
+                                                onChange={(exp) => {rule.condition = exp; console.log(exp)}}/>
                                         </Col>
                                         <Col span={6} className="center">
-                                            <ExpressionView expression={untracked(() => rule.result)}
-                                                            item={untracked(() => this.item)}
-                                                            onChange={(exp) => rule.result = exp}/>
+                                            <ExpressionView
+                                                allowEdit
+                                                expression={untracked(() => rule.result)}
+                                                item={untracked(() => this.item)}
+                                                onChange={(exp) => rule.result = exp}/>
                                         </Col>
                                     </Row>
                                 })
@@ -205,13 +209,13 @@ class AddConfigItemModal extends Component {
                                             })}>Add Rule</Button>
                             </Col>
                         </Row>
-                        <Row gutter={24} className="rule-default">
+                        <Row key={defaultRule.key} gutter={24} className="rule-default">
                             <Col span={18} className="center">
                                 <b>Default</b>
                             </Col>
                             <Col span={6} className="center">
                                 <ExpressionView
-                                    key={defaultRule.key}
+                                    allowEdit
                                     expression={untracked(() => defaultRule.result)}
                                     item={this.item}
                                     onChange={(exp) => defaultRule.result = exp}

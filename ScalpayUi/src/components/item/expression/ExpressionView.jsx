@@ -6,11 +6,13 @@ import axios from "axios";
 import reactStringReplace from "react-string-replace";
 import {ExpType, Func, DataType} from "~/utils/store";
 import editExpressionModal from "~/modals/editExpressionModal";
+import guid from "~/utils/guid";
 
 @observer
 export default class ExpressionView extends Component {
     static defaultProps = {
         expression: {
+            key: guid(),
             returnType: null,
             expType: null,
             funcName: null,
@@ -19,12 +21,18 @@ export default class ExpressionView extends Component {
             var: null
         },
         item: {},
+        allowEdit: false,
+        allowSubEdit: false,
         onChange: (expression) => {}
     };
 
-    @observable expression = Object.assign({}, this.props.expression);
+    @observable expression = Object.assign({key: guid()}, this.props.expression);
 
     render = () => {
+        const editProps = { };
+        if (this.props.allowEdit) {
+            editProps.onClick = this.handleClick;
+        }
         switch (this.expression.expType) {
             case ExpType.Value:
                 let display = "";
@@ -54,15 +62,17 @@ export default class ExpressionView extends Component {
                         display = this.expression.value;
                         break;
                 }
-                return <span onClick={this.handleClick}>{display}</span>;
+                return <span {...editProps}>{display}</span>;
             case ExpType.Var:
-                return <span onClick={this.handleClick}>{this.expression.var}</span>;
+                return <span {...editProps}>{this.expression.var}</span>;
             case ExpType.Func:
-                return <span onClick={this.handleClick}>
+                return <span {...editProps}>
                     {
                         reactStringReplace(Func[this.expression.returnType][this.expression.funcName].displayExp, /{(\d+)}/, (argsIndex) => {
+                            this.expression.funcArgs[argsIndex].key = this.expression.funcArgs[argsIndex].key || guid();
                             return <ExpressionView
-                                key={argsIndex}
+                                key={this.expression.funcArgs[argsIndex].key}
+                                allowEdit={this.props.allowSubEdit}
                                 expression={this.expression.funcArgs[argsIndex]}
                                 item={this.props.item}
                                 onChange={(expression) => this.expression.funcArgs[argsIndex] = expression}/>
@@ -77,6 +87,7 @@ export default class ExpressionView extends Component {
     handleClick = () => {
         editExpressionModal.open(this.expression, this.props.item, (exp) => {
             this.expression = exp;
+            this.expression.key = guid();
             this.props.onChange(exp);
         });
     }
