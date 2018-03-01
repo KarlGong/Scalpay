@@ -36,8 +36,8 @@ export const DataType = {
 };
 
 const boolDefaultExp = {
-    return: "Bool",
-    type: ExpType.Value,
+    returnType: "Bool",
+    expType: ExpType.Value,
     value: true
 };
 
