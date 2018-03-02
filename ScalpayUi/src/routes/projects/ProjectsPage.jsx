@@ -7,9 +7,7 @@ import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
 import "./ProjectsPage.less";
 import PageWrapper from "~/layouts/PageWrapper";
-import addProjectModal from "~/modals/addProjectModal";
-import editProjectModal from "~/modals/editProjectModal";
-import deleteProjectModal from "~/modals/deleteProjectModal";
+import projectModal from "~/modals/projectModal";
 import global from "~/global";
 import ProjectInfo from "~/components/ProjectInfo";
 
@@ -73,14 +71,14 @@ export default class ProjectsPage extends Component {
     };
 
     addProject = () => {
-        addProjectModal.open((project) => this.searchProjects());
+        projectModal.add((project) => this.searchProjects());
     };
 
     editProject = (project) => {
-        editProjectModal.open(project, (project) => this.searchProjects());
+        projectModal.edit(project, (project) => this.searchProjects());
     };
 
     deleteProject = (project) => {
-        deleteProjectModal.open(project, (project) => this.searchProjects());
+        projectModal.del(project, (project) => this.searchProjects());
     };
 }

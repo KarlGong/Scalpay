@@ -10,8 +10,7 @@ import moment from "moment";
 import Validator from "~/utils/Validator";
 import "./ViewProjectPage.less";
 import global from "~/global";
-import deleteProjectModal from "~/modals/deleteProjectModal";
-import editProjectModal from "~/modals/editProjectModal";
+import projectModal from "~/modals/projectModal";
 
 @observer
 export default class ViewProjectPage extends Component {
@@ -68,10 +67,10 @@ export default class ViewProjectPage extends Component {
     };
 
     editProject = () => {
-        editProjectModal.open(this.project, (project) => this.loadProject());
+        projectModal.edit(this.project, (project) => this.loadProject());
     };
 
     deleteProject = () => {
-        deleteProjectModal.open(this.project, (project) => global.history.goBack());
+        projectModal.del(this.project, (project) => global.history.goBack());
     }
 }
