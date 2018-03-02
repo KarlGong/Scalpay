@@ -29,21 +29,21 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpGet("config/{itemKey}")]
-        public async Task<Item> GetItem([FromRoute] string itemKey)
+        public async Task<Item> GetConfigItem([FromRoute] string itemKey)
         {
             return await _configItemservice.GetConfigItemAsync(itemKey);
         }
 
         [HttpPut("config")]
         [Authorization(Privilege.ItemAdd)]
-        public async Task<Item> AddItem([FromBody] AddConfigItemParams ps)
+        public async Task<Item> AddConfigItem([FromBody] AddConfigItemParams ps)
         {
             return await _configItemservice.AddConfigItemAsync(ps);
         }
 
         [HttpPost("config/{itemKey}")]
         [Authorization(Privilege.ItemEdit)]
-        public async Task<Item> UpdateItem([FromRoute] string itemKey, [FromBody] UpdateConfigItemParams ps)
+        public async Task<Item> UpdateConfigItem([FromRoute] string itemKey, [FromBody] UpdateConfigItemParams ps)
         {
             ps.ItemKey = itemKey;
             return await _configItemservice.UpdateConfigItemAsync(ps);
@@ -51,7 +51,7 @@ namespace ScalpayApi.Controllers
 
         [HttpDelete("config/{itemKey}")]
         [Authorization(Privilege.ItemDelete)]
-        public async Task DeleteItem([FromRoute] string itemKey)
+        public async Task DeleteConfigItem([FromRoute] string itemKey)
         {
             await _configItemservice.DeleteConfigItemAsync(itemKey);
         }

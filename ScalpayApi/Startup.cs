@@ -37,6 +37,7 @@ namespace ScalpayApi
                 options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                     options.SerializerSettings.Converters.Add(new StringEnumConverter(false));
                 }
             );
@@ -69,6 +70,7 @@ namespace ScalpayApi
             JsonConvert.DefaultSettings = (() =>
             {
                 var settings = new JsonSerializerSettings();
+                settings.NullValueHandling = NullValueHandling.Ignore;
                 settings.Converters.Add(new StringEnumConverter(false));
                 return settings;
             });

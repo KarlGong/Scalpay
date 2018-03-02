@@ -7,7 +7,7 @@ import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
 import {IndexRoute, hashHistory, Router, Route, Link} from "react-router";
 import global from "~/global";
-import addConfigItemModal from "~/modals/addConfigItemModal";
+import configItemModal from "~/modals/configItemModal";
 import "./SHeader.less";
 import logo from "~/assets/imgs/logo.png";
 
@@ -34,7 +34,7 @@ export default class SHeader extends Component {
                                 overlay={
                                     <Menu onClick={(e) => {
                                         if (e.key === "config") {
-                                            addConfigItemModal.open()
+                                            configItemModal.add()
                                         }
                                     }}>
                                         <Menu.Item key="config">Config Item</Menu.Item>

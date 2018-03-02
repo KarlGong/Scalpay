@@ -11,7 +11,7 @@ export default class FunctionSelect extends Component {
         style: {},
         className: "",
         returnType: "",
-        defaultValue: "",
+        defaultValue: undefined,
         onChange: (functionName) => {}
     };
 

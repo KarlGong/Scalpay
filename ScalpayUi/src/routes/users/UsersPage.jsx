@@ -40,7 +40,7 @@ export default class UsersPage extends Component {
                     return <List.Item actions={[<a className="edit" onClick={() => this.editUser(user)}>edit</a>,
                         <a className="delete" onClick={() => this.deleteUser(user)}>delete</a>]}>
                         <List.Item.Meta
-                            title={<UserInfo user={user}/>}
+                            title={<span><UserInfo user={user}/></span>}
                             description={user.email}
                         />
                         <div>{user.username}</div>
@@ -63,14 +63,14 @@ export default class UsersPage extends Component {
     };
 
     addUser = () => {
-        userModal.add(() => this.searchUsers());
+        userModal.add();
     };
 
     editUser = (user) => {
-        userModal.edit(user, () => this.searchUsers());
+        userModal.edit(user);
     };
 
     deleteUser = (user) => {
-        userModal.del(user, () => this.searchUsers());
+        userModal.del(user);
     };
 }

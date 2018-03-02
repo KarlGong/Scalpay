@@ -48,7 +48,7 @@ export default class ProjectsPage extends Component {
 
                     return <List.Item actions={actions}>
                         <List.Item.Meta
-                            title={<ProjectInfo project={project}/>}
+                            title={<span><ProjectInfo project={project}/></span>}
                             description={project.description}
                         />
                         <div>{project.projectKey}</div>
@@ -71,14 +71,14 @@ export default class ProjectsPage extends Component {
     };
 
     addProject = () => {
-        projectModal.add((project) => this.searchProjects());
+        projectModal.add();
     };
 
     editProject = (project) => {
-        projectModal.edit(project, (project) => this.searchProjects());
+        projectModal.edit(project);
     };
 
     deleteProject = (project) => {
-        projectModal.del(project, (project) => this.searchProjects());
+        projectModal.del(project);
     };
 }

@@ -46,33 +46,15 @@ class EditExpressionModal extends Component {
         afterClose: () => {}
     };
 
+    @observable expression = Object.assign({
+        returnType: null,
+        expType: null,
+        funcName: null,
+        funcArgs: [],
+        value: null,
+        var: null
+    }, this.props.expression);
     @observable visible = true;
-
-    constructor(props) {
-        super(props);
-        this.expression = observable(Object.assign({
-            returnType: null,
-            expType: null,
-            funcName: null,
-            funcArgs: [],
-            value: null,
-            var: null
-        }, this.props.expression));
-        this.expression.expType = this.expression.expType || ExpType.Value;
-        if (this.expression.expType === ExpType.Value) {
-            const valueDefault = {
-                [DataType.Bool]: true,
-                [DataType.DateTime]: "datetime",
-                [DataType.Duration]: "duration",
-                [DataType.Number]: 0,
-                [DataType.NumberList]: [],
-                [DataType.String]: "",
-                [DataType.StringDict]: {},
-                [DataType.StringListInput]: []
-            };
-            this.expression.value = this.expression.value || valueDefault[this.expression.returnType]
-        }
-    }
 
     render = () => {
         const valueInputProps = {
@@ -93,7 +75,7 @@ class EditExpressionModal extends Component {
 
         return <Modal
             title={"Edit Expression - Return Data Type - " + this.expression.returnType}
-            className="edit-expression"
+            className="edit-expression-modal"
             okText="Ok"
             cancelText="Cancel"
             visible={this.visible}
@@ -116,7 +98,7 @@ class EditExpressionModal extends Component {
                         className="var-select"
                         variables={this.props.item.parameterInfos
                             .filter(p => p.dataType === this.expression.returnType)}
-                        defaultValue={this.expression.var}
+                        defaultValue={untracked(() => this.expression.var || undefined)}
                         onChange={(variableName) => this.expression.var = variableName}
                     />
                     : null
@@ -126,7 +108,7 @@ class EditExpressionModal extends Component {
                         <FunctionSelect
                             className="func-select"
                             returnType={untracked(() => this.expression.returnType)}
-                            defaultValue={this.expression.funcName}
+                            defaultValue={untracked(() => this.expression.funcName || undefined)}
                             onChange={(functionName) => {
                                 this.expression.funcName = functionName;
                                 this.expression.funcArgs = Func[this.expression.returnType][functionName].funcArgs;

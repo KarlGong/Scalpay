@@ -12,20 +12,21 @@ namespace ScalpayApi.Models
 
         public ConfigItem ConfigItem { get; set; }
 
+        // todo: https://github.com/aspnet/EntityFrameworkCore/issues/242
         public SExpression Condition // null means default rule
         {
-            get { return JsonConvert.DeserializeObject<SExpression>(ConditionString); }
+            get { return ConditionString != null ? JsonConvert.DeserializeObject<SExpression>(ConditionString) : null; }
 
-            set { ConditionString = JsonConvert.SerializeObject(value); }
+            set { ConditionString = value != null ? JsonConvert.SerializeObject(value) : null; }
         }
 
         public string ConditionString { get; set; }
 
         public SExpression Result
         {
-            get { return JsonConvert.DeserializeObject<SExpression>(ResultString); }
+            get { return ResultString != null ? JsonConvert.DeserializeObject<SExpression>(ResultString) : null; }
 
-            set { ResultString = JsonConvert.SerializeObject(value); }
+            set { ResultString = value != null ? JsonConvert.SerializeObject(value): null; }
         }
 
         public string ResultString { get; set; }

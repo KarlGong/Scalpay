@@ -13,7 +13,7 @@ namespace ScalpayApi.Models
         // Func
         public string FuncName { get; set; }
         
-        public List<SExpression> FuncArgs { get; set; } = new List<SExpression>();
+        public List<SExpression> FuncArgs { get; set; }
         
         // Value
         public JToken Value { get; set; }

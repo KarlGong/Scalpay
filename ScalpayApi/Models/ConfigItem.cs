@@ -11,8 +11,10 @@ namespace ScalpayApi.Models
             get { return ItemType.Config; }
         }
 
+        // todo: https://github.com/aspnet/EntityFrameworkCore/issues/242
         public ConfigItemMode Mode { get; set; }
 
+        // todo: https://github.com/aspnet/EntityFrameworkCore/issues/242
         public List<ParameterInfo> ParameterInfos
         {
             get { return JsonConvert.DeserializeObject<List<ParameterInfo>>(ParameterInfosString); }
@@ -24,6 +26,6 @@ namespace ScalpayApi.Models
 
         public SDataType ResultDataType { get; set; }
 
-        public List<Rule> Rules { get; set; } = new List<Rule>();
+        public List<Rule> Rules { get; set; }
     }
 }

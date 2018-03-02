@@ -10,7 +10,7 @@ export default class VariableSelect extends Component {
     static defaultProps = {
         style: {},
         className: "",
-        defaultValue: "",
+        defaultValue: undefined,
         variables: [],
         onChange: (variableName) => {}
     };

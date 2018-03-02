@@ -15,11 +15,7 @@ export default class ItemInfo extends Component {
     };
 
     render = () => {
-        return <span>
-            <ProjectInfo project={this.props.item.project}/>
-            <span>/</span>
-            <a onClick={() => global.history.push("/items/" + this.props.item.itemKey)}
+        return <a onClick={() => global.history.push("/items/" + this.props.item.itemKey)}
                title={this.props.item.itemKey}>{this.props.item.name}</a>
-        </span>;
     }
 }

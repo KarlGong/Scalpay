@@ -10,7 +10,10 @@ import PageWrapper from "~/layouts/PageWrapper";
 import ProjectSelect from "~/components/ProjectSelect";
 import ItemTypeSelect from "~/components/ItemTypeSelect";
 import ItemInfo from "~/components/ItemInfo";
+import {ItemType} from "~/utils/store";
+import configItemModal from "~/modals/configItemModal";
 import global from "~/global";
+import ProjectInfo from "~/components/ProjectInfo";
 
 @observer
 export default class ItemsPage extends Component {
@@ -47,7 +50,7 @@ export default class ItemsPage extends Component {
                         className="filter input"
                         placeholder="Search by item key/name/description"
                         onChange={(e) => this.searchParams.searchText = e.target.value || null} />
-                    <Button type="primary">Search</Button>
+                    <Button type="primary" onClick={() => this.searchItems()}>Search</Button>
                 </div>}
                 renderItem={item => {
                     let actions = [];
@@ -58,7 +61,7 @@ export default class ItemsPage extends Component {
 
                     return <List.Item actions={actions}>
                         <List.Item.Meta
-                            title={<ItemInfo item={item}/>}
+                            title={<span><ProjectInfo project={item.project}/> / <ItemInfo item={item}/></span>}
                             description={item.description}
                         />
                         <div>{item.itemKey}</div>
@@ -81,14 +84,14 @@ export default class ItemsPage extends Component {
     };
 
     editItem = (item) => {
-
+        if (item.type === ItemType.Config) {
+            configItemModal.edit(item)
+        }
     };
 
     deleteItem = (item) => {
-
-    };
-
-    viewItem = (item) => {
-        global.history.push("/items/" + item.itemKey);
+        if (item.type === ItemType.Config) {
+            configItemModal.del(item)
+        }
     };
 }
