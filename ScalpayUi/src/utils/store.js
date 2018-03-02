@@ -64,7 +64,7 @@ export const DefaultExp = {
     String: {
         returnType: DataType.String,
         expType: ExpType.Value,
-        value: "string"
+        value: "String"
     },
     StringDict: {
         returnType: DataType.StringDict,
@@ -94,6 +94,11 @@ export const Func = {
             displayName: "(Bool) is not equal to (Bool)",
             displayExp: "{0} != {1}",
             funcArgs: [DefaultExp.Bool, DefaultExp.Bool]
+        },
+        "StringIsEqualToString": {
+            displayName: "(String) is equal to (String)",
+            displayExp: "{0} = {1}, ignoring case {2}",
+            funcArgs: [DefaultExp.String, DefaultExp.String, DefaultExp.Bool]
         }
     },
     DateTime: {},
