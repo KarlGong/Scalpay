@@ -24,9 +24,9 @@ namespace ScalpayApi.Models
 
         public SExpression Result
         {
-            get { return ResultString != null ? JsonConvert.DeserializeObject<SExpression>(ResultString) : null; }
+            get { return JsonConvert.DeserializeObject<SExpression>(ResultString); }
 
-            set { ResultString = value != null ? JsonConvert.SerializeObject(value): null; }
+            set { ResultString = JsonConvert.SerializeObject(value); }
         }
 
         public string ResultString { get; set; }

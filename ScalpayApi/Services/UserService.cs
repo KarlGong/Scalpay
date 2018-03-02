@@ -1,61 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ScalpayApi.Data;
-using ScalpayApi.Enums;
 using ScalpayApi.Models;
+using ScalpayApi.Services.Parameters;
+using ScalpayApi.Services.Parameters.Criterias;
 
 namespace ScalpayApi.Services
 {
-    public class UserCriteria : Criteria<User>
-    {
-        public string ApiKey { get; set; }
-
-        public string Username { get; set; }
-
-        public string Password { get; set; }
-
-        public string SearchText { get; set; }
-
-        public override Expression<Func<User, bool>> ToWherePredicate()
-        {
-            return u =>
-                (ApiKey == null || ApiKey == u.ApiKey)
-                && (Username == null || Username == u.Username)
-                && (Password == null || Password == u.Password)
-                && (SearchText == null
-                    || u.Username.Contains(SearchText)
-                    || u.FullName.Contains(SearchText)
-                    || u.Email.Contains(SearchText));
-        }
-    }
-
-    public class AddUserParams
-    {
-        public string Username { get; set; }
-
-        public string Email { get; set; }
-
-        public string FullName { get; set; }
-
-        public List<Privilege> Privileges { get; set; }
-    }
-
-    public class UpdateUserParams
-    {
-        public string Username { get; set; }
-
-        public string Email { get; set; }
-
-        public string FullName { get; set; }
-
-        public List<Privilege> Privileges { get; set; }
-    }
-
     public interface IUserService
     {
         Task<User> GetUserAsync(UserCriteria criteria);

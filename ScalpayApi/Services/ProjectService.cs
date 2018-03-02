@@ -1,51 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ScalpayApi.Data;
 using ScalpayApi.Enums;
 using ScalpayApi.Models;
+using ScalpayApi.Services.Parameters;
+using ScalpayApi.Services.Parameters.Criterias;
 
 namespace ScalpayApi.Services
 {
-    public class ProjectCriteria : Criteria<Project>
-    {
-        public string ProjectKey { get; set; }
-
-        public string SearchText { get; set; }
-
-        public override Expression<Func<Project, bool>> ToWherePredicate()
-        {
-            return p =>
-                (ProjectKey == null || ProjectKey == p.ProjectKey)
-                && (SearchText == null
-                    || p.ProjectKey.Contains(SearchText)
-                    || p.Name.Contains(SearchText)
-                    || p.Description.Contains(SearchText));
-        }
-    }
-
-    public class AddProjectParams
-    {
-        public string ProjectKey { get; set; }
-
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-    }
-
-    public class UpdateProjectParams
-    {
-        public string ProjectKey { get; set; }
-
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-    }
-
     public interface IProjectService
     {
         Task<Project> GetProjectAsync(ProjectCriteria criteria);

@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using ScalpayApi.Controllers.DTOs;
 using ScalpayApi.Models;
 using ScalpayApi.Services;
+using ScalpayApi.Services.Parameters;
+using ScalpayApi.Services.Parameters.Criterias;
 
 namespace ScalpayApi.Controllers
 {

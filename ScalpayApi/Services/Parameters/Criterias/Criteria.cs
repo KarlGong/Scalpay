@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace ScalpayApi.Services
+namespace ScalpayApi.Services.Parameters.Criterias
 {
     public abstract class Criteria<T>
     {

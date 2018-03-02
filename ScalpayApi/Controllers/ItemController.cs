@@ -5,6 +5,8 @@ using ScalpayApi.Enums;
 using ScalpayApi.Models;
 using ScalpayApi.Services;
 using ScalpayApi;
+using ScalpayApi.Services.Parameters;
+using ScalpayApi.Services.Parameters.Criterias;
 
 namespace ScalpayApi.Controllers
 {

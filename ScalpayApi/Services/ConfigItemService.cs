@@ -4,48 +4,12 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ScalpayApi.Data;
-using ScalpayApi.Enums;
 using ScalpayApi.Models;
+using ScalpayApi.Services.Parameters;
 using ScalpayApi.Services.SExpressions;
 
 namespace ScalpayApi.Services
 {
-    public class AddConfigItemParams
-    {
-        public string ProjectKey { get; set; }
-
-        public string ItemKey { get; set; }
-
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-
-        public ConfigItemMode Mode { get; set; }
-
-        public List<ParameterInfo> ParameterInfos { get; set; }
-
-        public SDataType ResultDataType { get; set; }
-
-        public List<Rule> Rules { get; set; }
-    }
-
-    public class UpdateConfigItemParams
-    {
-        public string ItemKey { get; set; }
-
-        public string Name { get; set; }
-
-        public string Description { get; set; }
-
-        public ConfigItemMode Mode { get; set; }
-
-        public List<ParameterInfo> ParameterInfos { get; set; }
-
-        public SDataType ResultDataType { get; set; }
-
-        public List<Rule> Rules { get; set; }
-    }
-
     public interface IConfigItemService
     {
         Task<ConfigItem> GetConfigItemAsync(string itemKey);
@@ -84,10 +48,10 @@ namespace ScalpayApi.Services
 
         public async Task<ConfigItem> AddConfigItemAsync(AddConfigItemParams ps)
         {
-            var order = 0;
-            ps.Rules.ForEach(rule => rule.Order = order++);
-
             var item = _mapper.Map<ConfigItem>(ps);
+            
+            var order = 0;
+            item.Rules.ForEach(rule => rule.Order = order++);
 
             await _context.ConfigItems.AddAsync(item);
 
@@ -98,14 +62,14 @@ namespace ScalpayApi.Services
 
         public async Task<ConfigItem> UpdateConfigItemAsync(UpdateConfigItemParams ps)
         {
-            var order = 0;
-            ps.Rules.ForEach(rule => rule.Order = order++);
-
             var previousItem = await GetConfigItemAsync(ps.ItemKey);
 
             _context.ConfigItems.Attach(previousItem);
 
             _mapper.Map(ps, previousItem);
+            
+            var order = 0;
+            previousItem.Rules.ForEach(rule => rule.Order = order++);
 
             await _context.SaveChangesAsync();
 
