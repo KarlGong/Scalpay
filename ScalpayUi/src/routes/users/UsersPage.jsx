@@ -27,13 +27,12 @@ export default class UsersPage extends Component {
     render = () => {
         return <PageWrapper className="users-page">
             <List
-                className="list"
                 loading={this.loading}
                 itemLayout="horizontal"
                 dataSource={this.users}
                 header={<span>
                         <Input style={{width: "250px"}} placeholder="Search by username/full name/email"
-                               onChange={(e) => this.searchText = e.target.value}
+                               onChange={(e) => this.searchText = e.target.value || null}
                                onPressEnter={(e) => this.searchUsers()}/>
                         <Button style={{marginLeft: "10px"}} type="primary"
                                 onClick={() => this.searchUsers()}>Search</Button>

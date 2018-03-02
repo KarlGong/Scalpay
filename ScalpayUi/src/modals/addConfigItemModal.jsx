@@ -6,9 +6,8 @@ import axios from "axios";
 import {render, unmountComponentAtNode} from "react-dom";
 import ProjectSelect from "~/components/ProjectSelect";
 import {DataType, ItemType, ConfigItemMode, DefaultExp} from "~/utils/store";
-import ItemTypeSelect from "~/components/ItemTypeSelect";
 import DataTypeSelect from "~/components/DataTypeSelect";
-import ExpressionView from "~/components/item/expression/ExpressionView";
+import ExpressionView from "~/components/expression/ExpressionView";
 import DragListView from "react-drag-listview";
 import guid from "~/utils/guid";
 import "./addConfigItemModal.less";
@@ -150,7 +149,10 @@ class AddConfigItemModal extends Component {
                             <Form.Item label="Result Data Type"
                                        {...formItemLayout}
                             >
-                                <DataTypeSelect style={{width: "150px"}} onChange={(dataType) => {
+                                <DataTypeSelect
+                                    style={{width: "150px"}}
+                                    defaultValue={untracked(() => this.item.resultDataType)}
+                                    onChange={(dataType) => {
                                     this.item.resultDataType = dataType;
                                     this.item.rules.clear();
                                     this.item.rules.push({

@@ -8,7 +8,8 @@ import {ItemType} from "~/utils/store";
 @observer
 export default class ItemTypeSelect extends Component {
     static defaultProps = {
-        defaultValue: null,
+        defaultValue: undefined,
+        allowClear: false,
         onChange: (itemType) => {},
         style: {},
         className: ""
@@ -17,7 +18,7 @@ export default class ItemTypeSelect extends Component {
     render = () => {
         return <span>
             <Select
-                allowClear
+                allowClear={this.props.allowClear}
                 placeholder="Item Type"
                 defaultValue={this.props.defaultValue}
                 dropdownMatchSelectWidth={false}

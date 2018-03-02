@@ -8,17 +8,17 @@ import Validator from "~/utils/Validator";
 import {IndexRoute, browserHistory, Router, Route, Link} from "react-router";
 import global from "~/global";
 import {ExpType, DataType, Func} from "~/utils/store";
-import BoolSelect from "~/components/item/expression/BoolSelect";
-import DateTimeInput from "~/components/item/expression/DateTimeInput";
-import DurationInput from "~/components/item/expression/DurationInput";
-import NumberInput from "~/components/item/expression/NumberInput";
-import NumberListInput from "~/components/item/expression/NumberListInput";
-import StringInput from "~/components/item/expression/StringInput";
-import StringDictInput from "~/components/item/expression/StringDictInput";
-import StringListInput from "~/components/item/expression/StringListInput";
-import FunctionSelect from "~/components/item/expression/FunctionSelect";
-import VariableSelect from "~/components/item/expression/VariableSelect";
-import ExpressionView from "~/components/item/expression/ExpressionView";
+import BoolSelect from "~/components/expression/BoolSelect";
+import DateTimeInput from "~/components/expression/DateTimeInput";
+import DurationInput from "~/components/expression/DurationInput";
+import NumberInput from "~/components/expression/NumberInput";
+import NumberListInput from "~/components/expression/NumberListInput";
+import StringInput from "~/components/expression/StringInput";
+import StringDictInput from "~/components/expression/StringDictInput";
+import StringListInput from "~/components/expression/StringListInput";
+import FunctionSelect from "~/components/expression/FunctionSelect";
+import VariableSelect from "~/components/expression/VariableSelect";
+import ExpressionView from "~/components/expression/ExpressionView";
 import "./editExpressionModal.less";
 
 function open(expression, item, onSuccess) {

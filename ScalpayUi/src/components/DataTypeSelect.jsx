@@ -16,7 +16,6 @@ export default class DataTypeSelect extends Component {
 
     render = () => {
         return <Select
-            allowClear
             showSearch
             dropdownMatchSelectWidth={false}
             defaultValue={this.props.defaultValue}

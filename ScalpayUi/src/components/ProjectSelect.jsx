@@ -11,8 +11,8 @@ export default class ProjectSelect extends Component {
     static defaultProps = {
         style: {},
         className: "",
-        onChange: (value) => {
-        }
+        onChange: (value) => {},
+        allowClear: false
     };
 
     focused = false;
@@ -22,13 +22,13 @@ export default class ProjectSelect extends Component {
 
     render = () => {
         return <Select
-            allowClear
             showSearch
+            allowClear={this.props.allowClear}
             placeholder="Project"
             className={this.props.className}
             style={this.props.style}
             dropdownMatchSelectWidth={false}
-            notFoundContent={this.loading ? <Spin size="small"/> : null}
+            notFoundContent={this.loading ? <Spin size="small"/> : "Not Found"}
             filterOption={false}
             onSearch={debounce(this.searchProjects, 800)}
             onChange={this.props.onChange}
