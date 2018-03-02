@@ -8,9 +8,7 @@ import {Privilege} from "~/utils/store";
 import "./UsersPage.less";
 import PageWrapper from "~/layouts/PageWrapper";
 import global from "~/global";
-import addUserModal from "~/modals/addUserModal";
-import deleteUserModal from "~/modals/deleteUserModal";
-import editUserModal from "~/modals/editUserModal";
+import userModal from "~/modals/userModal";
 import UserInfo from "~/components/UserInfo";
 
 @observer
@@ -65,14 +63,14 @@ export default class UsersPage extends Component {
     };
 
     addUser = () => {
-        addUserModal.open(() => this.searchUsers());
+        userModal.add(() => this.searchUsers());
     };
 
     editUser = (user) => {
-        editUserModal.open(user, () => this.searchUsers());
+        userModal.edit(user, () => this.searchUsers());
     };
 
     deleteUser = (user) => {
-        deleteUserModal.open(user, () => this.searchUsers());
+        userModal.del(user, () => this.searchUsers());
     };
 }

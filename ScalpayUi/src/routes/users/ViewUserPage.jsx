@@ -10,8 +10,7 @@ import moment from "moment";
 import Validator from "~/utils/Validator";
 import "./ViewUserPage.less";
 import global from "~/global";
-import deleteUserModal from "~/modals/deleteUserModal";
-import editUserModal from "~/modals/editUserModal";
+import userModal from "~/modals/userModal";
 
 @observer
 export default class ViewUserPage extends Component {
@@ -68,10 +67,10 @@ export default class ViewUserPage extends Component {
     };
 
     editUser = () => {
-        editUserModal.open(this.user, () => this.loadUser());
+        userModal.edit(this.user, () => this.loadUser());
     };
 
     deleteUser = () => {
-        deleteUserModal.open(this.user, (user) => global.history.goBack());
+        userModal.del(this.user, (user) => global.history.goBack());
     }
 }
