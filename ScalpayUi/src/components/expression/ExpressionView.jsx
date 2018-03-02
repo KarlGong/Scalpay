@@ -30,11 +30,10 @@ export default class ExpressionView extends Component {
     @observable expression = Object.assign({key: guid()}, this.props.expression);
 
     render = () => {
-        const editProps = { };
-        if (this.props.allowEdit) {
-            editProps.onClick = this.handleClick;
-            editProps.className = "editable-expression";
-        }
+        const editProps = {
+            onClick: this.props.allowEdit ? this.handleClick : undefined,
+            className: this.props.allowEdit ? "editable-expression" : undefined
+        };
         switch (this.expression.expType) {
             case ExpType.Value:
                 let display = "";
