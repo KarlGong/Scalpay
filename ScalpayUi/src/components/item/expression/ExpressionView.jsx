@@ -7,6 +7,7 @@ import reactStringReplace from "react-string-replace";
 import {ExpType, Func, DataType} from "~/utils/store";
 import editExpressionModal from "~/modals/editExpressionModal";
 import guid from "~/utils/guid";
+import "./ExpressionView.less";
 
 @observer
 export default class ExpressionView extends Component {
@@ -32,6 +33,7 @@ export default class ExpressionView extends Component {
         const editProps = { };
         if (this.props.allowEdit) {
             editProps.onClick = this.handleClick;
+            editProps.className = "editable-expression";
         }
         switch (this.expression.expType) {
             case ExpType.Value:
@@ -67,6 +69,7 @@ export default class ExpressionView extends Component {
                 return <span {...editProps}>{this.expression.var}</span>;
             case ExpType.Func:
                 return <span {...editProps}>
+                    <span>(</span>
                     {
                         reactStringReplace(Func[this.expression.returnType][this.expression.funcName].displayExp, /{(\d+)}/, (argsIndex) => {
                             this.expression.funcArgs[argsIndex].key = this.expression.funcArgs[argsIndex].key || guid();
@@ -78,10 +81,10 @@ export default class ExpressionView extends Component {
                                 onChange={(expression) => this.expression.funcArgs[argsIndex] = expression}/>
                         })
                     }
+                    <span>)</span>
                 </span>;
-            default:
-                return <span onClick={this.handleClick}>{"<" + this.expression.returnType + ">"}</span>;
         }
+        return null;
     };
 
     handleClick = () => {

@@ -5,7 +5,7 @@ import {observable, toJS, untracked, runInAction, action} from "mobx";
 import axios from "axios";
 import {render, unmountComponentAtNode} from "react-dom";
 import ProjectSelect from "~/components/ProjectSelect";
-import {DataType, ItemType, ConfigItemMode} from "~/utils/store";
+import {DataType, ItemType, ConfigItemMode, DefaultExp} from "~/utils/store";
 import ItemTypeSelect from "~/components/ItemTypeSelect";
 import DataTypeSelect from "~/components/DataTypeSelect";
 import ExpressionView from "~/components/item/expression/ExpressionView";
@@ -41,7 +41,7 @@ class AddConfigItemModal extends Component {
         rules: [{
             key: guid(),
             condition: null,
-            result: {returnType: DataType.String}
+            result: DefaultExp.String
         }]
     };
     @observable visible = true;
@@ -156,7 +156,7 @@ class AddConfigItemModal extends Component {
                                     this.item.rules.push({
                                         key: guid(),
                                         condition: null,
-                                        result: {returnType: dataType}
+                                        result: DefaultExp[dataType]
                                     });
                                 }}/>
                             </Form.Item>
@@ -181,7 +181,7 @@ class AddConfigItemModal extends Component {
                                                 allowEdit
                                                 expression={untracked(() => rule.condition)}
                                                 item={untracked(() => this.item)}
-                                                onChange={(exp) => {rule.condition = exp; console.log(exp)}}/>
+                                                onChange={(exp) => rule.condition = exp}/>
                                         </Col>
                                         <Col span={6} className="center">
                                             <ExpressionView
@@ -200,12 +200,8 @@ class AddConfigItemModal extends Component {
                                         onClick={() => this.item.rules.push(
                                             {
                                                 key: guid(),
-                                                condition: {
-                                                    returnType: DataType.Bool
-                                                },
-                                                result: {
-                                                    returnType: this.item.resultDataType
-                                                }
+                                                condition: DefaultExp.Bool,
+                                                result: DefaultExp[this.item.resultDataType]
                                             })}>Add Rule</Button>
                             </Col>
                         </Row>
