@@ -36,33 +36,33 @@ export default class ExpressionView extends Component {
         };
         switch (this.expression.expType) {
             case ExpType.Value:
-                let display = "";
-                switch (this.expression.returnType) {
-                    case DataType.Bool:
-                        display = this.expression.value ? "True" : "False";
-                        break;
-                    case DataType.DateTime:
-                        display = this.expression.value;
-                        break;
-                    case DataType.Duration:
-                        display = this.expression.value;
-                        break;
-                    case DataType.Number:
-                        display = this.expression.value;
-                        break;
-                    case DataType.NumberList:
-                        display = this.expression.value;
-                        break;
-                    case DataType.String:
-                        display = this.expression.value;
-                        break;
-                    case DataType.StringDict:
-                        display = this.expression.value;
-                        break;
-                    case DataType.StringList:
-                        display = this.expression.value;
-                        break;
-                }
+                let display = JSON.stringify(this.expression.value);
+                // switch (this.expression.returnType) {
+                //     case DataType.Bool:
+                //         display = this.expression.value;
+                //         break;
+                //     case DataType.DateTime:
+                //         display = this.expression.value;
+                //         break;
+                //     case DataType.Duration:
+                //         display = this.expression.value;
+                //         break;
+                //     case DataType.Number:
+                //         display = this.expression.value;
+                //         break;
+                //     case DataType.NumberList:
+                //         display = this.expression.value;
+                //         break;
+                //     case DataType.String:
+                //         display = this.expression.value;
+                //         break;
+                //     case DataType.StringDict:
+                //         display = this.expression.value;
+                //         break;
+                //     case DataType.StringList:
+                //         display = this.expression.value;
+                //         break;
+                // }
                 return <span {...editProps}>{display}</span>;
             case ExpType.Var:
                 return <span {...editProps}>{this.expression.var}</span>;
