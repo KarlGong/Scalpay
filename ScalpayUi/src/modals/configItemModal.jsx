@@ -55,7 +55,7 @@ class EditConfigItemModal extends Component {
     static defaultProps = {
         item: {
             projectKey: null,
-            itemKey: null,
+            itemKey: "config.null.",
             name: null,
             description: null,
             mode: ConfigItemMode.Property,
@@ -139,10 +139,11 @@ class EditConfigItemModal extends Component {
                                        {...formItemLayout}
                             >
                                 <Input
+                                    addonBefore={"config." + this.item.projectKey + "."}
                                     style={{width: "500px"}}
                                     disabled={!this.props.addMode}
-                                    defaultValue={untracked(() => this.item.itemKey)}
-                                    onChange={(e) => this.item.itemKey = e.target.value}
+                                    defaultValue={untracked(() => this.item.itemKey.split(".").slice(2).join("."))}
+                                    onChange={(e) => this.item.itemKey = "config." + this.item.projectKey + "." + e.target.value}
                                 />
                             </Form.Item>
                             <Form.Item label="Name"
