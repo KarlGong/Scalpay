@@ -155,33 +155,33 @@ class EditUserModal extends Component {
 
     handleOk = () => {
         if (this.props.addMode) {
-            this.validator.validateAll(() => {
-                this.loading = true;
-                axios.put("/api/users", this.user)
-                    .then(res => {
-                        let user = res.data;
-                        this.loading = false;
-                        this.visible = false;
-                        message.success(<span>
-                        User <UserInfo user={user}/> is added successfully!
-                    </span>);
-                        this.props.onSuccess(user);
-                    }, () => this.loading = false)
-            });
+            this.validator
+                .validateAll()
+                .then(() => {
+                    this.loading = true;
+                    axios.put("/api/users", this.user)
+                        .then(res => {
+                            let user = res.data;
+                            this.loading = false;
+                            this.visible = false;
+                            message.success(<span>User <UserInfo user={user}/> is added successfully!</span>);
+                            this.props.onSuccess(user);
+                        }, () => this.loading = false)
+                });
         } else {
-            this.validator.validateAll(() => {
-                this.loading = true;
-                axios.post("/api/users/" + this.user.username, this.user)
-                    .then(res => {
-                        let user = res.data;
-                        this.loading = false;
-                        this.visible = false;
-                        message.success(<span>
-                        User <UserInfo user={user}/> is updated successfully!
-                    </span>);
-                        this.props.onSuccess(user);
-                    }, () => this.loading = false)
-            });
+            this.validator
+                .validateAll()
+                .then(() => {
+                    this.loading = true;
+                    axios.post("/api/users/" + this.user.username, this.user)
+                        .then(res => {
+                            let user = res.data;
+                            this.loading = false;
+                            this.visible = false;
+                            message.success(<span>User <UserInfo user={user}/> is updated successfully!</span>);
+                            this.props.onSuccess(user);
+                        }, () => this.loading = false)
+                });
         }
     };
 

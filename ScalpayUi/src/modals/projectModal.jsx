@@ -121,33 +121,37 @@ class EditProjectModal extends Component {
 
     handleOk = () => {
         if (this.props.addMode) {
-            this.validator.validateAll(() => {
-                this.loading = true;
-                axios.put("/api/projects", this.project)
-                    .then(res => {
-                        let project = res.data;
-                        this.loading = false;
-                        this.visible = false;
-                        message.success(<span>
+            this.validator
+                .validateAll()
+                .then(() => {
+                    this.loading = true;
+                    axios.put("/api/projects", this.project)
+                        .then(res => {
+                            let project = res.data;
+                            this.loading = false;
+                            this.visible = false;
+                            message.success(<span>
                         Project <ProjectInfo project={project}/> is added successfully!
                     </span>);
-                        this.props.onSuccess(project);
-                    }, () => this.loading = false);
-            });
+                            this.props.onSuccess(project);
+                        }, () => this.loading = false);
+                });
         } else {
-            this.validator.validateAll(() => {
-                this.loading = true;
-                axios.post("/api/projects/" + this.project.projectKey, this.project)
-                    .then(res => {
-                        let project = res.data;
-                        this.loading = false;
-                        this.visible = false;
-                        message.success(<span>
+            this.validator
+                .validateAll()
+                .then(() => {
+                    this.loading = true;
+                    axios.post("/api/projects/" + this.project.projectKey, this.project)
+                        .then(res => {
+                            let project = res.data;
+                            this.loading = false;
+                            this.visible = false;
+                            message.success(<span>
                         Project <ProjectInfo project={project}/> is updated successfully!
                     </span>);
-                        this.props.onSuccess(project);
-                    }, () => this.loading = false);
-            });
+                            this.props.onSuccess(project);
+                        }, () => this.loading = false);
+                });
         }
     };
 

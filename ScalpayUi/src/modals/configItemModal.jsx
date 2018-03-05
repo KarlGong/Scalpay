@@ -314,29 +314,33 @@ class EditConfigItemModal extends Component {
 
     handleOk = () => {
         if (this.props.addMode) {
-            this.validator.validateAll(() => {
-                this.loading = true;
-                axios.put("/api/items/config", this.item)
-                    .then(res => {
-                        let item = res.data;
-                        this.loading = false;
-                        this.visible = false;
-                        message.success(<span>Item <ItemInfo item={item}/> is added successfully!</span>);
-                        this.props.onSuccess(item);
-                    }, () => this.loading = false)
-            });
+            this.validator
+                .validateAll()
+                .then(() => {
+                    this.loading = true;
+                    axios.put("/api/items/config", this.item)
+                        .then(res => {
+                            let item = res.data;
+                            this.loading = false;
+                            this.visible = false;
+                            message.success(<span>Item <ItemInfo item={item}/> is added successfully!</span>);
+                            this.props.onSuccess(item);
+                        }, () => this.loading = false)
+                });
         } else {
-            this.validator.validateAll(() => {
-                this.loading = true;
-                axios.post("/api/items/config/" + this.item.itemKey, this.item)
-                    .then(res => {
-                        let item = res.data;
-                        this.loading = false;
-                        this.visible = false;
-                        message.success(<span>Item <ItemInfo item={item}/> is updated successfully!</span>);
-                        this.props.onSuccess(item);
-                    }, () => this.loading = false)
-            });
+            this.validator
+                .validateAll()
+                .then(() => {
+                    this.loading = true;
+                    axios.post("/api/items/config/" + this.item.itemKey, this.item)
+                        .then(res => {
+                            let item = res.data;
+                            this.loading = false;
+                            this.visible = false;
+                            message.success(<span>Item <ItemInfo item={item}/> is updated successfully!</span>);
+                            this.props.onSuccess(item);
+                        }, () => this.loading = false)
+                });
         }
     };
 
