@@ -11,7 +11,7 @@ import ProjectSelect from "~/components/ProjectSelect";
 import ItemTypeSelect from "~/components/ItemTypeSelect";
 import ItemInfo from "~/components/ItemInfo";
 import {ItemType} from "~/utils/store";
-import configItemModal from "~/modals/configItemModal";
+import configItemModal from "~/modals/configItemModal/configItemModal";
 import global from "~/global";
 import ProjectInfo from "~/components/ProjectInfo";
 

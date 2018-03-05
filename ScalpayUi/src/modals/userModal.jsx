@@ -93,37 +93,37 @@ class EditUserModal extends Component {
         >
             <Form>
                 <Form.Item label="Username"
-                           validateStatus={this.basicValidator.getResult("username").status}
-                           help={this.basicValidator.getResult("username").message}>
+                           validateStatus={this.validator.getResult("username").status}
+                           help={this.validator.getResult("username").message}>
                     <Input
                         disabled={!this.props.addMode}
                         defaultValue={untracked(() => this.user.username)}
                         onChange={(e) => {
                             this.user.username = e.target.value;
-                            this.basicValidator.resetResult("username");
-                        }} onBlur={() => this.basicValidator.validate("username")}
+                            this.validator.resetResult("username");
+                        }} onBlur={() => this.validator.validate("username")}
                     />
                 </Form.Item>
                 <Form.Item label="Full Name"
-                           validateStatus={this.basicValidator.getResult("fullName").status}
-                           help={this.basicValidator.getResult("fullName").message}>
+                           validateStatus={this.validator.getResult("fullName").status}
+                           help={this.validator.getResult("fullName").message}>
                     <Input
                         defaultValue={untracked(() => this.user.fullName)}
                         placeholder=""
                         onChange={(e) => {
                             this.user.fullName = e.target.value;
-                            this.basicValidator.resetResult("fullName");
-                        }} onBlur={() => this.basicValidator.validate("fullName")}/>
+                            this.validator.resetResult("fullName");
+                        }} onBlur={() => this.validator.validate("fullName")}/>
                 </Form.Item>
                 <Form.Item label="Email"
-                           validateStatus={this.basicValidator.getResult("email").status}
-                           help={this.basicValidator.getResult("email").message}>
+                           validateStatus={this.validator.getResult("email").status}
+                           help={this.validator.getResult("email").message}>
                     <Input
                         defaultValue={untracked(() => this.user.email)}
                         onChange={(e) => {
                             this.user.email = e.target.value;
-                            this.basicValidator.resetResult("email");
-                        }} onBlur={() => this.basicValidator.validate("email")}/>
+                            this.validator.resetResult("email");
+                        }} onBlur={() => this.validator.validate("email")}/>
                 </Form.Item>
                 <Form.Item label="Privileges">
                     <Checkbox.Group
@@ -155,7 +155,7 @@ class EditUserModal extends Component {
 
     handleOk = () => {
         if (this.props.addMode) {
-            this.basicValidator
+            this.validator
                 .validateAll()
                 .then(() => {
                     this.loading = true;
@@ -169,7 +169,7 @@ class EditUserModal extends Component {
                         }, () => this.loading = false)
                 });
         } else {
-            this.basicValidator
+            this.validator
                 .validateAll()
                 .then(() => {
                     this.loading = true;

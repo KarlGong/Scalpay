@@ -86,7 +86,7 @@ class EditProjectModal extends Component {
                 <Form.Item
                     label="Project Key"
                     validateStatus={this.basicValidator.getResult("projectKey").status}
-                    help={this.basicValidator.getResult("projectKey").message}>
+                    help={this.validator.getResult("projectKey").message}>
                     <Input
                         disabled={!this.props.addMode}
                         defaultValue={untracked(() => this.project.projectKey)}

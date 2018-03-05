@@ -7,7 +7,7 @@ import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
 import {IndexRoute, hashHistory, Router, Route, Link} from "react-router";
 import global from "~/global";
-import configItemModal from "~/modals/configItemModal";
+import configItemModal from "~/modals/configItemModal/configItemModal";
 import "./SHeader.less";
 import logo from "~/assets/imgs/logo.png";
 
