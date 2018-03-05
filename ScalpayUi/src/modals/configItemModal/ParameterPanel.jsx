@@ -15,21 +15,46 @@ import "./configItemModal.less";
 import ItemInfo from "~/components/ItemInfo";
 import event from "~/utils/event";
 import Validator from "~/utils/Validator";
+import {isVariableUsed, updateVariable} from "~/utils/expressionHelper";
 import "./ParameterPanel.less";
 
 @observer
 export default class ParameterPanel extends Component {
     static defaultProps = {
         item: {},
-        setValidators: (validators) => {},
+        setValidators: (validators) => {
+        },
     };
 
     item = this.props.item; // observable
+    @observable resultDataTypeKey = guid();
 
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.validators = [];
-        this.props.setValidators(this.validators)
+        this.validatorDescriptor = {
+            name: (rule, value, callback, source, options) => {
+                let errors = [];
+                let val = source.parameterInfos[value].name;
+                if (!val) {
+                    errors.push(new Error("parameter name is required"));
+                }
+                if (!/^[a-zA-Z0-9-_.]+?$/.test(val)) {
+                    errors.push(new Error("parameter name can only contain alphanumeric characters, - , _ and ."));
+                }
+                if (source.parameterInfos.filter(info => info.name === val).length > 1) {
+                    errors.push(new Error("duplicating parameter name: " + val));
+                }
+                callback(errors);
+            }
+        };
+        this.validators = this.item.parameterInfos.map((info, index) =>
+            new Validator({
+                    name: index, // put the index to validate array
+                    parameterInfos: this.item.parameterInfos
+                },
+                this.validatorDescriptor));
+        this.props.setValidators(this.validators);
+        this.item.parameterInfos.map(info => info.oldName = info.name); // prevent the parameter's old name
     }
 
     render = () => {
@@ -57,18 +82,77 @@ export default class ParameterPanel extends Component {
                                             paramInfo.name = e.target.value;
                                             this.validators[index].resetResult("name");
                                         }}
-                                        onBlur={() => this.validators[index].validate("name")}
+                                        onBlur={(e) => {
+                                            this.validators[index].validate("name").then(() => {
+                                                if (!paramInfo.oldName) { // for the new added parameter
+                                                    paramInfo.oldName = paramInfo.name;
+                                                    return;
+                                                }
+                                                if (paramInfo.name === paramInfo.oldName) return; // for the unchanged parameter
+                                                const hide = message.loading("Updating all expressions to use new parameter name...", 0);
+                                                this.item.rules.map(rule => {
+                                                    updateVariable(rule.condition, paramInfo.oldName, paramInfo.name);
+                                                    updateVariable(rule.result, paramInfo.oldName, paramInfo.name);
+                                                    rule.key = guid();
+                                                });
+                                                paramInfo.oldName = paramInfo.name;
+                                                hide();
+                                            });
+                                        }}
                                     />
                                 </Tooltip>
                                 <DataTypeSelect
                                     className="data-type"
                                     defaultValue={untracked(() => paramInfo.dataType)}
-                                    onChange={(value) => paramInfo.dataType = value}
+                                    onChange={(value) => {
+                                        Modal.confirm({
+                                            title: "Are you sure to change the data type of this parameter?",
+                                            content: "All the expressions use this parameter will be reset.",
+                                            okText: "Change",
+                                            okType: "danger",
+                                            cancelText: "No",
+                                            onOk: () => {
+                                                paramInfo.dataType = value;
+                                                this.item.rules.map(rule => {
+                                                    if (isVariableUsed(rule.condition, paramInfo.name)) {
+                                                        rule.condition = DefaultExp.Bool;
+                                                    }
+                                                    if (isVariableUsed(rule.result, paramInfo.name)) {
+                                                        rule.result = DefaultExp[this.item.resultDataType];
+                                                    }
+                                                    rule.key = guid();
+                                                });
+                                            },
+                                            onCancel: () => {
+                                                paramInfo.key = guid();
+                                            },
+                                        });
+                                    }}
                                 />
                                 <span onClick={() => {
-                                    this.item.parameterInfos.splice(index, 1);
-                                    this.validators.splice(index, 1);
-                                    this.props.setValidators(this.validators);
+                                    Modal.confirm({
+                                        title: "Are you sure to delete this parameter?",
+                                        content: "All the expressions use this parameter will be reset.",
+                                        okText: "Delete",
+                                        okType: "danger",
+                                        cancelText: "No",
+                                        onOk: () => {
+                                            this.item.rules.map(rule => {
+                                                if (isVariableUsed(rule.condition, paramInfo.name)) {
+                                                    rule.condition = DefaultExp.Bool;
+                                                }
+                                                if (isVariableUsed(rule.result, paramInfo.name)) {
+                                                    rule.result = DefaultExp[this.item.resultDataType];
+                                                }
+                                                rule.key = guid();
+                                            });
+                                            this.item.parameterInfos.splice(index, 1);
+                                            this.validators.splice(index, 1);
+                                            this.props.setValidators(this.validators);
+                                        }
+                                    });
+
+
                                 }}>
                                     <Icon type="minus-circle-o" className="delete"/>
                                 </span>
@@ -90,22 +174,7 @@ export default class ParameterPanel extends Component {
                                         name: this.item.parameterInfos.length - 1, // put the index to validate array
                                         parameterInfos: this.item.parameterInfos
                                     },
-                                    {
-                                        name: (rule, value, callback, source, options) => {
-                                            let errors = [];
-                                            let val = source.parameterInfos[value].name;
-                                            if (!val) {
-                                                errors.push(new Error("parameter name is required"));
-                                            }
-                                            if (!/^[a-zA-Z0-9-_.]+?$/.test(val)) {
-                                                errors.push(new Error("parameter name can only contain alphanumeric characters, - , _ and ."));
-                                            }
-                                            if (source.parameterInfos.filter(info => info.name === val).length > 1) {
-                                                errors.push(new Error("duplicated parameter name: " + val));
-                                            }
-                                            callback(errors);
-                                        }
-                                    })
+                                    this.validatorDescriptor)
                             );
                             this.props.setValidators(this.validators);
                         }}
@@ -115,14 +184,26 @@ export default class ParameterPanel extends Component {
                            {...formItemLayout}
                 >
                     <DataTypeSelect
+                        key={this.resultDataTypeKey}
                         style={{width: "150px"}}
                         defaultValue={untracked(() => this.item.resultDataType)}
                         onChange={(dataType) => {
-
-                            this.item.resultDataType = dataType;
-                            this.item.rules.map(rule => {
-                                rule.result = DefaultExp[dataType];
-                                rule.key = guid();
+                            Modal.confirm({
+                                title: "Are you sure to change the result data type?",
+                                content: "The result expression of all rules will be reset.",
+                                okText: "Change",
+                                okType: "danger",
+                                cancelText: "No",
+                                onOk: () => {
+                                    this.item.resultDataType = dataType;
+                                    this.item.rules.map(rule => {
+                                        rule.result = DefaultExp[dataType];
+                                        rule.key = guid();
+                                    });
+                                },
+                                onCancel: () => {
+                                    this.resultDataTypeKey = guid();
+                                },
                             });
                         }}/>
                 </Form.Item>
