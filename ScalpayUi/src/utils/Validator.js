@@ -14,6 +14,10 @@ export default class Validator {
         this.descriptor = descriptor;
     }
 
+    hasError = () => {
+        return Object.entries(this.results).filter(([fieldName, result]) => result.status === "error").length
+    };
+
     getResult = (fieldName) => {
         return this.results[fieldName] || Validator.defaultResult;
     };

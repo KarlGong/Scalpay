@@ -1,48 +1,58 @@
 .config-item-modal {
-  .parameter {
-    margin-bottom: 10px;
 
-    .name {
-      width: 150px;
+  .panel.error .ant-collapse-header {
+    color: #f5222d;
+  }
 
-    }
-    .data-type {
-      margin-left: 10px;
-      width: 150px;
-    }
-    .delete {
-      margin-left: 10px;
-      color: rgba(255, 0, 0, 0.5);
-      cursor: pointer;
-      font-size: 18px;
-      &:hover {
-        color: #f00;
+  .parameter-panel {
+    .parameter {
+      margin-bottom: 10px;
+
+      .name {
+        width: 150px;
+      }
+
+      .data-type {
+        margin-left: 10px;
+        width: 150px;
+      }
+
+      .delete {
+        margin-left: 10px;
+        color: rgba(255, 0, 0, 0.5);
+        cursor: pointer;
+        font-size: 18px;
+        &:hover {
+          color: #f00;
+        }
       }
     }
+
+    .add-parameter {
+      width: 310px
+    }
   }
 
-  .add-parameter {
-    width: 310px
-  }
+  .rules-panel {
+    .center {
+      text-align: center;
+    }
 
-  .center {
-    text-align: center;
-  }
+    .rule-header {
+      padding-bottom: 10px;
+    }
 
-  .rule-header {
-    padding-bottom: 10px;
-  }
+    .rule {
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
 
-  .rule {
-    margin-top: 5px;
-    margin-bottom: 5px;
-  }
+    .rule-add {
+      width: 100%;
+    }
 
-  .rule-add {
-    width: 100%;
-  }
-
-  .rule-default {
-    padding-top: 10px;
+    .rule-default {
+      padding-top: 10px;
+    }
   }
 }

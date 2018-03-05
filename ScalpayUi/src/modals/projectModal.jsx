@@ -85,26 +85,26 @@ class EditProjectModal extends Component {
             <Form>
                 <Form.Item
                     label="Project Key"
-                    validateStatus={this.validator.getResult("projectKey").status}
-                    help={this.validator.getResult("projectKey").message}>
+                    validateStatus={this.basicValidator.getResult("projectKey").status}
+                    help={this.basicValidator.getResult("projectKey").message}>
                     <Input
                         disabled={!this.props.addMode}
                         defaultValue={untracked(() => this.project.projectKey)}
                         onChange={(e) => {
                             this.project.projectKey = e.target.value;
-                            this.validator.resetResult("projectKey");
-                        }} onBlur={() => this.validator.validate("projectKey")}/>
+                            this.basicValidator.resetResult("projectKey");
+                        }} onBlur={() => this.basicValidator.validate("projectKey")}/>
                 </Form.Item>
                 <Form.Item
                     label="Name"
-                    validateStatus={this.validator.getResult("name").status}
-                    help={this.validator.getResult("name").message}>
+                    validateStatus={this.basicValidator.getResult("name").status}
+                    help={this.basicValidator.getResult("name").message}>
                     <Input
                         defaultValue={untracked(() => this.project.name)}
                         onChange={(e) => {
                             this.project.name = e.target.value;
-                            this.validator.resetResult("name");
-                        }} onBlur={() => this.validator.validate("name")}/>
+                            this.basicValidator.resetResult("name");
+                        }} onBlur={() => this.basicValidator.validate("name")}/>
                 </Form.Item>
                 <Form.Item label="Description">
                     <Input.TextArea
@@ -121,7 +121,7 @@ class EditProjectModal extends Component {
 
     handleOk = () => {
         if (this.props.addMode) {
-            this.validator
+            this.basicValidator
                 .validateAll()
                 .then(() => {
                     this.loading = true;
@@ -137,7 +137,7 @@ class EditProjectModal extends Component {
                         }, () => this.loading = false);
                 });
         } else {
-            this.validator
+            this.basicValidator
                 .validateAll()
                 .then(() => {
                     this.loading = true;

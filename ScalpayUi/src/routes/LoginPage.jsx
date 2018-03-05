@@ -21,22 +21,22 @@ export default class LoginPage extends Component {
         return (
             <Layout className="login-page">
                 <Form className="login-form">
-                    <Form.Item validateStatus={this.validator.getResult("username").status}
-                               help={this.validator.getResult("username").message}>
+                    <Form.Item validateStatus={this.basicValidator.getResult("username").status}
+                               help={this.basicValidator.getResult("username").message}>
                         <Input prefix={<Icon type="user" className="input-icon"/>} placeholder="username"
                                onChange={(e) => {
                                    this.user.username = e.target.value;
-                                   this.validator.resetResult("username");
-                               }} onBlur={() => this.validator.validate("username")}/>
+                                   this.basicValidator.resetResult("username");
+                               }} onBlur={() => this.basicValidator.validate("username")}/>
                     </Form.Item>
-                    <Form.Item validateStatus={this.validator.getResult("password").status}
-                               help={this.validator.getResult("password").message}>
+                    <Form.Item validateStatus={this.basicValidator.getResult("password").status}
+                               help={this.basicValidator.getResult("password").message}>
                         <Input prefix={<Icon type="lock" className="input-icon"/>} type="password"
                                placeholder="Password"
                                onChange={(e) => {
                                    this.user.password = e.target.value;
-                                   this.validator.resetResult("password");
-                               }} onBlur={() => this.validator.validate("password")}
+                                   this.basicValidator.resetResult("password");
+                               }} onBlur={() => this.basicValidator.validate("password")}
                                onKeyUp={e => e.keyCode === 13 && this.onSubmit()}/>
                     </Form.Item>
                     <Form.Item>
@@ -53,7 +53,7 @@ export default class LoginPage extends Component {
     };
 
     onSubmit = () => {
-        this.validator.validateAll(() => {
+        this.basicValidator.validateAll(() => {
             this.loading = true;
             auth.login(this.user.username, this.user.password)
                 .then(() => global.history.push(this.props.router.location.query.returnUrl || "/"))
