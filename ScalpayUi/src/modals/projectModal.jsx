@@ -55,7 +55,16 @@ class EditProjectModal extends Component {
 
     @observable project = Object.assign({}, this.props.project);
     validator = new Validator(this.project, {
-        projectKey: {required: true},
+        projectKey: (rule, value, callback, source, options) => {
+            let errors = [];
+            if (!value) {
+                errors.push(new Error("project key is required"));
+            }
+            if (!/^[a-zA-Z0-9-_]+?$/.test(value)) {
+                errors.push(new Error("project key can only contain alphanumeric characters, - and _"))
+            }
+            callback(errors);
+        },
         name: {required: true}
     });
     @observable loading = false;
@@ -80,7 +89,6 @@ class EditProjectModal extends Component {
                     help={this.validator.getResult("projectKey").message}>
                     <Input
                         disabled={!this.props.addMode}
-                        placeholder="A-Z a-z 0-9 -"
                         defaultValue={untracked(() => this.project.projectKey)}
                         onChange={(e) => {
                             this.project.projectKey = e.target.value;
@@ -93,7 +101,6 @@ class EditProjectModal extends Component {
                     help={this.validator.getResult("name").message}>
                     <Input
                         defaultValue={untracked(() => this.project.name)}
-                        placeholder=""
                         onChange={(e) => {
                             this.project.name = e.target.value;
                             this.validator.resetResult("name");
@@ -103,7 +110,7 @@ class EditProjectModal extends Component {
                     <Input.TextArea
                         defaultValue={untracked(() => this.project.description)}
                         rows={6}
-                        placeholder=""
+                        placeholder="Optional"
                         onChange={(e) => {
                             this.project.description = e.target.value;
                         }}/>

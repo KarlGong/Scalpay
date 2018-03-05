@@ -134,6 +134,7 @@ class EditExpressionModal extends Component {
     };
 
     handleOk = () => {
+        // clear useless properties
         let returnExpression = {
             returnType: this.expression.returnType,
             expType: this.expression.expType

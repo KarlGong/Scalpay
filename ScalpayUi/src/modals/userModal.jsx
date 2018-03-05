@@ -63,9 +63,18 @@ class EditUserModal extends Component {
 
     @observable user = Object.assign({}, this.props.user);
     validator = new Validator(this.user, {
-        username: {required: true},
+        username: (rule, value, callback, source, options) => {
+            let errors = [];
+            if (!value) {
+                errors.push(new Error("username is required"));
+            }
+            if (!/^[a-zA-Z0-9-_.]+?$/.test(value)) {
+                errors.push(new Error("username can only contain alphanumeric characters, - , _ and ."))
+            }
+            callback(errors);
+        },
         fullName: {required: true},
-        email: [{type: "email", required: true}]
+        email: {type: "email", required: true}
     });
     @observable loading = false;
     @observable visible = true;
@@ -111,7 +120,6 @@ class EditUserModal extends Component {
                            help={this.validator.getResult("email").message}>
                     <Input
                         defaultValue={untracked(() => this.user.email)}
-                        placeholder=""
                         onChange={(e) => {
                             this.user.email = e.target.value;
                             this.validator.resetResult("email");

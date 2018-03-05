@@ -55,7 +55,7 @@ class EditConfigItemModal extends Component {
     static defaultProps = {
         item: {
             projectKey: null,
-            itemKey: "config.null.",
+            itemKey: "config.null.", // the item key init format
             name: null,
             description: null,
             mode: ConfigItemMode.Property,
@@ -71,8 +71,6 @@ class EditConfigItemModal extends Component {
         afterClose: () => {}
     };
 
-    validator = new Validator(this.item, {
-    });
     @observable loading = false;
     @observable visible = true;
 
@@ -81,6 +79,21 @@ class EditConfigItemModal extends Component {
         this.item = observable(Object.assign({}, this.props.item));
         this.item.parameterInfos.map(p => p.key = p.key || guid());
         this.item.rules.map(r => r.key = r.key || guid());
+
+        this.validator = new Validator(this.item, {
+            projectKey: {required: true, message: "project is required"},
+            itemKey: (rule, value, callback, source, options) => {
+                let errors = [];
+                if (!value.split(".").slice(2).join(".")) {
+                    errors.push(new Error("item key is required"));
+                }
+                if (!/^config\.[^.]+?\.[a-zA-Z0-9-_.]+?$/.test(value)) {
+                    errors.push(new Error("item key can only contain alphanumeric characters, - , _ and ."))
+                }
+                callback(errors);
+            },
+            name: {required: true}
+        });
     }
 
     render = () => {
@@ -127,32 +140,52 @@ class EditConfigItemModal extends Component {
                         <Form>
                             <Form.Item label="Project"
                                        {...formItemLayout}
+                                       validateStatus={this.validator.getResult("projectKey").status}
+                                       help={this.validator.getResult("projectKey").message}
                             >
                                 <ProjectSelect
                                     style={{width: "300px"}}
                                     disabled={!this.props.addMode}
                                     defaultValue={untracked(() => this.item.projectKey)}
-                                    onChange={(value) => this.item.projectKey = value}
+                                    onChange={(value) => {
+                                        this.item.projectKey = value;
+                                        this.validator.resetResult("projectKey");
+                                    }}
+                                    onBlur={() => this.validator.validate("projectKey")}
                                 />
                             </Form.Item>
                             <Form.Item label="Item Key"
                                        {...formItemLayout}
+                                       validateStatus={this.validator.getResult("itemKey").status}
+                                       help={this.validator.getResult("itemKey").message}
                             >
                                 <Input
                                     addonBefore={"config." + this.item.projectKey + "."}
                                     style={{width: "500px"}}
                                     disabled={!this.props.addMode}
+                                    // config.foo.bar to bar
                                     defaultValue={untracked(() => this.item.itemKey.split(".").slice(2).join("."))}
-                                    onChange={(e) => this.item.itemKey = "config." + this.item.projectKey + "." + e.target.value}
+                                    onChange={(e) => {
+                                        // bar to config.foo.bar
+                                        this.item.itemKey = "config." + this.item.projectKey + "." + e.target.value;
+                                        this.validator.resetResult("itemKey")
+                                    }}
+                                    onBlur={() => this.validator.validate("itemKey")}
                                 />
                             </Form.Item>
                             <Form.Item label="Name"
                                        {...formItemLayout}
+                                       validateStatus={this.validator.getResult("name").status}
+                                       help={this.validator.getResult("name").message}
                             >
                                 <Input
                                     style={{width: "500px"}}
                                     defaultValue={untracked(() => this.item.name)}
-                                    onChange={(e) => this.item.name = e.target.value}
+                                    onChange={(e) => {
+                                        this.item.name = e.target.value;
+                                        this.validator.resetResult("name")
+                                    }}
+                                    onBlur={() => this.validator.validate("name")}
                                 />
                             </Form.Item>
                             <Form.Item label="Description"
@@ -160,6 +193,7 @@ class EditConfigItemModal extends Component {
                             >
                                 <Input.TextArea
                                     rows={4}
+                                    placeholder="Optional"
                                     style={{width: "500px"}}
                                     defaultValue={untracked(() => this.item.name)}
                                     onChange={(e) => this.item.description = e.target.value}

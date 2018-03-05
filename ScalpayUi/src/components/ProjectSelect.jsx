@@ -13,6 +13,7 @@ export default class ProjectSelect extends Component {
         style: {},
         className: "",
         onChange: (value) => {},
+        onBlur: () => {},
         allowClear: false,
         disabled: false,
         defaultValue: undefined
@@ -42,6 +43,7 @@ export default class ProjectSelect extends Component {
             filterOption={false}
             onSearch={debounce(this.searchProjects, 800)}
             onChange={this.props.onChange}
+            onBlur={this.props.onBlur}
         >
             {this.projects.map(project =>
                 <Select.Option key={project.projectKey}>{project.name}</Select.Option>
