@@ -3,8 +3,10 @@ import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked, runInAction, action} from "mobx";
 import axios from "axios";
+import cs from "classnames";
 import DragListView from "react-drag-listview";
 import NumberInput from "./NumberInput";
+import guid from "../../utils/guid";
 
 @observer
 export default class NumberListInput extends Component {
@@ -14,29 +16,36 @@ export default class NumberListInput extends Component {
         values: []
     };
 
-
-    @observable values = [];
+    @observable items = this.props.values.map(v => {
+        return {key: guid(), value: v}
+    });
 
     render = () => {
-        return <DragListView
-            style={this.props.style}
-            className={this.props.className}
-            onDragEnd={() => {}}>
-            {
-                this.values.map((item, index) => {
-                    return <div>
-                        <NumberInput/>
-                        <Icon
-                            className="dynamic-delete-button"
-                            type="minus-circle-o"
-                            onClick={() => this.remove(k)}
-                        />
-                    </div>
-                })
-            }
-            <Button type="dashed" onClick={this.add} style={{ width: "60%" }}>
-                <Icon type="plus" /> Add field
-            </Button>
-        </DragListView>
+        return <div className={cs("scalpay-list", this.props.className)}>
+            <DragListView
+                style={this.props.style}
+                onDragEnd={() => {
+                }}>
+                {
+                    this.items.map((item, index) => {
+                        return <div key={item.key} className="item">
+                            <NumberInput
+                                className="single"
+                                defaultValue={untracked(() => item.value)}
+                                onChange={(value) => item.value = value}
+                            />
+                            <Icon
+                                className="delete"
+                                type="minus-circle-o"
+                                onClick={() => this.items.splice(index, 1)}
+                            />
+                        </div>
+                    })
+                }
+                <Button type="dashed" className="add" onClick={() => this.items.push({key: guid(), value: 0})}>
+                    <Icon type="plus"/> Add field
+                </Button>
+            </DragListView>
+        </div>
     }
 }

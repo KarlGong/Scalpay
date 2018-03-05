@@ -14,11 +14,12 @@ export default class NumberInput extends Component {
     };
 
     render = () => {
-        return <InputNumber placeholder="Number"
-                            style={this.props.style}
-                            className={this.props.className}
-                            onChange={this.props.onChange}
-                            defaultValue={this.props.defaultValue}
-                            step={1}/>
+        return <InputNumber
+            placeholder="Number"
+            style={this.props.style}
+            className={this.props.className}
+            onChange={this.props.onChange}
+            defaultValue={this.props.defaultValue}
+            step={1}/>
     }
 }

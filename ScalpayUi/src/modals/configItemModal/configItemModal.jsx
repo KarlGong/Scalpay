@@ -71,8 +71,10 @@ class EditConfigItemModal extends Component {
             }]
         },
         addMode: false,
-        onSuccess: (item) => {},
-        afterClose: () => {}
+        onSuccess: (item) => {
+        },
+        afterClose: () => {
+        }
     };
 
     @observable loading = false;
@@ -135,7 +137,8 @@ class EditConfigItemModal extends Component {
                     </Collapse.Panel>
                     <Collapse.Panel
                         header="Rules"
-                        key="raw-rule">
+                        key="raw-rule"
+                        disabled={this.parameterPanelValidators.filter(v => v.hasError()).length}>
                         <RawRulePanel item={this.item}/>
                     </Collapse.Panel>
                 </Collapse>

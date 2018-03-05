@@ -43,7 +43,6 @@ export default class Validator {
         return new Promise((resolve, reject) => {
             let descriptor = {[fieldName]: this.descriptor[fieldName]};
             this.setResult(fieldName, {status: "validating", message: null});
-
             new Schema(descriptor).validate(this.subject, (errors, fields) => {
                 if (errors) {
                     // error
