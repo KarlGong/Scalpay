@@ -53,7 +53,7 @@ export default class LoginPage extends Component {
     };
 
     onSubmit = () => {
-        this.validator.validateAll(() => {
+        this.validator.validateAll().then(() => {
             this.loading = true;
             auth.login(this.user.username, this.user.password)
                 .then(() => global.history.push(this.props.router.location.query.returnUrl || "/"))

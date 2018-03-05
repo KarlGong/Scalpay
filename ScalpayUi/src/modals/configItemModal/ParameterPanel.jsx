@@ -118,11 +118,11 @@ export default class ParameterPanel extends Component {
                         style={{width: "150px"}}
                         defaultValue={untracked(() => this.item.resultDataType)}
                         onChange={(dataType) => {
+
                             this.item.resultDataType = dataType;
-                            this.item.rules.clear();
-                            this.item.rules.push({
-                                key: guid(),
-                                result: DefaultExp[dataType]
+                            this.item.rules.map(rule => {
+                                rule.result = DefaultExp[dataType];
+                                rule.key = guid();
                             });
                         }}/>
                 </Form.Item>
