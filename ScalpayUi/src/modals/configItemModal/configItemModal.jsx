@@ -82,9 +82,9 @@ class EditConfigItemModal extends Component {
 
     constructor(props) {
         super(props);
+        this.props.item.parameterInfos.map(p => p.key = p.key || guid());
+        this.props.item.rules.map(r => r.key = r.key || guid());
         this.item = observable(Object.assign({}, this.props.item));
-        this.item.parameterInfos.map(p => p.key = p.key || guid());
-        this.item.rules.map(r => r.key = r.key || guid());
     }
 
     render = () => {
