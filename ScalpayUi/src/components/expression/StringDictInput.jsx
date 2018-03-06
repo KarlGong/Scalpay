@@ -1,42 +1,119 @@
-import {Layout, Menu, Input, Icon, Button} from "antd";
+import {Layout, Menu, Input, Icon, Button, Tooltip} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked, runInAction, action} from "mobx";
 import axios from "axios";
 import DragListView from "react-drag-listview";
 import StringInput from "./StringInput";
+import guid from "../../utils/guid";
+import Validator from "../../utils/Validator";
+import cs from "classnames";
+import {message} from "antd/lib/index";
 
 @observer
 export default class StringDictInput extends Component {
     static defaultProps = {
         style: {},
         className: "",
-        values: []
+        defaultValue: {},
+        onChange: (value) => {
+        }
     };
 
-    @observable values = [];
+    constructor(props) {
+        super(props);
+        this.items = Object.entries(this.props.defaultValue).map(([dictKey, dictValue]) => {
+            return {key: guid(), dictKey: dictKey, dictValue: dictValue}
+        });
+
+        this.validatorDescriptor = {
+            dictKey: (rule, value, callback, source, options) => {
+                let errors = [];
+                if (value === null || value === undefined) {
+                    errors.push(new Error("key is required"));
+                }
+                if (this.items.filter(item => item.dictKey === value).length > 1) {
+                    errors.push(new Error("duplicating key: " + value));
+                }
+                callback(errors);
+            },
+            dictValue: (rule, value, callback, source, options) => {
+                let errors = [];
+                if (value === null || value === undefined) {
+                    errors.push(new Error("value is required"));
+                }
+                callback(errors);
+            }
+        };
+
+        this.validators = this.items.map((item) => new Validator(item, this.validatorDescriptor));
+    }
 
     render = () => {
-        return <DragListView
-            style={this.props.style}
-            className={this.props.className}
-            onDragEnd={() => {}}>
+        return <div className={cs("scalpay-list", this.props.className)} style={this.props.style}>
             {
-                this.values.map((item, index) => {
-                    return <div>
-                        <StringInput/>
-                        <StringInput/>
+                this.items.map((item, index) => {
+                    return <div key={item.key} className="item">
+                        <Tooltip
+                            placement="topLeft"
+                            title={this.validators[index].getResult("dictKey").message}>
+                            <Input
+                                className={cs("first", this.validators[index].getResult("dictKey").status)}
+                                defaultValue={untracked(() => item.dictKey)}
+                                onChange={(e) => {
+                                    item.dictKey = e.target.value;
+                                    this.validators[index].resetResult("dictKey");
+                                    this.handleChange();
+                                }}
+                                onBlur={(e) => this.validators[index].validate("dictKey")}
+                            />
+                        </Tooltip>
+                        <Tooltip
+                            placement="topLeft"
+                            title={this.validators[index].getResult("dictValue").message}>
+                            <Input
+                                className={cs("second", this.validators[index].getResult("dictValue").status)}
+                                defaultValue={untracked(() => item.dictValue)}
+                                onChange={(e) => {
+                                    item.dictValue = e.target.value;
+                                    this.validators[index].resetResult("dictValue");
+                                    this.handleChange();
+                                }}
+                                onBlur={(e) => this.validators[index].validate("dictValue")}
+                            />
+                        </Tooltip>
                         <Icon
-                            className="dynamic-delete-button"
+                            className="delete"
                             type="minus-circle-o"
-                            onClick={() => this.remove(k)}
+                            onClick={() => {
+                                this.items.splice(index, 1);
+                                this.validators.splice(index, 1);
+                                this.handleChange();
+                            }}
                         />
                     </div>
                 })
             }
-            <Button type="dashed" onClick={this.add} style={{ width: "60%" }}>
-                <Icon type="plus" /> Add field
+            <Button
+                type="dashed"
+                className="add"
+                onClick={() => {
+                    this.items.push({key: guid(), dictKey: "", dictValue: ""});
+                    this.validators.push(new Validator(this.items.slice(-1)[0], this.validatorDescriptor));
+                    this.handleChange();
+                }}>
+                <Icon type="plus"/> Add Key Value Pair
             </Button>
-        </DragListView>
-    }
+        </div>
+    };
+
+    handleChange = () => {
+        let dict = {};
+        this.items.map(item => dict[item.dictKey] = item.dictValue);
+        this.props.onChange(dict);
+    };
+
+    validate = () => {
+        return Promise.all(this.validators.map(v => v.validateAll()));
+    };
 }
