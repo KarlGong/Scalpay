@@ -32,7 +32,6 @@ export default class ParameterPanel extends Component {
         super(props);
         this.validatorDescriptor = {
             name: (rule, value, callback, source, options) => {
-                debugger
                 let errors = [];
                 let val = source.parameterInfos[value].name;
                 if (!val) {
@@ -106,6 +105,7 @@ export default class ParameterPanel extends Component {
                                         className="second"
                                         defaultValue={untracked(() => paramInfo.dataType)}
                                         onChange={(value) => {
+                                            if (!paramInfo.oldName) return; // for the new added parameter
                                             Modal.confirm({
                                                 title: "Are you sure to change the data type of this parameter?",
                                                 content: "All the expressions use this parameter will be reset.",
@@ -115,10 +115,10 @@ export default class ParameterPanel extends Component {
                                                 onOk: () => {
                                                     paramInfo.dataType = value;
                                                     this.item.rules.map(rule => {
-                                                        if (isVariableUsed(rule.condition, paramInfo.name)) {
+                                                        if (isVariableUsed(rule.condition, paramInfo.oldName)) {
                                                             rule.condition = DefaultExp.Bool;
                                                         }
-                                                        if (isVariableUsed(rule.result, paramInfo.name)) {
+                                                        if (isVariableUsed(rule.result, paramInfo.oldName)) {
                                                             rule.result = DefaultExp[this.item.resultDataType];
                                                         }
                                                         rule.key = guid();
@@ -145,10 +145,10 @@ export default class ParameterPanel extends Component {
                                             cancelText: "No",
                                             onOk: () => {
                                                 this.item.rules.map(rule => {
-                                                    if (isVariableUsed(rule.condition, paramInfo.name)) {
+                                                    if (isVariableUsed(rule.condition, paramInfo.oldName)) {
                                                         rule.condition = DefaultExp.Bool;
                                                     }
-                                                    if (isVariableUsed(rule.result, paramInfo.name)) {
+                                                    if (isVariableUsed(rule.result, paramInfo.oldName)) {
                                                         rule.result = DefaultExp[this.item.resultDataType];
                                                     }
                                                     rule.key = guid();

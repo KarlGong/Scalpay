@@ -122,7 +122,7 @@ class EditConfigItemModal extends Component {
                         className={cs({"error": this.basicPanelValidators.filter(v => v.hasError()).length})}>
                         <BasicPanel
                             item={this.item}
-                            addMode
+                            addMode={this.props.addMode}
                             setValidators={(validators) => this.basicPanelValidators = validators}
                         />
                     </Collapse.Panel>
@@ -138,7 +138,7 @@ class EditConfigItemModal extends Component {
                     <Collapse.Panel
                         header="Rules"
                         key="raw-rule"
-                        disabled={this.parameterPanelValidators.filter(v => v.hasError()).length}>
+                        disabled={!!this.parameterPanelValidators.filter(v => v.hasError()).length}>
                         <RawRulePanel item={this.item}/>
                     </Collapse.Panel>
                 </Collapse>
