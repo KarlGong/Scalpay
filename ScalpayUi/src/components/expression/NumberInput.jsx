@@ -17,7 +17,7 @@ export default class NumberInput extends Component {
 
     constructor(props){
         super(props);
-        this.item = observable({value: this.props.defaultValue});
+        this.item = {value: this.props.defaultValue};
         this.validator = new Validator(this.item, {
             value: (rule, value, callback, source, options) => {
                 let errors = [];
@@ -53,5 +53,5 @@ export default class NumberInput extends Component {
 
     validate = () => {
         return this.validator.validateAll();
-    }
+    };
 }

@@ -42,8 +42,10 @@ class EditExpressionModal extends Component {
             var: null
         },
         item: {},
-        onSuccess: (project) => {},
-        afterClose: () => {}
+        onSuccess: (project) => {
+        },
+        afterClose: () => {
+        }
     };
 
     @observable expression = Object.assign({
@@ -55,7 +57,10 @@ class EditExpressionModal extends Component {
         var: null
     }, this.props.expression);
     @observable visible = true;
+
     valueInput = null;
+    variableSelect = null;
+    functionSelect = null;
 
     render = () => {
         const valueInputProps = {
@@ -72,7 +77,7 @@ class EditExpressionModal extends Component {
             [DataType.NumberList]: <NumberListInput {...valueInputProps}/>,
             [DataType.String]: <StringInput {...valueInputProps} className="string-input"/>,
             [DataType.StringDict]: <StringDictInput {...valueInputProps}/>,
-            [DataType.StringListInput]: <StringListInput {...valueInputProps}/>
+            [DataType.StringList]: <StringListInput {...valueInputProps}/>
         }[this.expression.returnType];
 
         return <Modal
@@ -102,6 +107,7 @@ class EditExpressionModal extends Component {
                             .filter(p => p.dataType === this.expression.returnType)}
                         defaultValue={untracked(() => this.expression.var || undefined)}
                         onChange={(variableName) => this.expression.var = variableName}
+                        ref={instance => this.variableSelect = instance}
                     />
                     : null
                 }
@@ -115,6 +121,7 @@ class EditExpressionModal extends Component {
                                 this.expression.funcName = functionName;
                                 this.expression.funcArgs = Func[this.expression.returnType][functionName].funcArgs;
                             }}
+                            ref={instance => this.functionSelect = instance}
                         />
                         {
                             this.expression.funcName ?
@@ -136,23 +143,33 @@ class EditExpressionModal extends Component {
     };
 
     handleOk = () => {
-        this.valueInput.validate();
-        return
-        // clear useless properties
-        let returnExpression = {
-            returnType: this.expression.returnType,
-            expType: this.expression.expType
-        };
-        if (this.expression.expType === ExpType.Value) {
-            returnExpression.value = this.expression.value;
-        } else if (this.expression.expType === ExpType.Var) {
-            returnExpression.var = this.expression.var;
-        } else if (this.expression.expType === ExpType.Func) {
-            returnExpression.funcName = this.expression.funcName;
-            returnExpression.funcArgs = this.expression.funcArgs;
-        }
-        this.props.onSuccess(returnExpression);
-        this.visible = false;
+        const validateControl = {
+            [ExpType.Value]: this.valueInput,
+            [ExpType.Var]: this.variableSelect,
+            [ExpType.Func]: this.functionSelect
+        }[this.expression.expType];
+
+        validateControl.validate().then(() => {
+            // clear useless properties
+            let returnExpression = {
+                returnType: this.expression.returnType,
+                expType: this.expression.expType
+            };
+            switch (this.expression.expType) {
+                case ExpType.Value:
+                    returnExpression.value = this.expression.value;
+                    break;
+                case ExpType.Var:
+                    returnExpression.var = this.expression.var;
+                    break;
+                case ExpType.Func:
+                    returnExpression.funcName = this.expression.funcName;
+                    returnExpression.funcArgs = this.expression.funcArgs;
+                    break;
+            }
+            this.props.onSuccess(returnExpression);
+            this.visible = false;
+        });
     };
 
     handleCancel = (e) => {

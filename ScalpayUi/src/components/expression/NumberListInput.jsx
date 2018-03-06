@@ -23,10 +23,6 @@ export default class NumberListInput extends Component {
     });
     numberInputs = {};
 
-    constructor(props) {
-        super(props);
-    }
-
     render = () => {
         return <div className={cs("scalpay-list", this.props.className)}>
             <DragListView
@@ -42,14 +38,14 @@ export default class NumberListInput extends Component {
                                         item.value = value;
                                         this.handleChange();
                                     }}
-                                    ref={(instance) => this.numberInputs[item.key] = instance}
+                                    ref={(instance) => {if (instance) this.numberInputs[item.key] = instance;}}
                                 />
                             <Icon
                                 className="delete"
                                 type="minus-circle-o"
                                 onClick={() => {
                                     this.items.splice(index, 1);
-                                    delete this.numberInputs[this.items[index].key];
+                                    delete this.numberInputs[item.key];
                                     this.handleChange();
                                 }}
                             />
@@ -57,10 +53,10 @@ export default class NumberListInput extends Component {
                     })
                 }
                 <Button type="dashed" className="add" onClick={() => {
-                    this.items.push({key: guid(), value: null});
+                    this.items.push({key: guid(), value: 0});
                     this.handleChange();
                 }}>
-                    <Icon type="plus"/> Add field
+                    <Icon type="plus"/> Add Number
                 </Button>
             </DragListView>
         </div>
