@@ -33,14 +33,14 @@ export default class ParameterPanel extends Component {
         this.validatorDescriptor = {
             name: (rule, value, callback, source, options) => {
                 let errors = [];
-                let val = source.parameterInfos[value].name;
+                let val = value.name;
                 if (!val) {
                     errors.push(new Error("parameter name is required"));
                 }
                 if (!/^[a-zA-Z0-9-_.]+?$/.test(val)) {
                     errors.push(new Error("parameter name can only contain alphanumeric characters, - , _ and ."));
                 }
-                if (source.parameterInfos.filter(info => info.name === val).length > 1) {
+                if (this.item.parameterInfos.filter(info => info.name === val).length > 1) {
                     errors.push(new Error("duplicating parameter name: " + val));
                 }
                 callback(errors);
@@ -48,10 +48,8 @@ export default class ParameterPanel extends Component {
         };
         this.validators = this.item.parameterInfos.map((info, index) =>
             new Validator({
-                    name: index, // put the index to validate array
-                    parameterInfos: this.item.parameterInfos
-                },
-                this.validatorDescriptor));
+                name: info, // put the parameter info not name to avoid changing value issue
+            }, this.validatorDescriptor));
         this.props.setValidators(this.validators);
         this.item.parameterInfos.map(info => info.oldName = info.name); // prevent the parameter's old name
     }
@@ -159,7 +157,7 @@ export default class ParameterPanel extends Component {
                                             }
                                         });
                                     }}>
-                                    <Icon type="minus-circle-o" />
+                                    <Icon type="minus-circle-o"/>
                                 </span>
                                 </div>
                             })
@@ -173,12 +171,9 @@ export default class ParameterPanel extends Component {
                                     key: guid(),
                                     dataType: DataType.String
                                 });
-                                let validator = new Validator(
-                                    {
-                                        name: this.item.parameterInfos.length - 1, // put the index to validate array
-                                        parameterInfos: this.item.parameterInfos
-                                    },
-                                    this.validatorDescriptor);
+                                let validator = new Validator({
+                                    name: this.item.parameterInfos.slice(-1)[0], // put the parameter info not name to avoid changing value issue
+                                }, this.validatorDescriptor);
                                 this.validators.push(validator);
                                 this.props.setValidators(this.validators);
                                 validator.validate("name");
