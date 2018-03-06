@@ -79,8 +79,11 @@ class EditConfigItemModal extends Component {
 
     @observable loading = false;
     @observable visible = true;
-    @observable basicPanelValidators = [];
-    @observable parameterPanelValidators = [];
+
+    basicPanel = null;
+    @observable basicPanelHasError = false;
+    parameterPanel = null;
+    @observable parameterPanelHasError = false;
 
     constructor(props) {
         super(props);
@@ -117,28 +120,33 @@ class EditConfigItemModal extends Component {
                     accordion
                     defaultActiveKey={["basic"]}>
                     <Collapse.Panel
+                        forceRender
                         header="Basic"
                         key="basic"
-                        className={cs({"error": this.basicPanelValidators.filter(v => v.hasError()).length})}>
+                        className={cs({"error": this.basicPanelHasError})}>
                         <BasicPanel
                             item={this.item}
                             addMode={this.props.addMode}
-                            setValidators={(validators) => this.basicPanelValidators = validators}
+                            ref={(instance) => this.basicPanel = instance}
+                            onValidate={(hasError) => this.basicPanelHasError = hasError}
                         />
                     </Collapse.Panel>
                     <Collapse.Panel
+                        forceRender
                         header="Parameters & Result"
                         key="parameter"
-                        className={cs({"error": this.parameterPanelValidators.filter(v => v.hasError()).length})}>
+                        className={cs({"error": this.parameterPanelHasError})}>
                         <ParameterPanel
                             item={this.item}
-                            setValidators={(validators) => this.parameterPanelValidators = validators}
+                            ref={(instance) => this.parameterPanel = instance}
+                            onValidate={(hasError) => this.parameterPanelHasError = hasError}
                         />
                     </Collapse.Panel>
                     <Collapse.Panel
+                        forceRender
                         header="Rules"
                         key="raw-rule"
-                        disabled={!!this.parameterPanelValidators.filter(v => v.hasError()).length}>
+                        disabled={this.parameterPanelHasError}>
                         <RawRulePanel item={this.item}/>
                     </Collapse.Panel>
                 </Collapse>
@@ -148,10 +156,7 @@ class EditConfigItemModal extends Component {
 
     handleOk = () => {
         if (this.props.addMode) {
-            let validatePromise = this.basicPanelValidators.concat(this.parameterPanelValidators)
-                .map(v => v.validateAll());
-
-            Promise.all(validatePromise).then(() => {
+            Promise.all([this.basicPanel.validate(), this.parameterPanel.validate()]).then(() => {
                 this.loading = true;
                 axios.put("/api/items/config", this.item)
                     .then(res => {
@@ -163,10 +168,7 @@ class EditConfigItemModal extends Component {
                     }, () => this.loading = false)
             });
         } else {
-            let validatePromise = this.basicPanelValidators.concat(this.parameterPanelValidators)
-                .map(v => v.validateAll());
-
-            Promise.all(validatePromise).then(() => {
+            Promise.all([this.basicPanel.validate(), this.parameterPanel.validate()]).then(() => {
                 this.loading = true;
                 axios.post("/api/items/config/" + this.item.itemKey, this.item)
                     .then(res => {

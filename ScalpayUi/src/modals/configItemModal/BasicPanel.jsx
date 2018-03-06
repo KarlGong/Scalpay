@@ -21,11 +21,11 @@ export default class BasicPanel extends Component {
     static defaultProps = {
         item: {},
         addMode: false,
-        setValidators: (validators) => {},
+        onValidate: (hasError) => {},
     };
-    
+
     item = this.props.item; // observable
-    
+
     constructor(props) {
         super(props);
         this.validator = new Validator(this.item, {
@@ -41,8 +41,7 @@ export default class BasicPanel extends Component {
                 callback(errors);
             },
             name: {required: true}
-        });
-        this.props.setValidators([this.validator]);
+        }, this.props.onValidate);
     }
 
     render = () => {
@@ -121,4 +120,9 @@ export default class BasicPanel extends Component {
             </Form>
         </div>
     };
+
+    validate = () => {
+        return this.validator.validateAll();
+    };
+
 }

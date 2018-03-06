@@ -8,14 +8,16 @@ export default class Validator {
     descriptor;
     _results = {};
     @observable results = {};
+    onValidate = (hasError) => {};
 
-    constructor(subject, descriptor) {
+    constructor(subject, descriptor, onValidate) {
         this.subject = subject || {};
         this.descriptor = descriptor;
+        this.onValidate = onValidate || ((hasError) => {});
     }
 
     hasError = () => {
-        return Object.entries(this.results).filter(([fieldName, result]) => result.status === "error").length
+        return !!Object.entries(this.results).filter(([fieldName, result]) => result.status === "error").length
     };
 
     getResult = (fieldName) => {
@@ -47,15 +49,16 @@ export default class Validator {
                 if (errors) {
                     // error
                     this.setResult(fieldName, {status: "error", message: errors[0].message});
+                    this.onValidate(true);
                     reject(this._results[fieldName]);
                 } else {
                     // success
                     this.setResult(fieldName, {status: "success", message: null});
+                    this.onValidate(false);
                     resolve(this._results[fieldName]);
                 }
             })
-        });
-
+        })
     };
 
     validateAll = () => {
@@ -95,17 +98,20 @@ export default class Validator {
                         this._results[fieldName] = {status: "error", message: fields[fieldName][0].message}
                     });
                     this.results = this._results;
+                    this.onValidate(true);
                     reject(this._results);
                 } else {
                     // unvalidated success
                     this.results = this._results;
                     if (errorFieldNames.length || validatingFieldNames.length) {
+                        this.onValidate(true);
                         reject(this._results);
                     } else {
+                        this.onValidate(false);
                         resolve(this._results);
                     }
                 }
             })
-        });
+        })
     };
 }
