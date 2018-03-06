@@ -17,7 +17,7 @@ export default class Validator {
     }
 
     hasError = () => {
-        return !!Object.entries(this.results).filter(([fieldName, result]) => result.status === "error").length
+        return Object.entries(this.results).some(([fieldName, result]) => result.status === "error")
     };
 
     getResult = (fieldName) => {
@@ -54,7 +54,7 @@ export default class Validator {
                 } else {
                     // success
                     this.setResult(fieldName, {status: "success", message: null});
-                    this.onValidate(false);
+                    this.onValidate(this.hasError());
                     resolve(this._results[fieldName]);
                 }
             })

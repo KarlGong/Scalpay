@@ -218,6 +218,6 @@ export default class ParameterPanel extends Component {
     };
 
     hasError = () => {
-        return !!this.validators.filter(v => v.hasError()).length;
+        return this.validators.some(v => v.hasError());
     }
 }
