@@ -71,7 +71,7 @@ class EditExpressionModal extends Component {
 
         const valueInput = {
             [DataType.Bool]: <BoolSelect {...valueInputProps} />,
-            [DataType.DateTime]: <DateTimeInput {...valueInputProps}/>,
+            [DataType.DateTime]: <DateTimeInput {...valueInputProps} className="datetime-input"/>,
             [DataType.Duration]: <DurationInput {...valueInputProps}/>,
             [DataType.Number]: <NumberInput {...valueInputProps} className="number-input"/>,
             [DataType.NumberList]: <NumberListInput {...valueInputProps}/>,

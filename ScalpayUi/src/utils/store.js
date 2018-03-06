@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const Privilege = {
     ProjectAdd: "ProjectAdd",
     ProjectEdit: "ProjectEdit",
@@ -44,7 +46,7 @@ export const DefaultExp = {
     DateTime: {
         returnType: DataType.DateTime,
         expType: ExpType.Value,
-        value: ""
+        value: moment.utc().format()
     },
     Duration: {
         returnType: DataType.Duration,
@@ -64,7 +66,7 @@ export const DefaultExp = {
     String: {
         returnType: DataType.String,
         expType: ExpType.Value,
-        value: "String"
+        value: ""
     },
     StringDict: {
         returnType: DataType.StringDict,
