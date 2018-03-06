@@ -11,9 +11,9 @@ export default class StringInput extends Component {
     static defaultProps = {
         style: {},
         className: "",
+        defaultValue: "",
         onChange: (value) => {
-        },
-        defaultValue: ""
+        }
     };
 
     constructor(props) {

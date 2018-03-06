@@ -51,7 +51,7 @@ export const DefaultExp = {
     Duration: {
         returnType: DataType.Duration,
         expType: ExpType.Value,
-        value: ""
+        value: "P0Y0M0DT0H0M0S"
     },
     Number: {
         returnType: DataType.Number,

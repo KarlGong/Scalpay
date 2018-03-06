@@ -12,7 +12,11 @@ export default class NumberInput extends Component {
         style: {},
         className: "",
         onChange: (value) => {},
-        defaultValue: 0
+        defaultValue: 0,
+        min: -Infinity,
+        max: Infinity,
+        precision: undefined,
+        step: 1
     };
 
     constructor(props){
@@ -38,7 +42,10 @@ export default class NumberInput extends Component {
                 style={this.props.style}
                 className={cs(this.props.className, this.validator.getResult("value").status)}
                 defaultValue={this.props.defaultValue}
-                step={1}
+                min={this.props.min}
+                max={this.props.max}
+                precision={this.props.precision}
+                step={this.props.step}
                 onChange={(value) => {
                     this.item.value = value;
                     this.validator.resetResult("value");

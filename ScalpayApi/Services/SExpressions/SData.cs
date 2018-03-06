@@ -1,9 +1,9 @@
-﻿
+﻿using System.Runtime.Serialization;
+
 namespace ScalpayApi.Services.SExpressions
 {
-    public class SData
+    public abstract class SData : ISerializable
     {
-        
+        public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
     }
-    
 }

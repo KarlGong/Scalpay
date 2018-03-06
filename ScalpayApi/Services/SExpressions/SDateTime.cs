@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace ScalpayApi.Services.SExpressions
 {
@@ -14,6 +15,11 @@ namespace ScalpayApi.Services.SExpressions
         public SDateTime(DateTimeOffset inner)
         {
             Inner = inner.ToUniversalTime();
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("data", Inner.ToString("o"));
         }
     }
 }

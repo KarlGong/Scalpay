@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace ScalpayApi.Services.SExpressions
 {
@@ -10,6 +11,11 @@ namespace ScalpayApi.Services.SExpressions
         public SNumberList(List<double> inner)
         {
             Inner = inner;
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("data", Inner);
         }
     }
 }

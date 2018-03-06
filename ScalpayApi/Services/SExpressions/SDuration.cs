@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.Serialization;
+using System.Xml;
 
 namespace ScalpayApi.Services.SExpressions
 {
@@ -8,7 +10,7 @@ namespace ScalpayApi.Services.SExpressions
 
         public SDuration(string inner)
         {
-            Inner = TimeSpan.Parse(inner);
+            Inner = XmlConvert.ToTimeSpan(inner);
         }
 
         public SDuration(TimeSpan inner)
@@ -16,5 +18,9 @@ namespace ScalpayApi.Services.SExpressions
             Inner = inner;
         }
 
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("data", XmlConvert.ToString(Inner));
+        }
     }
 }

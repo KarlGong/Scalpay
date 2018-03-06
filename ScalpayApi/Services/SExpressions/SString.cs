@@ -1,4 +1,6 @@
-﻿namespace ScalpayApi.Services.SExpressions
+﻿using System.Runtime.Serialization;
+
+namespace ScalpayApi.Services.SExpressions
 {
     public class SString: SData
     {
@@ -7,6 +9,11 @@
         public SString(string inner)
         {
             Inner = inner;
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("data", Inner);
         }
     }
 }
