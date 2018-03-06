@@ -55,11 +55,13 @@ class EditExpressionModal extends Component {
         var: null
     }, this.props.expression);
     @observable visible = true;
+    valueInput = null;
 
     render = () => {
         const valueInputProps = {
             defaultValue: this.expression.value,
-            onChange: (value) => this.expression.value = value
+            onChange: (value) => this.expression.value = value,
+            ref: instance => this.valueInput = instance
         };
 
         const valueInput = {
@@ -134,6 +136,8 @@ class EditExpressionModal extends Component {
     };
 
     handleOk = () => {
+        this.valueInput.validate();
+        return
         // clear useless properties
         let returnExpression = {
             returnType: this.expression.returnType,

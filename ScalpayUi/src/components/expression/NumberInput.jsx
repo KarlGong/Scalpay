@@ -12,8 +12,7 @@ export default class NumberInput extends Component {
         style: {},
         className: "",
         onChange: (value) => {},
-        defaultValue: 0,
-        setValidators: (validators) => {}
+        defaultValue: 0
     };
 
     constructor(props){
@@ -28,7 +27,6 @@ export default class NumberInput extends Component {
                 callback(errors);
             }
         });
-        this.props.setValidators([this.validator]);
     }
 
     render = () => {
@@ -51,5 +49,9 @@ export default class NumberInput extends Component {
                 }}
             />
         </Tooltip>
+    };
+
+    validate = () => {
+        return this.validator.validateAll();
     }
 }

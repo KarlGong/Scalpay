@@ -14,18 +14,17 @@ export default class NumberListInput extends Component {
     static defaultProps = {
         style: {},
         className: "",
-        defaultValues: [],
-        setValidators: (validators) => {}
+        defaultValue: [],
+        onChange: (values) => {}
     };
 
-    @observable items = this.props.defaultValues.map(v => {
+    @observable items = this.props.defaultValue.map(v => {
         return {key: guid(), value: v}
     });
+    numberInputs = {};
 
     constructor(props) {
         super(props);
-        this.validators = this.props.defaultValues.map(v => []);
-        this.setValidators(this.validators);
     }
 
     render = () => {
@@ -41,24 +40,25 @@ export default class NumberListInput extends Component {
                                     defaultValue={untracked(() => item.value)}
                                     onChange={(value) => {
                                         item.value = value;
+                                        this.handleChange();
                                     }}
-                                    setValidators={(validators) => this.validators[index] = validators}
+                                    ref={(instance) => this.numberInputs[item.key] = instance}
                                 />
                             <Icon
                                 className="delete"
                                 type="minus-circle-o"
                                 onClick={() => {
                                     this.items.splice(index, 1);
-                                    this.validators.splice(index, 1);
-                                    this.setValidators(this.validators);
+                                    delete this.numberInputs[this.items[index].key];
+                                    this.handleChange();
                                 }}
                             />
                         </div>
                     })
                 }
                 <Button type="dashed" className="add" onClick={() => {
-                    this.items.push({key: guid(), value: 0});
-                    this.setValidators(this.validators);
+                    this.items.push({key: guid(), value: null});
+                    this.handleChange();
                 }}>
                     <Icon type="plus"/> Add field
                 </Button>
@@ -66,9 +66,11 @@ export default class NumberListInput extends Component {
         </div>
     };
 
-    setValidators = () => {
-        let validators = [];
-        this.validators.map(v => validators.concat(v));
-        this.props.setValidators(validators);
+    handleChange = () => {
+        this.props.onChange(this.items.map(item => item.value));
+    };
+
+    validate = () => {
+        return Promise.all(Object.values(this.numberInputs).map(v => v.validate()));
     }
 }
