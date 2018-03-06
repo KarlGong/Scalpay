@@ -21,8 +21,7 @@ import {isVariableUsed, updateVariable} from "~/utils/expressionHelper";
 export default class ParameterPanel extends Component {
     static defaultProps = {
         item: {},
-        setValidators: (validators) => {
-        },
+        setValidators: (validators) => {},
     };
 
     item = this.props.item; // observable
@@ -33,23 +32,19 @@ export default class ParameterPanel extends Component {
         this.validatorDescriptor = {
             name: (rule, value, callback, source, options) => {
                 let errors = [];
-                let val = value.name;
-                if (!val) {
+                if (!value) {
                     errors.push(new Error("parameter name is required"));
                 }
-                if (!/^[a-zA-Z0-9-_.]+?$/.test(val)) {
+                if (!/^[a-zA-Z0-9-_.]+?$/.test(value)) {
                     errors.push(new Error("parameter name can only contain alphanumeric characters, - , _ and ."));
                 }
-                if (this.item.parameterInfos.filter(info => info.name === val).length > 1) {
-                    errors.push(new Error("duplicating parameter name: " + val));
+                if (this.item.parameterInfos.filter(info => info.name === value).length > 1) {
+                    errors.push(new Error("duplicating parameter name: " + value));
                 }
                 callback(errors);
             }
         };
-        this.validators = this.item.parameterInfos.map((info, index) =>
-            new Validator({
-                name: info, // put the parameter info not name to avoid changing value issue
-            }, this.validatorDescriptor));
+        this.validators = this.item.parameterInfos.map((info, index) => new Validator(info, this.validatorDescriptor));
         this.props.setValidators(this.validators);
         this.item.parameterInfos.map(info => info.oldName = info.name); // prevent the parameter's old name
     }
@@ -171,9 +166,7 @@ export default class ParameterPanel extends Component {
                                     key: guid(),
                                     dataType: DataType.String
                                 });
-                                let validator = new Validator({
-                                    name: this.item.parameterInfos.slice(-1)[0], // put the parameter info not name to avoid changing value issue
-                                }, this.validatorDescriptor);
+                                let validator = new Validator(this.item.parameterInfos.slice(-1)[0], this.validatorDescriptor);
                                 this.validators.push(validator);
                                 this.props.setValidators(this.validators);
                                 validator.validate("name");
