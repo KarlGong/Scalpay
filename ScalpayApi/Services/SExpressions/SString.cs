@@ -1,7 +1,10 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
+using ScalpayApi.Enums;
 
 namespace ScalpayApi.Services.SExpressions
 {
+    [Serializable]
     public class SString: SData
     {
         public string Inner { get; set; }
@@ -13,6 +16,7 @@ namespace ScalpayApi.Services.SExpressions
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            info.AddValue("dataType", SDataType.String);
             info.AddValue("data", Inner);
         }
     }

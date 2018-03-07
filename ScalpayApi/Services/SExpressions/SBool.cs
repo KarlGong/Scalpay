@@ -1,7 +1,10 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
+using ScalpayApi.Enums;
 
 namespace ScalpayApi.Services.SExpressions
 {
+    [Serializable]
     public class SBool : SData
     {
         public bool Inner { get; set; }
@@ -13,6 +16,7 @@ namespace ScalpayApi.Services.SExpressions
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            info.AddValue("dataType", SDataType.Bool);
             info.AddValue("data", Inner);
         }
     }

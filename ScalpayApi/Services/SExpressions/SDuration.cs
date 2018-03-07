@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using System.Xml;
+using ScalpayApi.Enums;
 
 namespace ScalpayApi.Services.SExpressions
 {
+    [Serializable]
     public class SDuration: SData
     {
         public TimeSpan Inner { get; set; }
@@ -20,6 +22,7 @@ namespace ScalpayApi.Services.SExpressions
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            info.AddValue("dataType", SDataType.Duration);
             info.AddValue("data", XmlConvert.ToString(Inner));
         }
     }

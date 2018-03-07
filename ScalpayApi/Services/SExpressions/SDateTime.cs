@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Runtime.Serialization;
+using ScalpayApi.Enums;
 
 namespace ScalpayApi.Services.SExpressions
 {
+    [Serializable]
     public class SDateTime: SData
     {
         public DateTimeOffset Inner { get; set; }
@@ -19,7 +21,8 @@ namespace ScalpayApi.Services.SExpressions
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("data", Inner.ToString("o"));
+            info.AddValue("dataType", SDataType.DateTime);
+            info.AddValue("data", Inner.ToString("yyyy-MM-ddTHH:mm:ssZ"));
         }
     }
 }
