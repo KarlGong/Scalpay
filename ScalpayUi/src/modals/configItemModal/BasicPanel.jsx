@@ -1,7 +1,7 @@
 import {Input, Icon, Modal, Form, Radio, Row, Col, Collapse, Button, message, Tooltip} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
+import {observable, toJS, untracked, runInAction, action, computed} from "mobx";
 import axios from "axios";
 import cs from "classnames";
 import {render, unmountComponentAtNode} from "react-dom";
@@ -15,13 +15,14 @@ import event from "~/utils/event";
 import "./configItemModal.less";
 import ItemInfo from "~/components/ItemInfo";
 import Validator from "~/utils/Validator";
+import ComponentValidator from "~/utils/ComponentValidator";
 
 @observer
 export default class BasicPanel extends Component {
     static defaultProps = {
         item: {},
         addMode: false,
-        onValidate: (hasError) => {},
+        setValidator: (validator) => {}
     };
 
     item = this.props.item; // observable
@@ -41,7 +42,8 @@ export default class BasicPanel extends Component {
                 callback(errors);
             },
             name: {required: true}
-        }, this.props.onValidate);
+        });
+        this.props.setValidator(new ComponentValidator(this.validator));
     }
 
     render = () => {
@@ -120,9 +122,4 @@ export default class BasicPanel extends Component {
             </Form>
         </div>
     };
-
-    validate = () => {
-        return this.validator.validateAll();
-    };
-
 }

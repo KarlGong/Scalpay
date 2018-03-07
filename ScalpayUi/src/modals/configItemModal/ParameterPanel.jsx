@@ -16,12 +16,13 @@ import ItemInfo from "~/components/ItemInfo";
 import event from "~/utils/event";
 import Validator from "~/utils/Validator";
 import {isVariableUsed, updateVariable} from "~/utils/expressionHelper";
+import ComponentValidator from "~/utils/ComponentValidator";
 
 @observer
 export default class ParameterPanel extends Component {
     static defaultProps = {
         item: {},
-        onValidate: (hasError) => {}
+        setValidator: (validator) => {}
     };
 
     item = this.props.item; // observable
@@ -44,13 +45,8 @@ export default class ParameterPanel extends Component {
                 callback(errors);
             }
         };
-        this.validators = this.item.parameterInfos.map((info, index) =>
-            new Validator(
-                info,
-                this.validatorDescriptor,
-                // if validation error, return error, if no error, return all validators' error
-                (hasError) => {this.props.onValidate(hasError || this.hasError())}
-            ));
+        this.validators = this.item.parameterInfos.map((info, index) => new Validator(info, this.validatorDescriptor));
+        this.setValidator();
         this.item.parameterInfos.map(info => info.oldName = info.name); // prevent the parameter's old name
     }
 
@@ -132,7 +128,7 @@ export default class ParameterPanel extends Component {
                                         if (!paramInfo.oldName) { // for the new added parameter
                                             this.item.parameterInfos.splice(index, 1);
                                             this.validators.splice(index, 1);
-                                            this.props.onValidate(this.hasError());
+                                            this.setValidator();
                                             return;
                                         }
                                         Modal.confirm({
@@ -153,7 +149,7 @@ export default class ParameterPanel extends Component {
                                                 });
                                                 this.item.parameterInfos.splice(index, 1);
                                                 this.validators.splice(index, 1);
-                                                this.props.onValidate(this.hasError());
+                                                this.setValidator();
                                             }
                                         });
                                     }}>
@@ -174,9 +170,9 @@ export default class ParameterPanel extends Component {
                                 let validator = new Validator(
                                     this.item.parameterInfos.slice(-1)[0],
                                     this.validatorDescriptor,
-                                    (hasError) => {this.props.onValidate(hasError || this.hasError())}
                                 );
                                 this.validators.push(validator);
+                                this.setValidator();
                                 validator.validate("name");
                             }}
                         >Add Parameter</Button>
@@ -213,11 +209,7 @@ export default class ParameterPanel extends Component {
         </div>
     };
 
-    validate = () => {
-        return Promise.all(this.validators.map(v => v.validateAll()));
-    };
-
-    hasError = () => {
-        return this.validators.some(v => v.hasError());
+    setValidator = () => {
+        this.props.setValidator(new ComponentValidator(this.validators));
     }
 }
