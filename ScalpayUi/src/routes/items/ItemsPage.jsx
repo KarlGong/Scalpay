@@ -1,11 +1,11 @@
-import {Layout, Menu, Input, Icon, List, Button, Modal, message, Table, Select} from "antd";
+import {Layout, Menu, Input, Icon, List, Button, Modal, message, Table, Breadcrumb} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked, runInAction, action} from "mobx";
+import {Link} from "react-router";
 import axios from "axios";
 import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
-import "./ItemsPage.less";
 import PageWrapper from "~/layouts/PageWrapper";
 import ProjectSelect from "~/components/ProjectSelect";
 import ItemTypeSelect from "~/components/ItemTypeSelect";
@@ -14,6 +14,7 @@ import {ItemType} from "~/utils/store";
 import configItemModal from "~/modals/configItemModal/configItemModal";
 import global from "~/global";
 import ProjectInfo from "~/components/ProjectInfo";
+import "./ItemsPage.less";
 
 @observer
 export default class ItemsPage extends Component {
@@ -31,7 +32,12 @@ export default class ItemsPage extends Component {
     };
 
     render = () => {
-        return <PageWrapper className="items-page">
+        return <PageWrapper
+            className="items-page"
+            breadcrumb={<Breadcrumb>
+                <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+                <Breadcrumb.Item>Projects</Breadcrumb.Item>
+            </Breadcrumb>}>
             <List
                 className="list"
                 loading={this.loading}
@@ -41,15 +47,15 @@ export default class ItemsPage extends Component {
                     <ProjectSelect
                         allowClear
                         className="filter select"
-                        onChange={(value) => this.searchParams.projectKey = value} />
+                        onChange={(value) => this.searchParams.projectKey = value}/>
                     <ItemTypeSelect
                         allowClear
                         className="filter select"
-                        onChange={(value) => this.searchParams.itemType = value} />
+                        onChange={(value) => this.searchParams.itemType = value}/>
                     <Input
                         className="filter input"
                         placeholder="Search by item key/name/description"
-                        onChange={(e) => this.searchParams.searchText = e.target.value || null} />
+                        onChange={(e) => this.searchParams.searchText = e.target.value || null}/>
                     <Button type="primary" onClick={() => this.searchItems()}>Search</Button>
                 </div>}
                 renderItem={item => {

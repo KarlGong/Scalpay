@@ -11,12 +11,16 @@ import PropTypes from "prop-types";
 export default class PageWrapper extends Component {
     static defaultProps = {
         style: {},
-        className: ""
+        className: "",
+        breadcrumb: <div/>
     };
 
     render = () => {
         return <Layout className={cs("page-wrapper", this.props.className)} style={this.props.style}>
-                {this.props.children}
+            <div className="breadcrumb">
+                {this.props.breadcrumb}
+            </div>
+            {this.props.children}
         </Layout>
     }
 }
