@@ -12,7 +12,7 @@ namespace ScalpayApi.Data
 
             builder.Ignore(r => r.Condition);
 
-            builder.Property(r => r.ConditionString).HasColumnName("Condition"); // null means default rule
+            builder.Property(r => r.ConditionString).HasColumnName("Condition").IsRequired();
 
             builder.Ignore(r => r.Result);
 

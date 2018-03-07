@@ -30,8 +30,6 @@ export default class RawRulePanel extends Component {
         let resultWidth = 7;
         let deleteWidth = 1;
         let gutterWidth = 12;
-        let rules = this.item.rules.filter((rule) => rule.condition);
-        let defaultRule = this.item.rules.filter((rule) => !rule.condition)[0];
 
         return <div className="raw-rule-panel">
             <Row gutter={gutterWidth} className="rule-header">
@@ -45,7 +43,7 @@ export default class RawRulePanel extends Component {
             <DragListView onDragEnd={() => {
             }}>
                 {
-                    rules.map((rule) => {
+                    this.item.rules.map((rule) => {
                         return <Row key={rule.key} gutter={gutterWidth} className="rule">
                             <Col span={conditionWidth} className="center">
                                 <ExpressionView
@@ -75,24 +73,23 @@ export default class RawRulePanel extends Component {
             <Row gutter={gutterWidth}>
                 <Col span={conditionWidth + resultWidth}>
                     <Button icon="plus" type="dashed" className="rule-add"
-                            onClick={() => this.item.rules.push(
-                                {
-                                    key: guid(),
-                                    condition: DefaultExp.Bool,
-                                    result: DefaultExp[this.item.resultDataType]
-                                })}>Add Rule</Button>
+                            onClick={() => this.item.rules.push({
+                                key: guid(),
+                                condition: DefaultExp.Bool,
+                                result: DefaultExp[this.item.resultDataType]
+                            })}>Add Rule</Button>
                 </Col>
             </Row>
-            <Row key={defaultRule.key} gutter={gutterWidth} className="rule-default">
+            <Row key={this.item.defaultResultKey} gutter={gutterWidth} className="rule-default">
                 <Col span={conditionWidth} className="center">
                     <b>Default</b>
                 </Col>
                 <Col span={resultWidth} className="center">
                     <ExpressionView
                         allowEdit
-                        expression={untracked(() => defaultRule.result)}
+                        expression={untracked(() => this.item.defaultResult)}
                         item={this.item}
-                        onChange={(exp) => defaultRule.result = exp}
+                        onChange={(exp) => this.item.defaultResult = exp}
                     />
                 </Col>
             </Row>

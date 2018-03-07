@@ -48,6 +48,7 @@ namespace ScalpayApi.Migrations
                 name: "Items",
                 columns: table => new
                 {
+                    DefaultResult = table.Column<string>(nullable: true),
                     Mode = table.Column<int>(nullable: true),
                     ParameterInfos = table.Column<string>(nullable: true),
                     ResultDataType = table.Column<int>(nullable: true),
@@ -77,7 +78,7 @@ namespace ScalpayApi.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Condition = table.Column<string>(nullable: true),
+                    Condition = table.Column<string>(nullable: false),
                     InsertTime = table.Column<DateTime>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ItemKey = table.Column<string>(nullable: true),

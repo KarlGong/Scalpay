@@ -18,6 +18,8 @@ namespace ScalpayApi.Services.Parameters
         public List<ParameterInfo> ParameterInfos { get; set; }
 
         public SDataType ResultDataType { get; set; }
+        
+        public SExpression DefaultResult { get; set; }
 
         public List<Rule> Rules { get; set; }
     }

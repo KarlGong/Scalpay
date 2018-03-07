@@ -85,7 +85,7 @@ namespace ScalpayApi.Services
 
         public async Task<SData> EvalConfigItem(ConfigItem configItem, Dictionary<string, SData> parameters)
         {
-            foreach (var rule in configItem.Rules.Where(r => r.Condition != null).OrderBy(r => r.Order))
+            foreach (var rule in configItem.Rules.OrderBy(r => r.Order))
             {
                 if (((SBool) await _expService.EvalExpressionAsync(rule.Condition, parameters)).Inner)
                 {
@@ -93,9 +93,7 @@ namespace ScalpayApi.Services
                 }
             }
 
-            var defaultRule = configItem.Rules.Single(r => r.Condition == null);
-
-            return await _expService.EvalExpressionAsync(defaultRule.Result, parameters);
+            return await _expService.EvalExpressionAsync(configItem.DefaultResult, parameters);
         }
     }
 }

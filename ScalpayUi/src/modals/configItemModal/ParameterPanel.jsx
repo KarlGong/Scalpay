@@ -89,6 +89,8 @@ export default class ParameterPanel extends Component {
                                                         updateVariable(rule.result, paramInfo.oldName, paramInfo.name);
                                                         rule.key = guid();
                                                     });
+                                                    updateVariable(this.item.defaultResult, paramInfo.oldName, paramInfo.name);
+                                                    this.item.defaultResultKey = guid();
                                                     paramInfo.oldName = paramInfo.name;
                                                     hide();
                                                 });
@@ -117,6 +119,10 @@ export default class ParameterPanel extends Component {
                                                         }
                                                         rule.key = guid();
                                                     });
+                                                    if (isVariableUsed(this.item.defaultResult, paramInfo.oldName)) {
+                                                        this.item.defaultResult = DefaultExp[this.item.resultDataType];
+                                                        this.item.defaultResultKey = guid();
+                                                    }
                                                 },
                                                 onCancel: () => {
                                                     paramInfo.key = guid();
@@ -147,6 +153,10 @@ export default class ParameterPanel extends Component {
                                                     }
                                                     rule.key = guid();
                                                 });
+                                                if (isVariableUsed(this.item.defaultResult, paramInfo.oldName)) {
+                                                    this.item.defaultResult = DefaultExp[this.item.resultDataType];
+                                                    this.item.defaultResultKey = guid();
+                                                }
                                                 this.item.parameterInfos.splice(index, 1);
                                                 this.validators.splice(index, 1);
                                                 this.setValidator();
@@ -198,6 +208,8 @@ export default class ParameterPanel extends Component {
                                         rule.result = DefaultExp[dataType];
                                         rule.key = guid();
                                     });
+                                    this.item.defaultResult = DefaultExp[dataType];
+                                    this.item.defaultResultKey = guid();
                                 },
                                 onCancel: () => {
                                     this.resultDataTypeKey = guid();

@@ -79,6 +79,7 @@ namespace ScalpayApi.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("ConditionString")
+                        .IsRequired()
                         .HasColumnName("Condition");
 
                     b.Property<DateTime>("InsertTime")
@@ -136,6 +137,10 @@ namespace ScalpayApi.Migrations
             modelBuilder.Entity("ScalpayApi.Models.ConfigItem", b =>
                 {
                     b.HasBaseType("ScalpayApi.Models.Item");
+
+                    b.Property<string>("DefaultResultString")
+                        .IsRequired()
+                        .HasColumnName("DefaultResult");
 
                     b.Property<int>("Mode");
 

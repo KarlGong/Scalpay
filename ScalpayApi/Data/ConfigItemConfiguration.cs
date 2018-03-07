@@ -15,6 +15,10 @@ namespace ScalpayApi.Data
             builder.Property(i => i.ParameterInfosString).HasColumnName("ParameterInfos").IsRequired();
 
             builder.Property(i => i.ResultDataType).IsRequired();
+            
+            builder.Ignore(i => i.DefaultResult);
+
+            builder.Property(i => i.DefaultResultString).HasColumnName("DefaultResult").IsRequired();
 
             builder.HasMany(i => i.Rules).WithOne(r => r.ConfigItem).HasForeignKey(r => r.ItemKey)
                 .OnDelete(DeleteBehavior.Cascade);

@@ -26,6 +26,15 @@ namespace ScalpayApi.Models
 
         public SDataType ResultDataType { get; set; }
 
+        public SExpression DefaultResult
+        {
+            get { return JsonConvert.DeserializeObject<SExpression>(DefaultResultString); }
+
+            set { DefaultResultString = JsonConvert.SerializeObject(value); }
+        }
+
+        public string DefaultResultString { get; set; }
+        
         public List<Rule> Rules { get; set; }
     }
 }
