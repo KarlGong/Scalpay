@@ -41,7 +41,7 @@ namespace ScalpayApi.Services.SExpressions
             return new SBool(d1.Inner > d2.Inner);
         }
 
-        public static SBool DateTimeIsBeforDateTime(SDateTime d1, SDateTime d2)
+        public static SBool DateTimeIsBeforeDateTime(SDateTime d1, SDateTime d2)
         {
             return new SBool(d1.Inner < d2.Inner);
         }
@@ -133,26 +133,6 @@ namespace ScalpayApi.Services.SExpressions
         public static SBool DurationIsNotEqualToDuration(SDuration du1, SDuration du2)
         {
             return new SBool(du1.Inner != du2.Inner);
-        }
-
-        public static SBool DurationIsGreaterThenDuration(SDuration du1, SDuration du2)
-        {
-            return new SBool(du1.Inner > du2.Inner);
-        }
-
-        public static SBool DurationIsGreaterThenOrEqualToDuration(SDuration du1, SDuration du2)
-        {
-            return new SBool(du1.Inner >= du2.Inner);
-        }
-
-        public static SBool DurationIsLessThenDuration(SDuration du1, SDuration du2)
-        {
-            return new SBool(du1.Inner < du2.Inner);
-        }
-
-        public static SBool DurationIsLessThenOrEqualToDuration(SDuration du1, SDuration du2)
-        {
-            return new SBool(du1.Inner <= du2.Inner);
         }
 
         public static SDuration DurationBetweenDateTimes(SDateTime d1, SDateTime d2)
@@ -370,14 +350,14 @@ namespace ScalpayApi.Services.SExpressions
             return new SBool(sd.Inner.ContainsKey(s.Inner));
         }
 
-        public static SBool StringDictContainsValue(SStringDict sd, SString s)
-        {
-            return new SBool(sd.Inner.ContainsValue(s.Inner));
-        }
-
         public static SBool StringDictDoesNotContainKey(SStringDict sd, SString s)
         {
             return new SBool(!sd.Inner.ContainsKey(s.Inner));
+        }
+
+        public static SBool StringDictContainsValue(SStringDict sd, SString s)
+        {
+            return new SBool(sd.Inner.ContainsValue(s.Inner));
         }
 
         public static SBool StringDictDoesNotContainValue(SStringDict sd, SString s)

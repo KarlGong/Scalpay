@@ -44,7 +44,6 @@ export default class FunctionSelect extends Component {
                 showSearch
                 placeholder="Function"
                 dropdownMatchSelectWidth={false}
-                optionFilterProp="children"
                 defaultValue={this.props.defaultValue}
                 onChange={(value) => {
                     this.item.value = value;
