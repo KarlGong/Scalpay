@@ -22,19 +22,23 @@ export default class RawRulePanel extends Component {
     static defaultProps = {
         item: {} // observable
     };
-    
+
     item = this.props.item; // observable
 
     render = () => {
+        let conditionWidth = 16;
+        let resultWidth = 7;
+        let deleteWidth = 1;
+        let gutterWidth = 12;
         let rules = this.item.rules.filter((rule) => rule.condition);
         let defaultRule = this.item.rules.filter((rule) => !rule.condition)[0];
 
         return <div className="raw-rule-panel">
-            <Row gutter={24} className="rule-header">
-                <Col span={18} className="center">
+            <Row gutter={gutterWidth} className="rule-header">
+                <Col span={conditionWidth} className="center">
                     <b>Condition</b>
                 </Col>
-                <Col span={6} className="center">
+                <Col span={resultWidth} className="center">
                     <b>Result</b>
                 </Col>
             </Row>
@@ -42,27 +46,34 @@ export default class RawRulePanel extends Component {
             }}>
                 {
                     rules.map((rule) => {
-                        return <Row key={rule.key} gutter={24} className="rule">
-                            <Col span={18} className="center">
+                        return <Row key={rule.key} gutter={gutterWidth} className="rule">
+                            <Col span={conditionWidth} className="center">
                                 <ExpressionView
                                     allowEdit
                                     expression={untracked(() => rule.condition)}
                                     item={untracked(() => this.item)}
                                     onChange={(exp) => rule.condition = exp}/>
                             </Col>
-                            <Col span={6} className="center">
+                            <Col span={resultWidth} className="center">
                                 <ExpressionView
                                     allowEdit
                                     expression={untracked(() => rule.result)}
                                     item={untracked(() => this.item)}
                                     onChange={(exp) => rule.result = exp}/>
                             </Col>
+                            <Col span={deleteWidth} className="center">
+                                <Icon
+                                    className="delete"
+                                    type="minus-circle-o"
+                                    onClick={() => this.item.rules.remove(rule)}
+                                />
+                            </Col>
                         </Row>
                     })
                 }
             </DragListView>
-            <Row gutter={24} className="rule">
-                <Col span={24}>
+            <Row gutter={gutterWidth}>
+                <Col span={conditionWidth + resultWidth}>
                     <Button icon="plus" type="dashed" className="rule-add"
                             onClick={() => this.item.rules.push(
                                 {
@@ -72,11 +83,11 @@ export default class RawRulePanel extends Component {
                                 })}>Add Rule</Button>
                 </Col>
             </Row>
-            <Row key={defaultRule.key} gutter={24} className="rule-default">
-                <Col span={18} className="center">
+            <Row key={defaultRule.key} gutter={gutterWidth} className="rule-default">
+                <Col span={conditionWidth} className="center">
                     <b>Default</b>
                 </Col>
-                <Col span={6} className="center">
+                <Col span={resultWidth} className="center">
                     <ExpressionView
                         allowEdit
                         expression={untracked(() => defaultRule.result)}

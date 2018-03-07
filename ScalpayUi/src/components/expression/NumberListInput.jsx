@@ -49,7 +49,7 @@ export default class NumberListInput extends Component {
                                 className="delete"
                                 type="minus-circle-o"
                                 onClick={() => {
-                                    this.items.splice(index, 1);
+                                    this.items.remove(item);
                                     delete this.validators[item.key];
                                     this.setValidator();
                                     this.handleChange();
