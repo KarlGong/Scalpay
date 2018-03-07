@@ -189,12 +189,12 @@ namespace ScalpayApi.Services.SExpressions
             return new SNumber(n1.Inner - n2.Inner);
         }
 
-        public static SNumber NumberMultiplyNumber(SNumber n1, SNumber n2)
+        public static SNumber NumberMultipliedByNumber(SNumber n1, SNumber n2)
         {
             return new SNumber(n1.Inner * n2.Inner);
         }
 
-        public static SNumber NumberDivideNumber(SNumber n1, SNumber n2)
+        public static SNumber NumberDividedByNumber(SNumber n1, SNumber n2)
         {
             return new SNumber(n1.Inner / n2.Inner);
         }
@@ -238,9 +238,9 @@ namespace ScalpayApi.Services.SExpressions
             return new SNumber(nl.Inner.Count);
         }
 
-        public static SNumber NumberListGetValue(SNumberList nl, SNumber index)
+        public static SNumber NumberListGetByIndex(SNumberList nl, SNumber index)
         {
-            return new SNumber(nl.Inner[(int) index.Inner]);
+            return new SNumber(nl.Inner[(int) index.Inner - 1]);
         }
 
         public static SNumber NumberListSum(SNumberList nl)
@@ -248,7 +248,7 @@ namespace ScalpayApi.Services.SExpressions
             return new SNumber(nl.Inner.Sum());
         }
 
-        public static SNumber NumberListAvg(SNumberList nl)
+        public static SNumber NumberListAverage(SNumberList nl)
         {
             return new SNumber(nl.Inner.Average());
         }
@@ -380,7 +380,7 @@ namespace ScalpayApi.Services.SExpressions
             return new SNumber(sd.Inner.Count);
         }
 
-        public static SString StringDictGetValue(SStringDict sd, SString key)
+        public static SString StringDictGetByKey(SStringDict sd, SString key)
         {
             return new SString(sd.Inner[key.Inner]);
         }
@@ -414,9 +414,9 @@ namespace ScalpayApi.Services.SExpressions
             return new SNumber(sl.Inner.Count);
         }
 
-        public static SString StringListGetValue(SStringList sl, SNumber index)
+        public static SString StringListGetByIndex(SStringList sl, SNumber index)
         {
-            return new SString(sl.Inner[(int) index.Inner]);
+            return new SString(sl.Inner[(int) index.Inner - 1]);
         }
 
         #endregion

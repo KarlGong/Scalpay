@@ -39,7 +39,6 @@ export default class DurationInput extends Component {
         >
             <div className="row">
                 <NumberInput
-                    min={0}
                     precision={0}
                     step={1}
                     setValidator={validator => {
@@ -54,7 +53,6 @@ export default class DurationInput extends Component {
                 />
                 <div className="label">Years</div>
                 <NumberInput
-                    min={0}
                     precision={0}
                     step={1}
                     setValidator={validator => {
@@ -69,7 +67,6 @@ export default class DurationInput extends Component {
                 />
                 <div className="label">Months</div>
                 <NumberInput
-                    min={0}
                     precision={0}
                     step={1}
                     setValidator={validator => {
@@ -86,7 +83,6 @@ export default class DurationInput extends Component {
             </div>
             <div className="row">
                 <NumberInput
-                    min={0}
                     precision={0}
                     step={1}
                     setValidator={validator => {
@@ -101,7 +97,6 @@ export default class DurationInput extends Component {
                 />
                 <div className="label">Hours</div>
                 <NumberInput
-                    min={0}
                     precision={0}
                     step={10}
                     setValidator={validator => {
@@ -116,7 +111,6 @@ export default class DurationInput extends Component {
                 />
                 <div className="label">Minutes</div>
                 <NumberInput
-                    min={0}
                     precision={0}
                     step={10}
                     setValidator={validator => {

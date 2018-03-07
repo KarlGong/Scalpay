@@ -16,7 +16,7 @@ export default class NumberInput extends Component {
         defaultValue: 0,
         min: -Infinity,
         max: Infinity,
-        precision: undefined,
+        precision: null,
         step: 1,
         setValidator: (validator) => {}
     };
@@ -37,6 +37,10 @@ export default class NumberInput extends Component {
     }
 
     render = () => {
+        let precisionProps = {};
+        if (this.props.precision || this.props.precision === 0) {
+            precisionProps = {precision: this.props.precision};
+        }
         return <Tooltip
             placement="topLeft"
             title={this.validator.getResult("value").message}>
@@ -47,7 +51,7 @@ export default class NumberInput extends Component {
                 defaultValue={this.props.defaultValue}
                 min={this.props.min}
                 max={this.props.max}
-                precision={this.props.precision}
+                {...precisionProps}
                 step={this.props.step}
                 onChange={(value) => {
                     this.item.value = value;
