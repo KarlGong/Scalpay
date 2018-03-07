@@ -36,7 +36,7 @@ export default class ItemsPage extends Component {
             className="items-page"
             breadcrumb={<Breadcrumb>
                 <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
-                <Breadcrumb.Item>Projects</Breadcrumb.Item>
+                <Breadcrumb.Item>Items</Breadcrumb.Item>
             </Breadcrumb>}>
             <List
                 className="list"
@@ -75,8 +75,6 @@ export default class ItemsPage extends Component {
                 }}
             >
             </List>
-
-
         </PageWrapper>
     };
 

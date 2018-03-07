@@ -1,9 +1,10 @@
-import {Layout, Menu, Input, Icon, List, Button, Modal, message} from "antd";
+import {Layout, Menu, Input, Icon, List, Button, Modal, Breadcrumb} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked, runInAction, action} from "mobx";
 import axios from "axios";
 import auth from "~/utils/auth";
+import {Link} from "react-router";
 import {Privilege} from "~/utils/store";
 import "./UsersPage.less";
 import PageWrapper from "~/layouts/PageWrapper";
@@ -23,7 +24,12 @@ export default class UsersPage extends Component {
     };
 
     render = () => {
-        return <PageWrapper className="users-page">
+        return <PageWrapper
+            className="users-page"
+            breadcrumb={<Breadcrumb>
+                <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+                <Breadcrumb.Item>Users</Breadcrumb.Item>
+            </Breadcrumb>}>
             <List
                 loading={this.loading}
                 itemLayout="horizontal"

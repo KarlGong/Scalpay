@@ -1,8 +1,9 @@
-import {Layout, Menu, Input, Icon, Form, Spin, Button, Modal, message} from "antd";
+import {Layout, Menu, Input, Icon, Form, Spin, Button, Modal, Breadcrumb} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked, runInAction, action} from "mobx";
 import axios from "axios";
+import {Link} from "react-router";
 import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
 import PageWrapper from "~/layouts/PageWrapper";
@@ -28,7 +29,13 @@ export default class ViewUserPage extends Component {
             wrapperCol: {span: 21},
         };
 
-        return <PageWrapper className="view-user-page">
+        return <PageWrapper
+            className="view-user-page"
+            breadcrumb={<Breadcrumb>
+                <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+                <Breadcrumb.Item><Link to="/users">Users</Link></Breadcrumb.Item>
+                <Breadcrumb.Item>{this.props.params.username}</Breadcrumb.Item>
+            </Breadcrumb>}>
             <div className="command-bar">
                 {auth.hasPrivileges(Privilege.UserManage) ?
                     <div>

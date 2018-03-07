@@ -1,4 +1,4 @@
-import {Layout, Menu, Input, Icon, Form, Spin, Button, Modal, message} from "antd";
+import {Layout, Menu, Input, Icon, Form, Spin, Button, Modal, Breadcrumb} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked, runInAction, action} from "mobx";
@@ -8,6 +8,7 @@ import {Privilege} from "~/utils/store";
 import PageWrapper from "~/layouts/PageWrapper";
 import moment from "moment";
 import Validator from "~/utils/Validator";
+import {Link} from "react-router";
 import "./ViewProjectPage.less";
 import global from "~/global";
 import projectModal from "~/modals/projectModal";
@@ -28,7 +29,13 @@ export default class ViewProjectPage extends Component {
             wrapperCol: {span: 21},
         };
 
-        return <PageWrapper className="view-project-page">
+        return <PageWrapper
+            className="view-project-page"
+            breadcrumb={<Breadcrumb>
+                <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
+                <Breadcrumb.Item><Link to="/projects">Projects</Link></Breadcrumb.Item>
+                <Breadcrumb.Item>{this.props.params.projectKey}</Breadcrumb.Item>
+            </Breadcrumb>}>
             <div className="command-bar">
                 {auth.hasPrivileges(Privilege.ProjectEdit) ?
                     <Button className="command" onClick={() => this.editProject()}>Edit</Button>
