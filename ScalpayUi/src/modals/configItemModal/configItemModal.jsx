@@ -59,7 +59,7 @@ class EditConfigItemModal extends Component {
     static defaultProps = {
         item: {
             projectKey: null,
-            itemKey: "config.null.", // the item key init format
+            itemKey: null,
             name: null,
             description: null,
             mode: ConfigItemMode.Property,

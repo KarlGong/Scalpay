@@ -31,18 +31,19 @@ export default class BasicPanel extends Component {
         super(props);
         this.validator = new Validator(this.item, {
             projectKey: {required: true, message: "project is required"},
-            itemKey: (rule, value, callback, source, options) => {
+            partialItemKey: (rule, value, callback, source, options) => {
                 let errors = [];
-                if (!value.split(".").slice(2).join(".")) {
+                if (!value) {
                     errors.push(new Error("item key is required"));
                 }
-                if (!/^config\.[^.]+?\.[a-zA-Z0-9-_.]+?$/.test(value)) {
+                if (!/^[a-zA-Z0-9-_.]+?$/.test(value)) {
                     errors.push(new Error("item key can only contain alphanumeric characters, - , _ and ."))
                 }
                 callback(errors);
             },
             name: {required: true}
         });
+        this.item.partialItemKey = this.item.itemKey && this.item.itemKey.split(".").slice(2).join(".");
         this.props.setValidator(new ComponentValidator(this.validator));
     }
 
@@ -69,6 +70,7 @@ export default class BasicPanel extends Component {
                         defaultValue={untracked(() => this.item.projectKey)}
                         onChange={(value) => {
                             this.item.projectKey = value;
+                            this.item.itemKey = "config." + this.item.projectKey + "." + this.item.partialItemKey;
                             this.validator.resetResult("projectKey");
                         }}
                         onBlur={() => this.validator.validate("projectKey")}
@@ -76,21 +78,22 @@ export default class BasicPanel extends Component {
                 </Form.Item>
                 <Form.Item label="Item Key"
                            {...formItemLayout}
-                           validateStatus={this.validator.getResult("itemKey").status}
-                           help={this.validator.getResult("itemKey").message}
+                           validateStatus={this.validator.getResult("partialItemKey").status}
+                           help={this.validator.getResult("partialItemKey").message}
                 >
                     <Input
                         addonBefore={"config." + this.item.projectKey + "."}
                         style={{width: "500px"}}
                         disabled={!this.props.addMode}
                         // config.foo.bar to bar
-                        defaultValue={untracked(() => this.item.itemKey.split(".").slice(2).join("."))}
+                        defaultValue={untracked(() => this.item.partialItemKey)}
                         onChange={(e) => {
+                            this.item.partialItemKey = e.target.value;
                             // bar to config.foo.bar
-                            this.item.itemKey = "config." + this.item.projectKey + "." + e.target.value;
-                            this.validator.resetResult("itemKey")
+                            this.item.itemKey = "config." + this.item.projectKey + "." + this.item.partialItemKey;
+                            this.validator.resetResult("partialItemKey")
                         }}
-                        onBlur={() => this.validator.validate("itemKey")}
+                        onBlur={() => this.validator.validate("partialItemKey")}
                     />
                 </Form.Item>
                 <Form.Item label="Name"
