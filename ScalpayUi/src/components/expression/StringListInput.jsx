@@ -50,6 +50,7 @@ export default class StringListInput extends Component {
                                 onClick={() => {
                                     this.items.splice(index, 1);
                                     delete this.validators[item.key];
+                                    this.setValidator();
                                     this.handleChange();
                                 }}
                             />
