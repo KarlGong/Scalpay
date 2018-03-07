@@ -58,15 +58,15 @@ class EditExpressionModal extends Component {
     }, this.props.expression);
     @observable visible = true;
 
-    valueInput = null;
-    variableSelect = null;
-    functionSelect = null;
+    @observable valueInputValidator = null;
+    @observable variableValidator = null;
+    @observable functionValidator = null;
 
     render = () => {
         const valueInputProps = {
             defaultValue: this.expression.value,
             onChange: (value) => this.expression.value = value,
-            ref: instance => this.valueInput = instance
+            setValidator: validator => this.valueInputValidator = validator
         };
 
         const valueInput = {
@@ -107,7 +107,7 @@ class EditExpressionModal extends Component {
                             .filter(p => p.dataType === this.expression.returnType)}
                         defaultValue={untracked(() => this.expression.var || undefined)}
                         onChange={(variableName) => this.expression.var = variableName}
-                        ref={instance => this.variableSelect = instance}
+                        setValidator={validator => this.variableValidator = validator}
                     />
                     : null
                 }
@@ -121,7 +121,7 @@ class EditExpressionModal extends Component {
                                 this.expression.funcName = functionName;
                                 this.expression.funcArgs = Func[this.expression.returnType][functionName].funcArgs;
                             }}
-                            ref={instance => this.functionSelect = instance}
+                            setValidator={validator => this.functionValidator = validator}
                         />
                         {
                             this.expression.funcName ?
@@ -143,13 +143,13 @@ class EditExpressionModal extends Component {
     };
 
     handleOk = () => {
-        const validateControl = {
-            [ExpType.Value]: this.valueInput,
-            [ExpType.Var]: this.variableSelect,
-            [ExpType.Func]: this.functionSelect
+        const validator = {
+            [ExpType.Value]: this.valueInputValidator,
+            [ExpType.Var]: this.variableValidator,
+            [ExpType.Func]: this.functionValidator
         }[this.expression.expType];
 
-        validateControl.validate().then(() => {
+        validator.validate().then(() => {
             // clear useless properties
             let returnExpression = {
                 returnType: this.expression.returnType,

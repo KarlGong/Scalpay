@@ -5,6 +5,7 @@ import {observable, toJS, untracked, runInAction, action} from "mobx";
 import axios from "axios";
 import cs from "classnames";
 import Validator from "~/utils/Validator";
+import ComponentValidator from "~/utils/ComponentValidator";
 
 @observer
 export default class BoolSelect extends Component {
@@ -13,7 +14,8 @@ export default class BoolSelect extends Component {
         className: "",
         onChange: (value) => {
         },
-        defaultValue: true
+        defaultValue: true,
+        setValidator: (validator) => {}
     };
 
     constructor(props) {
@@ -28,6 +30,7 @@ export default class BoolSelect extends Component {
                 callback(errors);
             }
         });
+        this.props.setValidator(new ComponentValidator(this.validator))
     }
 
     render = () => {
@@ -50,9 +53,5 @@ export default class BoolSelect extends Component {
                 <Radio.Button value={false}>False</Radio.Button>
             </Radio.Group>
         </Tooltip>
-    };
-
-    validate = () => {
-        return this.validator.validateAll();
     };
 }

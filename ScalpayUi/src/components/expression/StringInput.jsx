@@ -5,6 +5,7 @@ import {observable, toJS, untracked, runInAction, action} from "mobx";
 import axios from "axios";
 import cs from "classnames";
 import Validator from "~/utils/Validator";
+import ComponentValidator from "~/utils/ComponentValidator";
 
 @observer
 export default class StringInput extends Component {
@@ -12,8 +13,8 @@ export default class StringInput extends Component {
         style: {},
         className: "",
         defaultValue: "",
-        onChange: (value) => {
-        }
+        onChange: (value) => { },
+        setValidator: (validator) => {}
     };
 
     constructor(props) {
@@ -28,6 +29,7 @@ export default class StringInput extends Component {
                 callback(errors);
             }
         });
+        this.props.setValidator(new ComponentValidator(this.validator));
     }
 
     render = () => {
@@ -49,9 +51,5 @@ export default class StringInput extends Component {
                 }}
             />
         </Tooltip>
-    };
-
-    validate = () => {
-        return this.validator.validateAll();
     };
 }

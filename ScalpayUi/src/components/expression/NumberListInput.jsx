@@ -8,6 +8,7 @@ import DragListView from "react-drag-listview";
 import NumberInput from "./NumberInput";
 import guid from "../../utils/guid";
 import Validator from "~/utils/Validator";
+import ComponentValidator from "~/utils/ComponentValidator";
 
 @observer
 export default class NumberListInput extends Component {
@@ -15,13 +16,14 @@ export default class NumberListInput extends Component {
         style: {},
         className: "",
         defaultValue: [],
-        onChange: (values) => {}
+        onChange: (values) => {},
+        setValidator: (validator) => {}
     };
 
     @observable items = this.props.defaultValue.map(v => {
         return {key: guid(), value: v}
     });
-    numberInputs = {};
+    validators = {};
 
     render = () => {
         return <div className={cs("scalpay-list", this.props.className)}>
@@ -38,14 +40,18 @@ export default class NumberListInput extends Component {
                                         item.value = value;
                                         this.handleChange();
                                     }}
-                                    ref={(instance) => {if (instance) this.numberInputs[item.key] = instance;}}
+                                    setValidator={validator => {
+                                        this.validators[item.key] = validator;
+                                        this.setValidator();
+                                    }}
                                 />
                             <Icon
                                 className="delete"
                                 type="minus-circle-o"
                                 onClick={() => {
                                     this.items.splice(index, 1);
-                                    delete this.numberInputs[item.key];
+                                    delete this.validators[item.key];
+                                    this.setValidator();
                                     this.handleChange();
                                 }}
                             />
@@ -66,7 +72,7 @@ export default class NumberListInput extends Component {
         this.props.onChange(this.items.map(item => item.value));
     };
 
-    validate = () => {
-        return Promise.all(Object.values(this.numberInputs).map(v => v.validate()));
-    }
+    setValidator = () => {
+        this.props.setValidator(new ComponentValidator(Object.values(this.validators)));
+    };
 }

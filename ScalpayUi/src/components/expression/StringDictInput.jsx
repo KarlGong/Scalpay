@@ -9,6 +9,7 @@ import guid from "../../utils/guid";
 import Validator from "../../utils/Validator";
 import cs from "classnames";
 import {message} from "antd/lib/index";
+import ComponentValidator from "~/utils/ComponentValidator";
 
 @observer
 export default class StringDictInput extends Component {
@@ -16,8 +17,8 @@ export default class StringDictInput extends Component {
         style: {},
         className: "",
         defaultValue: {},
-        onChange: (value) => {
-        }
+        onChange: (value) => { },
+        setValidator: (validator) => {}
     };
 
     constructor(props) {
@@ -47,6 +48,7 @@ export default class StringDictInput extends Component {
         };
 
         this.validators = this.items.map((item) => new Validator(item, this.validatorDescriptor));
+        this.setValidator();
     }
 
     render = () => {
@@ -88,6 +90,7 @@ export default class StringDictInput extends Component {
                             onClick={() => {
                                 this.items.splice(index, 1);
                                 this.validators.splice(index, 1);
+                                this.setValidator();
                                 this.handleChange();
                             }}
                         />
@@ -100,6 +103,7 @@ export default class StringDictInput extends Component {
                 onClick={() => {
                     this.items.push({key: guid(), dictKey: "", dictValue: ""});
                     this.validators.push(new Validator(this.items.slice(-1)[0], this.validatorDescriptor));
+                    this.setValidator();
                     this.handleChange();
                 }}>
                 <Icon type="plus"/> Add Key Value Pair
@@ -113,7 +117,7 @@ export default class StringDictInput extends Component {
         this.props.onChange(dict);
     };
 
-    validate = () => {
-        return Promise.all(this.validators.map(v => v.validateAll()));
+    setValidator = () => {
+        this.props.setValidator(new ComponentValidator(this.validators));
     };
 }

@@ -6,6 +6,7 @@ import axios from "axios";
 import {Func} from "~/utils/store";
 import Validator from "~/utils/Validator";
 import cs from "classnames";
+import ComponentValidator from "~/utils/ComponentValidator";
 
 @observer
 export default class VariableSelect extends Component {
@@ -14,8 +15,8 @@ export default class VariableSelect extends Component {
         className: "",
         defaultValue: undefined,
         variables: [],
-        onChange: (variableName) => {
-        }
+        onChange: (variableName) => {},
+        setValidator: (validator) => {}
     };
 
     constructor(props) {
@@ -30,6 +31,7 @@ export default class VariableSelect extends Component {
                 callback(errors);
             }
         });
+        this.props.setValidator(new ComponentValidator(this.validator));
     }
 
     render = () => {
@@ -58,9 +60,5 @@ export default class VariableSelect extends Component {
                 }
             </Select>
         </Tooltip>
-    };
-
-    validate = () => {
-        return this.validator.validateAll();
     };
 }

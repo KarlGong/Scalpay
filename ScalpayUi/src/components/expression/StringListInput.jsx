@@ -7,6 +7,7 @@ import DragListView from "react-drag-listview";
 import StringInput from "./StringInput";
 import cs from "classnames";
 import guid from "../../utils/guid";
+import ComponentValidator from "~/utils/ComponentValidator";
 
 @observer
 export default class StringListInput extends Component {
@@ -21,7 +22,7 @@ export default class StringListInput extends Component {
     @observable items = this.props.defaultValue.map(v => {
         return {key: guid(), value: v}
     });
-    stringInputs = {};
+    validators = {};
 
     render = () => {
         return <div className={cs("scalpay-list", this.props.className)}>
@@ -38,14 +39,17 @@ export default class StringListInput extends Component {
                                     item.value = value;
                                     this.handleChange();
                                 }}
-                                ref={(instance) => {if (instance) this.stringInputs[item.key] = instance;}}
+                                setValidator={validator => {
+                                    this.validators[item.key] = validator;
+                                    this.setValidator();
+                                }}
                             />
                             <Icon
                                 className="delete"
                                 type="minus-circle-o"
                                 onClick={() => {
                                     this.items.splice(index, 1);
-                                    delete this.stringInputs[item.key];
+                                    delete this.validators[item.key];
                                     this.handleChange();
                                 }}
                             />
@@ -66,7 +70,7 @@ export default class StringListInput extends Component {
         this.props.onChange(this.items.map(item => item.value));
     };
 
-    validate = () => {
-        return Promise.all(Object.values(this.stringInputs).map(v => v.validate()));
-    }
+    setValidator = () => {
+        this.props.setValidator(new ComponentValidator(Object.values(this.validators)));
+    };
 }

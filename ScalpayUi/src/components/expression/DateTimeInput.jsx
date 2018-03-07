@@ -6,6 +6,7 @@ import {observable, toJS, untracked, runInAction, action} from "mobx";
 import axios from "axios";
 import Validator from "~/utils/Validator";
 import cs from "classnames";
+import ComponentValidator from "~/utils/ComponentValidator";
 
 @observer
 export default class DateTimeInput extends Component {
@@ -13,8 +14,8 @@ export default class DateTimeInput extends Component {
         style: {},
         className: "",
         defaultValue: "",
-        onChange: (value) => {
-        }
+        onChange: (value) => { },
+        setValidator: (validator) => {}
     };
 
     constructor(props) {
@@ -29,6 +30,7 @@ export default class DateTimeInput extends Component {
                 callback(errors);
             }
         });
+        this.props.setValidator(new ComponentValidator(this.validator));
     }
 
     render = () => {
@@ -57,9 +59,5 @@ export default class DateTimeInput extends Component {
             />
             </span>
         </Tooltip>
-    };
-
-    validate = () => {
-        return this.validator.validateAll();
     };
 }

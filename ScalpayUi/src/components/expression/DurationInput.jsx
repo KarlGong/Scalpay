@@ -7,6 +7,7 @@ import axios from "axios";
 import moment from "moment";
 import NumberInput from "./NumberInput";
 import "./DurationInput.less";
+import ComponentValidator from "~/utils/ComponentValidator";
 
 @observer
 export default class DurationInput extends Component {
@@ -14,11 +15,11 @@ export default class DurationInput extends Component {
         style: {},
         className: "",
         defaultValue: "P0Y0M0DT0H0M0S",
-        onChange: (value) => {
-        }
+        onChange: (value) => {},
+        setValidator: (validator) => {}
     };
 
-    inputs = {};
+    inputValidators = {};
 
     constructor(props) {
         super(props);
@@ -41,7 +42,10 @@ export default class DurationInput extends Component {
                     min={0}
                     precision={0}
                     step={1}
-                    ref={instance => this.inputs["years"] = instance}
+                    setValidator={validator => {
+                        this.inputValidators["years"] = validator;
+                        this.setValidator();
+                    }}
                     defaultValue={this.years}
                     onChange={value => {
                         this.years = value;
@@ -53,7 +57,10 @@ export default class DurationInput extends Component {
                     min={0}
                     precision={0}
                     step={1}
-                    ref={instance => this.inputs["months"] = instance}
+                    setValidator={validator => {
+                        this.inputValidators["months"] = validator;
+                        this.setValidator();
+                    }}
                     defaultValue={this.months}
                     onChange={value => {
                         this.months = value;
@@ -65,7 +72,10 @@ export default class DurationInput extends Component {
                     min={0}
                     precision={0}
                     step={1}
-                    ref={instance => this.inputs["days"] = instance}
+                    setValidator={validator => {
+                        this.inputValidators["days"] = validator;
+                        this.setValidator();
+                    }}
                     defaultValue={this.days}
                     onChange={value => {
                         this.days = value;
@@ -79,7 +89,10 @@ export default class DurationInput extends Component {
                     min={0}
                     precision={0}
                     step={1}
-                    ref={instance => this.inputs["hours"] = instance}
+                    setValidator={validator => {
+                        this.inputValidators["hours"] = validator;
+                        this.setValidator();
+                    }}
                     defaultValue={this.hours}
                     onChange={value => {
                         this.hours = value;
@@ -91,7 +104,10 @@ export default class DurationInput extends Component {
                     min={0}
                     precision={0}
                     step={10}
-                    ref={instance => this.inputs["minutes"] = instance}
+                    setValidator={validator => {
+                        this.inputValidators["minutes"] = validator;
+                        this.setValidator();
+                    }}
                     defaultValue={this.minutes}
                     onChange={value => {
                         this.minutes = value;
@@ -103,7 +119,10 @@ export default class DurationInput extends Component {
                     min={0}
                     precision={0}
                     step={10}
-                    ref={instance => this.inputs["seconds"] = instance}
+                    setValidator={validator => {
+                        this.inputValidators["seconds"] = validator;
+                        this.setValidator();
+                    }}
                     defaultValue={this.seconds}
                     onChange={value => {
                         this.seconds = value;
@@ -127,7 +146,7 @@ export default class DurationInput extends Component {
         this.props.onChange(duration.toISOString());
     };
 
-    validate = () => {
-        return Promise.all(Object.values(this.inputs).map(input => input.validate()));
-    }
+    setValidator = () => {
+        this.props.setValidator(new ComponentValidator(Object.values(this.inputValidators)));
+    };
 }
