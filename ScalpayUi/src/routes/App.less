@@ -1,89 +1,95 @@
 /* scroll bar*/
 ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-    background-color: #fff;
+  background-color: #fff;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #a4a4a4;
-    border-radius: 2px;
+  background-color: #a4a4a4;
+  border-radius: 2px;
 }
 
 /* ant override*/
 .ant-layout,
 .ant-layout-header,
 .ant-layout-footer {
-    background-color: #fff !important;
+  background-color: #fff !important;
 }
+
 // breadcrumb's link should be blue
 .ant-breadcrumb a {
-    color: #1890ff !important;
+  color: #1890ff !important;
 }
 
 // danger button is too ugly
 .ant-btn-danger {
-    color: #fff;
-    background-color: #f00;
-    border-color: #f00;
+  color: #fff;
+  background-color: #f00;
+  border-color: #f00;
 }
 
 // show error at the header of collapse panel
 .ant-collapse-item.error .ant-collapse-header {
-    color: #f5222d;
+  color: #f5222d;
 }
+
 // for utils/Validator
 .ant-input.error,
 .ant-input-number.error,
 .ant-radio-group.error .ant-radio-button-wrapper,
 .ant-select.error .ant-select-selection,
-.datetime-input.error .ant-input{
-    border-color: #f5222d;
+.datetime-input.error .ant-input {
+  border-color: #f5222d;
 
-    &:focus {
-        border-color: #ff4d4f;
-        outline: 0;
-        box-shadow: 0 0 0 2px rgba(245, 34, 45, 0.2);
-    }
+  &:focus {
+    border-color: #ff4d4f;
+    outline: 0;
+    box-shadow: 0 0 0 2px rgba(245, 34, 45, 0.2);
+  }
 }
 
 /* globals */
+b, strong {
+  font-weight: 500 !important;
+}
+
 .scalpay-list {
-    overflow: auto;
-    max-height: 472px;
+  overflow: auto;
+  max-height: 472px;
 
-    .item {
-        margin-bottom: 10px;
+  .item {
+    margin-bottom: 10px;
 
-        .first {
-            width: 150px;
-        }
-
-        .second {
-            margin-left: 10px;
-            width: 150px;
-        }
-
-        .single {
-            width: 310px;
-        }
-
-        .delete {
-            margin-left: 10px;
-            color: rgba(255, 0, 0, 0.5);
-            cursor: pointer;
-            font-size: 18px;
-            &:hover {
-                color: #f00;
-            }
-        }
+    .first {
+      width: 150px;
     }
 
-    .add {
-        width: 310px;
+    .second {
+      margin-left: 10px;
+      width: 150px;
     }
+
+    .single {
+      width: 310px;
+    }
+
+    .delete {
+      margin-left: 10px;
+      color: rgba(255, 0, 0, 0.5);
+      cursor: pointer;
+      font-size: 18px;
+      &:hover {
+        color: #f00;
+      }
+    }
+  }
+
+  .add {
+    width: 310px;
+  }
 }
 

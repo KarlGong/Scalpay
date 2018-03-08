@@ -19,7 +19,7 @@ export default class FieldsViewer extends Component {
             {
                 this.props.fields.map(([label, value]) => {
                     return <div key={label} className="item">
-                        <div className="label">{label}:</div>
+                        <div className="label">{label}</div>
                         <div className="value">{value}</div>
                     </div>
                 })

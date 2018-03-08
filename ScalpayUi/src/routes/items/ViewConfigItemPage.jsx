@@ -7,20 +7,34 @@ import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
 import PageWrapper from "~/layouts/PageWrapper";
 import moment from "moment";
+import {DataType, ItemType, ConfigItemMode, DefaultExp} from "~/utils/store";
 import Validator from "~/utils/Validator";
 import {Link} from "react-router";
+import guid from "~/utils/guid";
 import global from "~/global";
 import FieldsViewer from "~/layouts/FieldsViewer";
 import CommandBar from "~/layouts/CommandBar";
 import configItemModal from "~/modals/configItemModal/configItemModal";
 import ProjectInfo from "~/components/ProjectInfo";
 import Block from "~/layouts/Block";
+import ExpressionView from "~/components/expression/ExpressionView";
 import "./ViewConfigItemPage.less";
 
 @observer
 export default class ViewConfigItemPage extends Component {
 
-    @observable item = {};
+    @observable item = {
+        projectKey: null,
+        itemKey: null,
+        name: null,
+        description: null,
+        mode: ConfigItemMode.Property,
+        parameterInfos: [],
+        resultDataType: DataType.String,
+        defaultResult: DefaultExp.String,
+        defaultResultKey: guid(),
+        rules: []
+    };
     @observable loading = false;
 
     componentDidMount = () => {
@@ -35,6 +49,10 @@ export default class ViewConfigItemPage extends Component {
         if (auth.hasPrivileges(Privilege.ItemDelete)) {
             commands.push(<Button type="danger" size="small" onClick={() => this.deleteItem()}>Delete</Button>)
         }
+
+        let conditionWidth = 16;
+        let resultWidth = 8;
+        let gutterWidth = 12;
 
         return <PageWrapper
             className="view-item-page"
@@ -57,8 +75,29 @@ export default class ViewConfigItemPage extends Component {
                             ["Update Time", moment(this.item.updateTime).fromNow()],
                         ]}/>
                     </Block>
-                    <Block name="Parameters">
-                        abc
+                    <Block name="Parameters & Result">
+                        <FieldsViewer fields={this.item.parameterInfos.map(info => [info.name, info.dataType])}/>
+                        <FieldsViewer fields={[[
+                            <b><i>Result Data Type</i></b>,
+                            <b><i>{this.item.resultDataType}</i></b>
+                        ]]}/>
+                    </Block>
+                    <Block name="Rules" className="rules">
+                        <Row gutter={gutterWidth} type="flex" align="middle" className="rule">
+                            <Col span={conditionWidth}><b>Condition</b></Col>
+                            <Col span={resultWidth}>Result</Col>
+                        </Row>
+                        {
+                            this.item.rules.map(rule =>
+                                <Row key={rule.key} gutter={gutterWidth} type="flex" align="middle" className="rule">
+                                    <Col span={conditionWidth}><ExpressionView expression={rule.condition}/></Col>
+                                    <Col span={resultWidth}><ExpressionView expression={rule.result}/></Col>
+                                </Row>)
+                        }
+                        <Row key={this.item.defaultResultKey} gutter={gutterWidth} type="flex" align="middle" className="rule">
+                            <Col span={conditionWidth}><b>Default</b></Col>
+                            <Col span={resultWidth}><ExpressionView expression={this.item.defaultResult}/></Col>
+                        </Row>
                     </Block>
                 </Spin>
             </Layout>
@@ -68,7 +107,12 @@ export default class ViewConfigItemPage extends Component {
     loadItem = () => {
         this.loading = true;
         axios.get("/api/items/config/" + this.props.params.itemKey)
-            .then((res) => this.item = res.data)
+            .then((res) => {
+                let item = res.data;
+                item.rules.map(r => r.key = guid());
+                item.defaultResultKey = guid();
+                this.item = item;
+            })
             .finally(() => this.loading = false);
     };
 

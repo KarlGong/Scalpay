@@ -33,10 +33,10 @@ export default class RawRulePanel extends Component {
 
         return <div className="raw-rule-panel">
             <Row gutter={gutterWidth} className="rule-header">
-                <Col span={conditionWidth} className="center">
+                <Col span={conditionWidth}>
                     <b>Condition</b>
                 </Col>
-                <Col span={resultWidth} className="center">
+                <Col span={resultWidth}>
                     <b>Result</b>
                 </Col>
             </Row>
@@ -45,21 +45,21 @@ export default class RawRulePanel extends Component {
                 {
                     this.item.rules.map((rule) => {
                         return <Row key={rule.key} gutter={gutterWidth} className="rule" type="flex" align="middle">
-                            <Col span={conditionWidth} className="center">
+                            <Col span={conditionWidth}>
                                 <ExpressionView
                                     allowEdit
                                     expression={untracked(() => rule.condition)}
                                     item={untracked(() => this.item)}
                                     onChange={(exp) => rule.condition = exp}/>
                             </Col>
-                            <Col span={resultWidth} className="center">
+                            <Col span={resultWidth}>
                                 <ExpressionView
                                     allowEdit
                                     expression={untracked(() => rule.result)}
                                     item={untracked(() => this.item)}
                                     onChange={(exp) => rule.result = exp}/>
                             </Col>
-                            <Col span={deleteWidth} className="center">
+                            <Col span={deleteWidth}>
                                 <Icon
                                     className="delete"
                                     type="minus-circle-o"
@@ -81,10 +81,10 @@ export default class RawRulePanel extends Component {
                 </Col>
             </Row>
             <Row key={this.item.defaultResultKey} gutter={gutterWidth} className="rule-default">
-                <Col span={conditionWidth} className="center">
+                <Col span={conditionWidth}>
                     <b>Default</b>
                 </Col>
-                <Col span={resultWidth} className="center">
+                <Col span={resultWidth}>
                     <ExpressionView
                         allowEdit
                         expression={untracked(() => this.item.defaultResult)}
