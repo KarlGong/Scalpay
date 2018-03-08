@@ -8,7 +8,8 @@ import {Privilege} from "~/utils/store";
 import PageWrapper from "~/layouts/PageWrapper";
 import moment from "moment";
 import Validator from "~/utils/Validator";
-import FieldsViewer from "~/components/FieldsViewer";
+import FieldsViewer from "~/layouts/FieldsViewer";
+import CommandBar from "~/layouts/CommandBar";
 import {Link} from "react-router";
 import "./ViewProjectPage.less";
 import global from "~/global";
@@ -25,10 +26,13 @@ export default class ViewProjectPage extends Component {
     };
 
     render = () => {
-        const formItemLayout = {
-            labelCol: {span: 3},
-            wrapperCol: {span: 21},
-        };
+        let commands = [];
+        if (auth.hasPrivileges(Privilege.ProjectEdit)) {
+            commands.push(<Button size="small" onClick={() => this.editProject()}>Edit</Button>)
+        }
+        if (auth.hasPrivileges(Privilege.ProjectDelete)) {
+            commands.push(<Button type="danger" size="small" onClick={() => this.deleteProject()}>Delete</Button>)
+        }
 
         return <PageWrapper
             className="view-project-page"
@@ -37,14 +41,7 @@ export default class ViewProjectPage extends Component {
                 <Breadcrumb.Item><Link to="/projects">Projects</Link></Breadcrumb.Item>
                 <Breadcrumb.Item>{this.props.params.projectKey}</Breadcrumb.Item>
             </Breadcrumb>}>
-            <div className="command-bar">
-                {auth.hasPrivileges(Privilege.ProjectEdit) ?
-                    <Button className="command" onClick={() => this.editProject()}>Edit</Button>
-                    : null}
-                {auth.hasPrivileges(Privilege.ProjectDelete) ?
-                    <Button type="danger" className="command" onClick={() => this.deleteProject()}>Delete</Button>
-                    : null}
-            </div>
+            <CommandBar leftItems={commands}/>
             <Spin spinning={this.loading}>
                 <FieldsViewer fields={[
                     ["Project Key", this.project.projectKey],

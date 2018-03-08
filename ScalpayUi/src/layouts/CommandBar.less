@@ -1,0 +1,21 @@
+.command-bar {
+  padding: 12px 5px;
+  border-bottom: 1px #dadada solid;
+  .left {
+    display: flex;
+    float: left;
+    .item {
+      margin-right: 10px;
+    }
+  }
+  .right {
+    display: flex;
+    float: right;
+    .item {
+      margin-left: 10px;
+    }
+  }
+  &::after {
+    clear: both;
+  }
+}

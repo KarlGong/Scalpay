@@ -7,12 +7,13 @@ import {Link} from "react-router";
 import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
 import PageWrapper from "~/layouts/PageWrapper";
+import CommandBar from "~/layouts/CommandBar";
 import moment from "moment";
 import Validator from "~/utils/Validator";
 import "./ViewUserPage.less";
 import global from "~/global";
 import userModal from "~/modals/userModal";
-import FieldsViewer from "~/components/FieldsViewer";
+import FieldsViewer from "~/layouts/FieldsViewer";
 
 @observer
 export default class ViewUserPage extends Component {
@@ -25,11 +26,11 @@ export default class ViewUserPage extends Component {
     };
 
     render = () => {
-        const formItemLayout = {
-            labelCol: {span: 3},
-            wrapperCol: {span: 21},
-        };
-
+        let commands = [];
+        if (auth.hasPrivileges(Privilege.UserManage)) {
+            commands.push(<Button size="small" onClick={() => this.editUser()}>Edit</Button>);
+            commands.push(<Button type="danger" size="small" onClick={() => this.deleteUser()}>Delete</Button>)
+        }
         return <PageWrapper
             className="view-user-page"
             breadcrumb={<Breadcrumb>
@@ -37,21 +38,12 @@ export default class ViewUserPage extends Component {
                 <Breadcrumb.Item><Link to="/users">Users</Link></Breadcrumb.Item>
                 <Breadcrumb.Item>{this.props.params.username}</Breadcrumb.Item>
             </Breadcrumb>}>
-            <div className="command-bar">
-                {auth.hasPrivileges(Privilege.UserManage) ?
-                    <div>
-                        <Button className="command" onClick={() => this.editUser()}>Edit</Button>
-                        <Button type="danger" className="command" onClick={() => this.deleteUser()}>Delete</Button>
-                    </div>
-                    : null}
-            </div>
+            <CommandBar leftItems={commands}/>
             <Spin spinning={this.loading}>
                 <FieldsViewer fields={[
                     ["Username", this.user.username],
                     ["Full Name", this.user.fullName],
                     ["Email", this.user.email],
-                    ["Create Time", moment(this.user.insertTime).fromNow()],
-                    ["Update Time", moment(this.user.updateTime).fromNow()]
                 ]}/>
             </Spin>
         </PageWrapper>

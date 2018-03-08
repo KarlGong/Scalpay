@@ -10,7 +10,8 @@ import moment from "moment";
 import Validator from "~/utils/Validator";
 import {Link} from "react-router";
 import global from "~/global";
-import FieldsViewer from "~/components/FieldsViewer";
+import FieldsViewer from "~/layouts/FieldsViewer";
+import CommandBar from "~/layouts/CommandBar";
 import configItemModal from "~/modals/configItemModal/configItemModal";
 import ProjectInfo from "~/components/ProjectInfo";
 import "./ViewConfigItemPage.less";
@@ -26,12 +27,13 @@ export default class ViewConfigItemPage extends Component {
     };
 
     render = () => {
-        const formItemLayout = {
-            labelCol: {span: 3},
-            wrapperCol: {span: 21},
-        };
-
-
+        let commands = [];
+        if (auth.hasPrivileges(Privilege.ItemEdit)){
+            commands.push(<Button size="small" onClick={() => this.editItem()}>Edit</Button>);
+        }
+        if (auth.hasPrivileges(Privilege.ItemDelete)) {
+            commands.push(<Button type="danger" size="small" onClick={() => this.deleteItem()}>Delete</Button>)
+        }
 
         return <PageWrapper
             className="view-item-page"
@@ -41,14 +43,7 @@ export default class ViewConfigItemPage extends Component {
                 <Breadcrumb.Item>Config</Breadcrumb.Item>
                 <Breadcrumb.Item>{this.props.params.itemKey}</Breadcrumb.Item>
             </Breadcrumb>}>
-            <div className="command-bar">
-                {auth.hasPrivileges(Privilege.ItemEdit) ?
-                    <Button className="command" onClick={() => this.editItem()} size="small">Edit</Button>
-                    : null}
-                {auth.hasPrivileges(Privilege.ItemDelete) ?
-                    <Button type="danger" className="command" onClick={() => this.deleteItem()} size="small">Delete</Button>
-                    : null}
-            </div>
+            <CommandBar leftItems={commands}/>
             <Spin spinning={this.loading}>
                 <FieldsViewer fields={[
                     ["Project", <ProjectInfo project={this.item.project}/>],
