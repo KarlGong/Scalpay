@@ -75,30 +75,52 @@ export default class ViewConfigItemPage extends Component {
                             ["Update Time", moment(this.item.updateTime).fromNow()],
                         ]}/>
                     </Block>
-                    <Block name="Parameters & Result">
-                        <FieldsViewer fields={this.item.parameterInfos.map(info => [info.name, info.dataType])}/>
-                        <FieldsViewer fields={[[
-                            <b><i>Result Data Type</i></b>,
-                            <b><i>{this.item.resultDataType}</i></b>
-                        ]]}/>
-                    </Block>
-                    <Block name="Rules" className="rules">
-                        <Row gutter={gutterWidth} type="flex" align="middle" className="rule">
-                            <Col span={conditionWidth}><b>Condition</b></Col>
-                            <Col span={resultWidth}><b>Result</b></Col>
-                        </Row>
-                        {
-                            this.item.rules.map(rule =>
-                                <Row key={rule.key} gutter={gutterWidth} type="flex" align="middle" className="rule">
-                                    <Col span={conditionWidth}><ExpressionView expression={rule.condition}/></Col>
-                                    <Col span={resultWidth}><ExpressionView expression={rule.result}/></Col>
-                                </Row>)
-                        }
-                        <Row key={this.item.defaultResultKey} gutter={gutterWidth} type="flex" align="middle" className="rule">
-                            <Col span={conditionWidth}><b>Default</b></Col>
-                            <Col span={resultWidth}><ExpressionView expression={this.item.defaultResult}/></Col>
-                        </Row>
-                    </Block>
+                    {
+                        this.item.mode === ConfigItemMode.Property ?
+                            <Block name="Property">
+                                <FieldsViewer fields={[
+                                    ["Result Data Type", this.item.resultDataType],
+                                    ["Result", <ExpressionView expression={this.item.defaultResult}/>]
+                                ]}/>
+                            </Block>
+                            : null
+                    }
+                    {
+                        this.item.mode === ConfigItemMode.Raw ?
+                            <Block name="Parameters & Result">
+                                <FieldsViewer
+                                    fields={this.item.parameterInfos.map(info => [info.name, info.dataType])}/>
+                                <FieldsViewer fields={[[
+                                    <b><i>Result Data Type</i></b>,
+                                    <b><i>{this.item.resultDataType}</i></b>
+                                ]]}/>
+                            </Block>
+                            : null
+                    }
+                    {
+                        this.item.mode === ConfigItemMode.Raw ?
+                            <Block name="Rules" className="rules">
+                                <Row gutter={gutterWidth} type="flex" align="middle" className="rule">
+                                    <Col span={conditionWidth}><b>Condition</b></Col>
+                                    <Col span={resultWidth}><b>Result</b></Col>
+                                </Row>
+                                {
+                                    this.item.rules.map(rule =>
+                                        <Row key={rule.key} gutter={gutterWidth} type="flex" align="middle"
+                                             className="rule">
+                                            <Col span={conditionWidth}><ExpressionView
+                                                expression={rule.condition}/></Col>
+                                            <Col span={resultWidth}><ExpressionView expression={rule.result}/></Col>
+                                        </Row>)
+                                }
+                                <Row key={this.item.defaultResultKey} gutter={gutterWidth} type="flex" align="middle"
+                                     className="rule">
+                                    <Col span={conditionWidth}><b>Default</b></Col>
+                                    <Col span={resultWidth}><ExpressionView expression={this.item.defaultResult}/></Col>
+                                </Row>
+                            </Block>
+                            : null
+                    }
                 </Spin>
             </Layout>
         </PageWrapper>
