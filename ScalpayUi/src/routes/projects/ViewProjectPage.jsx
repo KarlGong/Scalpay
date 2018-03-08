@@ -14,6 +14,7 @@ import {Link} from "react-router";
 import "./ViewProjectPage.less";
 import global from "~/global";
 import projectModal from "~/modals/projectModal";
+import Block from "~/layouts/Block";
 
 @observer
 export default class ViewProjectPage extends Component {
@@ -43,13 +44,15 @@ export default class ViewProjectPage extends Component {
             </Breadcrumb>}>
             <CommandBar leftItems={commands}/>
             <Spin spinning={this.loading}>
-                <FieldsViewer fields={[
-                    ["Project Key", this.project.projectKey],
-                    ["Name", this.project.name],
-                    ["Description", this.project.description],
-                    ["Create Time", moment(this.project.insertTime).fromNow()],
-                    ["Update Time", moment(this.project.updateTime).fromNow()],
-                ]}/>
+                <Block name="Basic">
+                    <FieldsViewer fields={[
+                        ["Project Key", this.project.projectKey],
+                        ["Name", this.project.name],
+                        ["Description", this.project.description],
+                        ["Create Time", moment(this.project.insertTime).fromNow()],
+                        ["Update Time", moment(this.project.updateTime).fromNow()],
+                    ]}/>
+                </Block>
             </Spin>
         </PageWrapper>
     };

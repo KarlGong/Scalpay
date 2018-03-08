@@ -14,6 +14,7 @@ import "./ViewUserPage.less";
 import global from "~/global";
 import userModal from "~/modals/userModal";
 import FieldsViewer from "~/layouts/FieldsViewer";
+import Block from "~/layouts/Block";
 
 @observer
 export default class ViewUserPage extends Component {
@@ -40,11 +41,13 @@ export default class ViewUserPage extends Component {
             </Breadcrumb>}>
             <CommandBar leftItems={commands}/>
             <Spin spinning={this.loading}>
+                <Block name="Basic">
                 <FieldsViewer fields={[
                     ["Username", this.user.username],
                     ["Full Name", this.user.fullName],
                     ["Email", this.user.email],
                 ]}/>
+                </Block>
             </Spin>
         </PageWrapper>
     };

@@ -1,4 +1,4 @@
-import {Layout, Menu, Input, Icon, Form, Spin, Button, Modal, Breadcrumb, Row, Col} from "antd";
+import {Layout, Menu, Input, Icon, Form, Spin, Button, Modal, Breadcrumb, Row, Col, Divider} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked, runInAction, action} from "mobx";
@@ -14,6 +14,7 @@ import FieldsViewer from "~/layouts/FieldsViewer";
 import CommandBar from "~/layouts/CommandBar";
 import configItemModal from "~/modals/configItemModal/configItemModal";
 import ProjectInfo from "~/components/ProjectInfo";
+import Block from "~/layouts/Block";
 import "./ViewConfigItemPage.less";
 
 @observer
@@ -28,7 +29,7 @@ export default class ViewConfigItemPage extends Component {
 
     render = () => {
         let commands = [];
-        if (auth.hasPrivileges(Privilege.ItemEdit)){
+        if (auth.hasPrivileges(Privilege.ItemEdit)) {
             commands.push(<Button size="small" onClick={() => this.editItem()}>Edit</Button>);
         }
         if (auth.hasPrivileges(Privilege.ItemDelete)) {
@@ -44,16 +45,23 @@ export default class ViewConfigItemPage extends Component {
                 <Breadcrumb.Item>{this.props.params.itemKey}</Breadcrumb.Item>
             </Breadcrumb>}>
             <CommandBar leftItems={commands}/>
-            <Spin spinning={this.loading}>
-                <FieldsViewer fields={[
-                    ["Project", <ProjectInfo project={this.item.project}/>],
-                    ["Item Key", this.item.itemKey],
-                    ["Name", this.item.name],
-                    ["Description", this.item.description],
-                    ["Create Time", moment(this.item.insertTime).fromNow()],
-                    ["Update Time", moment(this.item.updateTime).fromNow()],
-                ]}/>
-            </Spin>
+            <Layout style={{width: "600px"}}>
+                <Spin spinning={this.loading}>
+                    <Block name="Basic">
+                        <FieldsViewer fields={[
+                            ["Project", <ProjectInfo project={this.item.project}/>],
+                            ["Item Key", this.item.itemKey],
+                            ["Name", this.item.name],
+                            ["Description", this.item.description],
+                            ["Create Time", moment(this.item.insertTime).fromNow()],
+                            ["Update Time", moment(this.item.updateTime).fromNow()],
+                        ]}/>
+                    </Block>
+                    <Block name="Parameters">
+                        abc
+                    </Block>
+                </Spin>
+            </Layout>
         </PageWrapper>
     };
 
