@@ -26,7 +26,7 @@ export default class ParameterPanel extends Component {
     };
 
     item = this.props.item; // observable
-    @observable resultDataTypeKey = guid();
+    @observable resultDataTypeResetKey = guid();
 
     constructor(props) {
         super(props);
@@ -192,7 +192,7 @@ export default class ParameterPanel extends Component {
                            {...formItemLayout}
                 >
                     <DataTypeSelect
-                        key={this.resultDataTypeKey}
+                        key={this.resultDataTypeResetKey}
                         style={{width: "150px"}}
                         defaultValue={untracked(() => this.item.resultDataType)}
                         onChange={(dataType) => {
@@ -212,7 +212,7 @@ export default class ParameterPanel extends Component {
                                     this.item.defaultResultKey = guid();
                                 },
                                 onCancel: () => {
-                                    this.resultDataTypeKey = guid();
+                                    this.resultDataTypeResetKey = guid();
                                 },
                             });
                         }}/>

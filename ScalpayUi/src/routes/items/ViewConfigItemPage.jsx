@@ -85,7 +85,7 @@ export default class ViewConfigItemPage extends Component {
                     <Block name="Rules" className="rules">
                         <Row gutter={gutterWidth} type="flex" align="middle" className="rule">
                             <Col span={conditionWidth}><b>Condition</b></Col>
-                            <Col span={resultWidth}>Result</Col>
+                            <Col span={resultWidth}><b>Result</b></Col>
                         </Row>
                         {
                             this.item.rules.map(rule =>

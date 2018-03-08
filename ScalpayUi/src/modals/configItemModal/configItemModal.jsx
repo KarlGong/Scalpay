@@ -11,11 +11,13 @@ import DataTypeSelect from "~/components/DataTypeSelect";
 import ExpressionView from "~/components/expression/ExpressionView";
 import DragListView from "react-drag-listview";
 import guid from "~/utils/guid";
+import ComponentValidator from "~/utils/ComponentValidator";
 import "./configItemModal.less";
 import ItemInfo from "~/components/ItemInfo";
 import BasicPanel from "./BasicPanel";
 import ParameterPanel from "./ParameterPanel";
 import RawRulePanel from "./RawRulePanel";
+import PropertyPanel from "./PropertyPanel";
 import event from "~/utils/event";
 
 function add(onSuccess) {
@@ -82,6 +84,8 @@ class EditConfigItemModal extends Component {
     @observable basicPanelValidator = null;
     @observable parameterPanelValidator = null;
 
+    @observable modeResetKey = guid();
+
     constructor(props) {
         super(props);
         this.props.item.parameterInfos.map(p => p.key = p.key || guid());
@@ -106,8 +110,30 @@ class EditConfigItemModal extends Component {
             <div className="config-item-modal">
                 <div style={{float: "right"}}>
                     <Radio.Group
-                        onChange={(value) => this.item.mode = value}
-                        defaultValue={this.item.mode}>
+                        key={this.modeResetKey}
+                        onChange={(e) => {
+                            let targetMode = e.target.value;
+                            if (targetMode === ConfigItemMode.Property) {
+                                Modal.confirm({
+                                    title: "Are you sure to change to Property mode?",
+                                    content: "All the parameters and rules of this item will be cleared.",
+                                    okText: "Change",
+                                    okType: "danger",
+                                    cancelText: "No",
+                                    onOk: () => {
+                                        this.item.mode = targetMode;
+                                        this.item.parameterInfos = [];
+                                        this.item.rules = [];
+                                    },
+                                    onCancel: () => {
+                                        this.modeResetKey = guid();
+                                    },
+                                });
+                            } else {
+                                this.item.mode = targetMode;
+                            }
+                        }}
+                        defaultValue={untracked(() => this.item.mode)}>
                         <Radio.Button value={ConfigItemMode.Property}>Property</Radio.Button>
                         <Radio.Button value={ConfigItemMode.Raw}>Raw</Radio.Button>
                     </Radio.Group>
@@ -128,31 +154,57 @@ class EditConfigItemModal extends Component {
                             setValidator={(validator) => {this.basicPanelValidator = validator}}
                         />
                     </Collapse.Panel>
-                    <Collapse.Panel
-                        forceRender
-                        header="Parameters & Result"
-                        key="parameter"
-                        className={cs({"error": this.parameterPanelValidator && this.parameterPanelValidator.hasError()})}>
-                        <ParameterPanel
-                            item={this.item}
-                            setValidator={(validator) => {this.parameterPanelValidator = validator}}
-                        />
-                    </Collapse.Panel>
-                    <Collapse.Panel
-                        forceRender
-                        header="Rules"
-                        key="raw-rule"
-                        disabled={this.parameterPanelValidator && this.parameterPanelValidator.hasError()}>
-                        <RawRulePanel item={this.item}/>
-                    </Collapse.Panel>
+                    {
+                        this.item.mode === ConfigItemMode.Property ?
+                            <Collapse.Panel
+                                forceRender
+                                header="Property"
+                                key="property">
+                                <PropertyPanel
+                                    item={this.item}
+                                />
+                            </Collapse.Panel>
+                            : null
+                    }
+                    {
+                        this.item.mode === ConfigItemMode.Raw ?
+                            <Collapse.Panel
+                                forceRender
+                                header="Parameters & Result"
+                                key="parameter"
+                                className={cs({"error": this.parameterPanelValidator && this.parameterPanelValidator.hasError()})}>
+                                <ParameterPanel
+                                    item={this.item}
+                                    setValidator={(validator) => {this.parameterPanelValidator = validator}}
+                                />
+                            </Collapse.Panel>
+                            : null
+                    }
+                    {
+                        this.item.mode === ConfigItemMode.Raw ?
+                            <Collapse.Panel
+                                forceRender
+                                header="Rules"
+                                key="raw-rule"
+                                disabled={this.parameterPanelValidator && this.parameterPanelValidator.hasError()}>
+                                <RawRulePanel item={this.item}/>
+                            </Collapse.Panel>
+                            : null
+                    }
                 </Collapse>
             </div>
         </Modal>
     };
 
     handleOk = () => {
+        let validators = [this.basicPanelValidator];
+        if (this.item.mode === ConfigItemMode.Raw) {
+            validators.push(this.parameterPanelValidator);
+        }
+        let componentValidator = new ComponentValidator(validators);
+
         if (this.props.addMode) {
-            Promise.all([this.basicPanelValidator.validate(), this.parameterPanelValidator.validate()]).then(() => {
+            componentValidator.validate().then(() => {
                 this.loading = true;
                 axios.put("/api/items/config", this.item)
                     .then(res => {
@@ -164,7 +216,7 @@ class EditConfigItemModal extends Component {
                     }, () => this.loading = false)
             });
         } else {
-            Promise.all([this.basicPanelValidator.validate(), this.parameterPanelValidator.validate()]).then(() => {
+            componentValidator.validate().then(() => {
                 this.loading = true;
                 axios.post("/api/items/config/" + this.item.itemKey, this.item)
                     .then(res => {
