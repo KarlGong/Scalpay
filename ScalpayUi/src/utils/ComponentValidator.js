@@ -25,6 +25,6 @@ export default class ComponentValidator {
     };
 
     hasError = () => {
-        return this.validators.some(v => v.hasError());
+        return this.validators.some(v => v.hasError()) || this.subComponentValidators.some(v => v.hasError());
     }
 }
