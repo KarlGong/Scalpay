@@ -67,9 +67,8 @@ class EditConfigItemModal extends Component {
             mode: ConfigItemMode.Property,
             parameterInfos: [],
             resultDataType: DataType.String,
-            defaultResult: DefaultExp.String,
-            defaultResultKey: guid(),
-            rules: []
+            rules: [],
+            defaultResult: DefaultExp.String
         },
         addMode: false,
         onSuccess: (item) => {
@@ -90,8 +89,7 @@ class EditConfigItemModal extends Component {
         super(props);
         this.props.item.parameterInfos.map(p => p.key = p.key || guid());
         this.props.item.rules.map(r => r.key = r.key || guid());
-        this.props.item.defaultResultKey = this.props.item.defaultResultKey || guid();
-        this.item = observable(Object.assign({}, this.props.item));
+        this.item = observable(this.props.item);
     }
 
     render = () => {

@@ -87,10 +87,8 @@ export default class ParameterPanel extends Component {
                                                     this.item.rules.map(rule => {
                                                         updateVariable(rule.condition, paramInfo.oldName, paramInfo.name);
                                                         updateVariable(rule.result, paramInfo.oldName, paramInfo.name);
-                                                        rule.key = guid();
                                                     });
                                                     updateVariable(this.item.defaultResult, paramInfo.oldName, paramInfo.name);
-                                                    this.item.defaultResultKey = guid();
                                                     paramInfo.oldName = paramInfo.name;
                                                     hide();
                                                 });
@@ -117,15 +115,13 @@ export default class ParameterPanel extends Component {
                                                         if (isVariableUsed(rule.result, paramInfo.oldName)) {
                                                             rule.result = DefaultExp[this.item.resultDataType];
                                                         }
-                                                        rule.key = guid();
                                                     });
                                                     if (isVariableUsed(this.item.defaultResult, paramInfo.oldName)) {
                                                         this.item.defaultResult = DefaultExp[this.item.resultDataType];
-                                                        this.item.defaultResultKey = guid();
                                                     }
                                                 },
                                                 onCancel: () => {
-                                                    paramInfo.key = guid();
+                                                    paramInfo.key = guid(); //reset
                                                 },
                                             });
                                         }}
@@ -151,11 +147,9 @@ export default class ParameterPanel extends Component {
                                                     if (isVariableUsed(rule.result, paramInfo.oldName)) {
                                                         rule.result = DefaultExp[this.item.resultDataType];
                                                     }
-                                                    rule.key = guid();
                                                 });
                                                 if (isVariableUsed(this.item.defaultResult, paramInfo.oldName)) {
                                                     this.item.defaultResult = DefaultExp[this.item.resultDataType];
-                                                    this.item.defaultResultKey = guid();
                                                 }
                                                 this.item.parameterInfos.splice(index, 1);
                                                 this.validators.splice(index, 1);
@@ -206,10 +200,8 @@ export default class ParameterPanel extends Component {
                                     this.item.resultDataType = dataType;
                                     this.item.rules.map(rule => {
                                         rule.result = DefaultExp[dataType];
-                                        rule.key = guid();
                                     });
                                     this.item.defaultResult = DefaultExp[dataType];
-                                    this.item.defaultResultKey = guid();
                                 },
                                 onCancel: () => {
                                     this.resultDataTypeResetKey = guid();

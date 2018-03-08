@@ -19,18 +19,18 @@ export default class ProjectSelect extends Component {
         defaultValue: undefined
     };
 
-    @observable key = guid();
+    @observable resetKey = guid();
     lastSearchId = 0;
     @observable projects = [];
     @observable loading = false;
 
     componentDidMount = () => {
-        this.searchProjects().then(() => this.key = guid());
+        this.searchProjects().then(() => this.resetKey = guid());
     };
 
     render = () => {
         return <Select
-            key={this.key}
+            key={this.resetKey}
             showSearch
             disabled={this.props.disabled}
             allowClear={this.props.allowClear}

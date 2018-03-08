@@ -45,7 +45,6 @@ export default class PropertyPanel extends Component {
                                 onOk: () => {
                                     this.item.resultDataType = dataType;
                                     this.item.defaultResult = DefaultExp[dataType];
-                                    this.item.defaultResultKey = guid();
                                 },
                                 onCancel: () => {
                                     this.resultDataTypeResetKey = guid();
@@ -53,10 +52,10 @@ export default class PropertyPanel extends Component {
                             });
                         }}/>
                 </Form.Item>
-                <Form.Item key={this.item.defaultResultKey} label="Result" {...formItemLayout}>
+                <Form.Item label="Result" {...formItemLayout}>
                     <ExpressionView
                         allowEdit
-                        expression={untracked(() => this.item.defaultResult)}
+                        expression={this.item.defaultResult}
                         item={this.item}
                         onChange={(exp) => this.item.defaultResult = exp}
                     />

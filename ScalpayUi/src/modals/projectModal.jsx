@@ -53,7 +53,7 @@ class EditProjectModal extends Component {
         afterClose: () => {}
     };
 
-    @observable project = Object.assign({}, this.props.project);
+    @observable project = this.props.project;
     validator = new Validator(this.project, {
         projectKey: (rule, value, callback, source, options) => {
             let errors = [];

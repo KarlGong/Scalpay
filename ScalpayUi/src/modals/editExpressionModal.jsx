@@ -55,16 +55,16 @@ class EditExpressionModal extends Component {
         funcArgs: [],
         value: null,
         var: null
-    }, this.props.expression);
+    }, this.props.expression); // add all field as observable
     @observable visible = true;
 
-    @observable valueInputValidator = null;
-    @observable variableValidator = null;
-    @observable functionValidator = null;
+    valueInputValidator = null;
+    variableValidator = null;
+    functionValidator = null;
 
     render = () => {
         const valueInputProps = {
-            defaultValue: this.expression.value,
+            defaultValue: untracked(() => this.expression.value),
             onChange: (value) => this.expression.value = value,
             setValidator: validator => this.valueInputValidator = validator
         };
@@ -92,7 +92,7 @@ class EditExpressionModal extends Component {
             afterClose={() => this.props.afterClose()}
         >
             <Radio.Group
-                defaultValue={this.expression.expType}
+                defaultValue={untracked(() => this.expression.expType)}
                 onChange={(e) => this.expression.expType = e.target.value}>
                 <Radio value={ExpType.Value}>Value</Radio>
                 <Radio value={ExpType.Var}>Variable</Radio>
@@ -115,7 +115,7 @@ class EditExpressionModal extends Component {
                     <div>
                         <FunctionSelect
                             className="func-select"
-                            returnType={untracked(() => this.expression.returnType)}
+                            returnType={this.expression.returnType}
                             defaultValue={untracked(() => this.expression.funcName || undefined)}
                             onChange={(functionName) => {
                                 this.expression.funcName = functionName;

@@ -48,15 +48,15 @@ export default class RawRulePanel extends Component {
                             <Col span={conditionWidth}>
                                 <ExpressionView
                                     allowEdit
-                                    expression={untracked(() => rule.condition)}
-                                    item={untracked(() => this.item)}
+                                    expression={rule.condition}
+                                    item={this.item}
                                     onChange={(exp) => rule.condition = exp}/>
                             </Col>
                             <Col span={resultWidth}>
                                 <ExpressionView
                                     allowEdit
-                                    expression={untracked(() => rule.result)}
-                                    item={untracked(() => this.item)}
+                                    expression={rule.result}
+                                    item={this.item}
                                     onChange={(exp) => rule.result = exp}/>
                             </Col>
                             <Col span={deleteWidth}>
@@ -80,14 +80,14 @@ export default class RawRulePanel extends Component {
                             })}>Add Rule</Button>
                 </Col>
             </Row>
-            <Row key={this.item.defaultResultKey} gutter={gutterWidth} className="rule-default">
+            <Row gutter={gutterWidth} className="rule-default">
                 <Col span={conditionWidth}>
                     <b>Default</b>
                 </Col>
                 <Col span={resultWidth}>
                     <ExpressionView
                         allowEdit
-                        expression={untracked(() => this.item.defaultResult)}
+                        expression={this.item.defaultResult}
                         item={this.item}
                         onChange={(exp) => this.item.defaultResult = exp}
                     />

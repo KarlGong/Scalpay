@@ -13,7 +13,6 @@ import "./ExpressionView.less";
 export default class ExpressionView extends Component {
     static defaultProps = {
         expression: {
-            key: guid(),
             returnType: null,
             expType: null,
             funcName: null,
@@ -27,7 +26,11 @@ export default class ExpressionView extends Component {
         onChange: (expression) => {}
     };
 
-    @observable expression = Object.assign({key: guid()}, this.props.expression); // add a key if not existing
+    @observable expression = this.props.expression;
+
+    componentWillReceiveProps(nextProps) {
+        this.expression = nextProps.expression;
+    }
 
     render = () => {
         const editProps = {
@@ -71,10 +74,8 @@ export default class ExpressionView extends Component {
                     <span>(</span>
                     {
                         reactStringReplace(Func[this.expression.returnType][this.expression.funcName].displayExp, /{(\d+)}/, (argsIndex) => {
-                            // add a key to force update sub expression
-                            this.expression.funcArgs[argsIndex].key = this.expression.funcArgs[argsIndex].key || guid();
                             return <ExpressionView
-                                key={this.expression.funcArgs[argsIndex].key}
+                                key={argsIndex}
                                 allowEdit={this.props.allowSubEdit}
                                 expression={this.expression.funcArgs[argsIndex]}
                                 item={this.props.item}
@@ -90,7 +91,6 @@ export default class ExpressionView extends Component {
     handleClick = () => {
         editExpressionModal.open(this.expression, this.props.item, (exp) => {
             this.expression = exp;
-            this.expression.key = guid(); // update key if updated
             this.props.onChange(exp);
         });
     }

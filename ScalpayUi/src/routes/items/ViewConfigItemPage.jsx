@@ -31,9 +31,8 @@ export default class ViewConfigItemPage extends Component {
         mode: ConfigItemMode.Property,
         parameterInfos: [],
         resultDataType: DataType.String,
-        defaultResult: DefaultExp.String,
-        defaultResultKey: guid(),
-        rules: []
+        rules: [],
+        defaultResult: DefaultExp.String
     };
     @observable loading = false;
 
@@ -113,7 +112,7 @@ export default class ViewConfigItemPage extends Component {
                                             <Col span={resultWidth}><ExpressionView expression={rule.result}/></Col>
                                         </Row>)
                                 }
-                                <Row key={this.item.defaultResultKey} gutter={gutterWidth} type="flex" align="middle"
+                                <Row gutter={gutterWidth} type="flex" align="middle"
                                      className="rule">
                                     <Col span={conditionWidth}><b>Default</b></Col>
                                     <Col span={resultWidth}><ExpressionView expression={this.item.defaultResult}/></Col>
@@ -132,7 +131,6 @@ export default class ViewConfigItemPage extends Component {
             .then((res) => {
                 let item = res.data;
                 item.rules.map(r => r.key = guid());
-                item.defaultResultKey = guid();
                 this.item = item;
             })
             .finally(() => this.loading = false);

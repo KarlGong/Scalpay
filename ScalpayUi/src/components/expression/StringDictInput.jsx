@@ -23,9 +23,9 @@ export default class StringDictInput extends Component {
 
     constructor(props) {
         super(props);
-        this.items = Object.entries(this.props.defaultValue).map(([dictKey, dictValue]) => {
+        this.items = observable(Object.entries(this.props.defaultValue).map(([dictKey, dictValue]) => {
             return {key: guid(), dictKey: dictKey, dictValue: dictValue}
-        });
+        }));
 
         this.validatorDescriptor = {
             dictKey: (rule, value, callback, source, options) => {
