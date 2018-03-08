@@ -12,6 +12,7 @@ import Validator from "~/utils/Validator";
 import "./ViewUserPage.less";
 import global from "~/global";
 import userModal from "~/modals/userModal";
+import FieldsViewer from "~/components/FieldsViewer";
 
 @observer
 export default class ViewUserPage extends Component {
@@ -45,30 +46,20 @@ export default class ViewUserPage extends Component {
                     : null}
             </div>
             <Spin spinning={this.loading}>
-                <Form>
-                    <Form.Item label="Username" {...formItemLayout}>
-                        <span>{this.user.username}</span>
-                    </Form.Item>
-                    <Form.Item label="Full Name" {...formItemLayout}>
-                        <span>{this.user.fullName}</span>
-                    </Form.Item>
-                    <Form.Item label="Email" {...formItemLayout}>
-                        <span>{this.user.email}</span>
-                    </Form.Item>
-                    <Form.Item label="Create Time" {...formItemLayout}>
-                        <span>{moment(this.user.insertTime).fromNow()}</span>
-                    </Form.Item>
-                    <Form.Item label="Update Time" {...formItemLayout}>
-                        <span>{moment(this.user.updateTime).fromNow()}</span>
-                    </Form.Item>
-                </Form>
+                <FieldsViewer fields={[
+                    ["Username", this.user.username],
+                    ["Full Name", this.user.fullName],
+                    ["Email", this.user.email],
+                    ["Create Time", moment(this.user.insertTime).fromNow()],
+                    ["Update Time", moment(this.user.updateTime).fromNow()]
+                ]}/>
             </Spin>
         </PageWrapper>
     };
 
     loadUser = () => {
         this.loading = true;
-        axios.get("/api/users/" + this.props.router.params.username)
+        axios.get("/api/users/" + this.props.params.username)
             .then((res) => this.user = res.data)
             .finally(() => this.loading = false);
     };

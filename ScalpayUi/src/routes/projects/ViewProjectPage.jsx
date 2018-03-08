@@ -8,6 +8,7 @@ import {Privilege} from "~/utils/store";
 import PageWrapper from "~/layouts/PageWrapper";
 import moment from "moment";
 import Validator from "~/utils/Validator";
+import FieldsViewer from "~/components/FieldsViewer";
 import {Link} from "react-router";
 import "./ViewProjectPage.less";
 import global from "~/global";
@@ -45,30 +46,20 @@ export default class ViewProjectPage extends Component {
                     : null}
             </div>
             <Spin spinning={this.loading}>
-                <Form>
-                    <Form.Item label="Project Key" {...formItemLayout}>
-                        <span>{this.project.projectKey}</span>
-                    </Form.Item>
-                    <Form.Item label="Name" {...formItemLayout}>
-                        <span>{this.project.name}</span>
-                    </Form.Item>
-                    <Form.Item label="Description" {...formItemLayout}>
-                        <span>{this.project.description}</span>
-                    </Form.Item>
-                    <Form.Item label="Create Time" {...formItemLayout}>
-                        <span>{moment(this.project.insertTime).fromNow()}</span>
-                    </Form.Item>
-                    <Form.Item label="Update Time" {...formItemLayout}>
-                        <span>{moment(this.project.updateTime).fromNow()}</span>
-                    </Form.Item>
-                </Form>
+                <FieldsViewer fields={[
+                    ["Project Key", this.project.projectKey],
+                    ["Name", this.project.name],
+                    ["Description", this.project.description],
+                    ["Create Time", moment(this.project.insertTime).fromNow()],
+                    ["Update Time", moment(this.project.updateTime).fromNow()],
+                ]}/>
             </Spin>
         </PageWrapper>
     };
 
     loadProject = () => {
         this.loading = true;
-        axios.get("/api/projects/" + this.props.router.params.projectKey)
+        axios.get("/api/projects/" + this.props.params.projectKey)
             .then((res) => this.project = res.data)
             .finally(() => this.loading = false);
     };

@@ -44,7 +44,7 @@ export default class RawRulePanel extends Component {
             }}>
                 {
                     this.item.rules.map((rule) => {
-                        return <Row key={rule.key} gutter={gutterWidth} className="rule">
+                        return <Row key={rule.key} gutter={gutterWidth} className="rule" type="flex" align="middle">
                             <Col span={conditionWidth} className="center">
                                 <ExpressionView
                                     allowEdit

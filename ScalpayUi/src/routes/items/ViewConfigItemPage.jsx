@@ -1,4 +1,4 @@
-import {Layout, Menu, Input, Icon, Form, Spin, Button, Modal, Breadcrumb} from "antd";
+import {Layout, Menu, Input, Icon, Form, Spin, Button, Modal, Breadcrumb, Row, Col} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked, runInAction, action} from "mobx";
@@ -10,6 +10,7 @@ import moment from "moment";
 import Validator from "~/utils/Validator";
 import {Link} from "react-router";
 import global from "~/global";
+import FieldsViewer from "~/components/FieldsViewer";
 import configItemModal from "~/modals/configItemModal/configItemModal";
 import ProjectInfo from "~/components/ProjectInfo";
 import "./ViewConfigItemPage.less";
@@ -30,6 +31,8 @@ export default class ViewConfigItemPage extends Component {
             wrapperCol: {span: 21},
         };
 
+
+
         return <PageWrapper
             className="view-item-page"
             breadcrumb={<Breadcrumb>
@@ -40,33 +43,21 @@ export default class ViewConfigItemPage extends Component {
             </Breadcrumb>}>
             <div className="command-bar">
                 {auth.hasPrivileges(Privilege.ItemEdit) ?
-                    <Button className="command" onClick={() => this.editItem()}>Edit</Button>
+                    <Button className="command" onClick={() => this.editItem()} size="small">Edit</Button>
                     : null}
                 {auth.hasPrivileges(Privilege.ItemDelete) ?
-                    <Button type="danger" className="command" onClick={() => this.deleteItem()}>Delete</Button>
+                    <Button type="danger" className="command" onClick={() => this.deleteItem()} size="small">Delete</Button>
                     : null}
             </div>
             <Spin spinning={this.loading}>
-                <Form>
-                    <Form.Item label="Project" {...formItemLayout}>
-                        <span><ProjectInfo project={this.item.project}/></span>
-                    </Form.Item>
-                    <Form.Item label="Item Key" {...formItemLayout}>
-                        <span>{this.item.itemKey}</span>
-                    </Form.Item>
-                    <Form.Item label="Name" {...formItemLayout}>
-                        <span>{this.item.name}</span>
-                    </Form.Item>
-                    <Form.Item label="Description" {...formItemLayout}>
-                        <span>{this.item.description}</span>
-                    </Form.Item>
-                    <Form.Item label="Create Time" {...formItemLayout}>
-                        <span>{moment(this.item.insertTime).fromNow()}</span>
-                    </Form.Item>
-                    <Form.Item label="Update Time" {...formItemLayout}>
-                        <span>{moment(this.item.updateTime).fromNow()}</span>
-                    </Form.Item>
-                </Form>
+                <FieldsViewer fields={[
+                    ["Project", <ProjectInfo project={this.item.project}/>],
+                    ["Item Key", this.item.itemKey],
+                    ["Name", this.item.name],
+                    ["Description", this.item.description],
+                    ["Create Time", moment(this.item.insertTime).fromNow()],
+                    ["Update Time", moment(this.item.updateTime).fromNow()],
+                ]}/>
             </Spin>
         </PageWrapper>
     };
