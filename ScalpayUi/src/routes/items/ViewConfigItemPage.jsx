@@ -43,10 +43,10 @@ export default class ViewConfigItemPage extends Component {
     render = () => {
         let commands = [];
         if (auth.hasPrivileges(Privilege.ItemEdit)) {
-            commands.push(<Button size="small" onClick={() => this.editItem()}>Edit</Button>);
+            commands.push(<Button onClick={() => this.editItem()}>Edit</Button>);
         }
         if (auth.hasPrivileges(Privilege.ItemDelete)) {
-            commands.push(<Button type="danger" size="small" onClick={() => this.deleteItem()}>Delete</Button>)
+            commands.push(<Button type="danger" onClick={() => this.deleteItem()}>Delete</Button>)
         }
 
         let conditionWidth = 16;

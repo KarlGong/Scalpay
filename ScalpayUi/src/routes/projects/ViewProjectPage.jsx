@@ -29,10 +29,10 @@ export default class ViewProjectPage extends Component {
     render = () => {
         let commands = [];
         if (auth.hasPrivileges(Privilege.ProjectEdit)) {
-            commands.push(<Button size="small" onClick={() => this.editProject()}>Edit</Button>)
+            commands.push(<Button onClick={() => this.editProject()}>Edit</Button>)
         }
         if (auth.hasPrivileges(Privilege.ProjectDelete)) {
-            commands.push(<Button type="danger" size="small" onClick={() => this.deleteProject()}>Delete</Button>)
+            commands.push(<Button type="danger" onClick={() => this.deleteProject()}>Delete</Button>)
         }
 
         return <PageWrapper

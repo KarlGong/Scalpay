@@ -80,6 +80,9 @@ class EditConfigItemModal extends Component {
     @observable loading = false;
     @observable visible = true;
 
+    // they should not be observable, but they are lazy loaded,
+    // then this.basicPanelValidator && this.basicPanelValidator.hasError() will not add this component as derived component
+    // call this.forceUpdate() in setValidator can also solve the issue.
     @observable basicPanelValidator = null;
     @observable parameterPanelValidator = null;
 

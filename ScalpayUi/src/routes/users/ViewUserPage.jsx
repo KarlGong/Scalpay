@@ -29,8 +29,8 @@ export default class ViewUserPage extends Component {
     render = () => {
         let commands = [];
         if (auth.hasPrivileges(Privilege.UserManage)) {
-            commands.push(<Button size="small" onClick={() => this.editUser()}>Edit</Button>);
-            commands.push(<Button type="danger" size="small" onClick={() => this.deleteUser()}>Delete</Button>)
+            commands.push(<Button onClick={() => this.editUser()}>Edit</Button>);
+            commands.push(<Button type="danger" onClick={() => this.deleteUser()}>Delete</Button>)
         }
         return <PageWrapper
             className="view-user-page"

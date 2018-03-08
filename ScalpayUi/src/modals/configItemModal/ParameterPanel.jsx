@@ -25,7 +25,7 @@ export default class ParameterPanel extends Component {
         setValidator: (validator) => {}
     };
 
-    item = this.props.item; // observable
+    item = this.props.item; // observable, changes affect the input item, onXXChange can solve this, but it's too complex
     @observable resultDataTypeResetKey = guid();
 
     constructor(props) {
