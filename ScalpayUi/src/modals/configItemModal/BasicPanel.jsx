@@ -118,7 +118,7 @@ export default class BasicPanel extends Component {
                         rows={4}
                         placeholder="Optional"
                         style={{width: "500px"}}
-                        defaultValue={untracked(() => this.item.name)}
+                        defaultValue={untracked(() => this.item.description)}
                         onChange={(e) => this.item.description = e.target.value}
                     />
                 </Form.Item>
