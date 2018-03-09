@@ -44,7 +44,7 @@ namespace ScalpayApi.Services
 
         public async Task<User> GetUserAsync(UserCriteria criteria)
         {
-            return await _context.Users.SingleOrDefaultAsync(criteria.ToWherePredicate());
+            return await _context.Users.AsNoTracking().SingleOrDefaultAsync(criteria.ToWherePredicate());
         }
 
         public async Task<User> GetUserAsync(string username)
@@ -57,12 +57,12 @@ namespace ScalpayApi.Services
 
         public async Task<List<User>> GetUsersAsync(UserCriteria criteria)
         {
-            return await _context.Users.Where(criteria.ToWherePredicate()).ToListAsync();
+            return await _context.Users.AsNoTracking().Where(criteria.ToWherePredicate()).ToListAsync();
         }
 
         public async Task<List<User>> GetUsersAsync()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.AsNoTracking().ToListAsync();
         }
 
         public async Task<User> GenerateNewApiKeyAsync(User user)
@@ -92,6 +92,8 @@ namespace ScalpayApi.Services
         public async Task<User> UpdateUserAsync(UpdateUserParams ps)
         {
             var user = await GetUserAsync(ps.Username);
+
+            _context.Users.Attach(user);
 
             _mapper.Map(ps, user);
 

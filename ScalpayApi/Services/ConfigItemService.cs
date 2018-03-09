@@ -38,7 +38,7 @@ namespace ScalpayApi.Services
 
         public async Task<ConfigItem> GetConfigItemAsync(string itemKey)
         {
-            var item = await _context.ConfigItems.Include(i => i.Project).Include(i => i.Rules)
+            var item = await _context.ConfigItems.AsNoTracking().Include(i => i.Project).Include(i => i.Rules)
                 .SingleOrDefaultAsync(i => i.ItemKey == itemKey);
 
             item.Rules = item.Rules.OrderBy(r => r.Order).ToList();
@@ -62,18 +62,18 @@ namespace ScalpayApi.Services
 
         public async Task<ConfigItem> UpdateConfigItemAsync(UpdateConfigItemParams ps)
         {
-            var previousItem = await GetConfigItemAsync(ps.ItemKey);
+            var item = await GetConfigItemAsync(ps.ItemKey);
 
-            _context.ConfigItems.Attach(previousItem);
+            _context.ConfigItems.Attach(item);
 
-            _mapper.Map(ps, previousItem);
+            _mapper.Map(ps, item);
             
             var order = 0;
-            previousItem.Rules.ForEach(rule => rule.Order = order++);
+            item.Rules.ForEach(rule => rule.Order = order++);
 
             await _context.SaveChangesAsync();
 
-            return previousItem;
+            return item;
         }
 
         public async Task DeleteConfigItemAsync(string itemKey)

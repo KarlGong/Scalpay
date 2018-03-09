@@ -41,7 +41,7 @@ namespace ScalpayApi.Services
 
         public async Task<Project> GetProjectAsync(ProjectCriteria criteria)
         {
-            return await _context.Projects.SingleOrDefaultAsync(criteria.ToWherePredicate());
+            return await _context.Projects.AsNoTracking().SingleOrDefaultAsync(criteria.ToWherePredicate());
         }
 
         public async Task<Project> GetProjectAsync(string projectKey)
@@ -54,12 +54,12 @@ namespace ScalpayApi.Services
 
         public async Task<List<Project>> GetProjectsAsync(ProjectCriteria criteria)
         {
-            return await _context.Projects.Where(criteria.ToWherePredicate()).ToListAsync();
+            return await _context.Projects.AsNoTracking().Where(criteria.ToWherePredicate()).ToListAsync();
         }
 
         public async Task<List<Project>> GetProjectsAsync()
         {
-            return await _context.Projects.ToListAsync();
+            return await _context.Projects.AsNoTracking().ToListAsync();
         }
 
         public async Task<Project> AddProjectAsync(AddProjectParams ps)
@@ -75,13 +75,15 @@ namespace ScalpayApi.Services
 
         public async Task<Project> UpdateProjectAsync(UpdateProjectParams ps)
         {
-            var previousProject = await GetProjectAsync(ps.ProjectKey);
+            var project = await GetProjectAsync(ps.ProjectKey);
 
-            _mapper.Map(ps, previousProject);
+            _context.Projects.Attach(project);
+
+            _mapper.Map(ps, project);
 
             await _context.SaveChangesAsync();
 
-            return previousProject;
+            return project;
         }
 
         public async Task DeleteProjectAsync(string projectKey)

@@ -28,7 +28,7 @@ namespace ScalpayApi.Services
 
         public async Task<List<Item>> GetItemsAsync(ItemCriteria criteria)
         {
-            return await _context.Items.Include(i => i.Project).Where(criteria.ToWherePredicate()).ToListAsync();
+            return await _context.Items.AsNoTracking().Include(i => i.Project).Where(criteria.ToWherePredicate()).ToListAsync();
         }
     }
 }
