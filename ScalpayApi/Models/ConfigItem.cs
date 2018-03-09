@@ -17,9 +17,19 @@ namespace ScalpayApi.Models
         // todo: https://github.com/aspnet/EntityFrameworkCore/issues/242
         public List<ParameterInfo> ParameterInfos
         {
-            get { return JsonConvert.DeserializeObject<List<ParameterInfo>>(ParameterInfosString); }
+            get
+            {
+                return ParameterInfosString == null
+                    ? new List<ParameterInfo>()
+                    : JsonConvert.DeserializeObject<List<ParameterInfo>>(ParameterInfosString);
+            }
 
-            set { ParameterInfosString = JsonConvert.SerializeObject(value); }
+            set
+            {
+                ParameterInfosString = value == null
+                    ? JsonConvert.SerializeObject(new List<ParameterInfo>())
+                    : JsonConvert.SerializeObject(value);
+            }
         }
 
         public string ParameterInfosString { get; set; }
@@ -34,7 +44,7 @@ namespace ScalpayApi.Models
         }
 
         public string DefaultResultString { get; set; }
-        
-        public List<Rule> Rules { get; set; }
+
+        public List<Rule> Rules { get; set; } = new List<Rule>();
     }
 }

@@ -13,7 +13,7 @@ using System;
 namespace ScalpayApi.Migrations
 {
     [DbContext(typeof(ScalpayDbContext))]
-    [Migration("20180307131244_init")]
+    [Migration("20180309075851_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -135,6 +135,30 @@ namespace ScalpayApi.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("ScalpayApi.Models.WordInfo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("InsertTime")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ItemKey");
+
+                    b.Property<string>("Language");
+
+                    b.Property<DateTime>("UpdateTime")
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<string>("Word");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemKey");
+
+                    b.ToTable("WordInfo");
+                });
+
             modelBuilder.Entity("ScalpayApi.Models.ConfigItem", b =>
                 {
                     b.HasBaseType("ScalpayApi.Models.Item");
@@ -178,6 +202,14 @@ namespace ScalpayApi.Migrations
                 {
                     b.HasOne("ScalpayApi.Models.ConfigItem", "ConfigItem")
                         .WithMany("Rules")
+                        .HasForeignKey("ItemKey")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("ScalpayApi.Models.WordInfo", b =>
+                {
+                    b.HasOne("ScalpayApi.Models.WordItem", "WordItem")
+                        .WithMany("WordInfos")
                         .HasForeignKey("ItemKey")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

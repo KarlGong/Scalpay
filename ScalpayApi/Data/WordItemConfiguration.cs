@@ -8,6 +8,8 @@ namespace ScalpayApi.Data
     {
         public void Configure(EntityTypeBuilder<WordItem> builder)
         {
+            builder.HasMany(i => i.WordInfos).WithOne(w => w.WordItem).HasForeignKey(w => w.ItemKey)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

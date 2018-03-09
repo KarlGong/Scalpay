@@ -1,4 +1,5 @@
-﻿using ScalpayApi.Enums;
+﻿using System.Collections.Generic;
+using ScalpayApi.Enums;
 
 namespace ScalpayApi.Models
 {
@@ -8,5 +9,7 @@ namespace ScalpayApi.Models
         {
             get { return ItemType.Word; }
         }
+        
+        public List<WordInfo> WordInfos { get; set; }= new List<WordInfo>();
     }
 }

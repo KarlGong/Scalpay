@@ -18,12 +18,17 @@ namespace ScalpayApi.Data
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new ProjectConfiguration());
-            modelBuilder.ApplyConfiguration(new ItemConfiguration());
-            modelBuilder.ApplyConfiguration(new ConfigItemConfiguration());
-            modelBuilder.ApplyConfiguration(new WordItemConfiguration());
             modelBuilder.ApplyConfiguration(new UserConfiguration());
+            
+            modelBuilder.ApplyConfiguration(new ProjectConfiguration());
+            
+            modelBuilder.ApplyConfiguration(new ItemConfiguration());
+            
+            modelBuilder.ApplyConfiguration(new ConfigItemConfiguration());
             modelBuilder.ApplyConfiguration(new RuleConfiguration());
+            
+            modelBuilder.ApplyConfiguration(new WordItemConfiguration());
+            modelBuilder.ApplyConfiguration(new WordInfoConfiguration());
         }
     }
 }
