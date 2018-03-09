@@ -128,7 +128,7 @@ namespace ScalpayApi
                         {
                             new ConfigItem()
                             {
-                                ItemKey = $"config.{scalpayKey}.word.languages",
+                                ItemKey = $"config.{scalpayKey}.word_item.languages",
                                 Name = "Word Item Languages",
                                 Description = "The look up for word item languages.",
                                 ProjectKey = scalpayKey,
