@@ -57,5 +57,33 @@ namespace ScalpayApi.Controllers
         {
             await _configItemservice.DeleteConfigItemAsync(itemKey);
         }
+        
+        [HttpGet("word/{itemKey}")]
+        public async Task<Item> GetWordItem([FromRoute] string itemKey)
+        {
+            return await _wordItemService.GetWordItemAsync(itemKey);
+        }
+
+        [HttpPut("word")]
+        [Authorization(Privilege.ItemAdd)]
+        public async Task<Item> AddWordItem([FromBody] AddWordItemParams ps)
+        {
+            return await _wordItemService.AddWordItemAsync(ps);
+        }
+
+        [HttpPost("word/{itemKey}")]
+        [Authorization(Privilege.ItemEdit)]
+        public async Task<Item> UpdateWordItem([FromRoute] string itemKey, [FromBody] UpdateWordItemParams ps)
+        {
+            ps.ItemKey = itemKey;
+            return await _wordItemService.UpdateWordItemAsync(ps);
+        }
+
+        [HttpDelete("word/{itemKey}")]
+        [Authorization(Privilege.ItemDelete)]
+        public async Task DeleteWordItem([FromRoute] string itemKey)
+        {
+            await _wordItemService.DeleteWordItemAsync(itemKey);
+        }
     }
 }

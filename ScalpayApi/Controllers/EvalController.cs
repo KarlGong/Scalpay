@@ -9,34 +9,58 @@ using ScalpayApi.Services.SExpressions;
 namespace ScalpayApi.Controllers
 {
     [Route("api/eval")]
-    public class EvalController: Controller
+    public class EvalController : Controller
     {
         private readonly IConfigItemService _configItemService;
+        private readonly IWordItemService _wordItemService;
         private readonly IExpressionService _expService;
 
-        public EvalController(IConfigItemService configItemService, IExpressionService expService)
+        public EvalController(IConfigItemService configItemService, IWordItemService wordItemService,
+            IExpressionService expService)
         {
             _configItemService = configItemService;
+            _wordItemService = wordItemService;
             _expService = expService;
         }
-        
+
         [HttpPost("config/{itemKey}")]
-        public async Task<SData> EvalItem([FromRoute] string itemKey, [FromBody] Dictionary<string, JToken> parameters)
+        public async Task<SData> EvalConfigItem([FromRoute] string itemKey, [FromBody] Dictionary<string, JToken> parameters)
         {
             var item = await _configItemService.GetConfigItemAsync(itemKey);
-            
+
             var variables = new Dictionary<string, SData>();
 
             foreach (var pair in parameters)
             {
                 var parameterInfo = item.ParameterInfos.SingleOrDefault(p => p.Name == pair.Key);
-                
-                if (parameterInfo == null) continue; // data type not found, since paramter is not decalred in parameter list.
+
+                if (parameterInfo == null)
+                    continue; // data type not found, since paramter is not decalred in parameter list.
 
                 variables.Add(pair.Key, await _expService.ConvertToSDataAsync(pair.Value, parameterInfo.DataType));
             }
-            
+
             return await _configItemService.EvalConfigItem(item, variables);
+        }
+
+        [HttpGet("config/{itemKey}")]
+        public async Task<SData> EvalConfigPropertyItem([FromRoute] string itemKey)
+        {
+            var item = await _configItemService.GetConfigItemAsync(itemKey);
+
+            return await _configItemService.EvalConfigItem(item, new Dictionary<string, SData>());
+        }
+
+        [HttpGet("word/{itemKey}")]
+        public async Task<string> EvalWordItem([FromRoute] string itemKey, [FromQuery] string lng)
+        {
+            return await _wordItemService.EvalWordItemAsync(itemKey, lng);
+        }
+        
+        [HttpPost("word")]
+        public async Task<Dictionary<string, string>> EvalWordItems([FromBody] List<string> itemKeys, [FromQuery] string lng)
+        {
+            return await _wordItemService.EvalWordItemsAsync(itemKeys, lng);
         }
     }
 }

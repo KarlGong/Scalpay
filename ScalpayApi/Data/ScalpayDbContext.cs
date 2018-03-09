@@ -9,13 +9,18 @@ namespace ScalpayApi.Data
         {
             
         }
-        
-        public DbSet<Project> Projects { get; set; }
-        public DbSet<Item> Items { get; set; }
-        public DbSet<ConfigItem> ConfigItems { get; set; }
-        public DbSet<WordItem> WordItems { get; set; }
+
         public DbSet<User> Users { get; set; }
         
+        public DbSet<Project> Projects { get; set; }
+        
+        public DbSet<Item> Items { get; set; }
+        
+        public DbSet<ConfigItem> ConfigItems { get; set; }
+        
+        public DbSet<WordItem> WordItems { get; set; }
+        public DbSet<WordInfo> WordInfos { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserConfiguration());
