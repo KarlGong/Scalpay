@@ -90,8 +90,8 @@ export default class ViewConfigItemPage extends Component {
                                 <FieldsViewer
                                     fields={this.item.parameterInfos.map(info => [info.name, info.dataType])}/>
                                 <FieldsViewer fields={[[
-                                    <b><i>Result Data Type</i></b>,
-                                    <b><i>{this.item.resultDataType}</i></b>
+                                    <b>Result Data Type</b>,
+                                    <b>{this.item.resultDataType}</b>
                                 ]]}/>
                             </Block>
                             : null
