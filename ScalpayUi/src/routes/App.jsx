@@ -10,7 +10,7 @@ export default class App extends Component {
     render = () => {
         return <Layout>
             <SHeader/>
-            <Layout style={{minHeight: "calc(100% - 88px)", display: "flex", alignItems: "center"}}>
+            <Layout style={{minHeight: "calc(100% - 96px)"}}>
                 {this.props.children}
             </Layout>
             <SFooter/>
