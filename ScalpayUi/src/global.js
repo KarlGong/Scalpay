@@ -1,8 +1,19 @@
 import {browserHistory} from "react-router";
 import {notification} from "antd";
 import axios from "axios";
+import auth from "~/utils/auth";
 
 const history = browserHistory;
+
+axios.interceptors.request.use(
+    config => {
+        if (auth.user) {
+            config.headers["Scalpay-Api-Key"] = auth.user.apiKey;
+        }
+        return config;
+    },
+    error => Promise.reject(error)
+);
 
 axios.interceptors.response.use(
     response => response,

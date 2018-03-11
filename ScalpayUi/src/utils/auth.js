@@ -29,16 +29,4 @@ class Auth {
     }
 }
 
-const auth = new Auth();
-
-axios.interceptors.request.use(
-    config => {
-        if (auth.user) {
-            config.headers["Scalpay-Api-Key"] = auth.user.apiKey;
-        }
-        return config;
-    },
-    error => Promise.reject(error)
-);
-
-export default auth;
+export default new Auth();
