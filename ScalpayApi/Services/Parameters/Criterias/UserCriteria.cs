@@ -14,15 +14,15 @@ namespace ScalpayApi.Services.Parameters.Criterias
 
         public string SearchText { get; set; }
 
-        public override bool IsMatched(User user)
+        public override Expression<Func<User, bool>> ToWherePredicate()
         {
-            return (ApiKey == null || ApiKey == user.ApiKey)
-                   && (Username == null || Username == user.Username)
-                   && (Password == null || Password == user.Password)
-                   && (SearchText == null
-                       || user.Username.Contains(SearchText)
-                       || user.FullName.Contains(SearchText)
-                       || user.Email.Contains(SearchText));
+            return u => (ApiKey == null || ApiKey == u.ApiKey)
+                        && (Username == null || Username == u.Username)
+                        && (Password == null || Password == u.Password)
+                        && (SearchText == null
+                            || u.Username.Contains(SearchText)
+                            || u.FullName.Contains(SearchText)
+                            || u.Email.Contains(SearchText));
         }
     }
 }

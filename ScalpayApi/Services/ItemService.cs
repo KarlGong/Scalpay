@@ -14,7 +14,7 @@ namespace ScalpayApi.Services
 {
     public interface IItemService
     {
-        Task<List<Item>> GetItemsAsync(GetItemsParams ps);
+        Task<List<Item>> GetItemsAsync(ItemCriteria criteria);
 
         Task<int> GetItemsCountAsync(ItemCriteria criteria);
     }
@@ -28,10 +28,10 @@ namespace ScalpayApi.Services
             _context = context;
         }
 
-        public async Task<List<Item>> GetItemsAsync(GetItemsParams ps)
+        public async Task<List<Item>> GetItemsAsync(ItemCriteria criteria)
         {
-            return await _context.Items.AsNoTracking().Include(i => i.Project).Where(ps.Criteria)
-                .WithPaging(ps.Pagination).ToListAsync();
+            return await _context.Items.AsNoTracking().Include(i => i.Project).WithCriteria(criteria)
+                .ToListAsync();
         }
 
         public async Task<int> GetItemsCountAsync(ItemCriteria criteria)

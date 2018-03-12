@@ -17,7 +17,11 @@ export default class ProjectsPage extends Component {
 
     @observable loading = false;
     @observable projects = [];
-    searchText = null;
+    criteria = {
+        searchText: null,
+        pageIndex: 0,
+        pageSize: 20
+    };
 
     componentDidMount = () => {
         this.searchProjects();
@@ -36,7 +40,7 @@ export default class ProjectsPage extends Component {
                 dataSource={this.projects}
                 header={<span>
                             <Input style={{width: "250px"}} placeholder="Search by key/name/description"
-                                   onChange={(e) => this.searchText = e.target.value || null}
+                                   onChange={(e) => this.criteria.searchText = e.target.value || null}
                                    onPressEnter={(e) => this.searchProjects()}/>
                             <Button style={{marginLeft: "10px"}} type="primary"
                                     onClick={() => this.searchProjects()}>Search</Button>
@@ -68,9 +72,7 @@ export default class ProjectsPage extends Component {
     searchProjects = () => {
         this.loading = true;
         axios.get("/api/projects", {
-            params: {
-                searchText: this.searchText
-            }
+            params: this.criteria
         })
             .then(response => this.projects = response.data.data)
             .finally(() => this.loading = false);

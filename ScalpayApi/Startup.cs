@@ -14,6 +14,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using ScalpayApi.Data;
 using ScalpayApi.Enums;
 using ScalpayApi.Models;
@@ -41,6 +42,7 @@ namespace ScalpayApi
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                     options.SerializerSettings.Converters.Add(new StringEnumConverter(false));
+                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 }
             );
 
@@ -92,6 +94,7 @@ namespace ScalpayApi
                 settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 settings.NullValueHandling = NullValueHandling.Ignore;
                 settings.Converters.Add(new StringEnumConverter(false));
+                settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 return settings;
             });
             

@@ -21,10 +21,12 @@ export default class ItemsPage extends Component {
 
     @observable loading = false;
     @observable items = [];
-    searchParams = {
+    criteria = {
         projectKey: null,
         itemType: null,
-        searchText: null
+        searchText: null,
+        pageIndex: 0,
+        pageSize: 20
     };
 
     componentDidMount = () => {
@@ -47,15 +49,15 @@ export default class ItemsPage extends Component {
                     <ProjectSelect
                         allowClear
                         className="filter select"
-                        onChange={(value) => this.searchParams.projectKey = value}/>
+                        onChange={(value) => this.criteria.projectKey = value || null}/>
                     <ItemTypeSelect
                         allowClear
                         className="filter select"
-                        onChange={(value) => this.searchParams.itemType = value}/>
+                        onChange={(value) => this.criteria.itemType = value || null}/>
                     <Input
                         className="filter input"
                         placeholder="Search by item key/name/description"
-                        onChange={(e) => this.searchParams.searchText = e.target.value || null}/>
+                        onChange={(e) => this.criteria.searchText = e.target.value || null}/>
                     <Button type="primary" onClick={() => this.searchItems()}>Search</Button>
                 </div>}
                 renderItem={item => {
@@ -81,10 +83,7 @@ export default class ItemsPage extends Component {
     searchItems = () => {
         this.loading = true;
         axios.get("/api/items", {
-            params: {
-                criteria: this.searchParams,
-                pagination: {pageIndex: 0, pageSize: 10}
-            }
+            params: this.criteria
         })
             .then(response => this.items = response.data.data)
             .finally(() => this.loading = false);

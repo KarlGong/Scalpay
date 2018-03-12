@@ -22,12 +22,12 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpGet]
-        public async Task<Result<List<Project>>> GetProjects([FromQuery] GetProjectsParams ps)
+        public async Task<Result<List<Project>>> GetProjects([FromQuery] ProjectCriteria criteria)
         {
             return new Result<List<Project>>()
             {
-                Data = await _service.GetProjectsAsync(ps),
-                TotalCount = await _service.GetProjectsCountAsync(ps.Criteria)
+                Data = await _service.GetProjectsAsync(criteria),
+                TotalCount = await _service.GetProjectsCountAsync(criteria)
             };
         }
 

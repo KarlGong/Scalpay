@@ -20,7 +20,7 @@ namespace ScalpayApi.Services
 
         Task<User> GetUserByApiKeyAsync(string apiKey);
 
-        Task<List<User>> GetUsersAsync(GetUsersParams ps);
+        Task<List<User>> GetUsersAsync(UserCriteria criteria);
 
         Task<int> GetUsersCountAsync(UserCriteria criteria);
 
@@ -48,7 +48,7 @@ namespace ScalpayApi.Services
             var user = await _context.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Username == username);
             if (user == null)
             {
-                throw new UserNotFoundException($"User with username {username} is not found.");
+                throw new ScalpayException(StatusCode.UserNotFound, $"User with username {username} is not found.");
             }
 
             return user;
@@ -60,7 +60,7 @@ namespace ScalpayApi.Services
                 .SingleOrDefaultAsync(u => u.Username == username && u.Password == password);
             if (user == null)
             {
-                throw new IncorrectUsernameOrPassword("The username or password is incorrect.");
+                throw new ScalpayException(StatusCode.IncorrectUsernameOrPassword, "The username or password is incorrect.");
             }
 
             return user;
@@ -71,15 +71,15 @@ namespace ScalpayApi.Services
             var user = await _context.Users.AsNoTracking().SingleOrDefaultAsync(u => u.ApiKey == apiKey);
             if (user == null)
             {
-                throw new UserNotFoundException($"User with api key {apiKey} is not found.");
+                throw new ScalpayException(StatusCode.UserNotFound, $"User with api key {apiKey} is not found.");
             }
 
             return user;
         }
 
-        public async Task<List<User>> GetUsersAsync(GetUsersParams ps)
+        public async Task<List<User>> GetUsersAsync(UserCriteria criteria)
         {
-            return await _context.Users.AsNoTracking().Where(ps.Criteria).WithPaging(ps.Pagination).ToListAsync();
+            return await _context.Users.AsNoTracking().WithCriteria(criteria).ToListAsync();
         }
 
         public async Task<int> GetUsersCountAsync(UserCriteria criteria)
@@ -89,6 +89,13 @@ namespace ScalpayApi.Services
 
         public async Task<User> AddUserAsync(AddUserParams ps)
         {
+            var oldUser = await _context.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Username == ps.Username);
+
+            if (oldUser != null)
+            {
+                throw new ScalpayException(StatusCode.UserExisted, $"User with username {ps.Username} is already existed.");
+            }
+
             var user = _mapper.Map<User>(ps);
 
             user.Password = "1";

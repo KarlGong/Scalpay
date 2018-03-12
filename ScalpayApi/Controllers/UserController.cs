@@ -25,12 +25,12 @@ namespace ScalpayApi.Controllers
 
         [HttpGet]
         [Authorization(Privilege.UserManage)]
-        public async Task<Result<List<UserDTO>>> GetUsers([FromQuery] GetUsersParams ps)
+        public async Task<Result<List<UserDTO>>> GetUsers([FromQuery] UserCriteria criteria)
         {
             return new Result<List<UserDTO>>()
             {
-                Data = _mapper.Map<List<UserDTO>>(await _service.GetUsersAsync(ps)),
-                TotalCount = await _service.GetUsersCountAsync(ps.Criteria)
+                Data = _mapper.Map<List<UserDTO>>(await _service.GetUsersAsync(criteria)),
+                TotalCount = await _service.GetUsersCountAsync(criteria)
             };
         }
 

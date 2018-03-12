@@ -42,7 +42,7 @@ namespace ScalpayApi.Services
                 .SingleOrDefaultAsync(i => i.ItemKey == itemKey);
             if (item == null)
             {
-                throw new ItemNotFoundException($"Word item with item key {itemKey} is not found");
+                throw new ScalpayException(StatusCode.ItemNotFound, $"Word item with item key {itemKey} is not found");
             }
 
             return item;

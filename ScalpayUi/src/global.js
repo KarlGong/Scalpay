@@ -19,7 +19,7 @@ axios.interceptors.response.use(
     response => {
         if (response.data.statusCode){
             notification.error({
-                message: "Error code: " + response.data.statusCode,
+                message: "Error code " + response.data.statusCode,
                 description: response.data.message,
                 duration: 0,
             });

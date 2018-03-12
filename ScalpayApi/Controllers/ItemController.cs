@@ -26,12 +26,12 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpGet]
-        public async Task<Result<List<Item>>> GetItems([FromQuery] GetItemsParams ps)
+        public async Task<Result<List<Item>>> GetItems([FromQuery] ItemCriteria criteria)
         {
             return new Result<List<Item>>()
             {
-                Data = await _itemService.GetItemsAsync(ps),
-                TotalCount = await _itemService.GetItemsCountAsync(ps.Criteria)
+                Data = await _itemService.GetItemsAsync(criteria),
+                TotalCount = await _itemService.GetItemsCountAsync(criteria)
             };
         }
 

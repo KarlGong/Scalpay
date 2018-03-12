@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
@@ -18,7 +19,7 @@ namespace ScalpayApi
     public class AuthenticationMiddleware
     {
         private readonly RequestDelegate _next;
-        
+
         public AuthenticationMiddleware(RequestDelegate next)
         {
             _next = next;
@@ -40,9 +41,8 @@ namespace ScalpayApi
                 {
                     user = await userService.GetUserByApiKeyAsync(apiKeys[0]);
                 }
-                catch (UserNotFoundException e)
+                catch (ScalpayException e)
                 {
-                    
                 }
 
                 if (user != null)
@@ -60,6 +60,7 @@ namespace ScalpayApi
                     return;
                 }
             }
+
             context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
             context.Response.ContentType = "text/plain";
             await context.Response.WriteAsync("You cannot perform this action, please sign in.");

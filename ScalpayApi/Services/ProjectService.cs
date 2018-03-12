@@ -16,7 +16,7 @@ namespace ScalpayApi.Services
     {
         Task<Project> GetProjectAsync(string projectKey);
 
-        Task<List<Project>> GetProjectsAsync(GetProjectsParams ps);
+        Task<List<Project>> GetProjectsAsync(ProjectCriteria criteria);
 
         Task<int> GetProjectsCountAsync(ProjectCriteria criteria);
 
@@ -43,15 +43,15 @@ namespace ScalpayApi.Services
             var project = await _context.Projects.AsNoTracking().SingleOrDefaultAsync(p => p.ProjectKey == projectKey);
             if (project == null)
             {
-                throw new ProjectNotFoundException($"Project with project key {projectKey} is not found.");
+                throw new ScalpayException(StatusCode.ProjectNotFound, $"Project with project key {projectKey} is not found.");
             }
 
             return project;
         }
 
-        public async Task<List<Project>> GetProjectsAsync(GetProjectsParams ps)
+        public async Task<List<Project>> GetProjectsAsync(ProjectCriteria criteria)
         {
-            return await _context.Projects.AsNoTracking().Where(ps.Criteria).WithPaging(ps.Pagination).ToListAsync();
+            return await _context.Projects.AsNoTracking().WithCriteria(criteria).ToListAsync();
         }
 
         public async Task<int> GetProjectsCountAsync(ProjectCriteria criteria)
@@ -61,6 +61,14 @@ namespace ScalpayApi.Services
 
         public async Task<Project> AddProjectAsync(AddProjectParams ps)
         {
+            var oldProject = await _context.Projects.AsNoTracking()
+                .SingleOrDefaultAsync(p => p.ProjectKey == ps.ProjectKey);
+
+            if (oldProject != null)
+            {
+                throw new ScalpayException(StatusCode.ProjectExisted, $"Project with project key {ps.ProjectKey} is already existed.");
+            }
+
             var project = _mapper.Map<Project>(ps);
 
             await _context.Projects.AddAsync(project);

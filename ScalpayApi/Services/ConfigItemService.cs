@@ -43,7 +43,7 @@ namespace ScalpayApi.Services
                 .SingleOrDefaultAsync(i => i.ItemKey == itemKey);
             if (item == null)
             {
-                throw new ItemNotFoundException($"Config item with item key {itemKey} is not found.");
+                throw new ScalpayException(StatusCode.ItemNotFound, $"Config item with item key {itemKey} is not found.");
             }
 
             item.Rules = item.Rules.OrderBy(r => r.Order).ToList();
@@ -53,6 +53,13 @@ namespace ScalpayApi.Services
 
         public async Task<ConfigItem> AddConfigItemAsync(AddConfigItemParams ps)
         {
+            var oldItem = await _context.ConfigItems.AsNoTracking().SingleOrDefaultAsync(i => i.ItemKey == ps.ItemKey);
+
+            if (oldItem != null)
+            {
+                throw new ScalpayException(StatusCode.ItemExisted, $"Config item with item key {ps.ItemKey} is already existed.");
+            }
+
             var item = _mapper.Map<ConfigItem>(ps);
             
             var order = 0;
