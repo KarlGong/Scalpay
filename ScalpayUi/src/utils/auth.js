@@ -14,7 +14,7 @@ class Auth {
             username,
             password
         }).then(response => {
-            this.user = response.data;
+            this.user = response.data.data;
             localStorage.setItem("Scalpay-User", JSON.stringify(this.user));
         });
     };

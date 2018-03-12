@@ -13,7 +13,7 @@ namespace ScalpayApi.Services.Parameters
         // Func
         public string FuncName { get; set; }
         
-        public List<SExpression> FuncArgs { get; set; }
+        public List<SExpression> FuncArgs { get; set; } = new List<SExpression>();
         
         // Value
         public JToken Value { get; set; }

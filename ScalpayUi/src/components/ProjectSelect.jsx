@@ -63,7 +63,7 @@ export default class ProjectSelect extends Component {
         })
             .then(response => {
                 if (searchId === this.lastSearchId) {
-                    this.projects = response.data
+                    this.projects = response.data.data
                 }
             })
             .finally(() => this.loading = false);

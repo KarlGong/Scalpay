@@ -60,7 +60,7 @@ export default class ViewProjectPage extends Component {
     loadProject = () => {
         this.loading = true;
         axios.get("/api/projects/" + this.props.params.projectKey)
-            .then((res) => this.project = res.data)
+            .then((res) => this.project = res.data.data)
             .finally(() => this.loading = false);
     };
 

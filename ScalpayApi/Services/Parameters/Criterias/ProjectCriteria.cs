@@ -10,14 +10,13 @@ namespace ScalpayApi.Services.Parameters.Criterias
 
         public string SearchText { get; set; }
 
-        public override Expression<Func<Project, bool>> ToWherePredicate()
+        public override bool IsMatched(Project project)
         {
-            return p =>
-                (ProjectKey == null || ProjectKey == p.ProjectKey)
-                && (SearchText == null
-                    || p.ProjectKey.Contains(SearchText)
-                    || p.Name.Contains(SearchText)
-                    || p.Description.Contains(SearchText));
+            return (ProjectKey == null || ProjectKey == project.ProjectKey)
+                   && (SearchText == null
+                       || project.ProjectKey.Contains(SearchText)
+                       || project.Name.Contains(SearchText)
+                       || project.Description.Contains(SearchText));
         }
     }
 }

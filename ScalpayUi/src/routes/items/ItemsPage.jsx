@@ -81,9 +81,12 @@ export default class ItemsPage extends Component {
     searchItems = () => {
         this.loading = true;
         axios.get("/api/items", {
-            params: this.searchParams
+            params: {
+                criteria: this.searchParams,
+                pagination: {pageIndex: 0, pageSize: 10}
+            }
         })
-            .then(response => this.items = response.data)
+            .then(response => this.items = response.data.data)
             .finally(() => this.loading = false);
     };
 

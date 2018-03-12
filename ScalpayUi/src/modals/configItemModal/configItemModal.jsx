@@ -31,14 +31,14 @@ function add(onSuccess) {
 }
 
 function edit(item, onSuccess) {
-    const hide = message.loading("Loading item...", 0);
+    const hide = message.loading("Loading config item...", 0);
 
     const target = document.createElement("div");
     document.body.appendChild(target);
 
     axios.get("/api/items/config/" + item.itemKey)
         .then(res =>
-            render(<EditConfigItemModal item={res.data} onSuccess={onSuccess} afterClose={() => {
+            render(<EditConfigItemModal item={res.data.data} onSuccess={onSuccess} afterClose={() => {
                 unmountComponentAtNode(target);
                 target.remove()
             }}/>, target))
@@ -209,7 +209,7 @@ class EditConfigItemModal extends Component {
                 this.loading = true;
                 axios.put("/api/items/config", this.item)
                     .then(res => {
-                        let item = res.data;
+                        let item = res.data.data;
                         this.loading = false;
                         this.visible = false;
                         message.success(<span>Item <ItemInfo item={item}/> is added successfully!</span>);
@@ -221,7 +221,7 @@ class EditConfigItemModal extends Component {
                 this.loading = true;
                 axios.post("/api/items/config/" + this.item.itemKey, this.item)
                     .then(res => {
-                        let item = res.data;
+                        let item = res.data.data;
                         this.loading = false;
                         this.visible = false;
                         message.success(<span>Item <ItemInfo item={item}/> is updated successfully!</span>);

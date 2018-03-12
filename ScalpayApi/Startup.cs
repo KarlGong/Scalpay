@@ -73,10 +73,10 @@ namespace ScalpayApi
             InitApplication(serviceProvider);
             
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            
+            app.UseScalpayException();
 
             app.UseScalpayAuthentication();
-
-            app.UseDeveloperExceptionPage();
 
             app.UseStaticFiles();
 

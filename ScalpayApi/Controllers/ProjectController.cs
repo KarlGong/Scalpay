@@ -22,37 +22,51 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpGet]
-        public async Task<List<Project>> GetProjects([FromQuery] ProjectCriteria criteria)
+        public async Task<Result<List<Project>>> GetProjects([FromQuery] GetProjectsParams ps)
         {
-            return await _service.GetProjectsAsync(criteria);
+            return new Result<List<Project>>()
+            {
+                Data = await _service.GetProjectsAsync(ps),
+                TotalCount = await _service.GetProjectsCountAsync(ps.Criteria)
+            };
         }
 
         [HttpGet("{projectKey}")]
-        public async Task<Project> GetProject([FromRoute] string projectKey)
+        public async Task<Result<Project>> GetProject([FromRoute] string projectKey)
         {
-            return await _service.GetProjectAsync(projectKey);
+            return new Result<Project>()
+            {
+                Data = await _service.GetProjectAsync(projectKey)
+            };
         }
 
         [HttpPut]
         [Authorization(Privilege.ProjectAdd)]
-        public async Task<Project> AddProject([FromBody] AddProjectParams ps)
+        public async Task<Result<Project>> AddProject([FromBody] AddProjectParams ps)
         {
-            return await _service.AddProjectAsync(ps);
+            return new Result<Project>()
+            {
+                Data = await _service.AddProjectAsync(ps)
+            };
         }
 
         [HttpPost("{projectKey}")]
         [Authorization(Privilege.ProjectEdit)]
-        public async Task<Project> UpdateProject([FromRoute] string projectKey, [FromBody] UpdateProjectParams ps)
+        public async Task<Result<Project>> UpdateProject([FromRoute] string projectKey, [FromBody] UpdateProjectParams ps)
         {
             ps.ProjectKey = projectKey;
-            return await _service.UpdateProjectAsync(ps);
+            return new Result<Project>()
+            {
+                Data = await _service.UpdateProjectAsync(ps)
+            };
         }
 
         [HttpDelete("{projectKey}")]
         [Authorization(Privilege.ProjectDelete)]
-        public async Task DeleteProject([FromRoute] string projectKey)
+        public async Task<Result> DeleteProject([FromRoute] string projectKey)
         {
             await _service.DeleteProjectAsync(projectKey);
+            return new Result();
         }
     }
 }

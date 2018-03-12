@@ -29,7 +29,7 @@ namespace ScalpayApi
                 {
                     var username = context.HttpContext.User.FindFirstValue("Username");
 
-                    var user = await _service.GetUserAsync(username);
+                    var user = await _service.GetUserByUsernameAsync(username);
 
                     if (user.Privileges.Intersect(attribute.Privileges).Count() != attribute.Privileges.Count())
                     {

@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ScalpayApi.Data;
 using ScalpayApi.Models;
+using ScalpayApi.Services.Exceptions;
 using ScalpayApi.Services.Parameters;
 using ScalpayApi.Services.Parameters.Criterias;
 
@@ -13,15 +14,15 @@ namespace ScalpayApi.Services
 {
     public interface IUserService
     {
-        Task<User> GetUserAsync(UserCriteria criteria);
+        Task<User> GetUserByUsernameAsync(string username);
 
-        Task<User> GetUserAsync(string username);
+        Task<User> GetUserByUsernamePasswordAsync(string username, string password);
 
-        Task<List<User>> GetUsersAsync(UserCriteria criteria);
+        Task<User> GetUserByApiKeyAsync(string apiKey);
 
-        Task<List<User>> GetUsersAsync();
+        Task<List<User>> GetUsersAsync(GetUsersParams ps);
 
-        Task<User> GenerateNewApiKeyAsync(User user);
+        Task<int> GetUsersCountAsync(UserCriteria criteria);
 
         Task<User> AddUserAsync(AddUserParams ps);
 
@@ -42,36 +43,48 @@ namespace ScalpayApi.Services
             _mapper = mapper;
         }
 
-        public async Task<User> GetUserAsync(UserCriteria criteria)
+        public async Task<User> GetUserByUsernameAsync(string username)
         {
-            return await _context.Users.AsNoTracking().SingleOrDefaultAsync(criteria.ToWherePredicate());
-        }
-
-        public async Task<User> GetUserAsync(string username)
-        {
-            return await GetUserAsync(new UserCriteria()
+            var user = await _context.Users.AsNoTracking().SingleOrDefaultAsync(u => u.Username == username);
+            if (user == null)
             {
-                Username = username
-            });
-        }
-
-        public async Task<List<User>> GetUsersAsync(UserCriteria criteria)
-        {
-            return await _context.Users.AsNoTracking().Where(criteria.ToWherePredicate()).ToListAsync();
-        }
-
-        public async Task<List<User>> GetUsersAsync()
-        {
-            return await _context.Users.AsNoTracking().ToListAsync();
-        }
-
-        public async Task<User> GenerateNewApiKeyAsync(User user)
-        {
-            user.ApiKey = Guid.NewGuid().ToString();
-
-            await _context.SaveChangesAsync();
+                throw new UserNotFoundException($"User with username {username} is not found.");
+            }
 
             return user;
+        }
+
+        public async Task<User> GetUserByUsernamePasswordAsync(string username, string password)
+        {
+            var user = await _context.Users.AsNoTracking()
+                .SingleOrDefaultAsync(u => u.Username == username && u.Password == password);
+            if (user == null)
+            {
+                throw new IncorrectUsernameOrPassword("The username or password is incorrect.");
+            }
+
+            return user;
+        }
+
+        public async Task<User> GetUserByApiKeyAsync(string apiKey)
+        {
+            var user = await _context.Users.AsNoTracking().SingleOrDefaultAsync(u => u.ApiKey == apiKey);
+            if (user == null)
+            {
+                throw new UserNotFoundException($"User with api key {apiKey} is not found.");
+            }
+
+            return user;
+        }
+
+        public async Task<List<User>> GetUsersAsync(GetUsersParams ps)
+        {
+            return await _context.Users.AsNoTracking().Where(ps.Criteria).WithPaging(ps.Pagination).ToListAsync();
+        }
+
+        public async Task<int> GetUsersCountAsync(UserCriteria criteria)
+        {
+            return await _context.Users.AsNoTracking().CountAsync(criteria);
         }
 
         public async Task<User> AddUserAsync(AddUserParams ps)
@@ -91,7 +104,7 @@ namespace ScalpayApi.Services
 
         public async Task<User> UpdateUserAsync(UpdateUserParams ps)
         {
-            var user = await GetUserAsync(ps.Username);
+            var user = await GetUserByUsernameAsync(ps.Username);
 
             _context.Users.Attach(user);
 
@@ -104,7 +117,7 @@ namespace ScalpayApi.Services
 
         public async Task DeleteUserAsync(string username)
         {
-            _context.Users.Remove(await GetUserAsync(username));
+            _context.Users.Remove(await GetUserByUsernameAsync(username));
 
             await _context.SaveChangesAsync();
         }

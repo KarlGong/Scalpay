@@ -129,7 +129,7 @@ export default class ViewConfigItemPage extends Component {
         this.loading = true;
         axios.get("/api/items/config/" + this.props.params.itemKey)
             .then((res) => {
-                let item = res.data;
+                let item = res.data.data;
                 item.rules.map(r => r.key = guid());
                 this.item = item;
             })

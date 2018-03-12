@@ -35,24 +35,13 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpPost("signIn")]
-        public async Task<UserDTO> SignIn([FromBody] SignInParams ps)
+        public async Task<Result<UserDTO>> SignIn([FromBody] SignInParams ps)
         {
-            var user = await _service.GetUserAsync(new UserCriteria()
+            var user = await _service.GetUserByUsernamePasswordAsync(ps.Username, ps.Password);
+            return new Result<UserDTO>()
             {
-                Username = ps.Username,
-                Password = ps.Password
-            });
-
-            return _mapper.Map<UserDTO>(user);
-        }
-
-        [HttpGet("newApiKey")]
-        public async Task<UserDTO> GenerateNewKey()
-        {
-            var user = await _service.GenerateNewApiKeyAsync(
-                await _service.GetUserAsync(_httpContext.User.FindFirstValue("Username")));
-
-            return _mapper.Map<UserDTO>(user);
+                Data = _mapper.Map<UserDTO>(user)
+            };
         }
     }
 }

@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ScalpayApi.Data;
 using ScalpayApi.Models;
+using ScalpayApi.Services.Exceptions;
 using ScalpayApi.Services.Parameters;
 
 namespace ScalpayApi.Services
@@ -37,8 +38,14 @@ namespace ScalpayApi.Services
 
         public async Task<WordItem> GetWordItemAsync(string itemKey)
         {
-            return await _context.WordItems.AsNoTracking().Include(i => i.Project).Include(i => i.WordInfos)
+            var item = await _context.WordItems.AsNoTracking().Include(i => i.Project).Include(i => i.WordInfos)
                 .SingleOrDefaultAsync(i => i.ItemKey == itemKey);
+            if (item == null)
+            {
+                throw new ItemNotFoundException($"Word item with item key {itemKey} is not found");
+            }
+
+            return item;
         }
 
         public async Task<WordItem> AddWordItemAsync(AddWordItemParams ps)

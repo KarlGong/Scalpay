@@ -16,7 +16,17 @@ axios.interceptors.request.use(
 );
 
 axios.interceptors.response.use(
-    response => response,
+    response => {
+        if (response.data.statusCode){
+            notification.error({
+                message: "Error code: " + response.data.statusCode,
+                description: response.data.message,
+                duration: 0,
+            });
+            return Promise.reject(response);
+        }
+        return response;
+    },
     error => {
         notification.error({
             message: error.message,

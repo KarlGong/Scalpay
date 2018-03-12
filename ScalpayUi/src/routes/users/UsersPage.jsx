@@ -64,7 +64,7 @@ export default class UsersPage extends Component {
                 searchText: this.searchText
             }
         })
-            .then(response => this.users = response.data)
+            .then(response => this.users = response.data.data)
             .finally(() => this.loading = false);
     };
 

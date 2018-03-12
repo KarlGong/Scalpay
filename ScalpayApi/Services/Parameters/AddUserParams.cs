@@ -11,6 +11,6 @@ namespace ScalpayApi.Services.Parameters
 
         public string FullName { get; set; }
 
-        public List<Privilege> Privileges { get; set; }
+        public List<Privilege> Privileges { get; set; } = new List<Privilege>();
     }
 }

@@ -27,7 +27,7 @@ function edit(project, onSuccess) {
 
     axios.get("/api/projects/" + project.projectKey)
         .then(res =>
-            render(<EditProjectModal project={res.data} onSuccess={onSuccess} afterClose={() => {
+            render(<EditProjectModal project={res.data.data} onSuccess={onSuccess} afterClose={() => {
                 unmountComponentAtNode(target);
                 target.remove()
             }}/>, target))
@@ -127,7 +127,7 @@ class EditProjectModal extends Component {
                     this.loading = true;
                     axios.put("/api/projects", this.project)
                         .then(res => {
-                            let project = res.data;
+                            let project = res.data.data;
                             this.loading = false;
                             this.visible = false;
                             message.success(<span>
@@ -143,7 +143,7 @@ class EditProjectModal extends Component {
                     this.loading = true;
                     axios.post("/api/projects/" + this.project.projectKey, this.project)
                         .then(res => {
-                            let project = res.data;
+                            let project = res.data.data;
                             this.loading = false;
                             this.visible = false;
                             message.success(<span>

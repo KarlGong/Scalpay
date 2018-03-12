@@ -12,7 +12,7 @@ using ScalpayApi.Services.Parameters.Criterias;
 namespace ScalpayApi.Controllers
 {
     [Route("api/users")]
-    public class UserController: Controller
+    public class UserController : Controller
     {
         private readonly IUserService _service;
         private readonly IMapper _mapper;
@@ -25,43 +25,57 @@ namespace ScalpayApi.Controllers
 
         [HttpGet]
         [Authorization(Privilege.UserManage)]
-        public async Task<List<UserDTO>> GetUsers([FromQuery] UserCriteria criteria)
+        public async Task<Result<List<UserDTO>>> GetUsers([FromQuery] GetUsersParams ps)
         {
-            return _mapper.Map<List<UserDTO>>(await _service.GetUsersAsync(criteria));
+            return new Result<List<UserDTO>>()
+            {
+                Data = _mapper.Map<List<UserDTO>>(await _service.GetUsersAsync(ps)),
+                TotalCount = await _service.GetUsersCountAsync(ps.Criteria)
+            };
         }
 
         [HttpGet("{username}")]
-        public async Task<UserDTO> GetUser([FromRoute] string username)
+        public async Task<Result<UserDTO>> GetUser([FromRoute] string username)
         {
-            var user = await _service.GetUserAsync(username);
+            var user = await _service.GetUserByUsernameAsync(username);
 
-            return _mapper.Map<UserDTO>(user);
+            return new Result<UserDTO>()
+            {
+                Data = _mapper.Map<UserDTO>(user)
+            };
         }
 
         [HttpPut]
         [Authorization(Privilege.UserManage)]
-        public async Task<UserDTO> AddUser([FromBody] AddUserParams ps)
+        public async Task<Result<UserDTO>> AddUser([FromBody] AddUserParams ps)
         {
             var user = await _service.AddUserAsync(ps);
 
-            return _mapper.Map<UserDTO>(user);
+            return new Result<UserDTO>()
+            {
+                Data = _mapper.Map<UserDTO>(user)
+            };
         }
 
         [HttpPost("{username}")]
         [Authorization(Privilege.UserManage)]
-        public async Task<UserDTO> UpdateUser([FromRoute] string username, [FromBody] UpdateUserParams ps)
+        public async Task<Result<UserDTO>> UpdateUser([FromRoute] string username, [FromBody] UpdateUserParams ps)
         {
             ps.Username = username;
             var user = await _service.UpdateUserAsync(ps);
 
-            return _mapper.Map<UserDTO>(user);
+            return new Result<UserDTO>()
+            {
+                Data = _mapper.Map<UserDTO>(user)
+            };
         }
 
         [HttpDelete("{username}")]
         [Authorization(Privilege.UserManage)]
-        public async Task DeleteUser([FromRoute] string username)
+        public async Task<Result> DeleteUser([FromRoute] string username)
         {
             await _service.DeleteUserAsync(username);
+            return new Result();
         }
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using ScalpayApi.Models;
 using ScalpayApi.Services;
 using Microsoft.AspNetCore.Authentication;
+using ScalpayApi.Services.Exceptions;
 using ScalpayApi.Services.Parameters;
 using ScalpayApi.Services.Parameters.Criterias;
 
@@ -34,10 +35,15 @@ namespace ScalpayApi
             context.Request.Headers.TryGetValue("Scalpay-Api-Key", out var apiKeys);
             if (apiKeys.Any())
             {
-                var user = await userService.GetUserAsync(new UserCriteria()
+                User user = null;
+                try
                 {
-                    ApiKey = apiKeys[0]
-                });
+                    user = await userService.GetUserByApiKeyAsync(apiKeys[0]);
+                }
+                catch (UserNotFoundException e)
+                {
+                    
+                }
 
                 if (user != null)
                 {

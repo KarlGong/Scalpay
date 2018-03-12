@@ -1,36 +1,41 @@
-import {Input, Icon, Form, Checkbox, Row, Col, Divider, Modal, message} from "antd";
+import {Input, Icon, Modal, Form, Radio, Row, Col, Collapse, Button, message, Tooltip} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked, runInAction, action} from "mobx";
 import axios from "axios";
-import auth from "~/utils/auth";
-import {Privilege} from "~/utils/store";
-import PageWrapper from "~/layouts/PageWrapper";
+import cs from "classnames";
 import {render, unmountComponentAtNode} from "react-dom";
-import moment from "moment";
+import ProjectSelect from "~/components/ProjectSelect";
+import {DataType, ItemType, ConfigItemMode, DefaultExp} from "~/utils/store";
+import DataTypeSelect from "~/components/DataTypeSelect";
+import ExpressionView from "~/components/expression/ExpressionView";
+import DragListView from "react-drag-listview";
+import guid from "~/utils/guid";
+import ComponentValidator from "~/utils/ComponentValidator";
+import "./configItemModal.less";
+import ItemInfo from "~/components/ItemInfo";
 import Validator from "~/utils/Validator";
-import global from "~/global";
-import UserInfo from "~/components/UserInfo";
+import event from "~/utils/event";
 
 function add(onSuccess) {
     const target = document.createElement("div");
     document.body.appendChild(target);
 
-    render(<EditUserModal addMode onSuccess={onSuccess} afterClose={() => {
+    render(<EditWordItemModal addMode onSuccess={onSuccess} afterClose={() => {
         unmountComponentAtNode(target);
         target.remove()
     }}/>, target);
 }
 
-function edit(user, onSuccess) {
-    const hide = message.loading("Loading user...", 0);
+function edit(item, onSuccess) {
+    const hide = message.loading("Loading word item...", 0);
 
     const target = document.createElement("div");
     document.body.appendChild(target);
 
-    axios.get("/api/users/" + user.username)
+    axios.get("/api/items/word/" + item.itemKey)
         .then(res =>
-            render(<EditUserModal user={res.data.data} onSuccess={onSuccess} afterClose={() => {
+            render(<EditWordItemModal item={item} onSuccess={onSuccess} afterClose={() => {
                 unmountComponentAtNode(target);
                 target.remove()
             }}/>, target))
@@ -41,14 +46,14 @@ function del(user, onSuccess) {
     const target = document.createElement("div");
     document.body.appendChild(target);
 
-    render(<DeleteUserModal user={user} onSuccess={onSuccess} afterClose={() => {
+    render(<DeleteWordItemModal user={user} onSuccess={onSuccess} afterClose={() => {
         unmountComponentAtNode(target);
         target.remove()
     }}/>, target);
 }
 
 @observer
-class EditUserModal extends Component {
+class EditWordItemModal extends Component {
     static defaultProps = {
         user: {
             username: null,
@@ -125,30 +130,7 @@ class EditUserModal extends Component {
                             this.validator.resetResult("email");
                         }} onBlur={() => this.validator.validate("email")}/>
                 </Form.Item>
-                <Form.Item label="Privileges">
-                    <Checkbox.Group
-                        defaultValue={untracked(() => toJS(this.user.privileges))}
-                        onChange={e => this.user.privileges = e}>
-                        <Divider style={{fontSize: "12px"}}>Projects</Divider>
-                        <Row>
-                            <Col span={8}><Checkbox value={Privilege.ProjectAdd}>Add Project</Checkbox></Col>
-                            <Col span={8}><Checkbox value={Privilege.ProjectEdit}>Edit Project</Checkbox></Col>
-                            <Col span={8}><Checkbox value={Privilege.ProjectDelete} style={{color: "#f00"}}>Delete
-                                Project</Checkbox></Col>
-                        </Row>
-                        <Divider style={{fontSize: "12px"}}>Items</Divider>
-                        <Row>
-                            <Col span={8}><Checkbox value={Privilege.ItemAdd}>Add Item</Checkbox></Col>
-                            <Col span={8}><Checkbox value={Privilege.ItemEdit}>Edit Item</Checkbox></Col>
-                            <Col span={8}><Checkbox value={Privilege.ItemDelete} style={{color: "#f00"}}>Delete
-                                Item</Checkbox></Col>
-                        </Row>
-                        <Divider style={{fontSize: "12px"}}>Users</Divider>
-                        <Row>
-                            <Col span={8}><Checkbox value={Privilege.UserManage}>Manage Users</Checkbox></Col>
-                        </Row>
-                    </Checkbox.Group>
-                </Form.Item>
+
             </Form>
         </Modal>
     };
@@ -164,7 +146,7 @@ class EditUserModal extends Component {
                             let user = res.data.data;
                             this.loading = false;
                             this.visible = false;
-                            message.success(<span>User <UserInfo user={user}/> is added successfully!</span>);
+                            message.success(<span>User</span>);
                             this.props.onSuccess(user);
                         }, () => this.loading = false)
                 });
@@ -178,7 +160,7 @@ class EditUserModal extends Component {
                             let user = res.data.data;
                             this.loading = false;
                             this.visible = false;
-                            message.success(<span>User <UserInfo user={user}/> is updated successfully!</span>);
+                            message.success(<span>User</span>);
                             this.props.onSuccess(user);
                         }, () => this.loading = false)
                 });
@@ -191,7 +173,7 @@ class EditUserModal extends Component {
 }
 
 @observer
-class DeleteUserModal extends Component {
+class DeleteWordItemModal extends Component {
     static defaultProps = {
         user: {},
         onSuccess: (user) => {},
@@ -227,7 +209,7 @@ class DeleteUserModal extends Component {
                 this.loading = false;
                 this.visible = false;
                 message.success(<span>
-                        User <UserInfo user={this.props.user}/> is deleted successfully!
+                        User  is deleted successfully!
                     </span>);
                 this.props.onSuccess(this.props.user);
             }, () => this.loading = false);

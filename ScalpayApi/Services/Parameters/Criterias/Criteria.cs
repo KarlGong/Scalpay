@@ -5,6 +5,6 @@ namespace ScalpayApi.Services.Parameters.Criterias
 {
     public abstract class Criteria<T>
     {
-        public abstract Expression<Func<T, bool>> ToWherePredicate();
+        public abstract bool IsMatched(T item);
     }
 }

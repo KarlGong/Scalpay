@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using ScalpayApi.Data;
 using ScalpayApi.Enums;
 using ScalpayApi.Models;
+using ScalpayApi.Services.Exceptions;
 using ScalpayApi.Services.Parameters;
 using ScalpayApi.Services.Parameters.Criterias;
 
@@ -13,13 +14,11 @@ namespace ScalpayApi.Services
 {
     public interface IProjectService
     {
-        Task<Project> GetProjectAsync(ProjectCriteria criteria);
-
         Task<Project> GetProjectAsync(string projectKey);
 
-        Task<List<Project>> GetProjectsAsync(ProjectCriteria criteria);
+        Task<List<Project>> GetProjectsAsync(GetProjectsParams ps);
 
-        Task<List<Project>> GetProjectsAsync();
+        Task<int> GetProjectsCountAsync(ProjectCriteria criteria);
 
         Task<Project> AddProjectAsync(AddProjectParams ps);
 
@@ -39,27 +38,25 @@ namespace ScalpayApi.Services
             _mapper = mapper;
         }
 
-        public async Task<Project> GetProjectAsync(ProjectCriteria criteria)
-        {
-            return await _context.Projects.AsNoTracking().SingleOrDefaultAsync(criteria.ToWherePredicate());
-        }
-
         public async Task<Project> GetProjectAsync(string projectKey)
         {
-            return await GetProjectAsync(new ProjectCriteria()
+            var project = await _context.Projects.AsNoTracking().SingleOrDefaultAsync(p => p.ProjectKey == projectKey);
+            if (project == null)
             {
-                ProjectKey = projectKey
-            });
+                throw new ProjectNotFoundException($"Project with project key {projectKey} is not found.");
+            }
+
+            return project;
         }
 
-        public async Task<List<Project>> GetProjectsAsync(ProjectCriteria criteria)
+        public async Task<List<Project>> GetProjectsAsync(GetProjectsParams ps)
         {
-            return await _context.Projects.AsNoTracking().Where(criteria.ToWherePredicate()).ToListAsync();
+            return await _context.Projects.AsNoTracking().Where(ps.Criteria).WithPaging(ps.Pagination).ToListAsync();
         }
 
-        public async Task<List<Project>> GetProjectsAsync()
+        public async Task<int> GetProjectsCountAsync(ProjectCriteria criteria)
         {
-            return await _context.Projects.AsNoTracking().ToListAsync();
+            return await _context.Projects.AsNoTracking().CountAsync(criteria);
         }
 
         public async Task<Project> AddProjectAsync(AddProjectParams ps)

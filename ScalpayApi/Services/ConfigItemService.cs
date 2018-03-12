@@ -5,6 +5,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using ScalpayApi.Data;
 using ScalpayApi.Models;
+using ScalpayApi.Services.Exceptions;
 using ScalpayApi.Services.Parameters;
 using ScalpayApi.Services.SExpressions;
 
@@ -40,6 +41,10 @@ namespace ScalpayApi.Services
         {
             var item = await _context.ConfigItems.AsNoTracking().Include(i => i.Project).Include(i => i.Rules)
                 .SingleOrDefaultAsync(i => i.ItemKey == itemKey);
+            if (item == null)
+            {
+                throw new ItemNotFoundException($"Config item with item key {itemKey} is not found.");
+            }
 
             item.Rules = item.Rules.OrderBy(r => r.Order).ToList();
 

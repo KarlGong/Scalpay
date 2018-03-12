@@ -72,7 +72,7 @@ export default class ProjectsPage extends Component {
                 searchText: this.searchText
             }
         })
-            .then(response => this.projects = response.data)
+            .then(response => this.projects = response.data.data)
             .finally(() => this.loading = false);
     };
 

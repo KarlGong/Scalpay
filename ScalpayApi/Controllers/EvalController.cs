@@ -24,7 +24,7 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpPost("config/{itemKey}")]
-        public async Task<SData> EvalConfigItem([FromRoute] string itemKey, [FromBody] Dictionary<string, JToken> parameters)
+        public async Task<Result<SData>> EvalConfigItem([FromRoute] string itemKey, [FromBody] Dictionary<string, JToken> parameters)
         {
             var item = await _configItemService.GetConfigItemAsync(itemKey);
 
@@ -40,27 +40,39 @@ namespace ScalpayApi.Controllers
                 variables.Add(pair.Key, await _expService.ConvertToSDataAsync(pair.Value, parameterInfo.DataType));
             }
 
-            return await _configItemService.EvalConfigItem(item, variables);
+            return new Result<SData>()
+            {
+                Data = await _configItemService.EvalConfigItem(item, variables)
+            };
         }
 
         [HttpGet("config/{itemKey}")]
-        public async Task<SData> EvalConfigPropertyItem([FromRoute] string itemKey)
+        public async Task<Result<SData>> EvalConfigPropertyItem([FromRoute] string itemKey)
         {
             var item = await _configItemService.GetConfigItemAsync(itemKey);
 
-            return await _configItemService.EvalConfigItem(item, new Dictionary<string, SData>());
+            return new Result<SData>()
+            {
+                Data = await _configItemService.EvalConfigItem(item, new Dictionary<string, SData>())
+            };
         }
 
         [HttpGet("word/{itemKey}")]
-        public async Task<string> EvalWordItem([FromRoute] string itemKey, [FromQuery] string lng)
+        public async Task<Result<string>> EvalWordItem([FromRoute] string itemKey, [FromQuery] string lng)
         {
-            return await _wordItemService.EvalWordItemAsync(itemKey, lng);
+            return new Result<string>()
+            {
+                Data = await _wordItemService.EvalWordItemAsync(itemKey, lng)
+            };
         }
         
         [HttpPost("word")]
-        public async Task<Dictionary<string, string>> EvalWordItems([FromBody] List<string> itemKeys, [FromQuery] string lng)
+        public async Task<Result<Dictionary<string, string>>> EvalWordItems([FromBody] List<string> itemKeys, [FromQuery] string lng)
         {
-            return await _wordItemService.EvalWordItemsAsync(itemKeys, lng);
+            return new Result<Dictionary<string, string>>()
+            {
+                Data = await _wordItemService.EvalWordItemsAsync(itemKeys, lng)
+            };
         }
     }
 }
