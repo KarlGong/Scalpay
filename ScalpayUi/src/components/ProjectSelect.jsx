@@ -23,9 +23,19 @@ export default class ProjectSelect extends Component {
     lastSearchId = 0;
     @observable projects = [];
     @observable loading = false;
+    criteria = {
+        searchText: null,
+        pageIndex: 0,
+        pageSize: 20
+    };
 
     componentDidMount = () => {
-        this.searchProjects().then(() => this.resetKey = guid());
+        this.criteria.searchText = this.props.defaultValue;
+        this.searchProjects().then(() => {
+            this.criteria.searchText = null;
+            this.resetKey = guid();
+            this.searchProjects = debounce(this.searchProjects, 500);
+        });
     };
 
     render = () => {
@@ -41,7 +51,10 @@ export default class ProjectSelect extends Component {
             dropdownMatchSelectWidth={false}
             notFoundContent={this.loading ? <Spin size="small"/> : "Not Found"}
             filterOption={false}
-            onSearch={debounce(this.searchProjects, 800)}
+            onSearch={(value) => {
+                this.criteria.searchText = value || null;
+                this.searchProjects();
+            }}
             onChange={this.props.onChange}
             onBlur={this.props.onBlur}
         >
@@ -51,21 +64,19 @@ export default class ProjectSelect extends Component {
         </Select>
     };
 
-    searchProjects = (value) => {
+    searchProjects = () => {
         this.loading = true;
         this.projects = [];
         this.lastSearchId += 1;
         const searchId = this.lastSearchId;
         return axios.get("/api/projects", {
-            params: {
-                searchText: value || null
-            }
+            params: this.criteria
         })
             .then(response => {
                 if (searchId === this.lastSearchId) {
-                    this.projects = response.data.data
+                    this.projects = response.data.data;
+                    this.loading = false;
                 }
-            })
-            .finally(() => this.loading = false);
+            }, () => this.loading = false);
     }
 }
