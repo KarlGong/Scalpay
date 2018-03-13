@@ -30,7 +30,7 @@ namespace ScalpayApi.Services
 
         public async Task<List<Item>> GetItemsAsync(ItemCriteria criteria)
         {
-            return await _context.Items.AsNoTracking().Include(i => i.Project).WithCriteria(criteria)
+            return await _context.Items.AsNoTracking().Include(i => i.Project).OrderBy(i => i.ItemKey).WithCriteria(criteria)
                 .ToListAsync();
         }
 

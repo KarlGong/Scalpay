@@ -79,7 +79,7 @@ namespace ScalpayApi.Services
 
         public async Task<List<User>> GetUsersAsync(UserCriteria criteria)
         {
-            return await _context.Users.AsNoTracking().WithCriteria(criteria).ToListAsync();
+            return await _context.Users.AsNoTracking().OrderBy(u => u.Username).WithCriteria(criteria).ToListAsync();
         }
 
         public async Task<int> GetUsersCountAsync(UserCriteria criteria)

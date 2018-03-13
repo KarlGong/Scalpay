@@ -20,7 +20,7 @@ export default class ItemTypeSelect extends Component {
             <Select
                 allowClear={this.props.allowClear}
                 placeholder="Item Type"
-                defaultValue={this.props.defaultValue}
+                defaultValue={this.props.defaultValue || undefined}
                 dropdownMatchSelectWidth={false}
                 onChange={this.props.onChange}
                 style={this.props.style}

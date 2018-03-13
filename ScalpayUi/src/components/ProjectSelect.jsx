@@ -44,7 +44,7 @@ export default class ProjectSelect extends Component {
             showSearch
             disabled={this.props.disabled}
             allowClear={this.props.allowClear}
-            defaultValue={this.props.defaultValue}
+            defaultValue={this.props.defaultValue || undefined}
             placeholder="Project"
             className={this.props.className}
             style={this.props.style}

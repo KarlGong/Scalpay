@@ -41,7 +41,7 @@ export default class VariableSelect extends Component {
             <Select
                 style={this.props.style}
                 className={cs(this.props.className, this.validator.getResult("value").status)}
-                defaultValue={this.props.defaultValue}
+                defaultValue={this.props.defaultValue || undefined}
                 showSearch
                 placeholder="Variable"
                 dropdownMatchSelectWidth={false}

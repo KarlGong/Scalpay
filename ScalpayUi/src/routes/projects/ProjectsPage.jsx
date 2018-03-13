@@ -11,19 +11,37 @@ import PageWrapper from "~/layouts/PageWrapper";
 import projectModal from "~/modals/projectModal";
 import global from "~/global";
 import ProjectInfo from "~/components/ProjectInfo";
+import guid from "~/utils/guid";
 
 @observer
 export default class ProjectsPage extends Component {
 
     @observable loading = false;
     @observable projects = [];
-    criteria = {
-        searchText: null,
-        pageIndex: 0,
-        pageSize: 20
+    @observable totalCount = 0;
+    @observable filterRestKey = guid();
+
+    @observable criteria = {
+        searchText: this.props.location.query.searchText || null,
+        pageIndex: parseInt(this.props.location.query.pageIndex) || 0,
+        pageSize: parseInt(this.props.location.query.pageSize) || 20
     };
+    filter = {searchText: this.criteria.searchText};
 
     componentDidMount = () => {
+        this.searchProjects();
+    };
+
+    componentWillReceiveProps = (props) => {
+        if (JSON.stringify(this.props.location.query) !== JSON.stringify(props.location.query)){
+            this.criteria = {
+                searchText: props.location.query.searchText || null,
+                pageIndex: parseInt(props.location.query.pageIndex) || 0,
+                pageSize: parseInt(props.location.query.pageSize) || 20
+            };
+            this.filter = {searchText: this.criteria.searchText};
+            this.filterRestKey = guid();
+        }
         this.searchProjects();
     };
 
@@ -35,17 +53,39 @@ export default class ProjectsPage extends Component {
                 <Breadcrumb.Item>Projects</Breadcrumb.Item>
             </Breadcrumb>}>
             <List
+                pagination={{
+                    showTotal: (total, range) => total ? `${range[0]}-${range[1]} of ${total} items` : "0-0 of 0 items",
+                    pageSize: this.criteria.pageSize,
+                    current: this.criteria.pageIndex + 1,
+                    total: this.totalCount,
+                    onChange: (page, pageSize) => {
+                        this.criteria.pageIndex = page - 1;
+                        this.criteria.pageSize = pageSize;
+                        global.history.pushQueryParams(this.criteria);
+                    }
+                }}
+                className="list"
                 loading={this.loading}
                 itemLayout="horizontal"
                 dataSource={this.projects}
-                header={<span>
-                            <Input style={{width: "250px"}} placeholder="Search by key/name/description"
-                                   onChange={(e) => this.criteria.searchText = e.target.value || null}
-                                   onPressEnter={(e) => this.searchProjects()}/>
-                            <Button style={{marginLeft: "10px"}} type="primary"
-                                    onClick={() => this.searchProjects()}>Search</Button>
+                header={<span key={this.filterRestKey}>
+                            <Input
+                                style={{width: "250px"}}
+                                placeholder="Search by key/name/description"
+                                defaultValue={untracked(() => this.criteria.searchText)}
+                                onChange={(e) => this.filter.searchText = e.target.value || null}/>
+                            <Button
+                                style={{marginLeft: "10px"}}
+                                type="primary"
+                                onClick={() => {
+                                    this.criteria = Object.assign(this.criteria, this.filter);
+                                    this.criteria.pageIndex = 0;
+                                    global.history.pushQueryParams(this.criteria);
+                                }}>Search</Button>
                     {auth.hasPrivileges(Privilege.ProjectAdd) ?
-                        <Button style={{float: "right"}} onClick={() => this.addProject()}>Add Project</Button>
+                        <Button
+                            style={{float: "right"}}
+                            onClick={() => this.addProject()}>Add Project</Button>
                         : null
                     }
                     </span>}
@@ -74,7 +114,10 @@ export default class ProjectsPage extends Component {
         axios.get("/api/projects", {
             params: this.criteria
         })
-            .then(response => this.projects = response.data.data)
+            .then(response => {
+                this.projects = response.data.data;
+                this.totalCount = response.data.totalCount;
+            })
             .finally(() => this.loading = false);
     };
 

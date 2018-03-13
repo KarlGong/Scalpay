@@ -105,7 +105,7 @@ class EditExpressionModal extends Component {
                         className="var-select"
                         variables={this.props.item.parameterInfos
                             .filter(p => p.dataType === this.expression.returnType)}
-                        defaultValue={untracked(() => this.expression.var || undefined)}
+                        defaultValue={untracked(() => this.expression.var)}
                         onChange={(variableName) => this.expression.var = variableName}
                         setValidator={validator => this.variableValidator = validator}
                     />
@@ -116,7 +116,7 @@ class EditExpressionModal extends Component {
                         <FunctionSelect
                             className="func-select"
                             returnType={this.expression.returnType}
-                            defaultValue={untracked(() => this.expression.funcName || undefined)}
+                            defaultValue={untracked(() => this.expression.funcName)}
                             onChange={(functionName) => {
                                 this.expression.funcName = functionName;
                                 this.expression.funcArgs = Func[this.expression.returnType][functionName].funcArgs;

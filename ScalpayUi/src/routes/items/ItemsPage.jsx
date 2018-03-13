@@ -1,5 +1,5 @@
 import {Layout, Menu, Input, Icon, List, Button, Modal, message, Table, Breadcrumb} from "antd";
-import React, {Component} from "react";
+import React, {PureComponent, Component} from "react";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked, runInAction, action} from "mobx";
 import {Link} from "react-router";
@@ -15,21 +15,49 @@ import configItemModal from "~/modals/configItemModal/configItemModal";
 import global from "~/global";
 import ProjectInfo from "~/components/ProjectInfo";
 import "./ItemsPage.less";
+import guid from "~/utils/guid";
 
 @observer
 export default class ItemsPage extends Component {
 
     @observable loading = false;
     @observable items = [];
-    criteria = {
-        projectKey: null,
-        itemType: null,
-        searchText: null,
-        pageIndex: 0,
-        pageSize: 20
+    @observable totalCount = 0;
+    @observable filterRestKey = guid();
+
+    @observable criteria = {
+        projectKey: this.props.location.query.projectKey || null,
+        itemType: this.props.location.query.itemType || null,
+        searchText: this.props.location.query.searchText || null,
+        pageIndex: parseInt(this.props.location.query.pageIndex) || 0,
+        pageSize: parseInt(this.props.location.query.pageSize) || 20
+    };
+    filter = {
+        projectKey: this.criteria.projectKey,
+        itemType: this.criteria.itemType,
+        searchText: this.criteria.searchText
     };
 
     componentDidMount = () => {
+        this.searchItems();
+    };
+
+    componentWillReceiveProps = (props) => {
+        if (JSON.stringify(this.props.location.query) !== JSON.stringify(props.location.query)) {
+            this.criteria = {
+                projectKey: props.location.query.projectKey || null,
+                itemType: props.location.query.itemType || null,
+                searchText: props.location.query.searchText || null,
+                pageIndex: parseInt(props.location.query.pageIndex) || 0,
+                pageSize: parseInt(props.location.query.pageSize) || 20
+            };
+            this.filter = {
+                projectKey: this.criteria.projectKey,
+                itemType: this.criteria.itemType,
+                searchText: this.criteria.searchText
+            };
+            this.filterRestKey = guid();
+        }
         this.searchItems();
     };
 
@@ -41,24 +69,42 @@ export default class ItemsPage extends Component {
                 <Breadcrumb.Item>Items</Breadcrumb.Item>
             </Breadcrumb>}>
             <List
+                pagination={{
+                    showTotal: (total, range) => total ? `${range[0]}-${range[1]} of ${total} items` : "0-0 of 0 items",
+                    pageSize: this.criteria.pageSize,
+                    current: this.criteria.pageIndex + 1,
+                    total: this.totalCount,
+                    onChange: (page, pageSize) => {
+                        this.criteria.pageIndex = page - 1;
+                        this.criteria.pageSize = pageSize;
+                        global.history.pushQueryParams(this.criteria);
+                    }
+                }}
                 className="list"
                 loading={this.loading}
                 itemLayout="horizontal"
                 dataSource={this.items}
-                header={<div className="item-filter">
+                header={<div key={this.filterRestKey} className="item-filter">
                     <ProjectSelect
                         allowClear
                         className="filter select"
-                        onChange={(value) => this.criteria.projectKey = value || null}/>
+                        defaultValue={untracked(() => this.criteria.projectKey)}
+                        onChange={(value) => this.filter.projectKey = value || null}/>
                     <ItemTypeSelect
                         allowClear
                         className="filter select"
-                        onChange={(value) => this.criteria.itemType = value || null}/>
+                        defaultValue={untracked(() => this.criteria.itemType)}
+                        onChange={(value) => this.filter.itemType = value || null}/>
                     <Input
                         className="filter input"
                         placeholder="Search by item key/name/description"
-                        onChange={(e) => this.criteria.searchText = e.target.value || null}/>
-                    <Button type="primary" onClick={() => this.searchItems()}>Search</Button>
+                        defaultValue={untracked(() => this.criteria.searchText)}
+                        onChange={(e) => this.filter.searchText = e.target.value || null}/>
+                    <Button type="primary" onClick={() => {
+                        this.criteria = Object.assign(this.criteria, this.filter);
+                        this.criteria.pageIndex = 0;
+                        global.history.pushQueryParams(this.criteria);
+                    }}>Search</Button>
                 </div>}
                 renderItem={item => {
                     let actions = [];
@@ -85,7 +131,10 @@ export default class ItemsPage extends Component {
         axios.get("/api/items", {
             params: this.criteria
         })
-            .then(response => this.items = response.data.data)
+            .then(response => {
+                this.items = response.data.data;
+                this.totalCount = response.data.totalCount;
+            })
             .finally(() => this.loading = false);
     };
 

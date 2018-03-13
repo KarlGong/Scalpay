@@ -18,7 +18,7 @@ export default class DataTypeSelect extends Component {
         return <Select
             showSearch
             dropdownMatchSelectWidth={false}
-            defaultValue={this.props.defaultValue}
+            defaultValue={this.props.defaultValue || undefined}
             style={this.props.style}
             className={this.props.className}
             placeholder="Data Type"

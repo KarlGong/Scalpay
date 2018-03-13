@@ -51,7 +51,7 @@ namespace ScalpayApi.Services
 
         public async Task<List<Project>> GetProjectsAsync(ProjectCriteria criteria)
         {
-            return await _context.Projects.AsNoTracking().WithCriteria(criteria).ToListAsync();
+            return await _context.Projects.AsNoTracking().OrderBy(p => p.ProjectKey).WithCriteria(criteria).ToListAsync();
         }
 
         public async Task<int> GetProjectsCountAsync(ProjectCriteria criteria)

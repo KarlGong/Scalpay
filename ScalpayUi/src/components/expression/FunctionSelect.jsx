@@ -44,7 +44,7 @@ export default class FunctionSelect extends Component {
                 showSearch
                 placeholder="Function"
                 dropdownMatchSelectWidth={false}
-                defaultValue={this.props.defaultValue}
+                defaultValue={this.props.defaultValue || undefined}
                 onChange={(value) => {
                     this.item.value = value;
                     this.validator.resetResult("value");
