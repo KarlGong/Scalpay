@@ -22,8 +22,8 @@ export default class SHeader extends Component {
                     <div className="logo item">
                         <Link to="/"><img src={logo}/></Link>
                     </div>
-                    <div className="item menu">
-                        <span onClick={() => global.history.push("/items")}>Items</span>
+                    <div className="item menu" onClick={() => global.history.push("/items")}>
+                        <span>Items</span>
                     </div>
                     <div className="item menu">
                         <span>Statistics</span>
