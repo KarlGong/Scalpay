@@ -35,11 +35,11 @@ export default class ProjectSelect extends Component {
             this.searchProjects().then(() => {
                 this.criteria.searchText = null;
                 this.resetKey = guid();
-                this.searchProjects = debounce(this.searchProjects, 500);
             });
         } else {
             this.searchProjects();
         }
+        this.searchProjects = debounce(this.searchProjects, 500);
     };
 
     render = () => {
