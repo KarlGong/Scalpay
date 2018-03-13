@@ -189,12 +189,12 @@ export const Func = {
         },
         "StringIsEqualToString": {
             displayName: "(String) is equal to (String)",
-            displayExp: "{0} is equal to {1}, ignoring case {2}",
+            displayExp: "{0} = {1}, ignoring case {2}",
             funcArgs: [DefaultExp.String, DefaultExp.String, DefaultExp.Bool]
         },
         "StringIsNotEqualToString": {
             displayName: "(String) is not equal to (String)",
-            displayExp: "{0} is not equal to {1}, ignoring case {2}",
+            displayExp: "{0} ≠ {1}, ignoring case {2}",
             funcArgs: [DefaultExp.String, DefaultExp.String, DefaultExp.Bool]
         },
         "StringStartsWithString": {
