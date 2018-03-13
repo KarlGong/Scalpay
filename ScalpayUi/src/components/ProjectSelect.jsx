@@ -30,12 +30,16 @@ export default class ProjectSelect extends Component {
     };
 
     componentDidMount = () => {
-        this.criteria.searchText = this.props.defaultValue;
-        this.searchProjects().then(() => {
-            this.criteria.searchText = null;
-            this.resetKey = guid();
-            this.searchProjects = debounce(this.searchProjects, 500);
-        });
+        if (this.props.defaultValue) {
+            this.criteria.searchText = this.props.defaultValue;
+            this.searchProjects().then(() => {
+                this.criteria.searchText = null;
+                this.resetKey = guid();
+                this.searchProjects = debounce(this.searchProjects, 500);
+            });
+        } else {
+            this.searchProjects();
+        }
     };
 
     render = () => {

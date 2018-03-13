@@ -13,6 +13,7 @@ import logo from "~/assets/imgs/logo.png";
 
 @observer
 export default class SHeader extends Component {
+    @observable searchLoading = false;
 
     render = () => {
         return <Layout.Header className="header">
@@ -49,7 +50,25 @@ export default class SHeader extends Component {
                 </div>
                 <div className="right">
                     <span className="item">
-                        <Input placeholder="Search" suffix={<Icon type="search"/>}/>
+                        <Input
+                            placeholder="Search Item"
+                            suffix={this.searchLoading ? <Spin size="small"/> : <Icon type="search"/>}
+                            onPressEnter={e => {
+                                let value = e.target.value;
+                                this.searchLoading = true;
+                                axios.get("/api/items", {
+                                    params: {itemKey: value}
+                                })
+                                    .then(response => {
+                                        if (response.data.totalCount === 1) {
+                                            global.history.push("/items/" + response.data.data[0].type.toLowerCase() + "/" + value);
+                                        } else {
+                                            global.history.push("/items?searchText=" + value)
+                                        }
+                                        this.searchLoading = false;
+                                    }, () => this.searchLoading = false)
+                            }}
+                        />
                     </span>
                     <span className="item dropdown">
                         <Badge dot>
