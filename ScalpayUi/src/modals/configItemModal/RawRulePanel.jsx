@@ -55,6 +55,7 @@ export default class RawRulePanel extends Component {
                                 <Col span={conditionWidth}>
                                     <ExpressionView
                                         allowEdit
+                                        topLevel
                                         expression={rule.condition}
                                         item={this.item}
                                         onChange={(exp) => rule.condition = exp}/>
@@ -62,6 +63,7 @@ export default class RawRulePanel extends Component {
                                 <Col span={resultWidth}>
                                     <ExpressionView
                                         allowEdit
+                                        topLevel
                                         expression={rule.result}
                                         item={this.item}
                                         onChange={(exp) => rule.result = exp}/>
@@ -95,6 +97,7 @@ export default class RawRulePanel extends Component {
                 <Col span={resultWidth}>
                     <ExpressionView
                         allowEdit
+                        topLevel
                         expression={this.item.defaultResult}
                         item={this.item}
                         onChange={(exp) => this.item.defaultResult = exp}

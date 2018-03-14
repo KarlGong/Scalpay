@@ -129,6 +129,7 @@ class EditExpressionModal extends Component {
                                     <ExpressionView
                                         key={this.expression.funcName}
                                         allowSubEdit
+                                        topLevel
                                         expression={this.expression}
                                         item={this.props.item}
                                         onChange={(exp) => this.expression = exp}/>

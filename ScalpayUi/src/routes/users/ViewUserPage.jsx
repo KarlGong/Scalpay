@@ -19,7 +19,12 @@ import Block from "~/layouts/Block";
 @observer
 export default class ViewUserPage extends Component {
 
-    @observable user = {};
+    @observable user = {
+        username: this.props.params.username,
+        fullName: null,
+        email: null,
+        privileges: []
+    };
     @observable loading = false;
 
     componentDidMount = () => {

@@ -19,7 +19,11 @@ import Block from "~/layouts/Block";
 @observer
 export default class ViewProjectPage extends Component {
 
-    @observable project = {};
+    @observable project = {
+        projectKey: this.props.params.projectKey,
+        name: null,
+        description: null
+    };
     @observable loading = false;
 
     componentDidMount = () => {

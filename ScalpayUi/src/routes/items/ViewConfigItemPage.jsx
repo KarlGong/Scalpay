@@ -25,7 +25,7 @@ export default class ViewConfigItemPage extends Component {
 
     @observable item = {
         projectKey: null,
-        itemKey: null,
+        itemKey: this.props.params.itemKey,
         name: null,
         description: null,
         mode: ConfigItemMode.Property,
@@ -78,7 +78,7 @@ export default class ViewConfigItemPage extends Component {
                             <Block name="Property">
                                 <FieldsViewer fields={[
                                     ["Result Data Type", this.item.resultDataType],
-                                    ["Result", <ExpressionView expression={this.item.defaultResult}/>]
+                                    ["Result", <ExpressionView topLevel expression={this.item.defaultResult}/>]
                                 ]}/>
                             </Block>
                             : null
@@ -107,14 +107,17 @@ export default class ViewConfigItemPage extends Component {
                                         <Row key={rule.key} type="flex" align="middle"
                                              className="rule">
                                             <Col span={conditionWidth}><ExpressionView
+                                                topLevel
                                                 expression={rule.condition}/></Col>
-                                            <Col span={resultWidth}><ExpressionView expression={rule.result}/></Col>
+                                            <Col span={resultWidth}><ExpressionView
+                                                topLevel
+                                                expression={rule.result}/></Col>
                                         </Row>)
                                 }
                                 <Row type="flex" align="middle"
                                      className="rule">
                                     <Col span={conditionWidth}><b>Default</b></Col>
-                                    <Col span={resultWidth}><ExpressionView expression={this.item.defaultResult}/></Col>
+                                    <Col span={resultWidth}><ExpressionView topLevel expression={this.item.defaultResult}/></Col>
                                 </Row>
                             </Block>
                             : null

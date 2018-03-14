@@ -3,6 +3,15 @@
   &.editable {
     color: #1890ff;
     cursor: pointer;
-    text-decoration: underline;
+    border-bottom: 1px #1890ff solid;
+  }
+}
+
+.expression-list-view { // it is in popover
+  max-height: 210px;
+  min-width: 50px;
+  overflow: auto;
+  .text {
+    white-space: nowrap;
   }
 }

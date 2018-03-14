@@ -55,6 +55,7 @@ export default class PropertyPanel extends Component {
                 <Form.Item label="Result" {...formItemLayout}>
                     <ExpressionView
                         allowEdit
+                        topLevel
                         expression={this.item.defaultResult}
                         item={this.item}
                         onChange={(exp) => this.item.defaultResult = exp}
