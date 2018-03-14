@@ -7,6 +7,7 @@ import reactStringReplace from "react-string-replace";
 import {ExpType, Func, DataType} from "~/utils/store";
 import editExpressionModal from "~/modals/editExpressionModal";
 import guid from "~/utils/guid";
+import cs from "classnames";
 import moment from "moment";
 import "./ExpressionView.less";
 
@@ -28,6 +29,7 @@ export default class ExpressionView extends Component {
         onChange: (expression) => {}
     };
 
+    @observable isBracketHovered = false;
     @observable expression = this.props.expression;
 
     componentWillReceiveProps(nextProps) {
@@ -95,7 +97,7 @@ export default class ExpressionView extends Component {
                                 content={this.expression.value.length ? <div className="expression-list-view">
                                     {this.expression.value.map((number, index) =>
                                         <div key={index} className="text">{number}</div>)}
-                                </div> : "<Empty Number List>"}
+                                </div> : "<Empty>"}
                             >
                                 <span><Icon type="number-list"/>&nbsp;[...{this.expression.value.length}]</span>
                             </Popover>;
@@ -112,7 +114,7 @@ export default class ExpressionView extends Component {
                                     :&nbsp;
                                     <span className="text">{value}</span>
                                 </div>)}
-                            </div> : "<Empty String Dict>"}
+                            </div> : "<Empty>"}
                         >
                             <span>
                                 <Icon type="string-dict"/>
@@ -126,7 +128,7 @@ export default class ExpressionView extends Component {
                                 content={this.expression.value.length ? <div className="expression-list-view">
                                     {this.expression.value.map((str, index) => <div key={index}
                                                                                     className="text">{str}</div>)}
-                                </div> : "<Empty String List>"}
+                                </div> : "<Empty>"}
                             >
                                 <span>
                                     <Icon type="string-list"/>
@@ -144,7 +146,14 @@ export default class ExpressionView extends Component {
                 </span>;
             case ExpType.Func:
                 return <span {...editProps}>
-                    <span>{!this.props.topLevel? "(" : ""}</span>
+                    {!this.props.topLevel?
+                        <span
+                            className={cs("bracket", {"hover": this.isBracketHovered})}
+                            onMouseEnter={() => this.isBracketHovered = true}
+                            onMouseLeave={() => this.isBracketHovered = false}
+                        >
+                            {"("}</span>
+                        : null}
                     {
                         reactStringReplace(Func[this.expression.returnType][this.expression.funcName].displayExp, /{(\d+)}/, (argsIndex) => {
                             return <ExpressionView
@@ -155,7 +164,14 @@ export default class ExpressionView extends Component {
                                 onChange={(expression) => this.expression.funcArgs[argsIndex] = expression}/>
                         })
                     }
-                    <span>{!this.props.topLevel? ")" : ""}</span>
+                    {!this.props.topLevel?
+                        <span
+                            className={cs("bracket", {"hover": this.isBracketHovered})}
+                            onMouseEnter={() => this.isBracketHovered = true}
+                            onMouseLeave={() => this.isBracketHovered = false}
+                        >
+                            {")"}</span>
+                        : null}
                 </span>;
         }
         return null;
