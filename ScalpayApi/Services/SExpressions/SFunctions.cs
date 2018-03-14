@@ -267,48 +267,46 @@ namespace ScalpayApi.Services.SExpressions
 
         #region SString
 
-        public static SBool StringIsEqualToString(SString s1, SString s2, SBool ignoringCase)
+        public static SBool StringIsEqualToString(SString s1, SString s2)
         {
-            if (ignoringCase.Inner)
-            {
-                s1.Inner = s1.Inner.ToLower();
-                s2.Inner = s2.Inner.ToLower();
-            }
-
-            return new SBool(s1.Inner == s2.Inner);
+            return new SBool(string.Equals(s1.Inner, s2.Inner, StringComparison.Ordinal));
         }
 
-        public static SBool StringIsNotEqualToString(SString s1, SString s2, SBool ignoringCase)
+        public static SBool StringIsEqualToStringIgnoringCase(SString s1, SString s2)
         {
-            if (ignoringCase.Inner)
-            {
-                s1.Inner = s1.Inner.ToLower();
-                s2.Inner = s2.Inner.ToLower();
-            }
-
-            return new SBool(s1.Inner != s2.Inner);
+            return new SBool(string.Equals(s1.Inner, s2.Inner, StringComparison.OrdinalIgnoreCase));
+        }
+        
+        public static SBool StringIsNotEqualToString(SString s1, SString s2)
+        {
+            return new SBool(!string.Equals(s1.Inner, s2.Inner, StringComparison.Ordinal));
         }
 
-        public static SBool StringStartsWithString(SString s1, SString s2, SBool ignoringCase)
+        public static SBool StringIsNotEqualToStringIgnoringCase(SString s1, SString s2)
         {
-            if (ignoringCase.Inner)
-            {
-                s1.Inner = s1.Inner.ToLower();
-                s2.Inner = s2.Inner.ToLower();
-            }
-
-            return new SBool(s1.Inner.StartsWith(s2.Inner));
+            return new SBool(!string.Equals(s1.Inner, s2.Inner, StringComparison.OrdinalIgnoreCase));
         }
 
-        public static SBool StringContainsString(SString s1, SString s2, SBool ignoringCase)
+        public static SBool StringStartsWithString(SString s1, SString s2)
         {
-            if (ignoringCase.Inner)
-            {
-                s1.Inner = s1.Inner.ToLower();
-                s2.Inner = s2.Inner.ToLower();
-            }
+            return new SBool(s1.Inner.StartsWith(s2.Inner, StringComparison.Ordinal));
+        }
+        
+        public static SBool StringStartsWithStringIgnoringCase(SString s1, SString s2)
+        {
+            return new SBool(s1.Inner.StartsWith(s2.Inner, StringComparison.OrdinalIgnoreCase));
+        }
 
-            return new SBool(s1.Inner.Contains(s2.Inner));
+        public static SBool StringContainsString(SString s1, SString s2)
+        {
+
+            return new SBool(s1.Inner.IndexOf(s2.Inner, StringComparison.Ordinal) >= 0);
+        }
+        
+        public static SBool StringContainsStringIgnoringCase(SString s1, SString s2)
+        {
+
+            return new SBool(s1.Inner.IndexOf(s2.Inner, StringComparison.OrdinalIgnoreCase) >= 0);
         }
 
         public static SString StringToLower(SString s)
@@ -389,12 +387,22 @@ namespace ScalpayApi.Services.SExpressions
 
         #region SStringList
 
-        public static SBool StringListContainsString(SStringList sl, SString s, SBool ignoringCase)
+        public static SBool StringListContainsString(SStringList sl, SString s)
+        {
+            return new SBool(sl.Inner.Any(i => i.Equals(s.Inner, StringComparison.Ordinal)));
+        }
+        
+        public static SBool StringListContainsStringIgnoringCase(SStringList sl, SString s)
         {
             return new SBool(sl.Inner.Any(i => i.Equals(s.Inner, StringComparison.OrdinalIgnoreCase)));
         }
 
-        public static SBool StringListDoesNotContainString(SStringList sl, SString s, SBool ignoringCase)
+        public static SBool StringListDoesNotContainString(SStringList sl, SString s)
+        {
+            return new SBool(!sl.Inner.Any(i => i.Equals(s.Inner, StringComparison.Ordinal)));
+        }
+        
+        public static SBool StringListDoesNotContainStringIgnoringCase(SStringList sl, SString s)
         {
             return new SBool(!sl.Inner.Any(i => i.Equals(s.Inner, StringComparison.OrdinalIgnoreCase)));
         }

@@ -94,7 +94,7 @@ export const Func = {
         },
         "BoolIsNotEqualToBool": {
             displayName: "(Bool) is not equal to (Bool)",
-            displayExp: "{0} ≠ {1}",
+            displayExp: "{0} != {1}",
             funcArgs: [DefaultExp.Bool, DefaultExp.Bool]
         },
         "DateTimeIsEqualToDateTime": {
@@ -104,7 +104,7 @@ export const Func = {
         },
         "DateTimeIsNotEqualToDateTime": {
             displayName: "(DateTime) is not equal to (DateTime)",
-            displayExp: "{0} ≠ {1}",
+            displayExp: "{0} != {1}",
             funcArgs: [DefaultExp.DateTime, DefaultExp.DateTime]
         },
         "DateTimeIsAfterDateTime": {
@@ -129,7 +129,7 @@ export const Func = {
         },
         "DurationIsNotEqualToDuration": {
             displayName: "(Duration) is not equal to (Duration)",
-            displayExp: "{0} ≠ {1}",
+            displayExp: "{0} != {1}",
             funcArgs: [DefaultExp.Duration, DefaultExp.Duration]
         },
         "NumberIsEqualToNumber": {
@@ -139,7 +139,7 @@ export const Func = {
         },
         "NumberIsNotEqualToNumber": {
             displayName: "(Number) is not equal to (Number)",
-            displayExp: "{0} ≠ {1}",
+            displayExp: "{0} != {1}",
             funcArgs: [DefaultExp.Number, DefaultExp.Number]
         },
         "NumberIsGreaterThenNumber": {
@@ -189,23 +189,43 @@ export const Func = {
         },
         "StringIsEqualToString": {
             displayName: "(String) is equal to (String)",
-            displayExp: "{0} = {1}, ignoring case {2}",
-            funcArgs: [DefaultExp.String, DefaultExp.String, DefaultExp.Bool]
+            displayExp: "{0} = {1}",
+            funcArgs: [DefaultExp.String, DefaultExp.String]
+        },
+        "StringIsEqualToStringIgnoringCase": {
+            displayName: "(String) is equal to (String) ignoring case",
+            displayExp: "{0} ≈ {1}",
+            funcArgs: [DefaultExp.String, DefaultExp.String]
         },
         "StringIsNotEqualToString": {
             displayName: "(String) is not equal to (String)",
-            displayExp: "{0} ≠ {1}, ignoring case {2}",
-            funcArgs: [DefaultExp.String, DefaultExp.String, DefaultExp.Bool]
+            displayExp: "{0} != {1}",
+            funcArgs: [DefaultExp.String, DefaultExp.String]
+        },
+        "StringIsNotEqualToStringIgnoringCase": {
+            displayName: "(String) is not equal to (String) ignoring case",
+            displayExp: "{0} !≈ {1}",
+            funcArgs: [DefaultExp.String, DefaultExp.String]
         },
         "StringStartsWithString": {
             displayName: "(String) starts with (String)",
-            displayExp: "{0} starts with {1}, ignoring case {2}",
-            funcArgs: [DefaultExp.String, DefaultExp.String, DefaultExp.Bool]
+            displayExp: "{0} starts with {1}",
+            funcArgs: [DefaultExp.String, DefaultExp.String]
+        },
+        "StringStartsWithStringIgnoringCase": {
+            displayName: "(String) starts with (String) ignoring case",
+            displayExp: "{0} starts with {1} ignoring case",
+            funcArgs: [DefaultExp.String, DefaultExp.String]
         },
         "StringContainsString": {
             displayName: "(String) contains (String)",
-            displayExp: "{0} contains {1}, ignoring case {2}",
-            funcArgs: [DefaultExp.String, DefaultExp.String, DefaultExp.Bool]
+            displayExp: "{0} contains {1}",
+            funcArgs: [DefaultExp.String, DefaultExp.String]
+        },
+        "StringContainsStringIgnoringCase": {
+            displayName: "(String) contains (String) ignoring case",
+            displayExp: "{0} contains {1} ignoring case",
+            funcArgs: [DefaultExp.String, DefaultExp.String]
         },
         "StringDictContainsKey": {
             displayName: "(StringDict) contains key (String)",
@@ -242,9 +262,19 @@ export const Func = {
             displayExp: "{0} contains {1}",
             funcArgs: [DefaultExp.StringList, DefaultExp.String]
         },
+        "StringListContainsStringIgnoringCase": {
+            displayName: "(StringList) contains (String) ignoring case",
+            displayExp: "{0} contains {1} ignoring case",
+            funcArgs: [DefaultExp.StringList, DefaultExp.String]
+        },
         "StringListDoesNotContainString": {
             displayName: "(StringList) doesn't contain (String)",
             displayExp: "{0} doesn't contain {1}",
+            funcArgs: [DefaultExp.StringList, DefaultExp.String]
+        },
+        "StringListDoesNotContainStringIgnoringCase": {
+            displayName: "(StringList) doesn't contain (String) ignoring case",
+            displayExp: "{0} doesn't contain {1} ignoring case",
             funcArgs: [DefaultExp.StringList, DefaultExp.String]
         },
         "StringListIsEmpty": {
