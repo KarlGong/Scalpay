@@ -25,10 +25,18 @@ export default class StringListInput extends Component {
     validators = {};
 
     render = () => {
-        return <div className={cs("scalpay-list", this.props.className)}>
+        return <div className={cs("scalpay-list", "draggable", this.props.className)}>
             <DragListView
                 style={this.props.style}
-                onDragEnd={() => { }}>
+                onDragEnd={(fromIndex, toIndex) => {
+                    let item = this.items.splice(fromIndex, 1)[0];
+                    this.items.splice(toIndex, 0, item);
+                    this.handleChange();
+                }}
+                scrollSpeed={3}
+                nodeSelector=".item"
+                handleSelector=".item"
+            >
                 {
                     this.items.map((item, index) => {
                         return <div key={item.key} className="item">

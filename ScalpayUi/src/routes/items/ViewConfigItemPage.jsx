@@ -51,7 +51,6 @@ export default class ViewConfigItemPage extends Component {
 
         let conditionWidth = 16;
         let resultWidth = 8;
-        let gutterWidth = 12;
 
         return <PageWrapper
             className="view-item-page"
@@ -99,20 +98,20 @@ export default class ViewConfigItemPage extends Component {
                     {
                         this.item.mode === ConfigItemMode.Raw ?
                             <Block name="Rules" className="rules">
-                                <Row gutter={gutterWidth} type="flex" align="middle" className="rule">
+                                <Row type="flex" align="middle" className="rule">
                                     <Col span={conditionWidth}><b>Condition</b></Col>
                                     <Col span={resultWidth}><b>Result</b></Col>
                                 </Row>
                                 {
                                     this.item.rules.map(rule =>
-                                        <Row key={rule.key} gutter={gutterWidth} type="flex" align="middle"
+                                        <Row key={rule.key} type="flex" align="middle"
                                              className="rule">
                                             <Col span={conditionWidth}><ExpressionView
                                                 expression={rule.condition}/></Col>
                                             <Col span={resultWidth}><ExpressionView expression={rule.result}/></Col>
                                         </Row>)
                                 }
-                                <Row gutter={gutterWidth} type="flex" align="middle"
+                                <Row type="flex" align="middle"
                                      className="rule">
                                     <Col span={conditionWidth}><b>Default</b></Col>
                                     <Col span={resultWidth}><ExpressionView expression={this.item.defaultResult}/></Col>

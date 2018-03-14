@@ -29,10 +29,9 @@ export default class RawRulePanel extends Component {
         let conditionWidth = 16;
         let resultWidth = 7;
         let deleteWidth = 1;
-        let gutterWidth = 12;
 
         return <div className="raw-rule-panel">
-            <Row gutter={gutterWidth} className="rule-header">
+            <Row className="rule-header">
                 <Col span={conditionWidth}>
                     <b>Condition</b>
                 </Col>
@@ -40,47 +39,56 @@ export default class RawRulePanel extends Component {
                     <b>Result</b>
                 </Col>
             </Row>
-            <DragListView onDragEnd={() => {
-            }}>
-                {
-                    this.item.rules.map((rule) => {
-                        return <Row key={rule.key} gutter={gutterWidth} className="rule" type="flex" align="middle">
-                            <Col span={conditionWidth}>
-                                <ExpressionView
-                                    allowEdit
-                                    expression={rule.condition}
-                                    item={this.item}
-                                    onChange={(exp) => rule.condition = exp}/>
-                            </Col>
-                            <Col span={resultWidth}>
-                                <ExpressionView
-                                    allowEdit
-                                    expression={rule.result}
-                                    item={this.item}
-                                    onChange={(exp) => rule.result = exp}/>
-                            </Col>
-                            <Col span={deleteWidth}>
-                                <Icon
-                                    className="delete"
-                                    type="minus-circle-o"
-                                    onClick={() => this.item.rules.remove(rule)}
-                                />
-                            </Col>
-                        </Row>
-                    })
-                }
-            </DragListView>
-            <Row gutter={gutterWidth}>
-                <Col span={conditionWidth + resultWidth}>
-                    <Button icon="plus" type="dashed" className="rule-add"
-                            onClick={() => this.item.rules.push({
-                                key: guid(),
-                                condition: DefaultExp.Bool,
-                                result: DefaultExp[this.item.resultDataType]
-                            })}>Add Rule</Button>
-                </Col>
-            </Row>
-            <Row gutter={gutterWidth} className="rule-default">
+            <div className="rules">
+                <DragListView
+                    onDragEnd={(fromIndex, toIndex) => {
+                        let rule = this.item.rules.splice(fromIndex, 1)[0];
+                        this.item.rules.splice(toIndex, 0, rule);
+                    }}
+                    scrollSpeed={3}
+                    nodeSelector=".rule"
+                    handleSelector=".rule"
+                >
+                    {
+                        this.item.rules.map((rule) => {
+                            return <Row key={rule.key} className="rule" type="flex" align="middle">
+                                <Col span={conditionWidth}>
+                                    <ExpressionView
+                                        allowEdit
+                                        expression={rule.condition}
+                                        item={this.item}
+                                        onChange={(exp) => rule.condition = exp}/>
+                                </Col>
+                                <Col span={resultWidth}>
+                                    <ExpressionView
+                                        allowEdit
+                                        expression={rule.result}
+                                        item={this.item}
+                                        onChange={(exp) => rule.result = exp}/>
+                                </Col>
+                                <Col span={deleteWidth}>
+                                    <Icon
+                                        className="delete"
+                                        type="minus-circle-o"
+                                        onClick={() => this.item.rules.remove(rule)}
+                                    />
+                                </Col>
+                            </Row>
+                        })
+                    }
+                </DragListView>
+                <Row>
+                    <Col span={conditionWidth + resultWidth}>
+                        <Button icon="plus" type="dashed" className="rule-add"
+                                onClick={() => this.item.rules.push({
+                                    key: guid(),
+                                    condition: DefaultExp.Bool,
+                                    result: DefaultExp[this.item.resultDataType]
+                                })}>Add Rule</Button>
+                    </Col>
+                </Row>
+            </div>
+            <Row className="rule-default">
                 <Col span={conditionWidth}>
                     <b>Default</b>
                 </Col>

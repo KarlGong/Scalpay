@@ -21,10 +21,10 @@ export default class PropertyPanel extends Component {
     render = () => {
         const formItemLayout = {
             labelCol: {
-                span: 4
+                span: 5
             },
             wrapperCol: {
-                span: 20
+                span: 19
             },
         };
 

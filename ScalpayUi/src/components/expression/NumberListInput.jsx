@@ -26,25 +26,33 @@ export default class NumberListInput extends Component {
     validators = {};
 
     render = () => {
-        return <div className={cs("scalpay-list", this.props.className)}>
+        return <div className={cs("scalpay-list", "draggable", this.props.className)}>
             <DragListView
                 style={this.props.style}
-                onDragEnd={() => { }}>
+                onDragEnd={(fromIndex, toIndex) => {
+                    let item = this.items.splice(fromIndex, 1)[0];
+                    this.items.splice(toIndex, 0, item);
+                    this.handleChange();
+                }}
+                scrollSpeed={3}
+                nodeSelector=".item"
+                handleSelector=".item"
+            >
                 {
                     this.items.map((item, index) => {
                         return <div key={item.key} className="item">
-                                <NumberInput
-                                    className="single"
-                                    defaultValue={untracked(() => item.value)}
-                                    onChange={(value) => {
-                                        item.value = value;
-                                        this.handleChange();
-                                    }}
-                                    setValidator={validator => {
-                                        this.validators[item.key] = validator;
-                                        this.setValidator();
-                                    }}
-                                />
+                            <NumberInput
+                                className="single"
+                                defaultValue={untracked(() => item.value)}
+                                onChange={(value) => {
+                                    item.value = value;
+                                    this.handleChange();
+                                }}
+                                setValidator={validator => {
+                                    this.validators[item.key] = validator;
+                                    this.setValidator();
+                                }}
+                            />
                             <Icon
                                 className="delete"
                                 type="minus-circle-o"
@@ -58,12 +66,12 @@ export default class NumberListInput extends Component {
                         </div>
                     })
                 }
-                <Button type="dashed" className="add" onClick={() => {
-                    this.items.push({key: guid(), value: 0});
-                    this.handleChange();
-                }}>
-                    <Icon type="plus"/> Add Number
-                </Button>
+                    <Button type="dashed" className="add" onClick={() => {
+                        this.items.push({key: guid(), value: 0});
+                        this.handleChange();
+                    }}>
+                        <Icon type="plus"/> Add Number
+                    </Button>
             </DragListView>
         </div>
     };

@@ -102,7 +102,7 @@ class EditConfigItemModal extends Component {
             cancelText="Cancel"
             visible={this.visible}
             maskClosable={false}
-            width={800}
+            width={1000}
             confirmLoading={this.loading}
             onOk={this.handleOk}
             onCancel={this.handleCancel}

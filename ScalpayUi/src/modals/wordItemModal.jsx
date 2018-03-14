@@ -21,7 +21,7 @@ function add(onSuccess) {
     const target = document.createElement("div");
     document.body.appendChild(target);
 
-    render(<EditWordItemModal addMode onSuccess={onSuccess} afterClose={() => {
+    render(<AddWordItemModal onSuccess={onSuccess} afterClose={() => {
         unmountComponentAtNode(target);
         target.remove()
     }}/>, target);
@@ -50,6 +50,83 @@ function del(user, onSuccess) {
         unmountComponentAtNode(target);
         target.remove()
     }}/>, target);
+}
+
+@observer
+class AddWordItemModal extends Component {
+    static defaultProps = {
+        onSuccess: (user) => {},
+        afterClose: () => {}
+    };
+
+    basicInfo = {
+        projectKey: null
+    };
+
+    validator = new Validator(this.basicInfo, {
+        projectKey: {required: true, message: "project is required"}
+    });
+    @observable loading = false;
+    @observable visible = true;
+
+    render = () => {
+        return <Modal
+            title="Add Word Item"
+            okText="Add Word Item"
+            cancelText="Cancel"
+            visible={this.visible}
+            maskClosable={false}
+            confirmLoading={this.loading}
+            onOk={this.handleOk}
+            onCancel={this.handleCancel}
+            afterClose={() => this.props.afterClose()}
+        >
+            <Form>
+                <Form.Item label="Project"
+                           validateStatus={this.validator.getResult("projectKey").status}
+                           help={this.validator.getResult("projectKey").message}>
+                    <Input
+                        onChange={(e) => {
+                        }} onBlur={() => this.validator.validate("projectKey")}
+                    />
+                </Form.Item>
+                <Form.Item label="Language">
+
+                </Form.Item>
+                <Form.Item label="Email"
+                           validateStatus={this.validator.getResult("email").status}
+                           help={this.validator.getResult("email").message}>
+                    <Input
+                        defaultValue={untracked(() => this.user.email)}
+                        onChange={(e) => {
+                            this.user.email = e.target.value;
+                            this.validator.resetResult("email");
+                        }} onBlur={() => this.validator.validate("email")}/>
+                </Form.Item>
+
+            </Form>
+        </Modal>
+    };
+
+    handleOk = () => {
+        this.validator
+            .validateAll()
+            .then(() => {
+                this.loading = true;
+                axios.put("/api/users", this.user)
+                    .then(res => {
+                        let user = res.data.data;
+                        this.loading = false;
+                        this.visible = false;
+                        message.success(<span>User</span>);
+                        this.props.onSuccess(user);
+                    }, () => this.loading = false)
+            });
+    };
+
+    handleCancel = (e) => {
+        this.visible = false;
+    };
 }
 
 @observer
@@ -136,35 +213,19 @@ class EditWordItemModal extends Component {
     };
 
     handleOk = () => {
-        if (this.props.addMode) {
-            this.validator
-                .validateAll()
-                .then(() => {
-                    this.loading = true;
-                    axios.put("/api/users", this.user)
-                        .then(res => {
-                            let user = res.data.data;
-                            this.loading = false;
-                            this.visible = false;
-                            message.success(<span>User</span>);
-                            this.props.onSuccess(user);
-                        }, () => this.loading = false)
-                });
-        } else {
-            this.validator
-                .validateAll()
-                .then(() => {
-                    this.loading = true;
-                    axios.post("/api/users/" + this.user.username, this.user)
-                        .then(res => {
-                            let user = res.data.data;
-                            this.loading = false;
-                            this.visible = false;
-                            message.success(<span>User</span>);
-                            this.props.onSuccess(user);
-                        }, () => this.loading = false)
-                });
-        }
+        this.validator
+            .validateAll()
+            .then(() => {
+                this.loading = true;
+                axios.put("/api/users", this.user)
+                    .then(res => {
+                        let user = res.data.data;
+                        this.loading = false;
+                        this.visible = false;
+                        message.success(<span>User</span>);
+                        this.props.onSuccess(user);
+                    }, () => this.loading = false)
+            });
     };
 
     handleCancel = (e) => {
