@@ -61,7 +61,7 @@ export default class ViewConfigItemPage extends Component {
                 <Breadcrumb.Item>{this.props.params.itemKey}</Breadcrumb.Item>
             </Breadcrumb>}>
             <CommandBar leftItems={commands}/>
-            <Layout style={{width: "600px"}}>
+            <Layout>
                 <Spin spinning={this.loading}>
                     <Block name="Basic">
                         <FieldsViewer fields={[

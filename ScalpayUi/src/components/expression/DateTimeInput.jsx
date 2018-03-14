@@ -1,4 +1,4 @@
-import {Layout, Menu, Input, Icon, DatePicker, TimePicker, Tooltip} from "antd";
+import {Layout, Menu, Input, Icon, DatePicker, Tooltip} from "antd";
 import React, {Component} from "react";
 import moment from "moment";
 import {observer} from "mobx-react";
@@ -34,30 +34,33 @@ export default class DateTimeInput extends Component {
     }
 
     render = () => {
-        return <Tooltip
-            placement="topLeft"
-            title={this.validator.getResult("value").message}>
-            <span>
-            <DatePicker
-                showTime
-                className={cs(this.props.className, this.validator.getResult("value").status)}
-                defaultValue={this.props.defaultValue && moment(this.props.defaultValue).utc()}
-                format="YYYY-MM-DD HH:mm:ss"
-                placeholder="Select Date Time"
-                onChange={(value) => {
-                    let val = value && value.utc().format();
-                    this.item.value = val;
-                    this.validator.validate("value");
-                    this.props.onChange(val);
-                }}
-                onOk={(value) => {
-                    let val = value && value.utc().format();
-                    this.item.value = val;
-                    this.validator.validate("value");
-                    this.props.onChange(val);
-                }}
-            />
-            </span>
-        </Tooltip>
+        return <span>
+            <Tooltip
+                placement="topLeft"
+                title={this.validator.getResult("value").message}>
+                <span>
+                    <DatePicker
+                        showTime
+                        className={cs(this.props.className, this.validator.getResult("value").status)}
+                        defaultValue={this.props.defaultValue && moment(this.props.defaultValue).utc()}
+                        format="YYYY-MM-DD HH:mm:ss"
+                        placeholder="Select Date Time"
+                        onChange={(value) => {
+                            let val = value && value.utc().format();
+                            this.item.value = val;
+                            this.validator.validate("value");
+                            this.props.onChange(val);
+                        }}
+                        onOk={(value) => {
+                            let val = value && value.utc().format();
+                            this.item.value = val;
+                            this.validator.validate("value");
+                            this.props.onChange(val);
+                        }}
+                    />
+                </span>
+            </Tooltip>
+            <Tooltip title="UTC time"><Icon type="question-circle" style={{marginLeft: "10px"}}/></Tooltip>
+        </span>
     };
 }

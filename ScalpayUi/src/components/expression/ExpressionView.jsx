@@ -55,8 +55,8 @@ export default class ExpressionView extends Component {
                                 content={"Local Time: " + mom.format("YYYY-MM-DD HH:mm:ss")}
                             >
                                 <span>
-                                <Icon type="date"/>
-                                    &nbsp;{mom.utc().format("YYYY-MM-DD HH:mm:ss")}
+                                <Icon type="date" className="type-icon"/>
+                                {mom.utc().format("YYYY-MM-DD HH:mm:ss")}
                                 </span>
                             </Popover>;
                         break;
@@ -85,7 +85,7 @@ export default class ExpressionView extends Component {
 
                         display =
                             <Popover content={detailText}>
-                                <span><Icon type="duration"/>&nbsp;{displayText}</span>
+                                <span><Icon type="duration" className="type-icon"/>{displayText}</span>
                             </Popover>;
                         break;
                     case DataType.Number:
@@ -99,12 +99,12 @@ export default class ExpressionView extends Component {
                                         <div key={index} className="text">{number}</div>)}
                                 </div> : "<Empty>"}
                             >
-                                <span><Icon type="number-list"/>&nbsp;[...{this.expression.value.length}]</span>
+                                <span><Icon type="number-list" className="type-icon"/>[...{this.expression.value.length}]</span>
                             </Popover>;
                         break;
                     case DataType.String:
                         display =
-                            <span><Icon type="left-quote"/>{this.expression.value}<Icon type="right-quote"/></span>;
+                            <span><Icon type="quote-left"/>{this.expression.value}<Icon type="quote-right"/></span>;
                         break;
                     case DataType.StringDict:
                         display = <Popover
@@ -117,8 +117,8 @@ export default class ExpressionView extends Component {
                             </div> : "<Empty>"}
                         >
                             <span>
-                                <Icon type="string-dict"/>
-                                {" {..." + Object.keys(this.expression.value).length + "}"}
+                                <Icon type="string-dict" className="type-icon"/>
+                                {"{..." + Object.keys(this.expression.value).length + "}"}
                             </span>
                         </Popover>;
                         break;
@@ -131,8 +131,8 @@ export default class ExpressionView extends Component {
                                 </div> : "<Empty>"}
                             >
                                 <span>
-                                    <Icon type="string-list"/>
-                                    &nbsp;[...{this.expression.value.length}]
+                                    <Icon type="string-list" className="type-icon"/>
+                                    [...{this.expression.value.length}]
                                 </span>
                             </Popover>;
                         break;
@@ -141,7 +141,7 @@ export default class ExpressionView extends Component {
             case ExpType.Var:
                 return <span {...editProps}>
                     <Popover content={"Data Type: " + this.expression.returnType}>
-                        <span><Icon type="var"/>&nbsp;{this.expression.var}</span>
+                        <span><Icon type="var" className="type-icon"/>{this.expression.var}</span>
                     </Popover>
                 </span>;
             case ExpType.Func:
