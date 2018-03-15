@@ -27,12 +27,14 @@ namespace ScalpayApi
 
         public async Task Invoke(HttpContext context, IUserService userService, IMapper mapper)
         {
-            if (context.Request.Path.Equals("/api/auth/signIn"))
+            var path = context.Request.Path.ToString();
+            if (path.Equals("/api/auth/signIn", StringComparison.OrdinalIgnoreCase)
+                || path.StartsWith("/api/eval/", StringComparison.OrdinalIgnoreCase))
             {
                 await _next(context);
                 return;
             }
-            
+
             context.Request.Headers.TryGetValue("Scalpay-Api-Key", out var apiKeys);
             if (apiKeys.Any())
             {
