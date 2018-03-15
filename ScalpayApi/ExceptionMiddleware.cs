@@ -14,6 +14,7 @@ using ScalpayApi.Controllers;
 using ScalpayApi.Services;
 using ScalpayApi.Services.Exceptions;
 using ScalpayApi.Services.Parameters.Criterias;
+using Serilog;
 
 namespace ScalpayApi
 {
@@ -34,6 +35,8 @@ namespace ScalpayApi
             }
             catch (ScalpayException e)
             {
+                Log.Error(e, $"Error Code: {(int) e.StatusCode}");
+                
                 context.Response.Clear();
                 context.Response.ContentType = @"application/json";
                 context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;

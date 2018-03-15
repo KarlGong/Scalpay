@@ -19,6 +19,7 @@ using ScalpayApi.Data;
 using ScalpayApi.Enums;
 using ScalpayApi.Models;
 using ScalpayApi.Services;
+using Serilog;
 
 namespace ScalpayApi
 {
@@ -27,6 +28,8 @@ namespace ScalpayApi
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
         }
 
         public IConfiguration Configuration { get; }
@@ -70,12 +73,13 @@ namespace ScalpayApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
+            IServiceProvider serviceProvider)
         {
             InitApplication(serviceProvider);
-            
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            
+
+            loggerFactory.AddSerilog();
+
             app.UseScalpayException();
 
             app.UseScalpayAuthentication();
@@ -97,12 +101,12 @@ namespace ScalpayApi
                 settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 return settings;
             });
-            
+
             // init database
             using (var context = serviceProvider.GetService<ScalpayDbContext>())
             {
                 context.Database.Migrate();
-                
+
                 // add default user
                 if (!context.Users.Any())
                 {
