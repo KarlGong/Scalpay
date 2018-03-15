@@ -36,7 +36,7 @@ namespace ScalpayApi
             {
                 context.Response.Clear();
                 context.Response.ContentType = @"application/json";
-                context.Response.StatusCode = (int) HttpStatusCode.OK;
+                context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
                 await context.Response.WriteAsync(JsonConvert.SerializeObject(new Result()
                 {
                     StatusCode = (int) e.StatusCode,

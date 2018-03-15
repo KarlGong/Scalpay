@@ -22,23 +22,21 @@ axios.interceptors.request.use(
 );
 
 axios.interceptors.response.use(
-    response => {
-        if (response.data.statusCode){
+    response => response,
+    error => {
+        if (error.response.data.statusCode) {
             notification.error({
-                message: "Error code " + response.data.statusCode,
-                description: response.data.message,
+                message: "Error code " + error.response.data.statusCode,
+                description: error.response.data.message,
                 duration: 0,
             });
-            return Promise.reject(response);
+        } else {
+            notification.error({
+                message: error.message,
+                description: error.response.data,
+                duration: 0,
+            });
         }
-        return response;
-    },
-    error => {
-        notification.error({
-            message: error.message,
-            description: error.response.data,
-            duration: 0,
-        });
         return Promise.reject(error);
     }
 );

@@ -11,5 +11,10 @@ namespace ScalpayApi.Services.Exceptions
         {
             StatusCode = code;
         }
+        
+        public ScalpayException(StatusCode code, string message, Exception innerException): base(message, innerException)
+        {
+            StatusCode = code;
+        }
     }
 }
