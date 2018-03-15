@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using ScalpayApi.Data;
 using ScalpayApi.Models;
 using ScalpayApi.Services.Exceptions;
@@ -21,7 +22,7 @@ namespace ScalpayApi.Services
 
         Task DeleteConfigItemAsync(string itemKey);
 
-        Task<SData> EvalConfigItem(ConfigItem configItem, Dictionary<string, SData> parameters);
+        Task<SData> EvalConfigItem(string itemKey, Dictionary<string, JToken> parameters);
     }
 
     public class ConfigItemService : IConfigItemService
@@ -43,7 +44,8 @@ namespace ScalpayApi.Services
                 .SingleOrDefaultAsync(i => i.ItemKey == itemKey);
             if (item == null)
             {
-                throw new ScalpayException(StatusCode.ItemNotFound, $"Config item with item key {itemKey} is not found.");
+                throw new ScalpayException(StatusCode.ItemNotFound,
+                    $"Config item with item key {itemKey} is not found.");
             }
 
             item.Rules = item.Rules.OrderBy(r => r.Order).ToList();
@@ -57,11 +59,12 @@ namespace ScalpayApi.Services
 
             if (oldItem != null)
             {
-                throw new ScalpayException(StatusCode.ItemExisted, $"Config item with item key {ps.ItemKey} is already existed.");
+                throw new ScalpayException(StatusCode.ItemExisted,
+                    $"Config item with item key {ps.ItemKey} is already existed.");
             }
 
             var item = _mapper.Map<ConfigItem>(ps);
-            
+
             var order = 0;
             item.Rules.ForEach(rule => rule.Order = order++);
 
@@ -79,7 +82,7 @@ namespace ScalpayApi.Services
             _context.ConfigItems.Attach(item);
 
             _mapper.Map(ps, item);
-            
+
             var order = 0;
             item.Rules.ForEach(rule => rule.Order = order++);
 
@@ -95,17 +98,31 @@ namespace ScalpayApi.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<SData> EvalConfigItem(ConfigItem configItem, Dictionary<string, SData> parameters)
+        public async Task<SData> EvalConfigItem(string itemKey, Dictionary<string, JToken> parameters)
         {
-            foreach (var rule in configItem.Rules.OrderBy(r => r.Order))
+            var item = await GetConfigItemAsync(itemKey);
+
+            var variables = new Dictionary<string, SData>();
+
+            foreach (var pair in parameters ?? new Dictionary<string, JToken>())
             {
-                if (((SBool) await _expService.EvalExpressionAsync(rule.Condition, parameters)).Inner)
+                var parameterInfo = item.ParameterInfos.SingleOrDefault(p => p.Name == pair.Key);
+
+                if (parameterInfo == null)
+                    continue; // data type not found, since paramter is not decalred in parameter list.
+
+                variables.Add(pair.Key, await _expService.ConvertToSDataAsync(pair.Value, parameterInfo.DataType));
+            }
+
+            foreach (var rule in item.Rules.OrderBy(r => r.Order))
+            {
+                if (((SBool) await _expService.EvalExpressionAsync(rule.Condition, variables)).Inner)
                 {
-                    return await _expService.EvalExpressionAsync(rule.Result, parameters);
+                    return await _expService.EvalExpressionAsync(rule.Result, variables);
                 }
             }
 
-            return await _expService.EvalExpressionAsync(configItem.DefaultResult, parameters);
+            return await _expService.EvalExpressionAsync(item.DefaultResult, variables);
         }
     }
 }

@@ -13,47 +13,19 @@ namespace ScalpayApi.Controllers
     {
         private readonly IConfigItemService _configItemService;
         private readonly IWordItemService _wordItemService;
-        private readonly IExpressionService _expService;
 
-        public EvalController(IConfigItemService configItemService, IWordItemService wordItemService,
-            IExpressionService expService)
+        public EvalController(IConfigItemService configItemService, IWordItemService wordItemService)
         {
             _configItemService = configItemService;
             _wordItemService = wordItemService;
-            _expService = expService;
         }
 
         [HttpPost("config/{itemKey}")]
         public async Task<Result<SData>> EvalConfigItem([FromRoute] string itemKey, [FromBody] Dictionary<string, JToken> parameters)
         {
-            var item = await _configItemService.GetConfigItemAsync(itemKey);
-
-            var variables = new Dictionary<string, SData>();
-
-            foreach (var pair in parameters)
-            {
-                var parameterInfo = item.ParameterInfos.SingleOrDefault(p => p.Name == pair.Key);
-
-                if (parameterInfo == null)
-                    continue; // data type not found, since paramter is not decalred in parameter list.
-
-                variables.Add(pair.Key, await _expService.ConvertToSDataAsync(pair.Value, parameterInfo.DataType));
-            }
-
             return new Result<SData>()
             {
-                Data = await _configItemService.EvalConfigItem(item, variables)
-            };
-        }
-
-        [HttpGet("config/{itemKey}")]
-        public async Task<Result<SData>> EvalConfigPropertyItem([FromRoute] string itemKey)
-        {
-            var item = await _configItemService.GetConfigItemAsync(itemKey);
-
-            return new Result<SData>()
-            {
-                Data = await _configItemService.EvalConfigItem(item, new Dictionary<string, SData>())
+                Data = await _configItemService.EvalConfigItem(itemKey, parameters)
             };
         }
 

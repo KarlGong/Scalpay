@@ -32,7 +32,7 @@ namespace ScalpayApi.Services
                 case SExpressionType.Var:
                     if (!variables.TryGetValue(exp.Var, out var variable))
                     {
-                        throw new ScalpayException(StatusCode.EvalItemError, $"Variable {exp.Var} is not existing.");
+                        throw new ScalpayException(StatusCode.EvalItemError, $"Variable {exp.Var} is not found in paramters.");
                     }
 
                     result = variable;
@@ -45,11 +45,16 @@ namespace ScalpayApi.Services
                             $"{exp.FuncName} is not a valid function name.");
                     }
 
-                    var args = exp.FuncArgs.Select(a => EvalExpressionAsync(a, variables).Result).ToArray<object>();
+                    var args = new List<SData>();
+
+                    foreach (var argExp in exp.FuncArgs)
+                    {
+                        args.Add(await EvalExpressionAsync(argExp, variables));
+                    }
 
                     try
                     {
-                        result = (SData) method.Invoke(null, args);
+                        result = (SData) method.Invoke(null, args.ToArray<object>());
                     }
                     catch (Exception e)
                     {
