@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
 using ScalpayApi.Data;
 using ScalpayApi.Models;
@@ -28,29 +30,37 @@ namespace ScalpayApi.Services
     public class ConfigItemService : IConfigItemService
     {
         private readonly ScalpayDbContext _context;
+        private readonly IMemoryCache _cache;
         private readonly IMapper _mapper;
         private readonly IExpressionService _expService;
 
-        public ConfigItemService(ScalpayDbContext context, IMapper mapper, IExpressionService expService)
+        public ConfigItemService(ScalpayDbContext context, IMemoryCache cache, IMapper mapper,
+            IExpressionService expService)
         {
             _context = context;
+            _cache = cache;
             _mapper = mapper;
             _expService = expService;
         }
 
         public async Task<ConfigItem> GetConfigItemAsync(string itemKey)
         {
-            var item = await _context.ConfigItems.AsNoTracking().Include(i => i.Project).Include(i => i.Rules)
-                .SingleOrDefaultAsync(i => i.ItemKey == itemKey);
-            if (item == null)
+            return await _cache.GetOrCreateAsync(itemKey, async entry =>
             {
-                throw new ScalpayException(StatusCode.ItemNotFound,
-                    $"Config item with item key {itemKey} is not found.");
-            }
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
 
-            item.Rules = item.Rules.OrderBy(r => r.Order).ToList();
+                var item = await _context.ConfigItems.AsNoTracking().Include(i => i.Project).Include(i => i.Rules)
+                    .SingleOrDefaultAsync(i => i.ItemKey == itemKey);
+                if (item == null)
+                {
+                    throw new ScalpayException(StatusCode.ItemNotFound,
+                        $"Config item with item key {itemKey} is not found.");
+                }
 
-            return item;
+                item.Rules = item.Rules.OrderBy(r => r.Order).ToList();
+
+                return item;
+            });
         }
 
         public async Task<ConfigItem> AddConfigItemAsync(AddConfigItemParams ps)
@@ -72,6 +82,8 @@ namespace ScalpayApi.Services
 
             await _context.SaveChangesAsync();
 
+            _cache.Set(item.ItemKey, item, TimeSpan.FromHours(1));
+
             return item;
         }
 
@@ -88,6 +100,8 @@ namespace ScalpayApi.Services
 
             await _context.SaveChangesAsync();
 
+            _cache.Set(item.ItemKey, item, TimeSpan.FromHours(1));
+
             return item;
         }
 
@@ -96,6 +110,8 @@ namespace ScalpayApi.Services
             _context.ConfigItems.Remove(await GetConfigItemAsync(itemKey));
 
             await _context.SaveChangesAsync();
+
+            _cache.Remove(itemKey);
         }
 
         public async Task<SData> EvalConfigItem(string itemKey, Dictionary<string, JToken> parameters)

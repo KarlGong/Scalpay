@@ -60,6 +60,8 @@ namespace ScalpayApi
             services.AddDbContextPool<ScalpayDbContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("mysql")));
 
+            services.AddMemoryCache();
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddTransient<IItemService, ItemService>();
