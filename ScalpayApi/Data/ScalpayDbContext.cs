@@ -16,6 +16,8 @@ namespace ScalpayApi.Data
         
         public DbSet<Item> Items { get; set; }
         
+        public DbSet<Audit> Audits { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserConfiguration());
@@ -24,6 +26,8 @@ namespace ScalpayApi.Data
             
             modelBuilder.ApplyConfiguration(new ItemConfiguration());
             modelBuilder.ApplyConfiguration(new RuleConfiguration());
+
+            modelBuilder.ApplyConfiguration(new AuditConfiguration());
         }
     }
 }

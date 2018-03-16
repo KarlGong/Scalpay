@@ -16,5 +16,7 @@ namespace ScalpayApi.Models
         public DateTime UpdateTime { get; set; }
         
         public List<Item> Items { get; set; } = new List<Item>();
+        
+        public List<Audit> Audits { get; set; } = new List<Audit>();
     }
 }

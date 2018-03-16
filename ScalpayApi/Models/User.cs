@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using ScalpayApi.Enums;
 
 namespace ScalpayApi.Models
@@ -32,5 +33,7 @@ namespace ScalpayApi.Models
         public DateTime InsertTime { get; set; }
 
         public DateTime UpdateTime { get; set; }
+        
+        public List<Audit> Audits { get; set; } = new List<Audit>();
     }
 }

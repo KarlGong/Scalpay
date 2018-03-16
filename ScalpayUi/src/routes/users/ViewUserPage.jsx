@@ -15,6 +15,7 @@ import global from "~/global";
 import userModal from "~/modals/userModal";
 import FieldsViewer from "~/layouts/FieldsViewer";
 import Block from "~/layouts/Block";
+import AuditsView from "~/components/AuditsView";
 
 @observer
 export default class ViewUserPage extends Component {
@@ -45,15 +46,16 @@ export default class ViewUserPage extends Component {
                 <Breadcrumb.Item>{this.props.params.username}</Breadcrumb.Item>
             </Breadcrumb>}>
             <CommandBar leftItems={commands}/>
-            <Spin spinning={this.loading}>
-                <Block name="Basic">
+            <Block name="Basic" loading={this.loading}>
                 <FieldsViewer fields={[
                     ["Username", this.user.username],
                     ["Full Name", this.user.fullName],
                     ["Email", this.user.email],
                 ]}/>
-                </Block>
-            </Spin>
+            </Block>
+            <Block name="Audits">
+                <AuditsView OperatorUserName={this.user.username}/>
+            </Block>
         </PageWrapper>
     };
 

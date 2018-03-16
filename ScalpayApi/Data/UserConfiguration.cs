@@ -25,6 +25,9 @@ namespace ScalpayApi.Data
             builder.Property(u => u.InsertTime).ValueGeneratedOnAdd();
 
             builder.Property(u => u.UpdateTime).ValueGeneratedOnAddOrUpdate();
+            
+            builder.HasMany(i => i.Audits).WithOne(a => a.Operator).HasForeignKey(a => a.OperatorUserName)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

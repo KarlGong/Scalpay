@@ -68,6 +68,7 @@ namespace ScalpayApi
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IExpressionService, ExpressionService>();
+            services.AddTransient<IAuditService, AuditService>();
 
             return services.BuildServiceProvider();
         }

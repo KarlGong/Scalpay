@@ -30,6 +30,9 @@ namespace ScalpayApi.Data
 
             builder.HasMany(i => i.Rules).WithOne(r => r.Item).HasForeignKey(r => r.ItemKey)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(i => i.Audits).WithOne(a => a.Item).HasForeignKey(a => a.ItemKey)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

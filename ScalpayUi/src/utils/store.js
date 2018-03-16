@@ -15,6 +15,15 @@ export const ItemMode = {
     Raw: "Raw"
 };
 
+export const AuditType = {
+    AddItem: "AddItem",
+    UpdateItem: "UpdateItem",
+    DeleteItem: "DeleteItem",
+    AddProject: "AddProject",
+    UpdateProject: "UpdateProject",
+    DeleteProject: "DeleteProject"
+};
+
 export const ExpType = {
     Func: "Func",
     Value: "Value",

@@ -54,7 +54,7 @@ export default class ProjectsPage extends Component {
             </Breadcrumb>}>
             <List
                 pagination={{
-                    showTotal: (total, range) => total ? `${range[0]}-${range[1]} of ${total} items` : "0-0 of 0 items",
+                    showTotal: (total, range) => total ? `${range[0]}-${range[1]} of ${total} projects` : "0-0 of 0 projects",
                     pageSize: this.criteria.pageSize,
                     current: this.criteria.pageIndex + 1,
                     total: this.totalCount,

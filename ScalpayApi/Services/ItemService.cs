@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
 using ScalpayApi.Data;
+using ScalpayApi.Enums;
 using ScalpayApi.Models;
 using ScalpayApi.Services.Exceptions;
 using ScalpayApi.Services.Parameters;
@@ -38,14 +39,16 @@ namespace ScalpayApi.Services
         private readonly IMemoryCache _cache;
         private readonly IMapper _mapper;
         private readonly IExpressionService _expService;
+        private readonly IAuditService _auditService;
 
         public ItemService(ScalpayDbContext context, IMemoryCache cache, IMapper mapper,
-            IExpressionService expService)
+            IExpressionService expService, IAuditService auditService)
         {
             _context = context;
             _cache = cache;
             _mapper = mapper;
             _expService = expService;
+            _auditService = auditService;
         }
         
         public async Task<List<Item>> GetItemsAsync(ItemCriteria criteria)
@@ -100,6 +103,13 @@ namespace ScalpayApi.Services
 
             _cache.Set(item.ItemKey, item, TimeSpan.FromHours(1));
 
+            await _auditService.AddAuditAsync(new AddAuditParams()
+            {
+                AuditType = AuditType.AddItem,
+                ProjectKey = ps.ProjectKey,
+                ItemKey = ps.ItemKey
+            });
+
             return item;
         }
 
@@ -117,17 +127,33 @@ namespace ScalpayApi.Services
             await _context.SaveChangesAsync();
 
             _cache.Set(item.ItemKey, item, TimeSpan.FromHours(1));
+            
+            await _auditService.AddAuditAsync(new AddAuditParams()
+            {
+                AuditType = AuditType.UpdateItem,
+                ProjectKey = item.ProjectKey,
+                ItemKey = ps.ItemKey
+            });
 
             return item;
         }
 
         public async Task DeleteItemAsync(string itemKey)
         {
-            _context.Items.Remove(await GetItemAsync(itemKey));
+            var item = await GetItemAsync(itemKey);
+            
+            _context.Items.Remove(item);
 
             await _context.SaveChangesAsync();
 
             _cache.Remove(itemKey);
+            
+            await _auditService.AddAuditAsync(new AddAuditParams()
+            {
+                AuditType = AuditType.DeleteItem,
+                ProjectKey = item.ProjectKey,
+                ItemKey = itemKey
+            });
         }
 
         public async Task<SData> EvalItem(string itemKey, Dictionary<string, JToken> parameters)

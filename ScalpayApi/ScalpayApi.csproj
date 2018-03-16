@@ -4,6 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Controllers\DTOS" />
+    <Folder Include="Migrations" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>

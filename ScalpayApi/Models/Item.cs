@@ -56,5 +56,7 @@ namespace ScalpayApi.Models
         public Project Project { get; set; }   
 
         public List<Rule> Rules { get; set; } = new List<Rule>();
+        
+        public List<Audit> Audits { get; set; } = new List<Audit>();
     }
 }

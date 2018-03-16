@@ -15,6 +15,7 @@ import "./ViewProjectPage.less";
 import global from "~/global";
 import projectModal from "~/modals/projectModal";
 import Block from "~/layouts/Block";
+import AuditsView from "~/components/AuditsView";
 
 @observer
 export default class ViewProjectPage extends Component {
@@ -47,17 +48,18 @@ export default class ViewProjectPage extends Component {
                 <Breadcrumb.Item>{this.props.params.projectKey}</Breadcrumb.Item>
             </Breadcrumb>}>
             <CommandBar leftItems={commands}/>
-            <Spin spinning={this.loading}>
-                <Block name="Basic">
-                    <FieldsViewer fields={[
-                        ["Project Key", this.project.projectKey],
-                        ["Name", this.project.name],
-                        ["Description", this.project.description],
-                        ["Create Time", moment(this.project.insertTime).fromNow()],
-                        ["Update Time", moment(this.project.updateTime).fromNow()],
-                    ]}/>
-                </Block>
-            </Spin>
+            <Block name="Basic" loading={this.loading}>
+                <FieldsViewer fields={[
+                    ["Project Key", this.project.projectKey],
+                    ["Name", this.project.name],
+                    ["Description", this.project.description],
+                    ["Create Time", moment(this.project.insertTime).fromNow()],
+                    ["Update Time", moment(this.project.updateTime).fromNow()],
+                ]}/>
+            </Block>
+            <Block name="Audits">
+                <AuditsView projectKey={this.project.projectKey}/>
+            </Block>
         </PageWrapper>
     };
 

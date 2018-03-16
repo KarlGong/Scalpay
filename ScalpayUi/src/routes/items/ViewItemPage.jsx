@@ -18,6 +18,7 @@ import itemModal from "~/modals/itemModal/itemModal";
 import ProjectInfo from "~/components/ProjectInfo";
 import Block from "~/layouts/Block";
 import ExpressionView from "~/components/expression/ExpressionView";
+import AuditsView from "~/components/AuditsView";
 import "./ViewItemPage.less";
 
 @observer
@@ -61,67 +62,68 @@ export default class ViewItemPage extends Component {
             </Breadcrumb>}>
             <CommandBar leftItems={commands}/>
             <Layout>
-                <Spin spinning={this.loading}>
-                    <Block name="Basic">
-                        <FieldsViewer fields={[
-                            ["Project", <ProjectInfo project={this.item.project}/>],
-                            ["Item Key", this.item.itemKey],
-                            ["Name", this.item.name],
-                            ["Description", this.item.description],
-                            ["Create Time", moment(this.item.insertTime).fromNow()],
-                            ["Update Time", moment(this.item.updateTime).fromNow()],
-                        ]}/>
-                    </Block>
-                    {
-                        this.item.mode === ItemMode.Property ?
-                            <Block name="Property">
-                                <FieldsViewer fields={[
-                                    ["Result Data Type", this.item.resultDataType],
-                                    ["Result", <ExpressionView topLevel expression={this.item.defaultResult}/>]
-                                ]}/>
-                            </Block>
-                            : null
-                    }
-                    {
-                        this.item.mode === ItemMode.Raw ?
-                            <Block name="Parameters & Result">
-                                <FieldsViewer
-                                    fields={this.item.parameterInfos.map(info => [info.name, info.dataType])}/>
-                                <FieldsViewer fields={[[
-                                    <b>Result Data Type</b>,
-                                    <b>{this.item.resultDataType}</b>
-                                ]]}/>
-                            </Block>
-                            : null
-                    }
-                    {
-                        this.item.mode === ItemMode.Raw ?
-                            <Block name="Rules" className="rules">
-                                <Row type="flex" align="middle" className="rule">
-                                    <Col span={conditionWidth}><b>Condition</b></Col>
-                                    <Col span={resultWidth}><b>Result</b></Col>
-                                </Row>
-                                {
-                                    this.item.rules.map(rule =>
-                                        <Row key={rule.key} type="flex" align="middle"
-                                             className="rule">
-                                            <Col span={conditionWidth}><ExpressionView
-                                                topLevel
-                                                expression={rule.condition}/></Col>
-                                            <Col span={resultWidth}><ExpressionView
-                                                topLevel
-                                                expression={rule.result}/></Col>
-                                        </Row>)
-                                }
-                                <Row type="flex" align="middle"
-                                     className="rule">
-                                    <Col span={conditionWidth}><b>Default</b></Col>
-                                    <Col span={resultWidth}><ExpressionView topLevel expression={this.item.defaultResult}/></Col>
-                                </Row>
-                            </Block>
-                            : null
-                    }
-                </Spin>
+                <Block name="Basic" loading={this.loading}>
+                    <FieldsViewer fields={[
+                        ["Project", <ProjectInfo project={this.item.project}/>],
+                        ["Item Key", this.item.itemKey],
+                        ["Name", this.item.name],
+                        ["Description", this.item.description],
+                        ["Create Time", moment(this.item.insertTime).fromNow()],
+                        ["Update Time", moment(this.item.updateTime).fromNow()],
+                    ]}/>
+                </Block>
+                {
+                    this.item.mode === ItemMode.Property ?
+                        <Block name="Property">
+                            <FieldsViewer fields={[
+                                ["Result Data Type", this.item.resultDataType],
+                                ["Result", <ExpressionView topLevel expression={this.item.defaultResult}/>]
+                            ]}/>
+                        </Block>
+                        : null
+                }
+                {
+                    this.item.mode === ItemMode.Raw ?
+                        <Block name="Parameters & Result">
+                            <FieldsViewer
+                                fields={this.item.parameterInfos.map(info => [info.name, info.dataType])}/>
+                            <FieldsViewer fields={[[
+                                <b>Result Data Type</b>,
+                                <b>{this.item.resultDataType}</b>
+                            ]]}/>
+                        </Block>
+                        : null
+                }
+                {
+                    this.item.mode === ItemMode.Raw ?
+                        <Block name="Rules" className="rules">
+                            <Row type="flex" align="middle" className="rule">
+                                <Col span={conditionWidth}><b>Condition</b></Col>
+                                <Col span={resultWidth}><b>Result</b></Col>
+                            </Row>
+                            {
+                                this.item.rules.map(rule =>
+                                    <Row key={rule.key} type="flex" align="middle"
+                                         className="rule">
+                                        <Col span={conditionWidth}><ExpressionView
+                                            topLevel
+                                            expression={rule.condition}/></Col>
+                                        <Col span={resultWidth}><ExpressionView
+                                            topLevel
+                                            expression={rule.result}/></Col>
+                                    </Row>)
+                            }
+                            <Row type="flex" align="middle"
+                                 className="rule">
+                                <Col span={conditionWidth}><b>Default</b></Col>
+                                <Col span={resultWidth}><ExpressionView topLevel expression={this.item.defaultResult}/></Col>
+                            </Row>
+                        </Block>
+                        : null
+                }
+                <Block name="Audits">
+                    <AuditsView itemKey={this.item.itemKey}/>
+                </Block>
             </Layout>
         </PageWrapper>
     };

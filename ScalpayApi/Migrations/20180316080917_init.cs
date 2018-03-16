@@ -72,6 +72,43 @@ namespace ScalpayApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Audits",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    AuditType = table.Column<int>(type: "int", nullable: false),
+                    InsertTime = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    ItemKey = table.Column<string>(type: "varchar(127)", nullable: true),
+                    OperatorUserName = table.Column<string>(type: "varchar(127)", nullable: true),
+                    ProjectKey = table.Column<string>(type: "varchar(127)", nullable: true),
+                    UpdateTime = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Audits", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Audits_Items_ItemKey",
+                        column: x => x.ItemKey,
+                        principalTable: "Items",
+                        principalColumn: "ItemKey",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Audits_Users_OperatorUserName",
+                        column: x => x.OperatorUserName,
+                        principalTable: "Users",
+                        principalColumn: "Username",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Audits_Projects_ProjectKey",
+                        column: x => x.ProjectKey,
+                        principalTable: "Projects",
+                        principalColumn: "ProjectKey",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Rule",
                 columns: table => new
                 {
@@ -97,6 +134,21 @@ namespace ScalpayApi.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Audits_ItemKey",
+                table: "Audits",
+                column: "ItemKey");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Audits_OperatorUserName",
+                table: "Audits",
+                column: "OperatorUserName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Audits_ProjectKey",
+                table: "Audits",
+                column: "ProjectKey");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Items_ProjectKey",
                 table: "Items",
                 column: "ProjectKey");
@@ -109,6 +161,9 @@ namespace ScalpayApi.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Audits");
+
             migrationBuilder.DropTable(
                 name: "Rule");
 

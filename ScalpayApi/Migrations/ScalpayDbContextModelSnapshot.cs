@@ -21,6 +21,36 @@ namespace ScalpayApi.Migrations
                 .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452");
 
+            modelBuilder.Entity("ScalpayApi.Models.Audit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AuditType");
+
+                    b.Property<DateTime>("InsertTime")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ItemKey");
+
+                    b.Property<string>("OperatorUserName");
+
+                    b.Property<string>("ProjectKey");
+
+                    b.Property<DateTime>("UpdateTime")
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemKey");
+
+                    b.HasIndex("OperatorUserName");
+
+                    b.HasIndex("ProjectKey");
+
+                    b.ToTable("Audits");
+                });
+
             modelBuilder.Entity("ScalpayApi.Models.Item", b =>
                 {
                     b.Property<string>("ItemKey")
@@ -138,6 +168,24 @@ namespace ScalpayApi.Migrations
                     b.HasKey("Username");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ScalpayApi.Models.Audit", b =>
+                {
+                    b.HasOne("ScalpayApi.Models.Item", "Item")
+                        .WithMany("Audits")
+                        .HasForeignKey("ItemKey")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ScalpayApi.Models.User", "Operator")
+                        .WithMany("Audits")
+                        .HasForeignKey("OperatorUserName")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ScalpayApi.Models.Project", "Project")
+                        .WithMany("Audits")
+                        .HasForeignKey("ProjectKey")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("ScalpayApi.Models.Item", b =>

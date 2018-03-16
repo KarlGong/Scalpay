@@ -31,11 +31,13 @@ namespace ScalpayApi.Services
     {
         private readonly ScalpayDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IAuditService _auditService;
 
-        public ProjectService(ScalpayDbContext context, IMapper mapper)
+        public ProjectService(ScalpayDbContext context, IMapper mapper, IAuditService auditService)
         {
             _context = context;
             _mapper = mapper;
+            _auditService = auditService;
         }
 
         public async Task<Project> GetProjectAsync(string projectKey)
@@ -74,6 +76,12 @@ namespace ScalpayApi.Services
             await _context.Projects.AddAsync(project);
 
             await _context.SaveChangesAsync();
+            
+            await _auditService.AddAuditAsync(new AddAuditParams()
+            {
+                AuditType = AuditType.AddProject,
+                ProjectKey = ps.ProjectKey,
+            });
 
             return project;
         }
@@ -87,15 +95,29 @@ namespace ScalpayApi.Services
             _mapper.Map(ps, project);
 
             await _context.SaveChangesAsync();
+            
+            await _auditService.AddAuditAsync(new AddAuditParams()
+            {
+                AuditType = AuditType.UpdateProject,
+                ProjectKey = ps.ProjectKey,
+            });
 
             return project;
         }
 
         public async Task DeleteProjectAsync(string projectKey)
         {
-            _context.Projects.Remove(await GetProjectAsync(projectKey));
+            var project = await GetProjectAsync(projectKey);
+            
+            _context.Projects.Remove(project);
 
             await _context.SaveChangesAsync();
+            
+            await _auditService.AddAuditAsync(new AddAuditParams()
+            {
+                AuditType = AuditType.DeleteProject,
+                ProjectKey = projectKey,
+            });
         }
     }
 }
