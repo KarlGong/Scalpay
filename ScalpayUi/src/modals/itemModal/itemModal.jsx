@@ -6,39 +6,39 @@ import axios from "axios";
 import cs from "classnames";
 import {render, unmountComponentAtNode} from "react-dom";
 import ProjectSelect from "~/components/ProjectSelect";
-import {DataType, ItemType, ConfigItemMode, DefaultExp} from "~/utils/store";
+import {DataType, ItemMode, DefaultExp} from "~/utils/store";
 import DataTypeSelect from "~/components/DataTypeSelect";
 import ExpressionView from "~/components/expression/ExpressionView";
 import DragListView from "react-drag-listview";
 import guid from "~/utils/guid";
 import ComponentValidator from "~/utils/ComponentValidator";
-import "./configItemModal.less";
 import ItemInfo from "~/components/ItemInfo";
 import BasicPanel from "./BasicPanel";
 import ParameterPanel from "./ParameterPanel";
 import RawRulePanel from "./RawRulePanel";
 import PropertyPanel from "./PropertyPanel";
 import event from "~/utils/event";
+import "./itemModal.less";
 
 function add(onSuccess) {
     const target = document.createElement("div");
     document.body.appendChild(target);
 
-    render(<EditConfigItemModal addMode onSuccess={onSuccess} afterClose={() => {
+    render(<EditItemModal addMode onSuccess={onSuccess} afterClose={() => {
         unmountComponentAtNode(target);
         target.remove()
     }}/>, target);
 }
 
 function edit(item, onSuccess) {
-    const hide = message.loading("Loading config item...", 0);
+    const hide = message.loading("Loading item...", 0);
 
     const target = document.createElement("div");
     document.body.appendChild(target);
 
-    axios.get("/api/items/config/" + item.itemKey)
+    axios.get("/api/items/" + item.itemKey)
         .then(res =>
-            render(<EditConfigItemModal item={res.data.data} onSuccess={onSuccess} afterClose={() => {
+            render(<EditItemModal item={res.data.data} onSuccess={onSuccess} afterClose={() => {
                 unmountComponentAtNode(target);
                 target.remove()
             }}/>, target))
@@ -49,7 +49,7 @@ function del(item, onSuccess) {
     const target = document.createElement("div");
     document.body.appendChild(target);
 
-    render(<DeleteConfigItemModal item={item} onSuccess={onSuccess} afterClose={() => {
+    render(<DeleteItemModal item={item} onSuccess={onSuccess} afterClose={() => {
         unmountComponentAtNode(target);
         target.remove()
     }}/>, target);
@@ -57,14 +57,14 @@ function del(item, onSuccess) {
 
 
 @observer
-class EditConfigItemModal extends Component {
+class EditItemModal extends Component {
     static defaultProps = {
         item: {
             projectKey: null,
             itemKey: null,
             name: null,
             description: null,
-            mode: ConfigItemMode.Property,
+            mode: ItemMode.Property,
             parameterInfos: [],
             resultDataType: DataType.String,
             rules: [],
@@ -97,8 +97,8 @@ class EditConfigItemModal extends Component {
 
     render = () => {
         return <Modal
-            title={this.props.addMode ? "Add Config Item" : "Edit Config Item"}
-            okText={this.props.addMode ? "Add Config Item" : "Update Config Item"}
+            title={this.props.addMode ? "Add Item" : "Edit Item"}
+            okText={this.props.addMode ? "Add Item" : "Update Item"}
             cancelText="Cancel"
             visible={this.visible}
             maskClosable={false}
@@ -108,13 +108,13 @@ class EditConfigItemModal extends Component {
             onCancel={this.handleCancel}
             afterClose={() => this.props.afterClose()}
         >
-            <div className="config-item-modal">
+            <div className="item-modal">
                 <div style={{float: "right"}}>
                     <Radio.Group
                         key={this.modeResetKey}
                         onChange={(e) => {
                             let targetMode = e.target.value;
-                            if (targetMode === ConfigItemMode.Property) {
+                            if (targetMode === ItemMode.Property) {
                                 Modal.confirm({
                                     title: "Are you sure to change to Property mode?",
                                     content: "All the parameters and rules of this item will be cleared.",
@@ -135,8 +135,8 @@ class EditConfigItemModal extends Component {
                             }
                         }}
                         defaultValue={untracked(() => this.item.mode)}>
-                        <Radio.Button value={ConfigItemMode.Property}>Property</Radio.Button>
-                        <Radio.Button value={ConfigItemMode.Raw}>Raw</Radio.Button>
+                        <Radio.Button value={ItemMode.Property}>Property</Radio.Button>
+                        <Radio.Button value={ItemMode.Raw}>Raw</Radio.Button>
                     </Radio.Group>
                 </div>
                 <div style={{clear: "both"}}/>
@@ -156,7 +156,7 @@ class EditConfigItemModal extends Component {
                         />
                     </Collapse.Panel>
                     {
-                        this.item.mode === ConfigItemMode.Property ?
+                        this.item.mode === ItemMode.Property ?
                             <Collapse.Panel
                                 forceRender
                                 header="Property"
@@ -168,7 +168,7 @@ class EditConfigItemModal extends Component {
                             : null
                     }
                     {
-                        this.item.mode === ConfigItemMode.Raw ?
+                        this.item.mode === ItemMode.Raw ?
                             <Collapse.Panel
                                 forceRender
                                 header="Parameters & Result"
@@ -182,7 +182,7 @@ class EditConfigItemModal extends Component {
                             : null
                     }
                     {
-                        this.item.mode === ConfigItemMode.Raw ?
+                        this.item.mode === ItemMode.Raw ?
                             <Collapse.Panel
                                 forceRender
                                 header="Rules"
@@ -199,7 +199,7 @@ class EditConfigItemModal extends Component {
 
     handleOk = () => {
         let validators = [this.basicPanelValidator];
-        if (this.item.mode === ConfigItemMode.Raw) {
+        if (this.item.mode === ItemMode.Raw) {
             validators.push(this.parameterPanelValidator);
         }
         let componentValidator = new ComponentValidator(validators);
@@ -207,7 +207,7 @@ class EditConfigItemModal extends Component {
         if (this.props.addMode) {
             componentValidator.validate().then(() => {
                 this.loading = true;
-                axios.put("/api/items/config", this.item)
+                axios.put("/api/items", this.item)
                     .then(res => {
                         let item = res.data.data;
                         this.loading = false;
@@ -219,7 +219,7 @@ class EditConfigItemModal extends Component {
         } else {
             componentValidator.validate().then(() => {
                 this.loading = true;
-                axios.post("/api/items/config/" + this.item.itemKey, this.item)
+                axios.post("/api/items/" + this.item.itemKey, this.item)
                     .then(res => {
                         let item = res.data.data;
                         this.loading = false;
@@ -237,7 +237,7 @@ class EditConfigItemModal extends Component {
 }
 
 @observer
-class DeleteConfigItemModal extends Component {
+class DeleteItemModal extends Component {
     static defaultProps = {
         item: {},
         onSuccess: (item) => {},
@@ -250,9 +250,9 @@ class DeleteConfigItemModal extends Component {
     render = () => {
         return <Modal
             title={<span>
-                <Icon type="question-circle" style={{color: "#ff4d4f"}}/> Are you sure to delete this config item?
+                <Icon type="question-circle" style={{color: "#ff4d4f"}}/> Are you sure to delete this item?
             </span>}
-            okText="Delete Config Item"
+            okText="Delete Item"
             okType="danger"
             cancelText="Cancel"
             visible={this.visible}
@@ -262,18 +262,18 @@ class DeleteConfigItemModal extends Component {
             onCancel={this.handleCancel}
             afterClose={() => this.props.afterClose()}
         >
-            All the data related to this config item will be deleted.
+            All the data related to this item will be deleted.
         </Modal>
     };
 
     handleOk = () => {
         this.loading = true;
-        axios.delete("/api/items/config/" + this.props.item.itemKey)
+        axios.delete("/api/items/" + this.props.item.itemKey)
             .then(() => {
                 this.loading = false;
                 this.visible = false;
                 message.success(
-                    <span>Config Item <ItemInfo item={this.props.item.itemKey}/> is deleted successfully!</span>);
+                    <span>Item <ItemInfo item={this.props.item.itemKey}/> is deleted successfully!</span>);
                 this.props.onSuccess(this.props.item);
             }, () => this.loading = false);
     };

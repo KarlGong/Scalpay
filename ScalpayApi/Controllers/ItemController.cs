@@ -14,15 +14,10 @@ namespace ScalpayApi.Controllers
     public class ItemController : Controller
     {
         private readonly IItemService _itemService;
-        private readonly IConfigItemService _configItemservice;
-        private readonly IWordItemService _wordItemService;
 
-        public ItemController(IItemService itemService, IConfigItemService configItemService,
-            IWordItemService wordItemService)
+        public ItemController(IItemService itemService)
         {
             _itemService = itemService;
-            _configItemservice = configItemService;
-            _wordItemService = wordItemService;
         }
 
         [HttpGet]
@@ -35,79 +30,41 @@ namespace ScalpayApi.Controllers
             };
         }
 
-        [HttpGet("config/{itemKey}")]
-        public async Task<Result<Item>> GetConfigItem([FromRoute] string itemKey)
+        [HttpGet("{itemKey}")]
+        public async Task<Result<Item>> GetItem([FromRoute] string itemKey)
         {
             return new Result<Item>()
             {
-                Data = await _configItemservice.GetConfigItemAsync(itemKey)
+                Data = await _itemService.GetItemAsync(itemKey)
             };
         }
 
-        [HttpPut("config")]
+        [HttpPut]
         [Authorization(Privilege.ItemAdd)]
-        public async Task<Result<Item>> AddConfigItem([FromBody] AddConfigItemParams ps)
+        public async Task<Result<Item>> AddItem([FromBody] AddItemParams ps)
         {
             return new Result<Item>()
             {
-                Data = await _configItemservice.AddConfigItemAsync(ps)
+                Data = await _itemService.AddItemAsync(ps)
             };
         }
 
-        [HttpPost("config/{itemKey}")]
+        [HttpPost("{itemKey}")]
         [Authorization(Privilege.ItemEdit)]
-        public async Task<Result<Item>> UpdateConfigItem([FromRoute] string itemKey, [FromBody] UpdateConfigItemParams ps)
+        public async Task<Result<Item>> UpdateItem([FromRoute] string itemKey, [FromBody] UpdateItemParams ps)
         {
             ps.ItemKey = itemKey;
             return new Result<Item>()
             {
-                Data = await _configItemservice.UpdateConfigItemAsync(ps)
+                Data = await _itemService.UpdateItemAsync(ps)
             };
         }
 
-        [HttpDelete("config/{itemKey}")]
+        [HttpDelete("{itemKey}")]
         [Authorization(Privilege.ItemDelete)]
-        public async Task<Result> DeleteConfigItem([FromRoute] string itemKey)
+        public async Task<Result> DeleteItem([FromRoute] string itemKey)
         {
-            await _configItemservice.DeleteConfigItemAsync(itemKey);
-            return new Result();
-        }
-
-        [HttpGet("word/{itemKey}")]
-        public async Task<Result<Item>> GetWordItem([FromRoute] string itemKey)
-        {
-            return new Result<Item>()
-            {
-                Data = await _wordItemService.GetWordItemAsync(itemKey)
-            };
-        }
-
-        [HttpPut("word")]
-        [Authorization(Privilege.ItemAdd)]
-        public async Task<Result<Item>> AddWordItem([FromBody] AddWordItemParams ps)
-        {
-            return new Result<Item>()
-            {
-                Data = await _wordItemService.AddWordItemAsync(ps)
-            };
-        }
-
-        [HttpPost("word/{itemKey}")]
-        [Authorization(Privilege.ItemEdit)]
-        public async Task<Result<Item>> UpdateWordItem([FromRoute] string itemKey, [FromBody] UpdateWordItemParams ps)
-        {
-            ps.ItemKey = itemKey;
-            return new Result<Item>()
-            {
-                Data = await _wordItemService.UpdateWordItemAsync(ps)
-            };
-        }
-
-        [HttpDelete("word/{itemKey}")]
-        [Authorization(Privilege.ItemDelete)]
-        public async Task<Result> DeleteWordItem([FromRoute] string itemKey)
-        {
-            await _wordItemService.DeleteWordItemAsync(itemKey);
+            await _itemService.DeleteItemAsync(itemKey);
             return new Result();
         }
     }

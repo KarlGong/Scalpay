@@ -6,13 +6,13 @@ import axios from "axios";
 import cs from "classnames";
 import {render, unmountComponentAtNode} from "react-dom";
 import ProjectSelect from "~/components/ProjectSelect";
-import {DataType, ItemType, ConfigItemMode, DefaultExp} from "~/utils/store";
+import {DataType, ItemMode, DefaultExp} from "~/utils/store";
 import DataTypeSelect from "~/components/DataTypeSelect";
 import ExpressionView from "~/components/expression/ExpressionView";
 import DragListView from "react-drag-listview";
 import guid from "~/utils/guid";
 import event from "~/utils/event";
-import "./configItemModal.less";
+import "./itemModal.less";
 import ItemInfo from "~/components/ItemInfo";
 import Validator from "~/utils/Validator";
 import ComponentValidator from "~/utils/ComponentValidator";
@@ -43,7 +43,7 @@ export default class BasicPanel extends Component {
             },
             name: {required: true}
         });
-        this.item.partialItemKey = this.item.itemKey && this.item.itemKey.split(".").slice(2).join(".");
+        this.item.partialItemKey = this.item.itemKey && this.item.itemKey.split(".").slice(1).join(".");
         this.props.setValidator(new ComponentValidator(this.validator));
     }
 
@@ -70,7 +70,7 @@ export default class BasicPanel extends Component {
                         defaultValue={untracked(() => this.item.projectKey)}
                         onChange={(value) => {
                             this.item.projectKey = value;
-                            this.item.itemKey = "config." + this.item.projectKey + "." + this.item.partialItemKey;
+                            this.item.itemKey = this.item.projectKey + "." + this.item.partialItemKey;
                             this.validator.resetResult("projectKey");
                         }}
                         onBlur={() => this.validator.validate("projectKey")}
@@ -82,15 +82,15 @@ export default class BasicPanel extends Component {
                            help={this.validator.getResult("partialItemKey").message}
                 >
                     <Input
-                        addonBefore={"config." + this.item.projectKey + "."}
+                        addonBefore={this.item.projectKey + "."}
                         style={{width: "500px"}}
                         disabled={!this.props.addMode}
-                        // config.foo.bar to bar
+                        // foo.bar to bar
                         defaultValue={untracked(() => this.item.partialItemKey)}
                         onChange={(e) => {
                             this.item.partialItemKey = e.target.value;
-                            // bar to config.foo.bar
-                            this.item.itemKey = "config." + this.item.projectKey + "." + this.item.partialItemKey;
+                            // bar to foo.bar
+                            this.item.itemKey = this.item.projectKey + "." + this.item.partialItemKey;
                             this.validator.resetResult("partialItemKey")
                         }}
                         onBlur={() => this.validator.validate("partialItemKey")}

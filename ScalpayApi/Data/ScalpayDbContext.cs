@@ -16,11 +16,6 @@ namespace ScalpayApi.Data
         
         public DbSet<Item> Items { get; set; }
         
-        public DbSet<ConfigItem> ConfigItems { get; set; }
-        
-        public DbSet<WordItem> WordItems { get; set; }
-        public DbSet<WordInfo> WordInfos { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserConfiguration());
@@ -28,12 +23,7 @@ namespace ScalpayApi.Data
             modelBuilder.ApplyConfiguration(new ProjectConfiguration());
             
             modelBuilder.ApplyConfiguration(new ItemConfiguration());
-            
-            modelBuilder.ApplyConfiguration(new ConfigItemConfiguration());
             modelBuilder.ApplyConfiguration(new RuleConfiguration());
-            
-            modelBuilder.ApplyConfiguration(new WordItemConfiguration());
-            modelBuilder.ApplyConfiguration(new WordInfoConfiguration());
         }
     }
 }

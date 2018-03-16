@@ -8,7 +8,7 @@ import axios from "axios";
 import auth from "~/utils/auth";
 import App from "~/routes/App";
 import ItemsPage from "~/routes/items/ItemsPage";
-import ViewConfigItemPage from "~/routes/items/ViewConfigItemPage";
+import ViewItemPage from "~/routes/items/ViewItemPage";
 import ViewProjectPage from "~/routes/projects/ViewProjectPage";
 import ProjectsPage from "~/routes/projects/ProjectsPage";
 import ViewUserPage from "~/routes/users/ViewUserPage";
@@ -41,7 +41,7 @@ render(
                 <Route path="login" component={LoginPage}/>
                 <Route path="items">
                     <IndexRoute component={ItemsPage}/>
-                    <Route path="config/:itemKey" component={ViewConfigItemPage}/>
+                    <Route path=":itemKey" component={ViewItemPage}/>
                 </Route>
                 <Route path="projects">
                     <IndexRoute component={ProjectsPage}/>

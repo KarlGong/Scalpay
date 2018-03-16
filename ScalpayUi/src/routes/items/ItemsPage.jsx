@@ -8,10 +8,8 @@ import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
 import PageWrapper from "~/layouts/PageWrapper";
 import ProjectSelect from "~/components/ProjectSelect";
-import ItemTypeSelect from "~/components/ItemTypeSelect";
 import ItemInfo from "~/components/ItemInfo";
-import {ItemType} from "~/utils/store";
-import configItemModal from "~/modals/configItemModal/configItemModal";
+import itemModal from "~/modals/itemModal/itemModal";
 import global from "~/global";
 import ProjectInfo from "~/components/ProjectInfo";
 import "./ItemsPage.less";
@@ -27,14 +25,12 @@ export default class ItemsPage extends Component {
 
     @observable criteria = {
         projectKey: this.props.location.query.projectKey || null,
-        itemType: this.props.location.query.itemType || null,
         searchText: this.props.location.query.searchText || null,
         pageIndex: parseInt(this.props.location.query.pageIndex) || 0,
         pageSize: parseInt(this.props.location.query.pageSize) || 20
     };
     filter = {
         projectKey: this.criteria.projectKey,
-        itemType: this.criteria.itemType,
         searchText: this.criteria.searchText
     };
 
@@ -46,14 +42,12 @@ export default class ItemsPage extends Component {
         if (JSON.stringify(this.props.location.query) !== JSON.stringify(props.location.query)) {
             this.criteria = {
                 projectKey: props.location.query.projectKey || null,
-                itemType: props.location.query.itemType || null,
                 searchText: props.location.query.searchText || null,
                 pageIndex: parseInt(props.location.query.pageIndex) || 0,
                 pageSize: parseInt(props.location.query.pageSize) || 20
             };
             this.filter = {
                 projectKey: this.criteria.projectKey,
-                itemType: this.criteria.itemType,
                 searchText: this.criteria.searchText
             };
             this.filterRestKey = guid();
@@ -90,11 +84,6 @@ export default class ItemsPage extends Component {
                         className="filter select"
                         defaultValue={untracked(() => this.criteria.projectKey)}
                         onChange={(value) => this.filter.projectKey = value || null}/>
-                    <ItemTypeSelect
-                        allowClear
-                        className="filter select"
-                        defaultValue={untracked(() => this.criteria.itemType)}
-                        onChange={(value) => this.filter.itemType = value || null}/>
                     <Input
                         className="filter input"
                         placeholder="Search by item key/name/description"
@@ -139,14 +128,10 @@ export default class ItemsPage extends Component {
     };
 
     editItem = (item) => {
-        if (item.type === ItemType.Config) {
-            configItemModal.edit(item)
-        }
+        itemModal.edit(item);
     };
 
     deleteItem = (item) => {
-        if (item.type === ItemType.Config) {
-            configItemModal.del(item)
-        }
+        itemModal.del(item);
     };
 }

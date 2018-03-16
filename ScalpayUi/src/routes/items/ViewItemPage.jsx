@@ -7,28 +7,28 @@ import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
 import PageWrapper from "~/layouts/PageWrapper";
 import moment from "moment";
-import {DataType, ItemType, ConfigItemMode, DefaultExp} from "~/utils/store";
+import {DataType, ItemMode, DefaultExp} from "~/utils/store";
 import Validator from "~/utils/Validator";
 import {Link} from "react-router";
 import guid from "~/utils/guid";
 import global from "~/global";
 import FieldsViewer from "~/layouts/FieldsViewer";
 import CommandBar from "~/layouts/CommandBar";
-import configItemModal from "~/modals/configItemModal/configItemModal";
+import itemModal from "~/modals/itemModal/itemModal";
 import ProjectInfo from "~/components/ProjectInfo";
 import Block from "~/layouts/Block";
 import ExpressionView from "~/components/expression/ExpressionView";
-import "./ViewConfigItemPage.less";
+import "./ViewItemPage.less";
 
 @observer
-export default class ViewConfigItemPage extends Component {
+export default class ViewItemPage extends Component {
 
     @observable item = {
         projectKey: null,
         itemKey: this.props.params.itemKey,
         name: null,
         description: null,
-        mode: ConfigItemMode.Property,
+        mode: ItemMode.Property,
         parameterInfos: [],
         resultDataType: DataType.String,
         rules: [],
@@ -57,7 +57,6 @@ export default class ViewConfigItemPage extends Component {
             breadcrumb={<Breadcrumb>
                 <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
                 <Breadcrumb.Item><Link to="/items">Items</Link></Breadcrumb.Item>
-                <Breadcrumb.Item>Config</Breadcrumb.Item>
                 <Breadcrumb.Item>{this.props.params.itemKey}</Breadcrumb.Item>
             </Breadcrumb>}>
             <CommandBar leftItems={commands}/>
@@ -74,7 +73,7 @@ export default class ViewConfigItemPage extends Component {
                         ]}/>
                     </Block>
                     {
-                        this.item.mode === ConfigItemMode.Property ?
+                        this.item.mode === ItemMode.Property ?
                             <Block name="Property">
                                 <FieldsViewer fields={[
                                     ["Result Data Type", this.item.resultDataType],
@@ -84,7 +83,7 @@ export default class ViewConfigItemPage extends Component {
                             : null
                     }
                     {
-                        this.item.mode === ConfigItemMode.Raw ?
+                        this.item.mode === ItemMode.Raw ?
                             <Block name="Parameters & Result">
                                 <FieldsViewer
                                     fields={this.item.parameterInfos.map(info => [info.name, info.dataType])}/>
@@ -96,7 +95,7 @@ export default class ViewConfigItemPage extends Component {
                             : null
                     }
                     {
-                        this.item.mode === ConfigItemMode.Raw ?
+                        this.item.mode === ItemMode.Raw ?
                             <Block name="Rules" className="rules">
                                 <Row type="flex" align="middle" className="rule">
                                     <Col span={conditionWidth}><b>Condition</b></Col>
@@ -129,7 +128,7 @@ export default class ViewConfigItemPage extends Component {
 
     loadItem = () => {
         this.loading = true;
-        axios.get("/api/items/config/" + this.props.params.itemKey)
+        axios.get("/api/items/" + this.props.params.itemKey)
             .then((res) => {
                 let item = res.data.data;
                 item.rules.map(r => r.key = guid());
@@ -139,10 +138,10 @@ export default class ViewConfigItemPage extends Component {
     };
 
     editItem = () => {
-        configItemModal.edit(this.item, (item) => this.loadItem());
+        itemModal.edit(this.item, (item) => this.loadItem());
     };
 
     deleteItem = () => {
-        configItemModal.del(this.item, (item) => global.history.goBack());
+        itemModal.del(this.item, (item) => global.history.goBack());
     }
 }

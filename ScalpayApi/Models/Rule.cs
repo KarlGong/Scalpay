@@ -10,7 +10,7 @@ namespace ScalpayApi.Models
 
         public string ItemKey { get; set; }
 
-        public ConfigItem ConfigItem { get; set; }
+        public Item Item { get; set; }
 
         // todo: https://github.com/aspnet/EntityFrameworkCore/issues/242
         public SExpression Condition

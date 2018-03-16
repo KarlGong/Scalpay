@@ -65,8 +65,6 @@ namespace ScalpayApi
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddTransient<IItemService, ItemService>();
-            services.AddTransient<IConfigItemService, ConfigItemService>();
-            services.AddTransient<IWordItemService, WordItemService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IExpressionService, ExpressionService>();
@@ -132,47 +130,8 @@ namespace ScalpayApi
                     {
                         ProjectKey = scalpayKey,
                         Name = scalpayKey,
-                        Description = "The Scalpay's configurations and words.",
+                        Description = "The Scalpay's configurations.",
                         Items = new List<Item>()
-                        {
-                            new ConfigItem()
-                            {
-                                ItemKey = $"config.{scalpayKey}.word_item.languages",
-                                Name = "Word Item Languages",
-                                Description = "The look up for word item languages.",
-                                ProjectKey = scalpayKey,
-                                Mode = ConfigItemMode.Property,
-                                ResultDataType = SDataType.StringDict,
-                                DefaultResult = new SExpression()
-                                {
-                                    ReturnType = SDataType.StringDict,
-                                    ExpType = SExpressionType.Value,
-                                    Value = JToken.FromObject(new Dictionary<string, string>()
-                                    {
-                                        {"Deutsch", "de"},
-                                        {"English", "en"},
-                                        {"español", "es"},
-                                        {"español (Latinoamérica)", "es-419"},
-                                        {"français", "fr"},
-                                        {"hrvatski", "hr"},
-                                        {"italiano", "it"},
-                                        {"Nederlands", "nl"},
-                                        {"polski", "pl"},
-                                        {"português (Brasil)", "pt-BR"},
-                                        {"português (Portugal)", "pt-PT"},
-                                        {"Tiếng Việt", "vi"},
-                                        {"Türkçe", "tr"},
-                                        {"русский", "ru"},
-                                        {"العربية", "ar"},
-                                        {"ไทย", "th"},
-                                        {"한국어", "ko"},
-                                        {"中文 (简体)", "zh-CN"},
-                                        {"中文 (繁體)", "zh-TW"},
-                                        {"日本語", "ja"}
-                                    })
-                                }
-                            }
-                        }
                     });
                     context.SaveChanges();
                 }

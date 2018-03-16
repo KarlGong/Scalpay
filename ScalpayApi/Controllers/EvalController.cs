@@ -11,39 +11,19 @@ namespace ScalpayApi.Controllers
     [Route("api/eval")]
     public class EvalController : Controller
     {
-        private readonly IConfigItemService _configItemService;
-        private readonly IWordItemService _wordItemService;
+        private readonly IItemService _itemService;
 
-        public EvalController(IConfigItemService configItemService, IWordItemService wordItemService)
+        public EvalController(IItemService itemService)
         {
-            _configItemService = configItemService;
-            _wordItemService = wordItemService;
+            _itemService = itemService;
         }
 
-        [HttpPost("config/{itemKey}")]
-        public async Task<Result<SData>> EvalConfigItem([FromRoute] string itemKey, [FromBody] Dictionary<string, JToken> parameters)
+        [HttpPost("{itemKey}")]
+        public async Task<Result<SData>> EvalItem([FromRoute] string itemKey, [FromBody] Dictionary<string, JToken> parameters)
         {
             return new Result<SData>()
             {
-                Data = await _configItemService.EvalConfigItem(itemKey, parameters)
-            };
-        }
-
-        [HttpGet("word/{itemKey}")]
-        public async Task<Result<string>> EvalWordItem([FromRoute] string itemKey, [FromQuery] string lng)
-        {
-            return new Result<string>()
-            {
-                Data = await _wordItemService.EvalWordItemAsync(itemKey, lng)
-            };
-        }
-        
-        [HttpPost("word")]
-        public async Task<Result<Dictionary<string, string>>> EvalWordItems([FromBody] List<string> itemKeys, [FromQuery] string lng)
-        {
-            return new Result<Dictionary<string, string>>()
-            {
-                Data = await _wordItemService.EvalWordItemsAsync(itemKeys, lng)
+                Data = await _itemService.EvalItem(itemKey, parameters)
             };
         }
     }

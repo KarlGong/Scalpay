@@ -10,12 +10,7 @@ export const Privilege = {
     UserManage: "UserManage"
 };
 
-export const ItemType = {
-    Config: "Config",
-    Word: "Word"
-};
-
-export const ConfigItemMode = {
+export const ItemMode = {
     Property: "Property",
     Raw: "Raw"
 };

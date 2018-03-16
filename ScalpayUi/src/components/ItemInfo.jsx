@@ -15,7 +15,7 @@ export default class ItemInfo extends Component {
     };
 
     render = () => {
-        return <a onClick={() => global.history.push("/items/" + this.props.item.type.toLowerCase() + "/" + this.props.item.itemKey)}
+        return <a onClick={() => global.history.push("/items/" + this.props.item.itemKey)}
                title={this.props.item.itemKey}>{this.props.item.name}</a>
     }
 }

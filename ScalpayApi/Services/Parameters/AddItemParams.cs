@@ -3,7 +3,7 @@ using ScalpayApi.Enums;
 
 namespace ScalpayApi.Services.Parameters
 {
-    public class AddConfigItemParams
+    public class AddItemParams
     {
         public string ProjectKey { get; set; }
 
@@ -13,7 +13,7 @@ namespace ScalpayApi.Services.Parameters
 
         public string Description { get; set; }
 
-        public ConfigItemMode Mode { get; set; }
+        public ItemMode Mode { get; set; }
 
         public List<ParameterInfo> ParameterInfos { get; set; } = new List<ParameterInfo>();
 
