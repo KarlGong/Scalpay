@@ -63,6 +63,8 @@ namespace ScalpayApi.Services
 
         public async Task<Project> AddProjectAsync(AddProjectParams ps)
         {
+            ps.ProjectKey = ps.ProjectKey.ToLower();
+            
             var oldProject = await _context.Projects.AsNoTracking()
                 .SingleOrDefaultAsync(p => p.ProjectKey == ps.ProjectKey);
 

@@ -84,6 +84,9 @@ namespace ScalpayApi.Services
 
         public async Task<Item> AddItemAsync(AddItemParams ps)
         {
+            ps.ProjectKey = ps.ProjectKey.ToLower();
+            ps.ItemKey = ps.ItemKey.ToLower();
+            
             var oldItem = await _context.Items.AsNoTracking().SingleOrDefaultAsync(i => i.ItemKey == ps.ItemKey);
 
             if (oldItem != null)
