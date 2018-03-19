@@ -3,6 +3,7 @@ import React, {Component} from "react";
 import {observable} from "mobx";
 import {observer} from "mobx-react";
 import axios from "axios";
+import cs from "classnames";
 import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
 import {IndexRoute, hashHistory, Router, Route, Link} from "react-router";
@@ -14,6 +15,14 @@ import "./SHeader.less";
 @observer
 export default class SHeader extends Component {
     @observable searchLoading = false;
+    @observable currentPath = global.history.getCurrentLocation().pathname;
+
+    componentWillReceiveProps = (props) => {
+        let newPath = global.history.getCurrentLocation().pathname;
+        if (this.currentPath !== newPath) {
+            this.currentPath = newPath;
+        }
+    };
 
     render = () => {
         return <Layout.Header className="header">
@@ -22,10 +31,16 @@ export default class SHeader extends Component {
                     <div className="logo item">
                         <Link to="/"><img src={logo}/></Link>
                     </div>
-                    <div className="item menu" onClick={() => global.history.push("/projects")}>
+                    <div className={cs("item", "menu", {"selected": this.currentPath.startsWith("/home")})}
+                         onClick={() => global.history.push("/home")}>
+                        <span>Home</span>
+                    </div>
+                    <div className={cs("item", "menu", {"selected": this.currentPath.startsWith("/projects")})}
+                         onClick={() => global.history.push("/projects")}>
                         <span>Projects</span>
                     </div>
-                    <div className="item menu" onClick={() => global.history.push("/items")}>
+                    <div className={cs("item", "menu", {"selected": this.currentPath.startsWith("/items")})}
+                         onClick={() => global.history.push("/items")}>
                         <span>Items</span>
                     </div>
                     <div className="item menu">
@@ -67,7 +82,7 @@ export default class SHeader extends Component {
                     <Dropdown overlay={<Menu>
                         {auth.hasPrivileges(Privilege.UserManage) ?
                             <Menu.Item key="0">
-                                <Link to="/users">View Users</Link>
+                                <Link to="/users">Manage Users</Link>
                             </Menu.Item>
                             : null
                         }

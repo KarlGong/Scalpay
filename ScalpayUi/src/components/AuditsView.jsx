@@ -15,7 +15,8 @@ export default class AuditsView extends Component {
     static defaultProps = {
         projectKey: null,
         ItemKey: null,
-        OperatorUserName: null
+        OperatorUserName: null,
+        pageSize: 5
     };
 
     criteria = {
@@ -23,7 +24,7 @@ export default class AuditsView extends Component {
         ItemKey: this.props.itemKey,
         OperatorUserName: this.props.OperatorUserName,
         pageIndex: 0,
-        pageSize: 5
+        pageSize: this.props.pageSize
     };
     @observable loading = false;
     @observable audits = [];

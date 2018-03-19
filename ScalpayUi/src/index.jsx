@@ -14,6 +14,7 @@ import ProjectsPage from "~/routes/projects/ProjectsPage";
 import ViewUserPage from "~/routes/users/ViewUserPage";
 import UsersPage from "~/routes/users/UsersPage";
 import LoginPage from "~/routes/LoginPage";
+import HomePage from "~/routes/HomePage";
 import "./assets/fonts/extra-iconfont/iconfont.css";
 import global from "./global";
 
@@ -37,7 +38,8 @@ render(
     <AppContainer>
         <Router history={global.history}>
             <Route path="/" component={App} onEnter={checkAuth}>
-                <IndexRedirect to="items"/>
+                <IndexRedirect to="home"/>
+                <Route path="home" component={HomePage}/>
                 <Route path="login" component={LoginPage}/>
                 <Route path="items">
                     <IndexRoute component={ItemsPage}/>
