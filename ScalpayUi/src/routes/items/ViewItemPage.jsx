@@ -19,6 +19,7 @@ import ProjectInfo from "~/components/ProjectInfo";
 import Block from "~/layouts/Block";
 import ExpressionView from "~/components/expression/ExpressionView";
 import AuditsView from "~/components/AuditsView";
+import VersionSelect from "~/components/VersionSelect";
 import "./ViewItemPage.less";
 
 @observer
@@ -30,6 +31,8 @@ export default class ViewItemPage extends Component {
         itemKey: this.params.itemKey,
         name: null,
         description: null,
+        version: null,
+        isLatest: false,
         mode: ItemMode.Property,
         parameterInfos: [],
         resultDataType: DataType.String,
@@ -50,9 +53,15 @@ export default class ViewItemPage extends Component {
     };
 
     render = () => {
-        let commands = [];
-        if (auth.hasPrivileges(Privilege.ItemManage) && !this.params.itemVersion) {
-            commands.push(<Button onClick={() => this.editItem()}>Edit</Button>);
+        let leftCommands = [];
+        if (auth.hasPrivileges(Privilege.ItemManage) && this.item.isLatest) {
+            leftCommands.push(<Button onClick={() => this.editItem()}>Edit</Button>);
+        }
+        let rightCommands = [];
+        if (this.item.isLatest) {
+            rightCommands.push(<VersionSelect
+                version={this.item.version}
+                onChange={(version) => global.history.push("/items/" + this.item.itemKey + "/v" + version)}/>)
         }
 
         let conditionWidth = 16;
@@ -69,12 +78,12 @@ export default class ViewItemPage extends Component {
                             <Breadcrumb.Item key={1}>
                                 <Link to={"/items/" + this.params.itemKey}>{this.params.itemKey}</Link>
                             </Breadcrumb.Item>,
-                            <Breadcrumb.Item key={2}>{this.params.itemVersion}</Breadcrumb.Item>
+                            <Breadcrumb.Item key={2}>v{this.params.itemVersion}</Breadcrumb.Item>
                         ]
                         : <Breadcrumb.Item>{this.params.itemKey}</Breadcrumb.Item>
                 }
             </Breadcrumb>}>
-            <CommandBar leftItems={commands}/>
+            <CommandBar leftItems={leftCommands} rightItems={rightCommands}/>
             <Layout>
                 <Block name="Basic" loading={this.loading}>
                     <FieldsViewer fields={[
@@ -135,7 +144,7 @@ export default class ViewItemPage extends Component {
                 }
                 {
                     !this.params.itemVersion ?
-                        <Block name="Audits">
+                        <Block name="Activity">
                             <AuditsView itemKey={this.item.itemKey}/>
                         </Block>
                         : null
@@ -148,7 +157,7 @@ export default class ViewItemPage extends Component {
         this.loading = true;
         let url = "";
         if (this.params.itemVersion) {
-            url = "/api/items/" + this.params.itemKey + "/" + this.params.itemVersion;
+            url = "/api/items/" + this.params.itemKey + "/v" + this.params.itemVersion;
         } else {
             url = "/api/items/" + this.params.itemKey;
         }

@@ -53,6 +53,8 @@ class EditItemModal extends Component {
             itemKey: null,
             name: null,
             description: null,
+            version: null,
+            isLatest: false,
             mode: ItemMode.Property,
             parameterInfos: [],
             resultDataType: DataType.String,

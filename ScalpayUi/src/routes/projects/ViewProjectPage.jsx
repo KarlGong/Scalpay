@@ -15,6 +15,7 @@ import "./ViewProjectPage.less";
 import global from "~/global";
 import projectModal from "~/modals/projectModal";
 import Block from "~/layouts/Block";
+import VersionSelect from "~/components/VersionSelect";
 import AuditsView from "~/components/AuditsView";
 
 @observer
@@ -24,7 +25,9 @@ export default class ViewProjectPage extends Component {
     @observable project = {
         projectKey: this.params.projectKey,
         name: null,
-        description: null
+        description: null,
+        version: null,
+        isLatest: false
     };
     @observable loading = false;
 
@@ -40,9 +43,15 @@ export default class ViewProjectPage extends Component {
     };
 
     render = () => {
-        let commands = [];
-        if (auth.hasPrivileges(Privilege.ProjectManage) && !this.params.projectVersion) {
-            commands.push(<Button onClick={() => this.editProject()}>Edit</Button>)
+        let leftCommands = [];
+        if (auth.hasPrivileges(Privilege.ProjectManage) && this.project.isLatest) {
+            leftCommands.push(<Button onClick={() => this.editProject()}>Edit</Button>)
+        }
+        let rightCommands = [];
+        if (this.project.isLatest) {
+            rightCommands.push(<VersionSelect
+                version={this.project.version}
+                onChange={(version) => global.history.push("/projects/" + this.project.projectKey + "/v" + version)}/>)
         }
 
         return <PageWrapper
@@ -58,12 +67,12 @@ export default class ViewProjectPage extends Component {
                                     {this.params.projectKey}
                                 </Link>
                             </Breadcrumb.Item>,
-                            <Breadcrumb.Item key={2}>{this.params.projectVersion}</Breadcrumb.Item>
+                            <Breadcrumb.Item key={2}>v{this.params.projectVersion}</Breadcrumb.Item>
                         ]
                         : <Breadcrumb.Item>{this.params.projectKey}</Breadcrumb.Item>
                 }
             </Breadcrumb>}>
-            <CommandBar leftItems={commands}/>
+            <CommandBar leftItems={leftCommands} rightItems={rightCommands}/>
             <Block name="Basic" loading={this.loading}>
                 <FieldsViewer fields={[
                     ["Project Key", this.project.projectKey],
@@ -73,7 +82,7 @@ export default class ViewProjectPage extends Component {
             </Block>
             {
                 !this.params.projectVersion ?
-                    <Block name="Audits">
+                    <Block name="Activity">
                         <AuditsView projectKey={this.project.projectKey}/>
                     </Block>
                     : null
@@ -85,7 +94,7 @@ export default class ViewProjectPage extends Component {
         this.loading = true;
         let url = "";
         if (this.params.projectVersion) {
-            url = "/api/projects/" + this.params.projectKey + "/" + this.params.projectVersion;
+            url = "/api/projects/" + this.params.projectKey + "/v" + this.params.projectVersion;
         } else {
             url = "/api/projects/" + this.params.projectKey;
         }

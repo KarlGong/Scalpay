@@ -38,7 +38,13 @@ function edit(project, onSuccess) {
 @observer
 class EditProjectModal extends Component {
     static defaultProps = {
-        project: {projectKey: null, name: null, description: null},
+        project: {
+            projectKey: null,
+            name: null,
+            description: null,
+            version: null,
+            isLatest: false
+        },
         addMode: false,
         onSuccess: (project) => {},
         afterClose: () => {}

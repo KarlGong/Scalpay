@@ -52,7 +52,7 @@ export default class ViewUserPage extends Component {
                     ["Email", this.user.email],
                 ]}/>
             </Block>
-            <Block name="Audits">
+            <Block name="Activity">
                 <AuditsView OperatorUserName={this.user.username}/>
             </Block>
         </PageWrapper>
