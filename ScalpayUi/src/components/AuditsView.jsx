@@ -70,7 +70,7 @@ export default class AuditsView extends Component {
                             <span> updated item </span>
                             <ProjectInfo projectKey={audit.projectKey}/>
                             <span> / </span>
-                            <ItemInfo itemKey={audit.itemKey} version={audit.args.fromItemVersion}/>
+                            <ItemInfo itemKey={audit.itemKey}/>
                             <span> to </span>
                             <ItemInfo itemKey={audit.itemKey} version={audit.args.toItemVersion}/>
                         </span>;
@@ -86,7 +86,7 @@ export default class AuditsView extends Component {
                         title = <span>
                             <UserInfo username={audit.operator}/>
                             <span> updated project </span>
-                            <ProjectInfo projectKey={audit.projectKey} version={audit.args.fromProjectVersion}/>
+                            <ProjectInfo projectKey={audit.projectKey}/>
                             <span> to </span>
                             <ProjectInfo projectKey={audit.projectKey} version={audit.args.toProjectVersion}/>
                         </span>;
