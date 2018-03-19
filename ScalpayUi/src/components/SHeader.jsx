@@ -22,6 +22,9 @@ export default class SHeader extends Component {
                     <div className="logo item">
                         <Link to="/"><img src={logo}/></Link>
                     </div>
+                    <div className="item menu" onClick={() => global.history.push("/projects")}>
+                        <span>Projects</span>
+                    </div>
                     <div className="item menu" onClick={() => global.history.push("/items")}>
                         <span>Items</span>
                     </div>
@@ -48,12 +51,11 @@ export default class SHeader extends Component {
                                 })
                                     .then(response => {
                                         if (response.data.totalCount === 1) {
-                                            global.history.push("/items/" + response.data.data[0].type.toLowerCase() + "/" + value);
+                                            global.history.push("/items/" + value);
                                         } else {
                                             global.history.push("/items?searchText=" + value)
                                         }
-                                        this.searchLoading = false;
-                                    }, () => this.searchLoading = false)
+                                    }).finally(() => this.searchLoading = false)
                             }}
                         />
                     </span>
@@ -63,11 +65,8 @@ export default class SHeader extends Component {
                         </Badge>
                     </span>
                     <Dropdown overlay={<Menu>
-                        <Menu.Item key="0">
-                            <Link to="/projects">View Projects</Link>
-                        </Menu.Item>
                         {auth.hasPrivileges(Privilege.UserManage) ?
-                            <Menu.Item key="1">
+                            <Menu.Item key="0">
                                 <Link to="/users">View Users</Link>
                             </Menu.Item>
                             : null
