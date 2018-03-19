@@ -104,38 +104,37 @@ namespace ScalpayApi
             });
 
             // init database
-            using (var context = serviceProvider.GetService<ScalpayDbContext>())
+            var context = serviceProvider.GetService<ScalpayDbContext>();
+
+            context.Database.Migrate();
+
+            // add default user
+            if (!context.Users.Any())
             {
-                context.Database.Migrate();
-
-                // add default user
-                if (!context.Users.Any())
+                context.Users.Add(new User()
                 {
-                    context.Users.Add(new User()
-                    {
-                        Username = "admin",
-                        ApiKey = Guid.NewGuid().ToString(),
-                        Email = "admin@scalpay.com",
-                        FullName = "Admin",
-                        Password = "1",
-                        Privileges = Enum.GetValues(typeof(Privilege)).Cast<Privilege>().ToList()
-                    });
-                    context.SaveChanges();
-                }
+                    Username = "admin",
+                    ApiKey = Guid.NewGuid().ToString(),
+                    Email = "admin@scalpay.com",
+                    FullName = "Admin",
+                    Password = "1",
+                    Privileges = Enum.GetValues(typeof(Privilege)).Cast<Privilege>().ToList()
+                });
+                context.SaveChanges();
+            }
 
-                // add scalpay project
-                if (!context.Projects.Any())
+            // add scalpay project
+            if (!context.Projects.Any())
+            {
+                context.Projects.Add(new Project()
                 {
-                    context.Projects.Add(new Project()
-                    {
-                        ProjectKey = "__scalpay",
-                        Name = "Scalpay",
-                        Description = "The Scalpay's configurations.",
-                        Version = 1,
-                        IsLatest = true
-                    });
-                    context.SaveChanges();
-                }
+                    ProjectKey = "__scalpay",
+                    Name = "Scalpay",
+                    Description = "The Scalpay's configurations.",
+                    Version = 1,
+                    IsLatest = true
+                });
+                context.SaveChanges();
             }
         }
     }

@@ -1,4 +1,4 @@
-import {Layout, Menu, AutoComplete, Input, Icon, Badge, Dropdown, Avatar, Spin} from "antd";
+import {Layout, Menu, AutoComplete, Input, Icon, Badge, Dropdown, Avatar, Spin, Popover} from "antd";
 import React, {Component} from "react";
 import {observable} from "mobx";
 import {observer} from "mobx-react";
@@ -15,13 +15,29 @@ export default class ProjectInfo extends Component {
         version: null
     };
 
+    @observable loading = false;
+    @observable projectInfo = {};
+
     render = () => {
-        if (this.props.version) {
-            return <a onClick={() => global.history.push("/projects/" + this.props.projectKey + "/v" + this.props.version)}>
-                {this.props.projectKey + ":v" + this.props.version}</a>
-        } else {
-            return <a onClick={() => global.history.push("/projects/" + this.props.projectKey)}>
-                {this.props.projectKey}</a>
-        }
+        return <Popover
+            title={this.loading? null: this.projectInfo.name}
+            content={this.loading? <Spin size="small"/>: this.projectInfo.description}
+            placement="bottomLeft"
+            mouseEnterDelay={0.5}
+            onVisibleChange={this.fetchInfo}
+        >
+            <a onClick={() => global.history.push("/projects/" + this.props.projectKey + (this.props.version ? "/v" + this.props.version : ""))}>
+                {this.props.projectKey + (this.props.version ? ":v" + this.props.version : "")}</a>
+        </Popover>
+    };
+
+    fetchInfo = () => {
+        if (Object.keys(this.projectInfo).length) return;
+        this.loading = true;
+        axios.get("/api/projects/" + this.props.projectKey + (this.props.version ? "/v" + this.props.version : ""))
+            .then((res) => {
+                this.projectInfo = res.data.data;
+            })
+            .finally(() => this.loading = false);
     }
 }
