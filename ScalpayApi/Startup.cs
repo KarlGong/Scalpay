@@ -62,13 +62,13 @@ namespace ScalpayApi
 
             services.AddMemoryCache();
 
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddTransient<IItemService, ItemService>();
-            services.AddTransient<IProjectService, ProjectService>();
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<IExpressionService, ExpressionService>();
-            services.AddTransient<IAuditService, AuditService>();
+            services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<IProjectService, ProjectService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IExpressionService, ExpressionService>();
+            services.AddScoped<IAuditService, AuditService>();
 
             return services.BuildServiceProvider();
         }
@@ -123,16 +123,16 @@ namespace ScalpayApi
                     context.SaveChanges();
                 }
 
-                const string scalpayKey = "__scalpay";
                 // add scalpay project
                 if (!context.Projects.Any())
                 {
                     context.Projects.Add(new Project()
                     {
-                        ProjectKey = scalpayKey,
-                        Name = scalpayKey,
+                        ProjectKey = "__scalpay",
+                        Name = "Scalpay",
                         Description = "The Scalpay's configurations.",
-                        Items = new List<Item>()
+                        Version = 1,
+                        IsLatest = true
                     });
                     context.SaveChanges();
                 }

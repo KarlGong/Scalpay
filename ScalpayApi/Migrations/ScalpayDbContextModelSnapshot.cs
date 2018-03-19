@@ -26,6 +26,10 @@ namespace ScalpayApi.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("ArgsString")
+                        .IsRequired()
+                        .HasColumnName("Args");
+
                     b.Property<int>("AuditType");
 
                     b.Property<DateTime>("InsertTime")
@@ -33,7 +37,7 @@ namespace ScalpayApi.Migrations
 
                     b.Property<string>("ItemKey");
 
-                    b.Property<string>("OperatorUserName");
+                    b.Property<string>("Operator");
 
                     b.Property<string>("ProjectKey");
 
@@ -42,18 +46,12 @@ namespace ScalpayApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ItemKey");
-
-                    b.HasIndex("OperatorUserName");
-
-                    b.HasIndex("ProjectKey");
-
                     b.ToTable("Audits");
                 });
 
             modelBuilder.Entity("ScalpayApi.Models.Item", b =>
                 {
-                    b.Property<string>("ItemKey")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("DefaultResultString")
@@ -64,6 +62,11 @@ namespace ScalpayApi.Migrations
 
                     b.Property<DateTime>("InsertTime")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("IsLatest");
+
+                    b.Property<string>("ItemKey")
+                        .IsRequired();
 
                     b.Property<int>("Mode");
 
@@ -81,16 +84,16 @@ namespace ScalpayApi.Migrations
                     b.Property<DateTime>("UpdateTime")
                         .ValueGeneratedOnAddOrUpdate();
 
-                    b.HasKey("ItemKey");
+                    b.Property<int>("Version");
 
-                    b.HasIndex("ProjectKey");
+                    b.HasKey("Id");
 
                     b.ToTable("Items");
                 });
 
             modelBuilder.Entity("ScalpayApi.Models.Project", b =>
                 {
-                    b.Property<string>("ProjectKey")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description");
@@ -98,13 +101,20 @@ namespace ScalpayApi.Migrations
                     b.Property<DateTime>("InsertTime")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<bool>("IsLatest");
+
                     b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<string>("ProjectKey")
                         .IsRequired();
 
                     b.Property<DateTime>("UpdateTime")
                         .ValueGeneratedOnAddOrUpdate();
 
-                    b.HasKey("ProjectKey");
+                    b.Property<int>("Version");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Projects");
                 });
@@ -121,7 +131,7 @@ namespace ScalpayApi.Migrations
                     b.Property<DateTime>("InsertTime")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ItemKey");
+                    b.Property<int>("ItemId");
 
                     b.Property<int>("Order");
 
@@ -134,7 +144,7 @@ namespace ScalpayApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ItemKey");
+                    b.HasIndex("ItemId");
 
                     b.ToTable("Rule");
                 });
@@ -170,37 +180,11 @@ namespace ScalpayApi.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("ScalpayApi.Models.Audit", b =>
-                {
-                    b.HasOne("ScalpayApi.Models.Item", "Item")
-                        .WithMany("Audits")
-                        .HasForeignKey("ItemKey")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ScalpayApi.Models.User", "Operator")
-                        .WithMany("Audits")
-                        .HasForeignKey("OperatorUserName")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("ScalpayApi.Models.Project", "Project")
-                        .WithMany("Audits")
-                        .HasForeignKey("ProjectKey")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("ScalpayApi.Models.Item", b =>
-                {
-                    b.HasOne("ScalpayApi.Models.Project", "Project")
-                        .WithMany("Items")
-                        .HasForeignKey("ProjectKey")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("ScalpayApi.Models.Rule", b =>
                 {
                     b.HasOne("ScalpayApi.Models.Item", "Item")
                         .WithMany("Rules")
-                        .HasForeignKey("ItemKey")
+                        .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

@@ -35,15 +35,6 @@ function edit(project, onSuccess) {
 
 }
 
-function del(project, onSuccess) {
-    const target = document.createElement("div");
-    document.body.appendChild(target);
-    render(<DeleteProjectModal project={project} onSuccess={onSuccess} afterClose={() => {
-        unmountComponentAtNode(target);
-        target.remove()
-    }}/>, target);
-}
-
 @observer
 class EditProjectModal extends Component {
     static defaultProps = {
@@ -131,7 +122,7 @@ class EditProjectModal extends Component {
                             this.loading = false;
                             this.visible = false;
                             message.success(<span>
-                        Project <ProjectInfo project={project}/> is added successfully!
+                        Project <ProjectInfo projectKey={project.projectKey}/> is added successfully!
                     </span>);
                             this.props.onSuccess(project);
                         }, () => this.loading = false);
@@ -147,7 +138,7 @@ class EditProjectModal extends Component {
                             this.loading = false;
                             this.visible = false;
                             message.success(<span>
-                        Project <ProjectInfo project={project}/> is updated successfully!
+                        Project <ProjectInfo projectKey={project.projectKey}/> is updated successfully!
                     </span>);
                             this.props.onSuccess(project);
                         }, () => this.loading = false);
@@ -161,50 +152,4 @@ class EditProjectModal extends Component {
 }
 
 
-@observer
-class DeleteProjectModal extends Component {
-    static defaultProps = {
-        project: {},
-        onSuccess: (project) => {},
-        afterClose: () => {}
-    };
-
-    @observable loading = false;
-    @observable visible = true;
-
-    render = () => {
-        return <Modal
-            title={<span><Icon type="question-circle" style={{color: "#ff4d4f"}}/> Are you sure to delete this project?</span>}
-            okText="Delete Project"
-            okType="danger"
-            cancelText="Cancel"
-            visible={this.visible}
-            maskClosable={false}
-            confirmLoading={this.loading}
-            onOk={this.handleOk}
-            onCancel={this.handleCancel}
-            afterClose={() => this.props.afterClose()}
-        >
-            All the items under this project will also be deleted.
-        </Modal>
-    };
-
-    handleOk = () => {
-        this.loading = true;
-        axios.delete("/api/projects/" + this.props.project.projectKey)
-            .then(() => {
-                this.loading = false;
-                this.visible = false;
-                message.success(<span>
-                        Project <ProjectInfo project={this.props.project}/> is deleted successfully!
-                    </span>);
-                this.props.onSuccess(this.props.project);
-            }, () => this.loading = false);
-    };
-
-    handleCancel = (e) => {
-        this.visible = false;
-    };
-}
-
-export default {add, edit, del};
+export default {add, edit};

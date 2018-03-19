@@ -63,8 +63,8 @@ export default class ItemsPage extends Component {
                 <Breadcrumb.Item>Items</Breadcrumb.Item>
             </Breadcrumb>}>
             <List
-                pagination={{
-                    showTotal: (total, range) => total ? `${range[0]}-${range[1]} of ${total} items` : "0-0 of 0 items",
+                pagination={this.totalCount ? {
+                    showTotal: (total, range) =>`${range[0]}-${range[1]} of ${total} items`,
                     pageSize: this.criteria.pageSize,
                     current: this.criteria.pageIndex + 1,
                     total: this.totalCount,
@@ -73,7 +73,7 @@ export default class ItemsPage extends Component {
                         this.criteria.pageSize = pageSize;
                         global.history.pushQueryParams(this.criteria);
                     }
-                }}
+                } : null}
                 className="list"
                 loading={this.loading}
                 itemLayout="horizontal"
@@ -97,17 +97,15 @@ export default class ItemsPage extends Component {
                 </div>}
                 renderItem={item => {
                     let actions = [];
-                    if (auth.hasPrivileges(Privilege.ItemEdit))
+                    if (auth.hasPrivileges(Privilege.ItemManage))
                         actions.push(<a className="edit" onClick={() => this.editItem(item)}>edit</a>);
-                    if (auth.hasPrivileges(Privilege.ItemDelete))
-                        actions.push(<a className="delete" onClick={() => this.deleteItem(item)}>delete</a>);
 
                     return <List.Item actions={actions}>
                         <List.Item.Meta
-                            title={<span><ProjectInfo project={item.project}/> / <ItemInfo item={item}/></span>}
+                            title={<span><ProjectInfo projectKey={item.projectKey}/> / <ItemInfo itemKey={item.itemKey}/> - {item.name}</span>}
                             description={item.description}
                         />
-                        <div>{item.itemKey}</div>
+                        <div>v{item.version}</div>
                     </List.Item>
                 }}
             >
@@ -129,9 +127,5 @@ export default class ItemsPage extends Component {
 
     editItem = (item) => {
         itemModal.edit(item);
-    };
-
-    deleteItem = (item) => {
-        itemModal.del(item);
     };
 }

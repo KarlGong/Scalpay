@@ -33,7 +33,7 @@ export default class ProjectsPage extends Component {
     };
 
     componentWillReceiveProps = (props) => {
-        if (JSON.stringify(this.props.location.query) !== JSON.stringify(props.location.query)){
+        if (JSON.stringify(this.props.location.query) !== JSON.stringify(props.location.query)) {
             this.criteria = {
                 searchText: props.location.query.searchText || null,
                 pageIndex: parseInt(props.location.query.pageIndex) || 0,
@@ -53,8 +53,8 @@ export default class ProjectsPage extends Component {
                 <Breadcrumb.Item>Projects</Breadcrumb.Item>
             </Breadcrumb>}>
             <List
-                pagination={{
-                    showTotal: (total, range) => total ? `${range[0]}-${range[1]} of ${total} projects` : "0-0 of 0 projects",
+                pagination={this.totalCount ? {
+                    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} projects`,
                     pageSize: this.criteria.pageSize,
                     current: this.criteria.pageIndex + 1,
                     total: this.totalCount,
@@ -63,7 +63,7 @@ export default class ProjectsPage extends Component {
                         this.criteria.pageSize = pageSize;
                         global.history.pushQueryParams(this.criteria);
                     }
-                }}
+                } : null}
                 className="list"
                 loading={this.loading}
                 itemLayout="horizontal"
@@ -82,7 +82,7 @@ export default class ProjectsPage extends Component {
                                     this.criteria.pageIndex = 0;
                                     global.history.pushQueryParams(this.criteria);
                                 }}>Search</Button>
-                    {auth.hasPrivileges(Privilege.ProjectAdd) ?
+                    {auth.hasPrivileges(Privilege.ProjectManage) ?
                         <Button
                             style={{float: "right"}}
                             onClick={() => this.addProject()}>Add Project</Button>
@@ -91,17 +91,15 @@ export default class ProjectsPage extends Component {
                     </span>}
                 renderItem={project => {
                     let actions = [];
-                    if (auth.hasPrivileges(Privilege.ProjectEdit))
+                    if (auth.hasPrivileges(Privilege.ProjectManage))
                         actions.push(<a className="edit" onClick={() => this.editProject(project)}>edit</a>);
-                    if (auth.hasPrivileges(Privilege.ProjectDelete))
-                        actions.push(<a className="delete" onClick={() => this.deleteProject(project)}>delete</a>);
 
                     return <List.Item actions={actions}>
                         <List.Item.Meta
-                            title={<span><ProjectInfo project={project}/></span>}
+                            title={<span><ProjectInfo projectKey={project.projectKey}/> - {project.name}</span>}
                             description={project.description}
                         />
-                        <div>{project.projectKey}</div>
+                        <div>v{project.version}</div>
                     </List.Item>
                 }}
             >
@@ -127,9 +125,5 @@ export default class ProjectsPage extends Component {
 
     editProject = (project) => {
         projectModal.edit(project);
-    };
-
-    deleteProject = (project) => {
-        projectModal.del(project);
     };
 }

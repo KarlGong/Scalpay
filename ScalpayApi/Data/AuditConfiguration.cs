@@ -8,11 +8,15 @@ namespace ScalpayApi.Data
     {
         public void Configure(EntityTypeBuilder<Audit> builder)
         {
-            builder.HasKey(i => i.Id);
+            builder.HasKey(a => a.Id);
 
-            builder.Property(i => i.InsertTime).ValueGeneratedOnAdd();
+            builder.Ignore(a => a.Args);
 
-            builder.Property(i => i.UpdateTime).ValueGeneratedOnAddOrUpdate();
+            builder.Property(a => a.ArgsString).HasColumnName("Args").IsRequired();
+
+            builder.Property(a => a.InsertTime).ValueGeneratedOnAdd();
+
+            builder.Property(a => a.UpdateTime).ValueGeneratedOnAddOrUpdate();
         }
     }
 }

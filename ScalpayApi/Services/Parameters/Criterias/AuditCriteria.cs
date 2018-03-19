@@ -11,13 +11,13 @@ namespace ScalpayApi.Services.Parameters.Criterias
 
         public string ProjectKey { get; set; }
 
-        public string OperatorUserName { get; set; }
+        public string Operator { get; set; }
 
         public override Expression<Func<Audit, bool>> ToWherePredicate()
         {
             return a => (ItemKey == null || ItemKey == a.ItemKey)
                         && (ProjectKey == null || ProjectKey == a.ProjectKey)
-                        && (OperatorUserName == null || OperatorUserName == a.OperatorUserName);
+                        && (Operator == null || Operator == a.Operator);
         }
     }
 }

@@ -1,12 +1,8 @@
 import moment from "moment";
 
 export const Privilege = {
-    ProjectAdd: "ProjectAdd",
-    ProjectEdit: "ProjectEdit",
-    ProjectDelete: "ProjectDelete",
-    ItemAdd: "ItemAdd",
-    ItemEdit: "ItemEdit",
-    ItemDelete: "ItemDelete",
+    ProjectManage: "ProjectManage",
+    ItemManage: "ItemManage",
     UserManage: "UserManage"
 };
 
@@ -18,10 +14,8 @@ export const ItemMode = {
 export const AuditType = {
     AddItem: "AddItem",
     UpdateItem: "UpdateItem",
-    DeleteItem: "DeleteItem",
     AddProject: "AddProject",
     UpdateProject: "UpdateProject",
-    DeleteProject: "DeleteProject"
 };
 
 export const ExpType = {

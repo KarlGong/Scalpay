@@ -33,7 +33,5 @@ namespace ScalpayApi.Models
         public DateTime InsertTime { get; set; }
 
         public DateTime UpdateTime { get; set; }
-        
-        public List<Audit> Audits { get; set; } = new List<Audit>();
     }
 }

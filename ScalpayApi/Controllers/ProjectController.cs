@@ -22,26 +22,35 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpGet]
-        public async Task<Result<List<Project>>> GetProjects([FromQuery] ProjectCriteria criteria)
+        public async Task<Result<List<Project>>> GetLatestProjects([FromQuery] ProjectCriteria criteria)
         {
             return new Result<List<Project>>()
             {
-                Data = await _service.GetProjectsAsync(criteria),
-                TotalCount = await _service.GetProjectsCountAsync(criteria)
+                Data = await _service.GetLatestProjectsAsync(criteria),
+                TotalCount = await _service.GetLatestProjectsCountAsync(criteria)
             };
         }
-
+        
         [HttpGet("{projectKey}")]
-        public async Task<Result<Project>> GetProject([FromRoute] string projectKey)
+        public async Task<Result<Project>> GetLatestProject([FromRoute] string projectKey)
         {
             return new Result<Project>()
             {
-                Data = await _service.GetProjectAsync(projectKey)
+                Data = await _service.GetProjectAsync(projectKey, null)
+            };
+        }
+
+        [HttpGet("{projectKey}/v{version}")]
+        public async Task<Result<Project>> GetProject([FromRoute] string projectKey, [FromRoute] int version)
+        {
+            return new Result<Project>()
+            {
+                Data = await _service.GetProjectAsync(projectKey, version)
             };
         }
 
         [HttpPut]
-        [Authorization(Privilege.ProjectAdd)]
+        [Authorization(Privilege.ProjectManage)]
         public async Task<Result<Project>> AddProject([FromBody] AddProjectParams ps)
         {
             return new Result<Project>()
@@ -51,7 +60,7 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpPost("{projectKey}")]
-        [Authorization(Privilege.ProjectEdit)]
+        [Authorization(Privilege.ProjectManage)]
         public async Task<Result<Project>> UpdateProject([FromRoute] string projectKey, [FromBody] UpdateProjectParams ps)
         {
             ps.ProjectKey = projectKey;
@@ -59,14 +68,6 @@ namespace ScalpayApi.Controllers
             {
                 Data = await _service.UpdateProjectAsync(ps)
             };
-        }
-
-        [HttpDelete("{projectKey}")]
-        [Authorization(Privilege.ProjectDelete)]
-        public async Task<Result> DeleteProject([FromRoute] string projectKey)
-        {
-            await _service.DeleteProjectAsync(projectKey);
-            return new Result();
         }
     }
 }

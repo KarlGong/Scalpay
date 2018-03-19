@@ -7,11 +7,17 @@ namespace ScalpayApi.Models
 {
     public class Item
     {
+        public int Id { get; set; }
+        
         public string ItemKey { get; set; }
 
         public string Name { get; set; }
 
         public string Description { get; set; }
+        
+        public int Version { get; set; }
+        
+        public bool IsLatest { get; set; }
 
         public DateTime InsertTime { get; set; }
 
@@ -53,10 +59,6 @@ namespace ScalpayApi.Models
         
         public string ProjectKey { get; set; }
 
-        public Project Project { get; set; }   
-
         public List<Rule> Rules { get; set; } = new List<Rule>();
-        
-        public List<Audit> Audits { get; set; } = new List<Audit>();
     }
 }

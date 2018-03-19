@@ -35,9 +35,9 @@ export default class AuditsView extends Component {
 
     render = () => {
         return <List
-            pagination={{
+            pagination={this.totalCount ? {
                 size: "small",
-                showTotal: (total, range) => total ? `${range[0]}-${range[1]} of ${total} records` : "0-0 of 0 records",
+                showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} records`,
                 pageSize: this.criteria.pageSize,
                 current: this.criteria.pageIndex + 1,
                 total: this.totalCount,
@@ -46,7 +46,7 @@ export default class AuditsView extends Component {
                     this.criteria.pageSize = pageSize;
                     this.fetchAudits();
                 }
-            }}
+            } : null}
             className="audits-view"
             itemLayout="horizontal"
             loading={this.loading}
@@ -55,28 +55,40 @@ export default class AuditsView extends Component {
                 let title = null;
                 switch (audit.auditType) {
                     case AuditType.AddItem:
-                        title = <span><UserInfo user={audit.operator}/> added item <ProjectInfo
-                            project={audit.project}/> / <ItemInfo item={audit.item}/></span>;
+                        title = <span>
+                            <UserInfo username={audit.operator}/>
+                            <span> added item </span>
+                            <ProjectInfo projectKey={audit.projectKey}/>
+                            <span> / </span>
+                            <ItemInfo itemKey={audit.itemKey} version={audit.args.itemVersion}/>
+                        </span>;
                         break;
                     case AuditType.UpdateItem:
-                        title = <span><UserInfo user={audit.operator}/> updated item <ProjectInfo
-                            project={audit.project}/> / <ItemInfo item={audit.item}/></span>;
-                        break;
-                    case AuditType.DeleteItem:
-                        title = <span><UserInfo user={audit.operator}/> deleted item <span
-                            className="deleted">{audit.itemKey}</span></span>;
+                        title = <span>
+                            <UserInfo username={audit.operator}/>
+                            <span> updated item </span>
+                            <ProjectInfo projectKey={audit.projectKey}/>
+                            <span> / </span>
+                            <ItemInfo itemKey={audit.itemKey} version={audit.args.fromItemVersion}/>
+                            <span> to </span>
+                            <ItemInfo itemKey={audit.itemKey} version={audit.args.toItemVersion}/>
+                        </span>;
                         break;
                     case AuditType.AddProject:
-                        title = <span><UserInfo user={audit.operator}/> added project <ProjectInfo
-                            project={audit.project}/></span>;
+                        title = <span>
+                            <UserInfo username={audit.operator}/>
+                            <span> added project </span>
+                            <ProjectInfo projectKey={audit.projectKey} version={audit.args.projectVersion}/>
+                        </span>;
                         break;
                     case AuditType.UpdateProject:
-                        title = <span><UserInfo user={audit.operator}/> updated project <ProjectInfo
-                            project={audit.project}/></span>;
-                        break;
-                    case AuditType.DeleteProject:
-                        title = <span><UserInfo user={audit.operator}/> deleted project <span
-                            className="deleted">{audit.projectKey}</span></span>;
+                        title = <span>
+                            <UserInfo username={audit.operator}/>
+                            <span> updated project </span>
+                            <ProjectInfo projectKey={audit.projectKey} version={audit.args.fromProjectVersion}/>
+                            <span> to </span>
+                            <ProjectInfo projectKey={audit.projectKey} version={audit.args.toProjectVersion}/>
+                        </span>;
                         break;
                 }
 

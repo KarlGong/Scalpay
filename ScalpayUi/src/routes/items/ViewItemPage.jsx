@@ -24,9 +24,10 @@ import "./ViewItemPage.less";
 @observer
 export default class ViewItemPage extends Component {
 
+    params = Object.assign({}, this.props.params);
     @observable item = {
         projectKey: null,
-        itemKey: this.props.params.itemKey,
+        itemKey: this.params.itemKey,
         name: null,
         description: null,
         mode: ItemMode.Property,
@@ -41,13 +42,17 @@ export default class ViewItemPage extends Component {
         this.loadItem();
     };
 
+    componentWillReceiveProps = (props) => {
+        if (JSON.stringify(this.params) !== JSON.stringify(props.params)) {
+            this.params = props.params;
+            this.loadItem();
+        }
+    };
+
     render = () => {
         let commands = [];
-        if (auth.hasPrivileges(Privilege.ItemEdit)) {
+        if (auth.hasPrivileges(Privilege.ItemManage) && !this.params.itemVersion) {
             commands.push(<Button onClick={() => this.editItem()}>Edit</Button>);
-        }
-        if (auth.hasPrivileges(Privilege.ItemDelete)) {
-            commands.push(<Button type="danger" onClick={() => this.deleteItem()}>Delete</Button>)
         }
 
         let conditionWidth = 16;
@@ -58,18 +63,25 @@ export default class ViewItemPage extends Component {
             breadcrumb={<Breadcrumb>
                 <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
                 <Breadcrumb.Item><Link to="/items">Items</Link></Breadcrumb.Item>
-                <Breadcrumb.Item>{this.props.params.itemKey}</Breadcrumb.Item>
+                {
+                    this.params.itemVersion ?
+                        [
+                            <Breadcrumb.Item key={1}>
+                                <Link to={"/items/" + this.params.itemKey}>{this.params.itemKey}</Link>
+                            </Breadcrumb.Item>,
+                            <Breadcrumb.Item key={2}>{this.params.itemVersion}</Breadcrumb.Item>
+                        ]
+                        : <Breadcrumb.Item>{this.params.itemKey}</Breadcrumb.Item>
+                }
             </Breadcrumb>}>
             <CommandBar leftItems={commands}/>
             <Layout>
                 <Block name="Basic" loading={this.loading}>
                     <FieldsViewer fields={[
-                        ["Project", <ProjectInfo project={this.item.project}/>],
+                        ["Project", <ProjectInfo projectKey={this.item.projectKey}/>],
                         ["Item Key", this.item.itemKey],
                         ["Name", this.item.name],
-                        ["Description", this.item.description],
-                        ["Create Time", moment(this.item.insertTime).fromNow()],
-                        ["Update Time", moment(this.item.updateTime).fromNow()],
+                        ["Description", this.item.description]
                     ]}/>
                 </Block>
                 {
@@ -121,16 +133,26 @@ export default class ViewItemPage extends Component {
                         </Block>
                         : null
                 }
-                <Block name="Audits">
-                    <AuditsView itemKey={this.item.itemKey}/>
-                </Block>
+                {
+                    !this.params.itemVersion ?
+                        <Block name="Audits">
+                            <AuditsView itemKey={this.item.itemKey}/>
+                        </Block>
+                        : null
+                }
             </Layout>
         </PageWrapper>
     };
 
     loadItem = () => {
         this.loading = true;
-        axios.get("/api/items/" + this.props.params.itemKey)
+        let url = "";
+        if (this.params.itemVersion) {
+            url = "/api/items/" + this.params.itemKey + "/" + this.params.itemVersion;
+        } else {
+            url = "/api/items/" + this.params.itemKey;
+        }
+        axios.get(url)
             .then((res) => {
                 let item = res.data.data;
                 item.rules.map(r => r.key = guid());
@@ -142,8 +164,4 @@ export default class ViewItemPage extends Component {
     editItem = () => {
         itemModal.edit(this.item, (item) => this.loadItem());
     };
-
-    deleteItem = () => {
-        itemModal.del(this.item, (item) => global.history.goBack());
-    }
 }

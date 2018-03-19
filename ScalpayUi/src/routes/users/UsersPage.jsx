@@ -53,8 +53,8 @@ export default class UsersPage extends Component {
                 <Breadcrumb.Item>Users</Breadcrumb.Item>
             </Breadcrumb>}>
             <List
-                pagination={{
-                    showTotal: (total, range) => total ? `${range[0]}-${range[1]} of ${total} users` : "0-0 of 0 users",
+                pagination={this.totalCount ? {
+                    showTotal: (total, range) =>`${range[0]}-${range[1]} of ${total} users`,
                     pageSize: this.criteria.pageSize,
                     current: this.criteria.pageIndex + 1,
                     total: this.totalCount,
@@ -63,7 +63,7 @@ export default class UsersPage extends Component {
                         this.criteria.pageSize = pageSize;
                         global.history.pushQueryParams(this.criteria);
                     }
-                }}
+                }: null}
                 className="list"
                 loading={this.loading}
                 itemLayout="horizontal"
@@ -87,13 +87,11 @@ export default class UsersPage extends Component {
                             onClick={() => this.addUser()}>Add User</Button>
                     </span>}
                 renderItem={user => {
-                    return <List.Item actions={[<a className="edit" onClick={() => this.editUser(user)}>edit</a>,
-                        <a className="delete" onClick={() => this.deleteUser(user)}>delete</a>]}>
+                    return <List.Item actions={[<a className="edit" onClick={() => this.editUser(user)}>edit</a>]}>
                         <List.Item.Meta
-                            title={<span><UserInfo user={user}/></span>}
+                            title={<span><UserInfo username={user.username}/> - {user.fullName}</span>}
                             description={user.email}
                         />
-                        <div>{user.username}</div>
                     </List.Item>
                 }}
             >
@@ -119,9 +117,5 @@ export default class UsersPage extends Component {
 
     editUser = (user) => {
         userModal.edit(user);
-    };
-
-    deleteUser = (user) => {
-        userModal.del(user);
     };
 }

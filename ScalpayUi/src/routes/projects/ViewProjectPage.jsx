@@ -20,8 +20,9 @@ import AuditsView from "~/components/AuditsView";
 @observer
 export default class ViewProjectPage extends Component {
 
+    params = Object.assign({}, this.props.params);
     @observable project = {
-        projectKey: this.props.params.projectKey,
+        projectKey: this.params.projectKey,
         name: null,
         description: null
     };
@@ -31,13 +32,17 @@ export default class ViewProjectPage extends Component {
         this.loadProject();
     };
 
+    componentWillReceiveProps = (props) => {
+        if (JSON.stringify(this.params) !== JSON.stringify(props.params)) {
+            this.params = props.params;
+            this.loadProject();
+        }
+    };
+
     render = () => {
         let commands = [];
-        if (auth.hasPrivileges(Privilege.ProjectEdit)) {
+        if (auth.hasPrivileges(Privilege.ProjectManage) && !this.params.projectVersion) {
             commands.push(<Button onClick={() => this.editProject()}>Edit</Button>)
-        }
-        if (auth.hasPrivileges(Privilege.ProjectDelete)) {
-            commands.push(<Button type="danger" onClick={() => this.deleteProject()}>Delete</Button>)
         }
 
         return <PageWrapper
@@ -45,27 +50,46 @@ export default class ViewProjectPage extends Component {
             breadcrumb={<Breadcrumb>
                 <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
                 <Breadcrumb.Item><Link to="/projects">Projects</Link></Breadcrumb.Item>
-                <Breadcrumb.Item>{this.props.params.projectKey}</Breadcrumb.Item>
+                {
+                    this.params.projectVersion ?
+                        [
+                            <Breadcrumb.Item key={1}>
+                                <Link to={"/projects/" + this.params.projectKey}>
+                                    {this.params.projectKey}
+                                </Link>
+                            </Breadcrumb.Item>,
+                            <Breadcrumb.Item key={2}>{this.params.projectVersion}</Breadcrumb.Item>
+                        ]
+                        : <Breadcrumb.Item>{this.params.projectKey}</Breadcrumb.Item>
+                }
             </Breadcrumb>}>
             <CommandBar leftItems={commands}/>
             <Block name="Basic" loading={this.loading}>
                 <FieldsViewer fields={[
                     ["Project Key", this.project.projectKey],
                     ["Name", this.project.name],
-                    ["Description", this.project.description],
-                    ["Create Time", moment(this.project.insertTime).fromNow()],
-                    ["Update Time", moment(this.project.updateTime).fromNow()],
+                    ["Description", this.project.description]
                 ]}/>
             </Block>
-            <Block name="Audits">
-                <AuditsView projectKey={this.project.projectKey}/>
-            </Block>
+            {
+                !this.params.projectVersion ?
+                    <Block name="Audits">
+                        <AuditsView projectKey={this.project.projectKey}/>
+                    </Block>
+                    : null
+            }
         </PageWrapper>
     };
 
     loadProject = () => {
         this.loading = true;
-        axios.get("/api/projects/" + this.props.params.projectKey)
+        let url = "";
+        if (this.params.projectVersion) {
+            url = "/api/projects/" + this.params.projectKey + "/" + this.params.projectVersion;
+        } else {
+            url = "/api/projects/" + this.params.projectKey;
+        }
+        axios.get(url)
             .then((res) => this.project = res.data.data)
             .finally(() => this.loading = false);
     };
@@ -73,8 +97,4 @@ export default class ViewProjectPage extends Component {
     editProject = () => {
         projectModal.edit(this.project, (project) => this.loadProject());
     };
-
-    deleteProject = () => {
-        projectModal.del(this.project, (project) => global.history.goBack());
-    }
 }

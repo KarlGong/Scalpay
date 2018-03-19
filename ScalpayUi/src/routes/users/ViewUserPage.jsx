@@ -36,7 +36,6 @@ export default class ViewUserPage extends Component {
         let commands = [];
         if (auth.hasPrivileges(Privilege.UserManage)) {
             commands.push(<Button onClick={() => this.editUser()}>Edit</Button>);
-            commands.push(<Button type="danger" onClick={() => this.deleteUser()}>Delete</Button>)
         }
         return <PageWrapper
             className="view-user-page"
@@ -69,8 +68,4 @@ export default class ViewUserPage extends Component {
     editUser = () => {
         userModal.edit(this.user, () => this.loadUser());
     };
-
-    deleteUser = () => {
-        userModal.del(this.user, (user) => global.history.goBack());
-    }
 }

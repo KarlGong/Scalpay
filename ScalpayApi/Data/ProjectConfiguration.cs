@@ -8,19 +8,19 @@ namespace ScalpayApi.Data
     {
         public void Configure(EntityTypeBuilder<Project> builder)
         {
-            builder.HasKey(p => p.ProjectKey);
+            builder.HasKey(p => p.Id);
+
+            builder.Property(p => p.ProjectKey).IsRequired();
 
             builder.Property(p => p.Name).IsRequired();
+            
+            builder.Property(p => p.Version).IsRequired();
+            
+            builder.Property(p => p.IsLatest).IsRequired();
 
             builder.Property(p => p.InsertTime).ValueGeneratedOnAdd();
 
             builder.Property(p => p.UpdateTime).ValueGeneratedOnAddOrUpdate();
-
-            builder.HasMany(p => p.Items).WithOne(i => i.Project).HasForeignKey(i => i.ProjectKey)
-                .OnDelete(DeleteBehavior.Cascade);
-            
-            builder.HasMany(i => i.Audits).WithOne(a => a.Project).HasForeignKey(a => a.ProjectKey)
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

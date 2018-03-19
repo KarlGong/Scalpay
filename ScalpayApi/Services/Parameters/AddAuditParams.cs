@@ -11,5 +11,7 @@ namespace ScalpayApi.Services.Parameters
         public string ProjectKey { get; set; }
         
         public string ItemKey { get; set; }
+        
+        public object Args { get; set; }
     }
 }

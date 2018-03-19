@@ -28,7 +28,7 @@ export default class SHeader extends Component {
                     <div className="item menu">
                         <span>Statistics</span>
                     </div>
-                    {auth.hasPrivileges(Privilege.ItemAdd) ?
+                    {auth.hasPrivileges(Privilege.ItemManage) ?
                         <div className="item">
                             <Button type="primary" onClick={() => itemModal.add()}>Add</Button>
                         </div>

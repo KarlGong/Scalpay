@@ -37,16 +37,6 @@ function edit(user, onSuccess) {
         .finally(() => hide());
 }
 
-function del(user, onSuccess) {
-    const target = document.createElement("div");
-    document.body.appendChild(target);
-
-    render(<DeleteUserModal user={user} onSuccess={onSuccess} afterClose={() => {
-        unmountComponentAtNode(target);
-        target.remove()
-    }}/>, target);
-}
-
 @observer
 class EditUserModal extends Component {
     static defaultProps = {
@@ -129,24 +119,9 @@ class EditUserModal extends Component {
                     <Checkbox.Group
                         defaultValue={untracked(() => toJS(this.user.privileges))}
                         onChange={e => this.user.privileges = e}>
-                        <Divider style={{fontSize: "12px"}}>Projects</Divider>
-                        <Row>
-                            <Col span={8}><Checkbox value={Privilege.ProjectAdd}>Add Project</Checkbox></Col>
-                            <Col span={8}><Checkbox value={Privilege.ProjectEdit}>Edit Project</Checkbox></Col>
-                            <Col span={8}><Checkbox value={Privilege.ProjectDelete} style={{color: "#f00"}}>Delete
-                                Project</Checkbox></Col>
-                        </Row>
-                        <Divider style={{fontSize: "12px"}}>Items</Divider>
-                        <Row>
-                            <Col span={8}><Checkbox value={Privilege.ItemAdd}>Add Item</Checkbox></Col>
-                            <Col span={8}><Checkbox value={Privilege.ItemEdit}>Edit Item</Checkbox></Col>
-                            <Col span={8}><Checkbox value={Privilege.ItemDelete} style={{color: "#f00"}}>Delete
-                                Item</Checkbox></Col>
-                        </Row>
-                        <Divider style={{fontSize: "12px"}}>Users</Divider>
-                        <Row>
-                            <Col span={8}><Checkbox value={Privilege.UserManage}>Manage Users</Checkbox></Col>
-                        </Row>
+                        <Checkbox value={Privilege.ProjectManage}>Manage Projects</Checkbox>
+                        <Checkbox value={Privilege.ItemManage}>Manage Items</Checkbox>
+                        <Checkbox value={Privilege.UserManage}>Manage Users</Checkbox>
                     </Checkbox.Group>
                 </Form.Item>
             </Form>
@@ -164,7 +139,7 @@ class EditUserModal extends Component {
                             let user = res.data.data;
                             this.loading = false;
                             this.visible = false;
-                            message.success(<span>User <UserInfo user={user}/> is added successfully!</span>);
+                            message.success(<span>User <UserInfo username={user.username}/> is added successfully!</span>);
                             this.props.onSuccess(user);
                         }, () => this.loading = false)
                 });
@@ -178,7 +153,7 @@ class EditUserModal extends Component {
                             let user = res.data.data;
                             this.loading = false;
                             this.visible = false;
-                            message.success(<span>User <UserInfo user={user}/> is updated successfully!</span>);
+                            message.success(<span>User <UserInfo username={user.username}/> is updated successfully!</span>);
                             this.props.onSuccess(user);
                         }, () => this.loading = false)
                 });
@@ -190,52 +165,4 @@ class EditUserModal extends Component {
     };
 }
 
-@observer
-class DeleteUserModal extends Component {
-    static defaultProps = {
-        user: {},
-        onSuccess: (user) => {},
-        afterClose: () => {}
-    };
-
-    @observable loading = false;
-    @observable visible = true;
-
-    render = () => {
-        return <Modal
-            title={<span>
-                <Icon type="question-circle" style={{color: "#ff4d4f"}}/> Are you sure to delete this user?
-            </span>}
-            okText="Delete User"
-            okType="danger"
-            cancelText="Cancel"
-            visible={this.visible}
-            maskClosable={false}
-            confirmLoading={this.loading}
-            onOk={this.handleOk}
-            onCancel={this.handleCancel}
-            afterClose={() => this.props.afterClose()}
-        >
-            All the data of this user will be deleted.
-        </Modal>
-    };
-
-    handleOk = () => {
-        this.loading = true;
-        axios.delete("/api/users/" + this.props.user.username)
-            .then(() => {
-                this.loading = false;
-                this.visible = false;
-                message.success(<span>
-                        User <UserInfo user={this.props.user}/> is deleted successfully!
-                    </span>);
-                this.props.onSuccess(this.props.user);
-            }, () => this.loading = false);
-    };
-
-    handleCancel = (e) => {
-        this.visible = false;
-    };
-}
-
-export default {add, edit, del};
+export default {add, edit};

@@ -42,10 +42,12 @@ render(
                 <Route path="items">
                     <IndexRoute component={ItemsPage}/>
                     <Route path=":itemKey" component={ViewItemPage}/>
+                    <Route path=":itemKey/:itemVersion" component={ViewItemPage}/>
                 </Route>
                 <Route path="projects">
                     <IndexRoute component={ProjectsPage}/>
                     <Route path=":projectKey" component={ViewProjectPage}/>
+                    <Route path=":projectKey/:projectVersion" component={ViewProjectPage}/>
                 </Route>
                 <Route path="users">
                     <IndexRoute component={UsersPage}/>

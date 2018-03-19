@@ -19,7 +19,7 @@ export default class ProjectSelect extends Component {
         defaultValue: undefined
     };
 
-    @observable resetKey = guid();
+    isFocused = false;
     lastSearchId = 0;
     @observable projects = [];
     @observable loading = false;
@@ -29,22 +29,13 @@ export default class ProjectSelect extends Component {
         pageSize: 20
     };
 
-    componentDidMount = () => {
-        if (this.props.defaultValue) {
-            this.criteria.searchText = this.props.defaultValue;
-            this.searchProjects().then(() => {
-                this.criteria.searchText = null;
-                this.resetKey = guid();
-            });
-        } else {
-            this.searchProjects();
-        }
-        this.searchProjects = debounce(this.searchProjects, 500);
+    constructor(props) {
+        super(props);
+        this.debounceSearchProjects = debounce(this.searchProjects, 500);
     };
 
     render = () => {
         return <Select
-            key={this.resetKey}
             showSearch
             disabled={this.props.disabled}
             allowClear={this.props.allowClear}
@@ -57,13 +48,14 @@ export default class ProjectSelect extends Component {
             filterOption={false}
             onSearch={(value) => {
                 this.criteria.searchText = value || null;
-                this.searchProjects();
+                this.debounceSearchProjects();
             }}
             onChange={this.props.onChange}
             onBlur={this.props.onBlur}
+            onFocus={this.handleFocus}
         >
             {this.projects.map(project =>
-                <Select.Option key={project.projectKey}>{project.name}</Select.Option>
+                <Select.Option key={project.projectKey}>{project.projectKey}</Select.Option>
             )}
         </Select>
     };
@@ -82,5 +74,12 @@ export default class ProjectSelect extends Component {
                     this.loading = false;
                 }
             }, () => this.loading = false);
+    };
+
+    handleFocus = () => {
+        if (!this.isFocused) {
+            this.searchProjects();
+            this.isFocused = true;
+        }
     }
 }

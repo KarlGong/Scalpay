@@ -16,7 +16,7 @@ namespace ScalpayApi.Services.Parameters.Criterias
         public override Expression<Func<Item, bool>> ToWherePredicate()
         {
             return i => (ItemKey == null || ItemKey == i.ItemKey)
-                        && (ProjectKey == null || ProjectKey == i.Project.ProjectKey)
+                        && (ProjectKey == null || ProjectKey == i.ProjectKey)
                         && (SearchText == null
                             || i.ItemKey.Contains(SearchText)
                             || i.Name.Contains(SearchText)

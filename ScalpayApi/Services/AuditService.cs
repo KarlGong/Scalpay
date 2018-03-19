@@ -25,19 +25,18 @@ namespace ScalpayApi.Services
     {
         private readonly ScalpayDbContext _context;
         private readonly IMapper _mapper;
-        private readonly string _operatorUsername;
+        private readonly string _operator;
 
         public AuditService(ScalpayDbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _mapper = mapper;
-            _operatorUsername = httpContextAccessor.HttpContext.User.FindFirstValue("Username");
+            _operator = httpContextAccessor.HttpContext.User.FindFirstValue("Username");
         }
 
         public async Task<List<Audit>> GetAuditsAsync(AuditCriteria criteria)
         {
-            return await _context.Audits.AsNoTracking().Include(a => a.Project).Include(a => a.Item)
-                .Include(a => a.Operator).OrderByDescending(a => a.InsertTime).WithCriteria(criteria).ToListAsync();
+            return await _context.Audits.AsNoTracking().OrderByDescending(a => a.InsertTime).WithCriteria(criteria).ToListAsync();
         }
 
         public async Task<int> GetAuditsCountAsync(AuditCriteria criteria)
@@ -49,7 +48,7 @@ namespace ScalpayApi.Services
         {
             var audit = _mapper.Map<Audit>(ps);
 
-            audit.OperatorUserName = _operatorUsername;
+            audit.Operator = _operator;
             
             await _context.Audits.AddAsync(audit);
 

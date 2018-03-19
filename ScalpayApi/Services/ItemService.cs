@@ -18,17 +18,15 @@ namespace ScalpayApi.Services
 {
     public interface IItemService
     {
-        Task<List<Item>> GetItemsAsync(ItemCriteria criteria);
+        Task<List<Item>> GetLatestItemsAsync(ItemCriteria criteria);
 
-        Task<int> GetItemsCountAsync(ItemCriteria criteria);
+        Task<int> GetLatestItemsCountAsync(ItemCriteria criteria);
         
-        Task<Item> GetItemAsync(string itemKey);
+        Task<Item> GetItemAsync(string itemKey, int? version);
 
         Task<Item> AddItemAsync(AddItemParams ps);
 
         Task<Item> UpdateItemAsync(UpdateItemParams ps);
-
-        Task DeleteItemAsync(string itemKey);
 
         Task<SData> EvalItem(string itemKey, Dictionary<string, JToken> parameters);
     }
@@ -51,35 +49,52 @@ namespace ScalpayApi.Services
             _auditService = auditService;
         }
         
-        public async Task<List<Item>> GetItemsAsync(ItemCriteria criteria)
+        public async Task<List<Item>> GetLatestItemsAsync(ItemCriteria criteria)
         {
-            return await _context.Items.AsNoTracking().Include(i => i.Project).OrderBy(i => i.ItemKey).WithCriteria(criteria)
+            return await _context.Items.AsNoTracking().OrderBy(i => i.ItemKey).Where(i => i.IsLatest).WithCriteria(criteria)
                 .ToListAsync();
         }
 
-        public async Task<int> GetItemsCountAsync(ItemCriteria criteria)
+        public async Task<int> GetLatestItemsCountAsync(ItemCriteria criteria)
         {
-            return await _context.Items.AsNoTracking().CountAsync(criteria);
+            return await _context.Items.AsNoTracking().Where(i => i.IsLatest).CountAsync(criteria);
         }
 
-        public async Task<Item> GetItemAsync(string itemKey)
+        public async Task<Item> GetItemAsync(string itemKey, int? version)
         {
-            return await _cache.GetOrCreateAsync(itemKey, async entry =>
+            if (version == null)
             {
-                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
+                return await _cache.GetOrCreateAsync(itemKey, async entry =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
 
-                var item = await _context.Items.AsNoTracking().Include(i => i.Project).Include(i => i.Rules)
-                    .SingleOrDefaultAsync(i => i.ItemKey == itemKey);
+                    var item = await _context.Items.AsNoTracking().Include(i => i.Rules)
+                        .SingleOrDefaultAsync(i => i.ItemKey == itemKey && i.IsLatest);
+                    if (item == null)
+                    {
+                        throw new ScalpayException(StatusCode.ItemNotFound,
+                            $"Item with item key {itemKey} is not found.");
+                    }
+
+                    item.Rules = item.Rules.OrderBy(r => r.Order).ToList();
+
+                    return item;
+                });
+            }
+            else
+            {
+                var item = await _context.Items.AsNoTracking().Include(i => i.Rules)
+                    .SingleOrDefaultAsync(i => i.ItemKey == itemKey && i.Version == version);
                 if (item == null)
                 {
                     throw new ScalpayException(StatusCode.ItemNotFound,
-                        $"Item with item key {itemKey} is not found.");
+                        $"Item with item key {itemKey}, version {version} is not found.");
                 }
 
                 item.Rules = item.Rules.OrderBy(r => r.Order).ToList();
 
                 return item;
-            });
+            }
         }
 
         public async Task<Item> AddItemAsync(AddItemParams ps)
@@ -87,16 +102,15 @@ namespace ScalpayApi.Services
             ps.ProjectKey = ps.ProjectKey.ToLower();
             ps.ItemKey = ps.ItemKey.ToLower();
             
-            var oldItem = await _context.Items.AsNoTracking().SingleOrDefaultAsync(i => i.ItemKey == ps.ItemKey);
-
-            if (oldItem != null)
+            if (await _context.Items.AsNoTracking().AnyAsync(i => i.ItemKey == ps.ItemKey))
             {
                 throw new ScalpayException(StatusCode.ItemExisted,
                     $"Item with item key {ps.ItemKey} is already existed.");
             }
 
             var item = _mapper.Map<Item>(ps);
-
+            item.Version = 1;
+            item.IsLatest = true;
             var order = 0;
             item.Rules.ForEach(rule => rule.Order = order++);
 
@@ -110,7 +124,11 @@ namespace ScalpayApi.Services
             {
                 AuditType = AuditType.AddItem,
                 ProjectKey = ps.ProjectKey,
-                ItemKey = ps.ItemKey
+                ItemKey = ps.ItemKey,
+                Args = new
+                {
+                    ItemVersion = item.Version
+                }
             });
 
             return item;
@@ -118,15 +136,19 @@ namespace ScalpayApi.Services
 
         public async Task<Item> UpdateItemAsync(UpdateItemParams ps)
         {
-            var item = await GetItemAsync(ps.ItemKey);
+            var latestItem = await GetItemAsync(ps.ItemKey, null);
+            _context.Items.Attach(latestItem);
 
-            _context.Items.Attach(item);
-
-            _mapper.Map(ps, item);
-
+            var item = _mapper.Map<Item>(ps);
+            item.ProjectKey = latestItem.ProjectKey;
+            item.Version = latestItem.Version + 1;
+            item.IsLatest = true;
+            latestItem.IsLatest = false;
             var order = 0;
             item.Rules.ForEach(rule => rule.Order = order++);
 
+            await _context.Items.AddAsync(item);
+            
             await _context.SaveChangesAsync();
 
             _cache.Set(item.ItemKey, item, TimeSpan.FromHours(1));
@@ -135,33 +157,20 @@ namespace ScalpayApi.Services
             {
                 AuditType = AuditType.UpdateItem,
                 ProjectKey = item.ProjectKey,
-                ItemKey = ps.ItemKey
+                ItemKey = ps.ItemKey,
+                Args = new
+                {
+                    FromItemVersion = latestItem.Version,
+                    ToItemVersion = item.Version
+                }
             });
 
             return item;
         }
 
-        public async Task DeleteItemAsync(string itemKey)
-        {
-            var item = await GetItemAsync(itemKey);
-            
-            _context.Items.Remove(item);
-
-            await _context.SaveChangesAsync();
-
-            _cache.Remove(itemKey);
-            
-            await _auditService.AddAuditAsync(new AddAuditParams()
-            {
-                AuditType = AuditType.DeleteItem,
-                ProjectKey = item.ProjectKey,
-                ItemKey = itemKey
-            });
-        }
-
         public async Task<SData> EvalItem(string itemKey, Dictionary<string, JToken> parameters)
         {
-            var item = await GetItemAsync(itemKey);
+            var item = await GetItemAsync(itemKey, null);
 
             var variables = new Dictionary<string, SData>();
 

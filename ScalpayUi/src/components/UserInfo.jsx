@@ -11,11 +11,10 @@ import global from "~/global";
 @observer
 export default class UserInfo extends Component {
     static defaultProps = {
-        user: {}
+        username: ""
     };
 
     render = () => {
-        return <a onClick={() => global.history.push("/users/" + this.props.user.username)}
-                  title={this.props.user.email}>{this.props.user.fullName}</a>
+        return <a onClick={() => global.history.push("/users/" + this.props.username)}>{this.props.username}</a>
     }
 }

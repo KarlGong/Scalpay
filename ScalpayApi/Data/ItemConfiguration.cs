@@ -8,9 +8,15 @@ namespace ScalpayApi.Data
     {
         public void Configure(EntityTypeBuilder<Item> builder)
         {
-            builder.HasKey(i => i.ItemKey);
+            builder.HasKey(i => i.Id);
+
+            builder.Property(i => i.ItemKey).IsRequired();
 
             builder.Property(i => i.Name).IsRequired();
+            
+            builder.Property(i => i.Version).IsRequired();
+            
+            builder.Property(i => i.IsLatest).IsRequired();
 
             builder.Property(i => i.InsertTime).ValueGeneratedOnAdd();
 
@@ -28,11 +34,10 @@ namespace ScalpayApi.Data
 
             builder.Property(i => i.DefaultResultString).HasColumnName("DefaultResult").IsRequired();
 
-            builder.HasMany(i => i.Rules).WithOne(r => r.Item).HasForeignKey(r => r.ItemKey)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.Property(i => i.ProjectKey).IsRequired();
 
-            builder.HasMany(i => i.Audits).WithOne(a => a.Item).HasForeignKey(a => a.ItemKey)
-                .OnDelete(DeleteBehavior.Restrict);
+            builder.HasMany(i => i.Rules).WithOne(r => r.Item).HasForeignKey(r => r.ItemId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

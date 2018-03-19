@@ -45,17 +45,6 @@ function edit(item, onSuccess) {
         .finally(() => hide());
 }
 
-function del(item, onSuccess) {
-    const target = document.createElement("div");
-    document.body.appendChild(target);
-
-    render(<DeleteItemModal item={item} onSuccess={onSuccess} afterClose={() => {
-        unmountComponentAtNode(target);
-        target.remove()
-    }}/>, target);
-}
-
-
 @observer
 class EditItemModal extends Component {
     static defaultProps = {
@@ -212,7 +201,7 @@ class EditItemModal extends Component {
                         let item = res.data.data;
                         this.loading = false;
                         this.visible = false;
-                        message.success(<span>Item <ItemInfo item={item}/> is added successfully!</span>);
+                        message.success(<span>Item <ItemInfo itemKey={item.itemKey}/> is added successfully!</span>);
                         this.props.onSuccess(item);
                     }, () => this.loading = false)
             });
@@ -224,7 +213,7 @@ class EditItemModal extends Component {
                         let item = res.data.data;
                         this.loading = false;
                         this.visible = false;
-                        message.success(<span>Item <ItemInfo item={item}/> is updated successfully!</span>);
+                        message.success(<span>Item <ItemInfo itemKey={item.itemKey}/> is updated successfully!</span>);
                         this.props.onSuccess(item);
                     }, () => this.loading = false)
             });
@@ -236,51 +225,4 @@ class EditItemModal extends Component {
     };
 }
 
-@observer
-class DeleteItemModal extends Component {
-    static defaultProps = {
-        item: {},
-        onSuccess: (item) => {},
-        afterClose: () => {}
-    };
-
-    @observable loading = false;
-    @observable visible = true;
-
-    render = () => {
-        return <Modal
-            title={<span>
-                <Icon type="question-circle" style={{color: "#ff4d4f"}}/> Are you sure to delete this item?
-            </span>}
-            okText="Delete Item"
-            okType="danger"
-            cancelText="Cancel"
-            visible={this.visible}
-            maskClosable={false}
-            confirmLoading={this.loading}
-            onOk={this.handleOk}
-            onCancel={this.handleCancel}
-            afterClose={() => this.props.afterClose()}
-        >
-            All the data related to this item will be deleted.
-        </Modal>
-    };
-
-    handleOk = () => {
-        this.loading = true;
-        axios.delete("/api/items/" + this.props.item.itemKey)
-            .then(() => {
-                this.loading = false;
-                this.visible = false;
-                message.success(
-                    <span>Item <ItemInfo item={this.props.item.itemKey}/> is deleted successfully!</span>);
-                this.props.onSuccess(this.props.item);
-            }, () => this.loading = false);
-    };
-
-    handleCancel = (e) => {
-        this.visible = false;
-    };
-}
-
-export default {add, edit, del};
+export default {add, edit};

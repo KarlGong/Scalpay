@@ -11,11 +11,17 @@ import ProjectInfo from "./ProjectInfo";
 @observer
 export default class ItemInfo extends Component {
     static defaultProps = {
-        item: {}
+        itemKey: "",
+        version: null
     };
 
     render = () => {
-        return <a onClick={() => global.history.push("/items/" + this.props.item.itemKey)}
-               title={this.props.item.itemKey}>{this.props.item.name}</a>
+        if (this.props.version) {
+            return <a onClick={() => global.history.push("/items/" + this.props.itemKey + "/v" + this.props.version)}>
+                {this.props.itemKey + ":v" + this.props.version}</a>
+        } else {
+            return <a onClick={() => global.history.push("/items/" + this.props.itemKey)}>
+                {this.props.itemKey}</a>
+        }
     }
 }

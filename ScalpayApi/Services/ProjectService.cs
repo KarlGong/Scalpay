@@ -14,17 +14,15 @@ namespace ScalpayApi.Services
 {
     public interface IProjectService
     {
-        Task<Project> GetProjectAsync(string projectKey);
+        Task<List<Project>> GetLatestProjectsAsync(ProjectCriteria criteria);
 
-        Task<List<Project>> GetProjectsAsync(ProjectCriteria criteria);
+        Task<int> GetLatestProjectsCountAsync(ProjectCriteria criteria);
 
-        Task<int> GetProjectsCountAsync(ProjectCriteria criteria);
-
+        Task<Project> GetProjectAsync(string projectKey, int? version);
+        
         Task<Project> AddProjectAsync(AddProjectParams ps);
 
         Task<Project> UpdateProjectAsync(UpdateProjectParams ps);
-
-        Task DeleteProjectAsync(string projectKey);
     }
 
     public class ProjectService : IProjectService
@@ -40,49 +38,72 @@ namespace ScalpayApi.Services
             _auditService = auditService;
         }
 
-        public async Task<Project> GetProjectAsync(string projectKey)
+        public async Task<List<Project>> GetLatestProjectsAsync(ProjectCriteria criteria)
         {
-            var project = await _context.Projects.AsNoTracking().SingleOrDefaultAsync(p => p.ProjectKey == projectKey);
-            if (project == null)
+            return await _context.Projects.AsNoTracking().OrderBy(p => p.ProjectKey).Where(p => p.IsLatest)
+                .WithCriteria(criteria).ToListAsync();
+        }
+
+        public async Task<int> GetLatestProjectsCountAsync(ProjectCriteria criteria)
+        {
+            return await _context.Projects.AsNoTracking().Where(p => p.IsLatest).CountAsync(criteria);
+        }
+
+        public async Task<Project> GetProjectAsync(string projectKey, int? version)
+        {
+            if (version == null)
             {
-                throw new ScalpayException(StatusCode.ProjectNotFound, $"Project with project key {projectKey} is not found.");
+                var project = await _context.Projects.AsNoTracking()
+                    .SingleOrDefaultAsync(p => p.ProjectKey == projectKey && p.IsLatest);
+                if (project == null)
+                {
+                    throw new ScalpayException(StatusCode.ProjectNotFound,
+                        $"Project with project key {projectKey} is not found.");
+                }
+
+                return project;
             }
+            else
+            {
+                var project = await _context.Projects.AsNoTracking()
+                    .SingleOrDefaultAsync(p => p.ProjectKey == projectKey && p.Version == version);
+                if (project == null)
+                {
+                    throw new ScalpayException(StatusCode.ProjectNotFound,
+                        $"Project with project key {projectKey}, version {version} is not found.");
+                }
 
-            return project;
-        }
-
-        public async Task<List<Project>> GetProjectsAsync(ProjectCriteria criteria)
-        {
-            return await _context.Projects.AsNoTracking().OrderBy(p => p.ProjectKey).WithCriteria(criteria).ToListAsync();
-        }
-
-        public async Task<int> GetProjectsCountAsync(ProjectCriteria criteria)
-        {
-            return await _context.Projects.AsNoTracking().CountAsync(criteria);
+                return project;
+            }
         }
 
         public async Task<Project> AddProjectAsync(AddProjectParams ps)
         {
             ps.ProjectKey = ps.ProjectKey.ToLower();
-            
-            var oldProject = await _context.Projects.AsNoTracking()
-                .SingleOrDefaultAsync(p => p.ProjectKey == ps.ProjectKey);
 
-            if (oldProject != null)
+            if (await _context.Projects.AsNoTracking()
+                .AnyAsync(p => p.ProjectKey == ps.ProjectKey))
             {
-                throw new ScalpayException(StatusCode.ProjectExisted, $"Project with project key {ps.ProjectKey} is already existed.");
+                throw new ScalpayException(StatusCode.ProjectExisted,
+                    $"Project with project key {ps.ProjectKey} is already existed.");
             }
 
             var project = _mapper.Map<Project>(ps);
+            project.Version = 1;
+            project.IsLatest = true;
 
             await _context.Projects.AddAsync(project);
 
             await _context.SaveChangesAsync();
-            
+
             await _auditService.AddAuditAsync(new AddAuditParams()
             {
                 AuditType = AuditType.AddProject,
                 ProjectKey = ps.ProjectKey,
+                Args = new
+                {
+                    ProjectVersion = project.Version
+                }
             });
 
             return project;
@@ -90,36 +111,30 @@ namespace ScalpayApi.Services
 
         public async Task<Project> UpdateProjectAsync(UpdateProjectParams ps)
         {
-            var project = await GetProjectAsync(ps.ProjectKey);
+            var latestProject = await GetProjectAsync(ps.ProjectKey, null);
+            _context.Projects.Attach(latestProject);
 
-            _context.Projects.Attach(project);
+            var project = _mapper.Map<Project>(ps);
+            project.Version = latestProject.Version + 1;
+            project.IsLatest = true;
+            latestProject.IsLatest = false;
 
-            _mapper.Map(ps, project);
+            await _context.Projects.AddAsync(project);
 
             await _context.SaveChangesAsync();
-            
+
             await _auditService.AddAuditAsync(new AddAuditParams()
             {
                 AuditType = AuditType.UpdateProject,
                 ProjectKey = ps.ProjectKey,
+                Args = new
+                {
+                    FromProjectVersion = latestProject.Version,
+                    ToProjectVersion = project.Version
+                }
             });
 
             return project;
-        }
-
-        public async Task DeleteProjectAsync(string projectKey)
-        {
-            var project = await GetProjectAsync(projectKey);
-            
-            _context.Projects.Remove(project);
-
-            await _context.SaveChangesAsync();
-            
-            await _auditService.AddAuditAsync(new AddAuditParams()
-            {
-                AuditType = AuditType.DeleteProject,
-                ProjectKey = projectKey,
-            });
         }
     }
 }

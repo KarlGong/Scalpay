@@ -21,26 +21,35 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpGet]
-        public async Task<Result<List<Item>>> GetItems([FromQuery] ItemCriteria criteria)
+        public async Task<Result<List<Item>>> GetLatestItems([FromQuery] ItemCriteria criteria)
         {
             return new Result<List<Item>>()
             {
-                Data = await _itemService.GetItemsAsync(criteria),
-                TotalCount = await _itemService.GetItemsCountAsync(criteria)
+                Data = await _itemService.GetLatestItemsAsync(criteria),
+                TotalCount = await _itemService.GetLatestItemsCountAsync(criteria)
             };
         }
 
         [HttpGet("{itemKey}")]
-        public async Task<Result<Item>> GetItem([FromRoute] string itemKey)
+        public async Task<Result<Item>> GetLatestItem([FromRoute] string itemKey)
         {
             return new Result<Item>()
             {
-                Data = await _itemService.GetItemAsync(itemKey)
+                Data = await _itemService.GetItemAsync(itemKey, null)
+            };
+        }
+
+        [HttpGet("{itemKey}/v{version}")]
+        public async Task<Result<Item>> GetItem([FromRoute] string itemKey, [FromRoute] int version)
+        {
+            return new Result<Item>()
+            {
+                Data = await _itemService.GetItemAsync(itemKey, version)
             };
         }
 
         [HttpPut]
-        [Authorization(Privilege.ItemAdd)]
+        [Authorization(Privilege.ItemManage)]
         public async Task<Result<Item>> AddItem([FromBody] AddItemParams ps)
         {
             return new Result<Item>()
@@ -50,7 +59,7 @@ namespace ScalpayApi.Controllers
         }
 
         [HttpPost("{itemKey}")]
-        [Authorization(Privilege.ItemEdit)]
+        [Authorization(Privilege.ItemManage)]
         public async Task<Result<Item>> UpdateItem([FromRoute] string itemKey, [FromBody] UpdateItemParams ps)
         {
             ps.ItemKey = itemKey;
@@ -58,14 +67,6 @@ namespace ScalpayApi.Controllers
             {
                 Data = await _itemService.UpdateItemAsync(ps)
             };
-        }
-
-        [HttpDelete("{itemKey}")]
-        [Authorization(Privilege.ItemDelete)]
-        public async Task<Result> DeleteItem([FromRoute] string itemKey)
-        {
-            await _itemService.DeleteItemAsync(itemKey);
-            return new Result();
         }
     }
 }

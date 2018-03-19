@@ -4,9 +4,7 @@
     {
         AddItem,
         UpdateItem,
-        DeleteItem,
         AddProject,
         UpdateProject,
-        DeleteProject,
     }
 }
