@@ -3,7 +3,7 @@ import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked, runInAction, action} from "mobx";
 import axios from "axios";
-import reactStringReplace from "react-string-replace";
+import replace from "string-replace-to-array";
 import {ExpType, Func, DataType} from "~/utils/store";
 import editExpressionModal from "~/modals/editExpressionModal";
 import guid from "~/utils/guid";
@@ -155,7 +155,7 @@ export default class ExpressionView extends Component {
                             {"("}</span>
                         : null}
                     {
-                        reactStringReplace(Func[this.expression.returnType][this.expression.funcName].displayExp, /{(\d+)}/, (argsIndex) => {
+                        replace(Func[this.expression.returnType][this.expression.funcName].displayExp, /{(\d+)}/g, (match, argsIndex) => {
                             return <ExpressionView
                                 key={argsIndex}
                                 allowEdit={this.props.allowSubEdit}
