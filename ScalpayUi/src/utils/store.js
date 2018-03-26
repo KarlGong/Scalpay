@@ -95,6 +95,16 @@ export const Func = {
             displayExp: "{0} != {1}",
             funcArgs: [DefaultExp.Bool, DefaultExp.Bool]
         },
+        "SBoolAndSBool": {
+            displayName: "(Bool) and (Bool)",
+            displayExp: "{0} and {1}",
+            funcArgs: [DefaultExp.Bool, DefaultExp.Bool]
+        },
+        "SBoolOrSBool": {
+            displayName: "(Bool) or (Bool)",
+            displayExp: "{0} or {1}",
+            funcArgs: [DefaultExp.Bool, DefaultExp.Bool]
+        },
         "DateTimeIsEqualToDateTime": {
             displayName: "(DateTime) is equal to (DateTime)",
             displayExp: "{0} = {1}",

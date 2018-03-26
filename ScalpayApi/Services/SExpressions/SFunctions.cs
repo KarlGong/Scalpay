@@ -22,6 +22,16 @@ namespace ScalpayApi.Services.SExpressions
             return new SBool(b1.Inner != b2.Inner);
         }
 
+        public static SBool SBoolAndSBool(SBool b1, SBool b2)
+        {
+            return new SBool(b1.Inner && b2.Inner);
+        }
+        
+        public static SBool SBoolOrSBool(SBool b1, SBool b2)
+        {
+            return new SBool(b1.Inner || b2.Inner);
+        }
+
         #endregion
 
         #region SDateTime
