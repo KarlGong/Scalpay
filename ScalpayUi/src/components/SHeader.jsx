@@ -44,9 +44,6 @@ export default class SHeader extends Component {
                          onClick={() => global.history.push("/items")}>
                         <span>Items</span>
                     </div>
-                    <div className="item menu">
-                        <span>Statistics</span>
-                    </div>
                     {auth.hasPrivileges(Privilege.ItemManage) ?
                         <div className="item">
                             <Button type="primary" onClick={() => itemModal.add()}>Add</Button>
@@ -75,23 +72,18 @@ export default class SHeader extends Component {
                             }}
                         />
                     </span>
-                    <span className="item dropdown">
-                        <Badge dot>
-                            <Icon type="bell" style={{fontSize: "18px"}}/>
-                        </Badge>
-                    </span>
-                    <Dropdown overlay={<Menu>
-                        {auth.hasPrivileges(Privilege.UserManage) ?
+                    {auth.hasPrivileges(Privilege.UserManage) ?
+                        <Dropdown overlay={<Menu>
                             <Menu.Item key="0">
                                 <Link to="/users">Manage Users</Link>
                             </Menu.Item>
-                            : null
-                        }
-                    </Menu>} trigger={["click"]} placement="bottomRight">
-                        <span className="item dropdown">
-                            <Icon type="setting" style={{fontSize: "18px"}}/>
-                        </span>
-                    </Dropdown>
+                        </Menu>} trigger={["click"]} placement="bottomRight">
+                            <span className="item dropdown">
+                                <Icon type="setting" style={{fontSize: "18px"}}/>
+                            </span>
+                        </Dropdown>
+                        : null
+                    }
                     {auth.user ?
                         <Dropdown overlay={<Menu>
                             <Menu.Item key="0">
