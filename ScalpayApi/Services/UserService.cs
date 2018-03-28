@@ -28,7 +28,7 @@ namespace ScalpayApi.Services
 
         Task<User> UpdateUserAsync(UpdateUserParams ps);
 
-        Task DeleteUserAsync(string username);
+        Task<User> UpdatePasswordAsync(UpdatePasswordParams ps);
     }
 
     public class UserService : IUserService
@@ -56,11 +56,10 @@ namespace ScalpayApi.Services
 
         public async Task<User> GetUserByUsernamePasswordAsync(string username, string password)
         {
-            var user = await _context.Users.AsNoTracking()
-                .SingleOrDefaultAsync(u => u.Username == username && u.Password == password);
-            if (user == null)
+            var user = await GetUserByUsernameAsync(username);
+            if (user.Password != password)
             {
-                throw new ScalpayException(StatusCode.IncorrectUsernameOrPassword, "The username or password is incorrect.");
+                throw new ScalpayException(StatusCode.IncorrectPassword, "The password is incorrect.");
             }
 
             return user;
@@ -122,11 +121,17 @@ namespace ScalpayApi.Services
             return user;
         }
 
-        public async Task DeleteUserAsync(string username)
+        public async Task<User> UpdatePasswordAsync(UpdatePasswordParams ps)
         {
-            _context.Users.Remove(await GetUserByUsernameAsync(username));
+            var user = await GetUserByUsernamePasswordAsync(ps.Username, ps.CurrentPassword);
+
+            _context.Users.Attach(user);
+
+            user.Password = ps.NewPassword;
 
             await _context.SaveChangesAsync();
+
+            return user;
         }
     }
 }

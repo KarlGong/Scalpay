@@ -10,6 +10,7 @@ import {IndexRoute, hashHistory, Router, Route, Link} from "react-router";
 import global from "~/global";
 import itemModal from "~/modals/itemModal/itemModal";
 import logo from "~/assets/imgs/logo.png";
+import updatePasswordModal from "~/modals/updatePasswordModal";
 import "./SHeader.less";
 
 @observer
@@ -94,10 +95,13 @@ export default class SHeader extends Component {
                     {auth.user ?
                         <Dropdown overlay={<Menu>
                             <Menu.Item key="0">
-                                <Link to={"/users/" + auth.user.username}>Profile</Link>
+                                <Link to={"/users/" + auth.user.username}>My Profile</Link>
+                            </Menu.Item>
+                            <Menu.Item key="1">
+                                <span onClick={e => updatePasswordModal.open(auth.user.username)}>Update Password</span>
                             </Menu.Item>
                             <Menu.Divider/>
-                            <Menu.Item key="1">
+                            <Menu.Item key="2">
                                 <a onClick={() => {
                                     auth.logout();
                                     global.history.push("/login");

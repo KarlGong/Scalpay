@@ -69,13 +69,17 @@ namespace ScalpayApi.Controllers
                 Data = _mapper.Map<UserDTO>(user)
             };
         }
-
-        [HttpDelete("{username}")]
-        [Authorization(Privilege.UserManage)]
-        public async Task<Result> DeleteUser([FromRoute] string username)
+        
+        [HttpPost("{username}/password")]
+        public async Task<Result<UserDTO>> UpdatePassword([FromRoute] string username, [FromBody] UpdatePasswordParams ps)
         {
-            await _service.DeleteUserAsync(username);
-            return new Result();
+            ps.Username = username;
+            var user = await _service.UpdatePasswordAsync(ps);
+
+            return new Result<UserDTO>()
+            {
+                Data = _mapper.Map<UserDTO>(user)
+            };
         }
     }
 }

@@ -12,6 +12,6 @@
         
         UserNotFound = 400,
         UserExisted = 401,
-        IncorrectUsernameOrPassword = 402,
+        IncorrectPassword = 402,
     }
 }
