@@ -10,7 +10,7 @@ new WebpackDevServer(webpack(config), {
     },
     proxy: {
         "/api": {
-            target: "http://localhost:5432",
+            target: "http://localhost:8000",
             secure: false
         }
     }
