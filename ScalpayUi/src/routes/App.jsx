@@ -1,7 +1,5 @@
-import {Layout, Menu, Input, Icon} from "antd";
+import {Layout} from "antd";
 import React, {Component} from "react";
-import {observer} from "mobx-react";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
 import SHeader from "~/components/SHeader";
 import SFooter from "~/components/SFooter";
 

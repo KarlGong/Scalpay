@@ -1,12 +1,10 @@
-import {Layout, Menu, Popover, Icon} from "antd";
+import {Icon, Popover} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
-import axios from "axios";
+import {observable} from "mobx";
 import replace from "string-replace-to-array";
-import {ExpType, Func, DataType} from "~/utils/store";
+import {DataType, ExpType, Func} from "~/utils/store";
 import editExpressionModal from "~/modals/editExpressionModal";
-import guid from "~/utils/guid";
 import cs from "classnames";
 import moment from "moment";
 import "./ExpressionView.less";

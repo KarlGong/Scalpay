@@ -1,8 +1,6 @@
-import {Layout, Menu, Input, Icon, Select, Tooltip} from "antd";
+import {Select, Tooltip} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
-import axios from "axios";
 import {Func} from "~/utils/store";
 import Validator from "~/utils/Validator";
 import cs from "classnames";

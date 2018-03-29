@@ -1,14 +1,13 @@
-import {Layout, Menu, Input, Icon, List} from "antd";
+import {List} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
+import {observable} from "mobx";
 import ItemInfo from "./ItemInfo";
 import ProjectInfo from "./ProjectInfo";
 import UserInfo from "./UserInfo";
 import {AuditType} from "~/utils/store";
 import axios from "axios";
 import moment from "moment";
-import global from "~/global";
 
 @observer
 export default class AuditsView extends Component {

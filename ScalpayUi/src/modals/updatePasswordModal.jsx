@@ -1,10 +1,9 @@
-import {Layout, Menu, Input, Icon, Modal, Form, message} from "antd";
+import {Form, Input, message, Modal} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
+import {observable} from "mobx";
 import axios from "axios";
 import {render, unmountComponentAtNode} from "react-dom";
-import {ExpType} from "~/utils/store";
 import Validator from "~/utils/Validator";
 
 function open(username, onSuccess) {

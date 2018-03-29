@@ -1,20 +1,11 @@
-import {Input, Icon, Modal, Form, Radio, Row, Col, Collapse, Button, message, Tooltip} from "antd";
+import {Button, Col, Icon, Row} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
-import axios from "axios";
-import cs from "classnames";
-import {render, unmountComponentAtNode} from "react-dom";
-import ProjectSelect from "~/components/ProjectSelect";
-import {DataType, ItemMode, DefaultExp} from "~/utils/store";
-import DataTypeSelect from "~/components/DataTypeSelect";
+import {DefaultExp} from "~/utils/store";
 import ExpressionView from "~/components/expression/ExpressionView";
 import DragListView from "react-drag-listview";
 import guid from "~/utils/guid";
 import "./itemModal.less";
-import ItemInfo from "~/components/ItemInfo";
-import Validator from "~/utils/Validator";
-import event from "~/utils/event";
 import "./RawRulePanel.less";
 
 @observer

@@ -1,6 +1,5 @@
 import {observable} from "mobx";
 import axios from "axios";
-import {Privilege} from "~/utils/store";
 
 class Auth {
     @observable user = null;

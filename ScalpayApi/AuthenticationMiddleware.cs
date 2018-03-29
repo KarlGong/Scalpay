@@ -9,10 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using ScalpayApi.Models;
 using ScalpayApi.Services;
-using Microsoft.AspNetCore.Authentication;
 using ScalpayApi.Services.Exceptions;
-using ScalpayApi.Services.Parameters;
-using ScalpayApi.Services.Parameters.Criterias;
 
 namespace ScalpayApi
 {

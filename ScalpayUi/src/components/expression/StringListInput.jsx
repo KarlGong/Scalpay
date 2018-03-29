@@ -1,8 +1,7 @@
-import {Layout, Menu, Input, Icon, Button} from "antd";
+import {Button, Icon} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
-import axios from "axios";
+import {observable, untracked} from "mobx";
 import DragListView from "react-drag-listview";
 import StringInput from "./StringInput";
 import cs from "classnames";

@@ -1,11 +1,9 @@
-import {Layout, Menu, Input, Icon, Select, Spin} from "antd";
+import {Select, Spin} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
+import {observable} from "mobx";
 import axios from "axios";
-import PropTypes from "prop-types";
 import debounce from "lodash.debounce";
-import guid from "~/utils/guid";
 
 @observer
 export default class ProjectSelect extends Component {

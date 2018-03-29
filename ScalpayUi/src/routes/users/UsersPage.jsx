@@ -1,11 +1,9 @@
-import {Layout, Menu, Input, Icon, List, Button, Modal, Breadcrumb} from "antd";
+import {Breadcrumb, Button, Input, List} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
+import {observable, untracked} from "mobx";
 import axios from "axios";
-import auth from "~/utils/auth";
 import {Link} from "react-router";
-import {Privilege} from "~/utils/store";
 import "./UsersPage.less";
 import PageWrapper from "~/layouts/PageWrapper";
 import global from "~/global";

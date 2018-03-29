@@ -1,15 +1,11 @@
-import {Input, Icon, Modal, Form, Radio, Row, Col, Collapse, Button, message, Tooltip} from "antd";
+import {Collapse, message, Modal, Radio} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
+import {observable, untracked} from "mobx";
 import axios from "axios";
 import cs from "classnames";
 import {render, unmountComponentAtNode} from "react-dom";
-import ProjectSelect from "~/components/ProjectSelect";
-import {DataType, ItemMode, DefaultExp} from "~/utils/store";
-import DataTypeSelect from "~/components/DataTypeSelect";
-import ExpressionView from "~/components/expression/ExpressionView";
-import DragListView from "react-drag-listview";
+import {DataType, DefaultExp, ItemMode} from "~/utils/store";
 import guid from "~/utils/guid";
 import ComponentValidator from "~/utils/ComponentValidator";
 import ItemInfo from "~/components/ItemInfo";
@@ -17,7 +13,6 @@ import BasicPanel from "./BasicPanel";
 import ParameterPanel from "./ParameterPanel";
 import RawRulePanel from "./RawRulePanel";
 import PropertyPanel from "./PropertyPanel";
-import event from "~/utils/event";
 import "./itemModal.less";
 
 function add(onSuccess) {

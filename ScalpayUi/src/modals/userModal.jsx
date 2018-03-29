@@ -1,15 +1,11 @@
-import {Input, Icon, Form, Checkbox, Row, Col, Divider, Modal, message} from "antd";
+import {Checkbox, Form, Input, message, Modal} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
+import {observable, toJS, untracked} from "mobx";
 import axios from "axios";
-import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
-import PageWrapper from "~/layouts/PageWrapper";
 import {render, unmountComponentAtNode} from "react-dom";
-import moment from "moment";
 import Validator from "~/utils/Validator";
-import global from "~/global";
 import UserInfo from "~/components/UserInfo";
 
 function add(onSuccess) {

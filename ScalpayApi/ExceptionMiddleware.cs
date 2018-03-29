@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Security.Claims;
+﻿using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using ScalpayApi.Controllers;
 using ScalpayApi.Services;
 using ScalpayApi.Services.Exceptions;
-using ScalpayApi.Services.Parameters.Criterias;
 using Serilog;
 
 namespace ScalpayApi

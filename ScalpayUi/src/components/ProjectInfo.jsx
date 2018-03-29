@@ -1,11 +1,8 @@
-import {Layout, Menu, AutoComplete, Input, Icon, Badge, Dropdown, Avatar, Spin, Popover} from "antd";
+import {Popover, Spin} from "antd";
 import React, {Component} from "react";
 import {observable} from "mobx";
 import {observer} from "mobx-react";
 import axios from "axios";
-import auth from "~/utils/auth";
-import {Privilege} from "~/utils/store";
-import {IndexRoute, hashHistory, Router, Route, Link} from "react-router";
 import global from "~/global";
 
 @observer

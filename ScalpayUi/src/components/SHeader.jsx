@@ -1,4 +1,4 @@
-import {Layout, Menu, AutoComplete, Input, Icon, Badge, Dropdown, Avatar, Spin, Button} from "antd";
+import {Avatar, Button, Dropdown, Icon, Input, Layout, Menu, Spin} from "antd";
 import React, {Component} from "react";
 import {observable} from "mobx";
 import {observer} from "mobx-react";
@@ -6,7 +6,7 @@ import axios from "axios";
 import cs from "classnames";
 import auth from "~/utils/auth";
 import {Privilege} from "~/utils/store";
-import {IndexRoute, hashHistory, Router, Route, Link} from "react-router";
+import {Link} from "react-router";
 import global from "~/global";
 import itemModal from "~/modals/itemModal/itemModal";
 import logo from "~/assets/imgs/logo.png";

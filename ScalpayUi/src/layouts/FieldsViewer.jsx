@@ -1,9 +1,6 @@
-import {Layout, Menu, Input, Row, Col} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import cs from "classnames";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
-import axios from "axios";
 import "./FieldsViewer.less";
 
 @observer

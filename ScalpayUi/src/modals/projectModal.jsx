@@ -1,12 +1,10 @@
-import {Layout, Menu, Input, Icon, Form, Spin, Modal, Button, message} from "antd";
+import {Form, Input, message, Modal} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {render, unmountComponentAtNode} from "react-dom";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
+import {observable, untracked} from "mobx";
 import axios from "axios";
 import Validator from "~/utils/Validator";
-import {IndexRoute, browserHistory, Router, Route, Link} from "react-router";
-import global from "~/global";
 import ProjectInfo from "~/components/ProjectInfo";
 
 function add(onSuccess) {

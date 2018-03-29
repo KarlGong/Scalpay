@@ -1,8 +1,7 @@
-import {Layout, Menu, Input, Form} from "antd";
+import {Form} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
-import axios from "axios";
+import {observable, untracked} from "mobx";
 import {Modal} from "antd/lib/index";
 import {DefaultExp} from "~/utils/store";
 import DataTypeSelect from "~/components/DataTypeSelect";

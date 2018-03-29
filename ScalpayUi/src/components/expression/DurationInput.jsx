@@ -1,9 +1,6 @@
-import {Layout, Menu, Input, Icon, InputNumber} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import cs from "classnames";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
-import axios from "axios";
 import moment from "moment";
 import NumberInput from "./NumberInput";
 import "./DurationInput.less";

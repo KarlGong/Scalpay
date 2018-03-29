@@ -1,14 +1,10 @@
-import {Layout, Menu, Input, Icon, Button, Tooltip} from "antd";
+import {Button, Icon, Input, Tooltip} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {observable, toJS, untracked, runInAction, action} from "mobx";
-import axios from "axios";
-import DragListView from "react-drag-listview";
-import StringInput from "./StringInput";
+import {observable, untracked} from "mobx";
 import guid from "../../utils/guid";
 import Validator from "../../utils/Validator";
 import cs from "classnames";
-import {message} from "antd/lib/index";
 import ComponentValidator from "~/utils/ComponentValidator";
 
 @observer
