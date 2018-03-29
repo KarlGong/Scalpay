@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "start": "node server.js",
-    "release": "rmdir /s /q dist && mkdir dist && set NODE_ENV=production && webpack -p --config webpack.config.prod.js --progress --colors",
+    "release": "(if exist dist rmdir /s /q dist) && mkdir dist && set NODE_ENV=production && webpack -p --config webpack.config.prod.js --progress --colors",
     "lint": "eslint src"
   },
   "repository": {

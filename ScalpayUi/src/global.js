@@ -1,4 +1,4 @@
-import {browserHistory} from "react-router";
+import {browserHistory, hashHistory} from "react-router";
 import {notification} from "antd";
 import axios from "axios";
 import auth from "~/utils/auth";

@@ -15,9 +15,10 @@ import ViewUserPage from "~/routes/users/ViewUserPage";
 import UsersPage from "~/routes/users/UsersPage";
 import LoginPage from "~/routes/LoginPage";
 import HomePage from "~/routes/HomePage";
-import "./assets/fonts/extra-iconfont/iconfont.css";
 import global from "./global";
-
+import "./index.less";
+import "~/assets/fonts/antd-iconfont/iconfont.css";
+import "~/assets/fonts/extra-iconfont/iconfont.css";
 
 const checkAuth = (nextState, replace) => {
     if (nextState.location.pathname === "/login" && auth.user) {

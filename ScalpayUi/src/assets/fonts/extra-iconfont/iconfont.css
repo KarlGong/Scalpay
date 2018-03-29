@@ -7,13 +7,6 @@
   url('iconfont.svg?t=1521019803224#anticon') format('svg'); /* iOS 4.1- */
 }
 
-.anticon {
-  font-family:"anticon" !important;
-  font-style:normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
 .anticon-date:before { content: "\ea00"; }
 
 .anticon-duration:before { content: "\ea01"; }

@@ -48,15 +48,8 @@ module.exports = {
                 use: [
                     "style-loader",
                     "css-loader",
-                    {
-                        loader: "less-loader",
-                        query: {
-                            "sourceMap": true,
-                            "modifyVars": {
-                                "@icon-url": "'/src/assets/fonts/antd-iconfont/iconfont'"
-                            }
-                        }
-                    }],
+                    "less-loader"
+                ],
                 include: [srcPath, libPath]
             },
             {
@@ -64,7 +57,9 @@ module.exports = {
                 use: [{
                     loader: "file-loader",
                     query: {
-                        name: "[path][name].[ext]",
+                        name: function(file) {
+                            return file.replace(/\\/g, "/").split("/src/")[1];
+                        },
                     }
                 }],
                 include: srcPath
