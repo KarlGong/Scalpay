@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,10 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using ScalpayApi.Data;
 using ScalpayApi.Enums;
@@ -81,11 +77,13 @@ namespace ScalpayApi
 
             loggerFactory.AddSerilog();
 
+            app.UseDefaultFiles();
+            
+            app.UseStaticFiles();
+            
             app.UseScalpayException();
 
             app.UseScalpayAuthentication();
-
-            app.UseStaticFiles();
 
             app.UseMvc();
         }

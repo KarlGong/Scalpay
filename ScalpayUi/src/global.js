@@ -4,7 +4,7 @@ import axios from "axios";
 import auth from "~/utils/auth";
 import querystring from "querystring";
 
-const history = browserHistory;
+const history = hashHistory;
 history.pushQueryParams = (obj) => {
     let path = history.getCurrentLocation().pathname;
     let query = querystring.stringify(obj);

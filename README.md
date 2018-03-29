@@ -1,6 +1,6 @@
 # Scalpay
 
-Scalpay is a out of system configuration platform. It is designed to uncouple bussiness related configuration from code.
+Scalpay is a configuration platform. It is designed to decouple business related configurations from code.
 
 Features:
 
