@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -78,9 +79,16 @@ namespace ScalpayApi
             loggerFactory.AddSerilog();
 
             app.UseDefaultFiles();
-            
+
             app.UseStaticFiles();
-            
+
+            app.UseRewriter(new RewriteOptions()
+                .AddRewrite("^(?!api/).*$", "/", true));
+
+            app.UseDefaultFiles();
+
+            app.UseStaticFiles();
+
             app.UseScalpayException();
 
             app.UseScalpayAuthentication();

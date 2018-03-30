@@ -1,10 +1,10 @@
-import {hashHistory} from "react-router";
+import {browserHistory} from "react-router";
 import {notification} from "antd";
 import axios from "axios";
 import auth from "~/utils/auth";
 import querystring from "querystring";
 
-const history = hashHistory;
+const history = browserHistory;
 history.pushQueryParams = (obj) => {
     let path = history.getCurrentLocation().pathname;
     let query = querystring.stringify(obj);
