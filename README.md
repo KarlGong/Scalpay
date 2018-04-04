@@ -7,7 +7,7 @@ Features:
 * Restful api.
 * Manage configurations by UI.
 * Regular configuration (regular property).
-* Dynamic configuration which can accpet parameters.
+* Dynamic configuration which can accept parameters.
 * Support multiple data types. String, Number, Bool, DateTime, Duration, StringList and so on.
 * Support configuration versions.
 * User Activity.
