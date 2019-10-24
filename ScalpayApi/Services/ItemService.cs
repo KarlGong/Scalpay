@@ -112,7 +112,14 @@ namespace Scalpay.Services
             item.Version = 1;
             item.IsLatest = true;
             var order = 0;
-            item.Rules.ForEach(rule => rule.Order = order++);
+            item.Rules.ForEach(rule =>
+            {
+                rule.Order = order++;
+                rule.InsertTime = DateTime.UtcNow;
+                rule.UpdateTime = DateTime.UtcNow;
+            });
+            item.InsertTime = DateTime.UtcNow;
+            item.UpdateTime = DateTime.UtcNow;
 
             await _context.Items.AddAsync(item);
 
@@ -146,6 +153,8 @@ namespace Scalpay.Services
             latestItem.IsLatest = false;
             var order = 0;
             item.Rules.ForEach(rule => rule.Order = order++);
+            item.InsertTime = DateTime.UtcNow;
+            item.UpdateTime = DateTime.UtcNow;
 
             await _context.Items.AddAsync(item);
             

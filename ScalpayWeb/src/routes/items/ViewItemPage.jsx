@@ -30,11 +30,11 @@ export default class ViewItemPage extends Component {
         description: null,
         version: null,
         isLatest: false,
-        mode: ItemMode.Property,
+        mode: ItemMode.property,
         parameterInfos: [],
-        resultDataType: DataType.String,
+        resultDataType: DataType.string,
         rules: [],
-        defaultResult: DefaultExp.String
+        defaultResult: DefaultExp.string
     };
     @observable loading = false;
 
@@ -51,7 +51,7 @@ export default class ViewItemPage extends Component {
 
     render = () => {
         let leftCommands = [];
-        if (auth.hasPrivileges(Privilege.ItemManage) && this.item.isLatest) {
+        if (auth.hasPrivileges(Privilege.itemManage) && this.item.isLatest) {
             leftCommands.push(<Button onClick={() => this.editItem()}>Edit</Button>);
         }
         let rightCommands = [];
@@ -91,7 +91,7 @@ export default class ViewItemPage extends Component {
                     ]}/>
                 </Block>
                 {
-                    this.item.mode === ItemMode.Property ?
+                    this.item.mode === ItemMode.property ?
                         <Block name="Property">
                             <FieldsViewer fields={[
                                 ["Result Data Type", this.item.resultDataType],
@@ -101,7 +101,7 @@ export default class ViewItemPage extends Component {
                         : null
                 }
                 {
-                    this.item.mode === ItemMode.Raw ?
+                    this.item.mode === ItemMode.raw ?
                         <Block name="Parameters & Result">
                             <FieldsViewer
                                 fields={this.item.parameterInfos.map(info => [info.name, info.dataType])}/>
@@ -113,7 +113,7 @@ export default class ViewItemPage extends Component {
                         : null
                 }
                 {
-                    this.item.mode === ItemMode.Raw ?
+                    this.item.mode === ItemMode.raw ?
                         <Block name="Rules" className="rules">
                             <Row type="flex" align="middle" className="rule">
                                 <Col span={conditionWidth}><b>Condition</b></Col>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -49,7 +50,9 @@ namespace Scalpay.Services
             var audit = _mapper.Map<Audit>(ps);
 
             audit.Operator = _operator;
-            
+            audit.InsertTime = DateTime.UtcNow;
+            audit.UpdateTime = DateTime.UtcNow;
+
             await _context.Audits.AddAsync(audit);
 
             await _context.SaveChangesAsync();

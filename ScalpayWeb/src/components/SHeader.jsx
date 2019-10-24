@@ -44,7 +44,7 @@ export default class SHeader extends Component {
                          onClick={() => global.history.push("/items")}>
                         <span>Items</span>
                     </div>
-                    {auth.hasPrivileges(Privilege.ItemManage) ?
+                    {auth.hasPrivileges(Privilege.itemManage) ?
                         <div className="item">
                             <Button type="primary" onClick={() => itemModal.add()}>Add</Button>
                         </div>
@@ -72,7 +72,7 @@ export default class SHeader extends Component {
                             }}
                         />
                     </span>
-                    {auth.hasPrivileges(Privilege.UserManage) ?
+                    {auth.hasPrivileges(Privilege.userManage) ?
                         <Dropdown overlay={<Menu>
                             <Menu.Item key="0">
                                 <Link to="/users">Manage Users</Link>

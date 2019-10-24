@@ -115,9 +115,9 @@ class EditUserModal extends Component {
                     <Checkbox.Group
                         defaultValue={untracked(() => toJS(this.user.privileges))}
                         onChange={e => this.user.privileges = e}>
-                        <Checkbox value={Privilege.ProjectManage}>Manage Projects</Checkbox>
-                        <Checkbox value={Privilege.ItemManage}>Manage Items</Checkbox>
-                        <Checkbox value={Privilege.UserManage}>Manage Users</Checkbox>
+                        <Checkbox value={Privilege.projectManage}>Manage Projects</Checkbox>
+                        <Checkbox value={Privilege.itemManage}>Manage Items</Checkbox>
+                        <Checkbox value={Privilege.userManage}>Manage Users</Checkbox>
                     </Checkbox.Group>
                 </Form.Item>
             </Form>

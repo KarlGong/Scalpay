@@ -26,9 +26,9 @@ namespace Scalpay.Data
                     v => Enum.GetValues(typeof(Privilege)).Cast<Privilege>().Where(p => (v & (int) p) != 0).ToList())
                 .IsRequired();
 
-            builder.Property(u => u.InsertTime).ValueGeneratedOnAdd();
+            builder.Property(u => u.InsertTime).IsRequired();
 
-            builder.Property(u => u.UpdateTime).ValueGeneratedOnAddOrUpdate();
+            builder.Property(u => u.UpdateTime).IsRequired();
         }
     }
 }

@@ -54,7 +54,7 @@ export default class AuditsView extends Component {
             renderItem={audit => {
                 let title = null;
                 switch (audit.auditType) {
-                    case AuditType.AddItem:
+                    case AuditType.addItem:
                         title = <span>
                             <UserInfo username={audit.operator}/>
                             <span> added item </span>
@@ -63,7 +63,7 @@ export default class AuditsView extends Component {
                             <ItemInfo itemKey={audit.itemKey} version={audit.args.itemVersion}/>
                         </span>;
                         break;
-                    case AuditType.UpdateItem:
+                    case AuditType.updateItem:
                         title = <span>
                             <UserInfo username={audit.operator}/>
                             <span> updated item </span>
@@ -74,14 +74,14 @@ export default class AuditsView extends Component {
                             <ItemInfo itemKey={audit.itemKey} version={audit.args.toItemVersion}/>
                         </span>;
                         break;
-                    case AuditType.AddProject:
+                    case AuditType.addProject:
                         title = <span>
                             <UserInfo username={audit.operator}/>
                             <span> added project </span>
                             <ProjectInfo projectKey={audit.projectKey} version={audit.args.projectVersion}/>
                         </span>;
                         break;
-                    case AuditType.UpdateProject:
+                    case AuditType.updateProject:
                         title = <span>
                             <UserInfo username={audit.operator}/>
                             <span> updated project </span>

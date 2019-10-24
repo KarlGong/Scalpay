@@ -40,13 +40,13 @@ export default class ExpressionView extends Component {
             className: this.props.allowEdit ? "expression editable" : "expression"
         };
         switch (this.expression.expType) {
-            case ExpType.Value:
+            case ExpType.value:
                 let display = null;
                 switch (this.expression.returnType) {
-                    case DataType.Bool:
+                    case DataType.bool:
                         display = JSON.stringify(this.expression.value);
                         break;
-                    case DataType.DateTime:
+                    case DataType.dateTime:
                         let mom = moment(this.expression.value);
                         display =
                             <Popover
@@ -58,7 +58,7 @@ export default class ExpressionView extends Component {
                                 </span>
                             </Popover>;
                         break;
-                    case DataType.Duration:
+                    case DataType.duration:
                         let duration = moment.duration(this.expression.value);
                         let displayText = "";
                         if (duration.asDays() >= 1) {
@@ -86,10 +86,10 @@ export default class ExpressionView extends Component {
                                 <span><Icon type="duration" className="type-icon"/>{displayText}</span>
                             </Popover>;
                         break;
-                    case DataType.Number:
+                    case DataType.number:
                         display = this.expression.value;
                         break;
-                    case DataType.NumberList:
+                    case DataType.numberList:
                         display =
                             <Popover
                                 content={this.expression.value.length ? <div className="expression-list-view">
@@ -100,11 +100,11 @@ export default class ExpressionView extends Component {
                                 <span><Icon type="number-list" className="type-icon"/>[...{this.expression.value.length}]</span>
                             </Popover>;
                         break;
-                    case DataType.String:
+                    case DataType.string:
                         display =
                             <span><Icon type="quote-left"/>{this.expression.value}<Icon type="quote-right"/></span>;
                         break;
-                    case DataType.StringDict:
+                    case DataType.stringDict:
                         display = <Popover
                             content={Object.keys(this.expression.value).length ? <div className="expression-list-view">
                                 {Object.entries(this.expression.value).map(([key, value], index) => <div key={index}>
@@ -120,7 +120,7 @@ export default class ExpressionView extends Component {
                             </span>
                         </Popover>;
                         break;
-                    case DataType.StringList:
+                    case DataType.stringList:
                         display =
                             <Popover
                                 content={this.expression.value.length ? <div className="expression-list-view">
@@ -136,13 +136,13 @@ export default class ExpressionView extends Component {
                         break;
                 }
                 return <span {...editProps}>{display}</span>;
-            case ExpType.Var:
+            case ExpType.var:
                 return <span {...editProps}>
                     <Popover content={"Data Type: " + this.expression.returnType}>
                         <span><Icon type="var" className="type-icon"/>{this.expression.var}</span>
                     </Popover>
                 </span>;
-            case ExpType.Func:
+            case ExpType.func:
                 return <span {...editProps}>
                     {!this.props.topLevel?
                         <span

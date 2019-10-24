@@ -117,7 +117,7 @@ export default class ParameterPanel extends Component {
                                                         paramInfo.dataType = value;
                                                         this.item.rules.map(rule => {
                                                             if (isVariableUsed(rule.condition, paramInfo.oldName)) {
-                                                                rule.condition = DefaultExp.Bool;
+                                                                rule.condition = DefaultExp.bool;
                                                             }
                                                             if (isVariableUsed(rule.result, paramInfo.oldName)) {
                                                                 rule.result = DefaultExp[this.item.resultDataType];
@@ -149,7 +149,7 @@ export default class ParameterPanel extends Component {
                                                 onOk: () => {
                                                     this.item.rules.map(rule => {
                                                         if (isVariableUsed(rule.condition, paramInfo.oldName)) {
-                                                            rule.condition = DefaultExp.Bool;
+                                                            rule.condition = DefaultExp.bool;
                                                         }
                                                         if (isVariableUsed(rule.result, paramInfo.oldName)) {
                                                             rule.result = DefaultExp[this.item.resultDataType];
@@ -176,7 +176,7 @@ export default class ParameterPanel extends Component {
                                 onClick={() => {
                                     this.item.parameterInfos.push({
                                         key: guid(),
-                                        dataType: DataType.String
+                                        dataType: DataType.string
                                     });
                                     let validator = new Validator(
                                         this.item.parameterInfos.slice(-1)[0],

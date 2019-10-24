@@ -23,9 +23,9 @@ namespace Scalpay.Data
 
             builder.Property(r => r.Order).IsRequired();
 
-            builder.Property(i => i.InsertTime).ValueGeneratedOnAdd();
+            builder.Property(i => i.InsertTime).IsRequired();
 
-            builder.Property(i => i.UpdateTime).ValueGeneratedOnAddOrUpdate();
+            builder.Property(i => i.UpdateTime).IsRequired();
         }
     }
 }

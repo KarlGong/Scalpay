@@ -82,7 +82,7 @@ export default class ProjectsPage extends Component {
                                     this.criteria.pageIndex = 0;
                                     global.history.pushQueryParams(this.criteria);
                                 }}>Search</Button>
-                    {auth.hasPrivileges(Privilege.ProjectManage) ?
+                    {auth.hasPrivileges(Privilege.projectManage) ?
                         <Button
                             style={{float: "right"}}
                             onClick={() => this.addProject()}>Add Project</Button>
@@ -91,7 +91,7 @@ export default class ProjectsPage extends Component {
                     </span>}
                 renderItem={project => {
                     let actions = [];
-                    if (auth.hasPrivileges(Privilege.ProjectManage))
+                    if (auth.hasPrivileges(Privilege.projectManage))
                         actions.push(<a className="edit" onClick={() => this.editProject(project)}>edit</a>);
 
                     return <List.Item actions={actions}>

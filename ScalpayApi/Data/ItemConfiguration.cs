@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Newtonsoft.Json;
@@ -21,13 +22,13 @@ namespace Scalpay.Data
 
             builder.Property(i => i.IsLatest).IsRequired();
 
-            builder.Property(i => i.InsertTime).ValueGeneratedOnAdd();
+            builder.Property(i => i.InsertTime).IsRequired();
 
-            builder.Property(i => i.UpdateTime).ValueGeneratedOnAddOrUpdate();
+            builder.Property(i => i.UpdateTime).IsRequired();
 
             builder.Property(i => i.Mode).HasConversion(
-                    v => (int) v,
-                    v => (ItemMode) v)
+                    v => v.ToString(),
+                    v => Enum.Parse<ItemMode>(v))
                 .IsRequired();
 
             builder.Property(i => i.ParameterInfos).HasConversion(
@@ -35,7 +36,10 @@ namespace Scalpay.Data
                     v => JsonConvert.DeserializeObject<List<ParameterInfo>>(v))
                 .IsRequired();
 
-            builder.Property(i => i.ResultDataType).IsRequired();
+            builder.Property(i => i.ResultDataType).HasConversion(
+                    v => v.ToString(),
+                    v => Enum.Parse<SDataType>(v))
+                .IsRequired();
 
             builder.Property(i => i.DefaultResult).HasConversion(
                     v => JsonConvert.SerializeObject(v),

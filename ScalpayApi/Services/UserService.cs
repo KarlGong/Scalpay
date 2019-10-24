@@ -98,8 +98,9 @@ namespace Scalpay.Services
             var user = _mapper.Map<User>(ps);
 
             user.Password = "1";
-
             user.ApiKey = Guid.NewGuid().ToString();
+            user.InsertTime = DateTime.UtcNow;
+            user.UpdateTime = DateTime.UtcNow;
 
             await _context.Users.AddAsync(user);
 
@@ -115,6 +116,7 @@ namespace Scalpay.Services
             _context.Users.Attach(user);
 
             _mapper.Map(ps, user);
+            user.UpdateTime = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 
@@ -128,6 +130,7 @@ namespace Scalpay.Services
             _context.Users.Attach(user);
 
             user.Password = ps.NewPassword;
+            user.UpdateTime = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 

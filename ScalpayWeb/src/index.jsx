@@ -56,7 +56,7 @@ render(
             </Route>
         </Router>
     </AppContainer>,
-    document.getElementById("app")
+    document.getElementById("root")
 );
 
 if (module.hot && process.env.NODE_ENV !== "production") {

@@ -31,7 +31,7 @@ export default class ViewUserPage extends Component {
 
     render = () => {
         let commands = [];
-        if (auth.hasPrivileges(Privilege.UserManage)) {
+        if (auth.hasPrivileges(Privilege.userManage)) {
             commands.push(<Button onClick={() => this.editUser()}>Edit</Button>);
         }
         return <PageWrapper

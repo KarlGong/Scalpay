@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -91,6 +92,8 @@ namespace Scalpay.Services
             var project = _mapper.Map<Project>(ps);
             project.Version = 1;
             project.IsLatest = true;
+            project.InsertTime = DateTime.UtcNow;
+            project.UpdateTime = DateTime.UtcNow;
 
             await _context.Projects.AddAsync(project);
 
@@ -118,6 +121,8 @@ namespace Scalpay.Services
             project.Version = latestProject.Version + 1;
             project.IsLatest = true;
             latestProject.IsLatest = false;
+            project.InsertTime = DateTime.UtcNow;
+            project.UpdateTime = DateTime.UtcNow;
 
             await _context.Projects.AddAsync(project);
 

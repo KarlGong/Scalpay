@@ -42,7 +42,7 @@ export default class ViewProjectPage extends Component {
 
     render = () => {
         let leftCommands = [];
-        if (auth.hasPrivileges(Privilege.ProjectManage) && this.project.isLatest) {
+        if (auth.hasPrivileges(Privilege.projectManage) && this.project.isLatest) {
             leftCommands.push(<Button onClick={() => this.editProject()}>Edit</Button>)
         }
         let rightCommands = [];

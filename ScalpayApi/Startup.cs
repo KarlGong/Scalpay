@@ -134,7 +134,9 @@ namespace Scalpay
                     Email = "admin@scalpay.com",
                     FullName = "Admin",
                     Password = "1",
-                    Privileges = Enum.GetValues(typeof(Privilege)).Cast<Privilege>().ToList()
+                    Privileges = Enum.GetValues(typeof(Privilege)).Cast<Privilege>().ToList(),
+                    InsertTime = DateTime.UtcNow,
+                    UpdateTime = DateTime.UtcNow
                 });
                 context.SaveChanges();
             }
@@ -148,7 +150,9 @@ namespace Scalpay
                     Name = "Scalpay",
                     Description = "The Scalpay's configurations.",
                     Version = 1,
-                    IsLatest = true
+                    IsLatest = true,
+                    InsertTime = DateTime.UtcNow,
+                    UpdateTime = DateTime.UtcNow
                 });
                 context.SaveChanges();
             }

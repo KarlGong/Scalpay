@@ -97,7 +97,7 @@ export default class ItemsPage extends Component {
                 </div>}
                 renderItem={item => {
                     let actions = [];
-                    if (auth.hasPrivileges(Privilege.ItemManage))
+                    if (auth.hasPrivileges(Privilege.itemManage))
                         actions.push(<a className="edit" onClick={() => this.editItem(item)}>edit</a>);
 
                     return <List.Item actions={actions}>

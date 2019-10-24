@@ -18,9 +18,9 @@ namespace Scalpay.Data
             
             builder.Property(p => p.IsLatest).IsRequired();
 
-            builder.Property(p => p.InsertTime).ValueGeneratedOnAdd();
+            builder.Property(p => p.InsertTime).IsRequired();
 
-            builder.Property(p => p.UpdateTime).ValueGeneratedOnAddOrUpdate();
+            builder.Property(p => p.UpdateTime).IsRequired();
         }
     }
 }

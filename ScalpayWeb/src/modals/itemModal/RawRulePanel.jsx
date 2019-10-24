@@ -75,7 +75,7 @@ export default class RawRulePanel extends Component {
                         <Button icon="plus" type="dashed" className="rule-add"
                                 onClick={() => this.item.rules.push({
                                     key: guid(),
-                                    condition: DefaultExp.Bool,
+                                    condition: DefaultExp.bool,
                                     result: DefaultExp[this.item.resultDataType]
                                 })}>Add Rule</Button>
                     </Col>

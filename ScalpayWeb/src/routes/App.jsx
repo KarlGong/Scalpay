@@ -7,9 +7,9 @@ export default class App extends Component {
     render = () => {
         return <Layout>
             <SHeader/>
-            <Layout style={{minHeight: "calc(100% - 96px)"}}>
+            <Layout.Content style={{flex: "1 0 auto"}}>
                 {this.props.children}
-            </Layout>
+            </Layout.Content>
             <SFooter/>
         </Layout>
     }

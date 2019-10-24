@@ -50,11 +50,11 @@ class EditItemModal extends Component {
             description: null,
             version: null,
             isLatest: false,
-            mode: ItemMode.Property,
+            mode: ItemMode.property,
             parameterInfos: [],
-            resultDataType: DataType.String,
+            resultDataType: DataType.string,
             rules: [],
-            defaultResult: DefaultExp.String
+            defaultResult: DefaultExp.string
         },
         addMode: false,
         onSuccess: (item) => {
@@ -100,7 +100,7 @@ class EditItemModal extends Component {
                         key={this.modeResetKey}
                         onChange={(e) => {
                             let targetMode = e.target.value;
-                            if (targetMode === ItemMode.Property) {
+                            if (targetMode === ItemMode.property) {
                                 Modal.confirm({
                                     title: "Are you sure to change to Property mode?",
                                     content: "All the parameters and rules of this item will be cleared.",
@@ -121,8 +121,8 @@ class EditItemModal extends Component {
                             }
                         }}
                         defaultValue={untracked(() => this.item.mode)}>
-                        <Radio.Button value={ItemMode.Property}>Property</Radio.Button>
-                        <Radio.Button value={ItemMode.Raw}>Raw</Radio.Button>
+                        <Radio.Button value={ItemMode.property}>Property</Radio.Button>
+                        <Radio.Button value={ItemMode.raw}>Raw</Radio.Button>
                     </Radio.Group>
                 </div>
                 <div style={{clear: "both"}}/>
@@ -142,7 +142,7 @@ class EditItemModal extends Component {
                         />
                     </Collapse.Panel>
                     {
-                        this.item.mode === ItemMode.Property ?
+                        this.item.mode === ItemMode.property ?
                             <Collapse.Panel
                                 forceRender
                                 header="Property"
@@ -154,7 +154,7 @@ class EditItemModal extends Component {
                             : null
                     }
                     {
-                        this.item.mode === ItemMode.Raw ?
+                        this.item.mode === ItemMode.raw ?
                             <Collapse.Panel
                                 forceRender
                                 header="Parameters & Result"
@@ -168,7 +168,7 @@ class EditItemModal extends Component {
                             : null
                     }
                     {
-                        this.item.mode === ItemMode.Raw ?
+                        this.item.mode === ItemMode.raw ?
                             <Collapse.Panel
                                 forceRender
                                 header="Rules"
@@ -185,7 +185,7 @@ class EditItemModal extends Component {
 
     handleOk = () => {
         let validators = [this.basicPanelValidator];
-        if (this.item.mode === ItemMode.Raw) {
+        if (this.item.mode === ItemMode.raw) {
             validators.push(this.parameterPanelValidator);
         }
         let componentValidator = new ComponentValidator(validators);
