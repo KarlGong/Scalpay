@@ -25,6 +25,7 @@ namespace ScalpayApi.Data
             modelBuilder.ApplyConfiguration(new ProjectConfiguration());
             
             modelBuilder.ApplyConfiguration(new ItemConfiguration());
+            
             modelBuilder.ApplyConfiguration(new RuleConfiguration());
 
             modelBuilder.ApplyConfiguration(new AuditConfiguration());

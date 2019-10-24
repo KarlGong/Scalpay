@@ -23,40 +23,14 @@ namespace ScalpayApi.Models
 
         public DateTime UpdateTime { get; set; }
 
-        // todo: https://github.com/aspnet/EntityFrameworkCore/issues/242
         public ItemMode Mode { get; set; }
 
-        // todo: https://github.com/aspnet/EntityFrameworkCore/issues/242
-        public List<ParameterInfo> ParameterInfos
-        {
-            get
-            {
-                return ParameterInfosString == null
-                    ? new List<ParameterInfo>()
-                    : JsonConvert.DeserializeObject<List<ParameterInfo>>(ParameterInfosString);
-            }
-
-            set
-            {
-                ParameterInfosString = value == null
-                    ? JsonConvert.SerializeObject(new List<ParameterInfo>())
-                    : JsonConvert.SerializeObject(value);
-            }
-        }
-
-        public string ParameterInfosString { get; set; }
+        public List<ParameterInfo> ParameterInfos { get; set; }
 
         public SDataType ResultDataType { get; set; }
 
-        public SExpression DefaultResult
-        {
-            get { return JsonConvert.DeserializeObject<SExpression>(DefaultResultString); }
+        public SExpression DefaultResult { get; set; }
 
-            set { DefaultResultString = JsonConvert.SerializeObject(value); }
-        }
-
-        public string DefaultResultString { get; set; }
-        
         public string ProjectKey { get; set; }
 
         public List<Rule> Rules { get; set; } = new List<Rule>();

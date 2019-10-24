@@ -1,19 +1,24 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using ScalpayApi.Controllers;
+using ScalpayApi.Exceptions;
 using ScalpayApi.Services;
-using ScalpayApi.Services.Exceptions;
-using Serilog;
 
 namespace ScalpayApi
 {
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
+
+        private static readonly Dictionary<Type, HttpStatusCode> EXCEPTION_STATUS_CODE_MAP =
+            new Dictionary<Type, HttpStatusCode>()
+            {
+                {typeof(NotFoundException), HttpStatusCode.NotFound}
+            };
 
         public ExceptionMiddleware(RequestDelegate next)
         {
@@ -26,23 +31,22 @@ namespace ScalpayApi
             {
                 await _next(context);
             }
-            catch (ScalpayException e)
+            catch (ScalpayException ex)
             {
-                Log.Error(e, $"Error Code: {(int) e.StatusCode}");
-                
-                context.Response.Clear();
-                context.Response.ContentType = @"application/json";
-                context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
-                await context.Response.WriteAsync(JsonConvert.SerializeObject(new Result()
+                if (EXCEPTION_STATUS_CODE_MAP.TryGetValue(ex.GetType(), out var code))
                 {
-                    StatusCode = (int) e.StatusCode,
-                    Message = e.Message
-                }));
+                    context.Response.StatusCode = (int) code;
+                    await context.Response.WriteAsync(ex.Message);
+                }
+                else
+                {
+                    throw;
+                }
             }
         }
     }
 
-    public static class ResultMiddlewareExtensions
+    public static class ExceptionMiddlewareExtensions
     {
         public static IApplicationBuilder UseScalpayException(this IApplicationBuilder builder)
         {

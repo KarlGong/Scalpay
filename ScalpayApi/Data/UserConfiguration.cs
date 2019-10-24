@@ -1,5 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ScalpayApi.Enums;
 using ScalpayApi.Models;
 
 namespace ScalpayApi.Data
@@ -18,9 +21,10 @@ namespace ScalpayApi.Data
 
             builder.Property(u => u.ApiKey).IsRequired();
 
-            builder.Ignore(u => u.Privileges);
-            
-            builder.Property(u => u.PrivilegesInt).HasColumnName("Privileges").IsRequired();
+            builder.Property(u => u.Privileges).HasConversion(
+                    v => v.Sum(p => (int) p),
+                    v => Enum.GetValues(typeof(Privilege)).Cast<Privilege>().Where(p => (v & (int) p) != 0).ToList())
+                .IsRequired();
 
             builder.Property(u => u.InsertTime).ValueGeneratedOnAdd();
 

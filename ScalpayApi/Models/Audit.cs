@@ -17,13 +17,7 @@ namespace ScalpayApi.Models
 
         public string Operator { get; set; }
 
-        public object Args
-        {
-            get { return JsonConvert.DeserializeObject(ArgsString); }
-            set { ArgsString = JsonConvert.SerializeObject(value); }
-        }
-
-        public string ArgsString { get; set; }
+        public object Args { get; set; }
 
         public DateTime InsertTime { get; set; }
 

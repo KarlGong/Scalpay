@@ -41,7 +41,7 @@ namespace ScalpayApi
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter(false));
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter(new CamelCaseNamingStrategy(), false));
                     options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 }
             );
@@ -77,20 +77,15 @@ namespace ScalpayApi
             InitApplication(serviceProvider);
 
             loggerFactory.AddSerilog();
-
-            app.UseDefaultFiles();
-
-            app.UseStaticFiles();
-
-            app.UseRewriter(new RewriteOptions()
-                .AddRewrite("^(?!api/).*$", "/", true));
-
-            app.UseDefaultFiles();
-
-            app.UseStaticFiles();
-
+            
             app.UseScalpayException();
+            
+            app.UseScalpayRewrite();
 
+            app.UseDefaultFiles();
+
+            app.UseStaticFiles();
+            
             app.UseScalpayAuthentication();
 
             app.UseMvc();
@@ -104,7 +99,7 @@ namespace ScalpayApi
                 var settings = new JsonSerializerSettings();
                 settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 settings.NullValueHandling = NullValueHandling.Ignore;
-                settings.Converters.Add(new StringEnumConverter(false));
+                settings.Converters.Add(new StringEnumConverter(new CamelCaseNamingStrategy(), false));
                 settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 return settings;
             });

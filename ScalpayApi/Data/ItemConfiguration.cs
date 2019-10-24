@@ -1,5 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Newtonsoft.Json;
+using ScalpayApi.Enums;
 using ScalpayApi.Models;
 
 namespace ScalpayApi.Data
@@ -13,26 +16,31 @@ namespace ScalpayApi.Data
             builder.Property(i => i.ItemKey).IsRequired();
 
             builder.Property(i => i.Name).IsRequired();
-            
+
             builder.Property(i => i.Version).IsRequired();
-            
+
             builder.Property(i => i.IsLatest).IsRequired();
 
             builder.Property(i => i.InsertTime).ValueGeneratedOnAdd();
 
             builder.Property(i => i.UpdateTime).ValueGeneratedOnAddOrUpdate();
-            
-            builder.Property(i => i.Mode).IsRequired();
-            
-            builder.Ignore(i => i.ParameterInfos);
 
-            builder.Property(i => i.ParameterInfosString).HasColumnName("ParameterInfos").IsRequired();
+            builder.Property(i => i.Mode).HasConversion(
+                    v => (int) v,
+                    v => (ItemMode) v)
+                .IsRequired();
+
+            builder.Property(i => i.ParameterInfos).HasConversion(
+                    v => JsonConvert.SerializeObject(v),
+                    v => JsonConvert.DeserializeObject<List<ParameterInfo>>(v))
+                .IsRequired();
 
             builder.Property(i => i.ResultDataType).IsRequired();
-            
-            builder.Ignore(i => i.DefaultResult);
 
-            builder.Property(i => i.DefaultResultString).HasColumnName("DefaultResult").IsRequired();
+            builder.Property(i => i.DefaultResult).HasConversion(
+                    v => JsonConvert.SerializeObject(v),
+                    v => JsonConvert.DeserializeObject<SExpression>(v))
+                .IsRequired();
 
             builder.Property(i => i.ProjectKey).IsRequired();
 

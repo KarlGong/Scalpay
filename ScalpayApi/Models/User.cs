@@ -18,17 +18,7 @@ namespace ScalpayApi.Models
 
         public string ApiKey { get; set; }
 
-        public List<Privilege> Privileges // todo: https://github.com/aspnet/EntityFrameworkCore/issues/242
-        {
-            get
-            {
-                return Enum.GetValues(typeof(Privilege)).Cast<Privilege>().Where(
-                    p => (PrivilegesInt & (int) p) != 0).ToList();
-            }
-            set { PrivilegesInt = value.Sum(p => (int) p); }
-        }
-
-        public int PrivilegesInt { get; set; }
+        public List<Privilege> Privileges { get; set; }
 
         public DateTime InsertTime { get; set; }
 

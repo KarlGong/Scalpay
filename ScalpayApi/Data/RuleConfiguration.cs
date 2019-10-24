@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Newtonsoft.Json;
 using ScalpayApi.Models;
 
 namespace ScalpayApi.Data
@@ -10,16 +11,18 @@ namespace ScalpayApi.Data
         {
             builder.HasKey(r => r.Id);
 
-            builder.Ignore(r => r.Condition);
-
-            builder.Property(r => r.ConditionString).HasColumnName("Condition").IsRequired();
-
-            builder.Ignore(r => r.Result);
-
-            builder.Property(r => r.ResultString).HasColumnName("Result").IsRequired();
+            builder.Property(r => r.Condition).HasConversion(
+                v => JsonConvert.SerializeObject(v),
+                v => JsonConvert.DeserializeObject<SExpression>(v))
+                .IsRequired();
+            
+            builder.Property(r => r.Result).HasConversion(
+                    v => JsonConvert.SerializeObject(v),
+                    v => JsonConvert.DeserializeObject<SExpression>(v))
+                .IsRequired();
 
             builder.Property(r => r.Order).IsRequired();
-            
+
             builder.Property(i => i.InsertTime).ValueGeneratedOnAdd();
 
             builder.Property(i => i.UpdateTime).ValueGeneratedOnAddOrUpdate();

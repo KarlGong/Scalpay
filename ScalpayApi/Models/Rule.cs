@@ -12,24 +12,9 @@ namespace ScalpayApi.Models
 
         public Item Item { get; set; }
 
-        // todo: https://github.com/aspnet/EntityFrameworkCore/issues/242
-        public SExpression Condition
-        {
-            get { return JsonConvert.DeserializeObject<SExpression>(ConditionString); }
+        public SExpression Condition { get; set; }
 
-            set { ConditionString = JsonConvert.SerializeObject(value); }
-        }
-
-        public string ConditionString { get; set; }
-
-        public SExpression Result
-        {
-            get { return JsonConvert.DeserializeObject<SExpression>(ResultString); }
-
-            set { ResultString = JsonConvert.SerializeObject(value); }
-        }
-
-        public string ResultString { get; set; }
+        public SExpression Result { get; set; }
 
         public int Order { get; set; }
 
