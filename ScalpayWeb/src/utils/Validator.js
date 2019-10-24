@@ -41,70 +41,34 @@ export default class Validator {
 
     validate = (fieldName) => {
         return new Promise((resolve, reject) => {
-            let descriptor = {[fieldName]: this.descriptor[fieldName]};
-            this.setResult(fieldName, {status: "validating", message: null});
-            new Schema(descriptor).validate(this.subject, (errors, fields) => {
-                if (errors) {
-                    // error
-                    this.setResult(fieldName, {status: "error", message: errors[0].message});
-                    reject(this._results[fieldName]);
-                } else {
-                    // success
-                    this.setResult(fieldName, {status: "success", message: null});
+            if (this.descriptor[fieldName]) {
+                let status = this.getResult(fieldName).status;
+                if (status === "success") {
                     resolve(this._results[fieldName]);
+                } else if (status === "validating" || status === "error"){
+                    reject(this._results[fieldName]);
+                } else  {
+                    let descriptor = {[fieldName]: this.descriptor[fieldName]};
+                    this.setResult(fieldName, {status: "validating", message: null});
+                    new Schema(descriptor).validate(this.subject, (errors, fields) => {
+                        if (errors) {
+                            // error
+                            this.setResult(fieldName, {status: "error", message: errors[0].message});
+                            reject(this._results[fieldName]);
+                        } else {
+                            // success
+                            this.setResult(fieldName, {status: "success", message: null});
+                            resolve(this._results[fieldName]);
+                        }
+                    });
                 }
-            })
-        })
+            } else {
+                throw new Error(`Validating descriptor of field ${fieldName} is not defined.`);
+            }
+        });
     };
 
     validateAll = () => {
-        return new Promise((resolve, reject) => {
-            let errorFieldNames = [];
-            let unvalidatedFieldNames = [];
-            let validatingFieldNames = [];
-
-            Object.keys(this.descriptor).map((fieldName) => {
-                switch (this.getResult(fieldName).status) {
-                    case null:
-                        unvalidatedFieldNames.push(fieldName);
-                        break;
-                    case "error":
-                        errorFieldNames.push(fieldName);
-                        break;
-                    case "validating":
-                        validatingFieldNames.push(fieldName);
-                        break;
-                }
-            });
-
-            let descriptor = {};
-            unvalidatedFieldNames.map((fieldName) => {
-                descriptor[fieldName] = this.descriptor[fieldName];
-                this._results[fieldName] = {status: "validating", message: null};
-            });
-            this.results = this._results;
-
-            new Schema(descriptor).validate(this.subject, (errors, fields) => {
-                unvalidatedFieldNames.map((fieldName) => {
-                    this._results[fieldName] = {status: "success", message: null};
-                });
-                if (errors) {
-                    // unvalidated error
-                    Object.keys(fields).map((fieldName) => {
-                        this._results[fieldName] = {status: "error", message: fields[fieldName][0].message}
-                    });
-                    this.results = this._results;
-                    reject(this._results);
-                } else {
-                    // unvalidated success
-                    this.results = this._results;
-                    if (errorFieldNames.length || validatingFieldNames.length) {
-                        reject(this._results);
-                    } else {
-                        resolve(this._results);
-                    }
-                }
-            })
-        })
+        return Promise.all(Object.keys(this.descriptor).map(fieldName => this.validate(fieldName)));
     };
 }

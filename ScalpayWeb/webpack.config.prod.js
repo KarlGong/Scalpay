@@ -6,11 +6,12 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
     entry: [
+        "@babel/polyfill",
         path.join(__dirname, "src/index")
     ],
     output: {
         path: path.join(__dirname, "dist"),
-        filename: "main.js",
+        filename: "[name].[chunkhash].js",
         publicPath: "/"
     },
     plugins: [
@@ -46,9 +47,18 @@ module.exports = {
             {
                 test: /\.less$/,
                 use: [
-                    "style-loader",
-                    "css-loader",
-                    "less-loader"
+                    {
+                        loader: "style-loader"
+                    },
+                    {
+                        loader: "css-loader",
+                    },
+                    {
+                        loader: "less-loader",
+                        options: {
+                            javascriptEnabled: true
+                        }
+                    }
                 ],
                 include: [srcPath, libPath]
             },

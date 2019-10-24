@@ -7,6 +7,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = {
     devtool: "eval",
     entry: [
+        "@babel/polyfill",
         "react-hot-loader/patch",
         "webpack-dev-server/client?http://localhost:3000",
         "webpack/hot/only-dev-server",
@@ -46,9 +47,18 @@ module.exports = {
             {
                 test: /\.less$/,
                 use: [
-                    "style-loader",
-                    "css-loader",
-                    "less-loader"
+                    {
+                        loader: "style-loader"
+                    },
+                    {
+                        loader: "css-loader",
+                    },
+                    {
+                        loader: "less-loader",
+                        options: {
+                            javascriptEnabled: true
+                        }
+                    }
                 ],
                 include: [srcPath, libPath]
             },
@@ -57,7 +67,7 @@ module.exports = {
                 use: [{
                     loader: "file-loader",
                     query: {
-                        name: function(file) {
+                        name: function (file) {
                             return file.replace(/\\/g, "/").split("/src/")[1];
                         },
                     }
