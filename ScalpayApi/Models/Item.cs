@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using ScalpayApi.Enums;
+using Scalpay.Enums;
 
-namespace ScalpayApi.Models
+namespace Scalpay.Models
 {
     public class Item
     {

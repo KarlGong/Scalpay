@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using ScalpayApi.Enums;
-using ScalpayApi.Models;
-using ScalpayApi.Services;
-using ScalpayApi.Services.Parameters;
-using ScalpayApi.Services.Parameters.Criterias;
+using Scalpay.Enums;
+using Scalpay.Models;
+using Scalpay.Services;
+using Scalpay.Services.Parameters;
+using Scalpay.Services.Parameters.Criterias;
 
-namespace ScalpayApi.Controllers
+namespace Scalpay.Controllers
 {
     [Route("api/projects")]
     public class ProjectController : Controller

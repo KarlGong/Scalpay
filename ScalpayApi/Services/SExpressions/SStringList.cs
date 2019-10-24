@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using ScalpayApi.Enums;
+using Scalpay.Enums;
 
-namespace ScalpayApi.Services.SExpressions
+namespace Scalpay.Services.SExpressions
 {
     [Serializable]
     public class SStringList: SData

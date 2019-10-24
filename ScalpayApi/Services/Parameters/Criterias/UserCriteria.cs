@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq.Expressions;
-using ScalpayApi.Models;
+using Scalpay.Models;
 
-namespace ScalpayApi.Services.Parameters.Criterias
+namespace Scalpay.Services.Parameters.Criterias
 {
     public class UserCriteria : Criteria<User>
     {

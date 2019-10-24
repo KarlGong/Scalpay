@@ -1,4 +1,4 @@
-﻿namespace ScalpayApi.Services.Parameters
+﻿namespace Scalpay.Services.Parameters
 {
     public class UpdatePasswordParams
     {

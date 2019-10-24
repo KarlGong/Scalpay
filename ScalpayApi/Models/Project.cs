@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ScalpayApi.Models
+namespace Scalpay.Models
 {
     public class Project
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace ScalpayApi.Exceptions
+namespace Scalpay.Exceptions
 {
     public class ScalpayException: Exception
     {

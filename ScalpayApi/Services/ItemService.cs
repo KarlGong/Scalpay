@@ -6,15 +6,15 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
-using ScalpayApi.Data;
-using ScalpayApi.Enums;
-using ScalpayApi.Models;
-using ScalpayApi.Services.Exceptions;
-using ScalpayApi.Services.Parameters;
-using ScalpayApi.Services.Parameters.Criterias;
-using ScalpayApi.Services.SExpressions;
+using Scalpay.Data;
+using Scalpay.Enums;
+using Scalpay.Models;
+using Scalpay.Services.Exceptions;
+using Scalpay.Services.Parameters;
+using Scalpay.Services.Parameters.Criterias;
+using Scalpay.Services.SExpressions;
 
-namespace ScalpayApi.Services
+namespace Scalpay.Services
 {
     public interface IItemService
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace ScalpayApi.Services.SExpressions
+namespace Scalpay.Services.SExpressions
 {
     public class SFunctions
     {

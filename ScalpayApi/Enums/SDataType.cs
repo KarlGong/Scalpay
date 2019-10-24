@@ -1,4 +1,4 @@
-﻿namespace ScalpayApi.Enums
+﻿namespace Scalpay.Enums
 {
     public enum SDataType
     {

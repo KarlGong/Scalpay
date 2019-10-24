@@ -1,4 +1,4 @@
-﻿namespace ScalpayApi.Controllers
+﻿namespace Scalpay.Controllers
 {
     public class Result<T>: Result
     {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.Serialization;
-using ScalpayApi.Enums;
+using Scalpay.Enums;
 
-namespace ScalpayApi.Services.SExpressions
+namespace Scalpay.Services.SExpressions
 {
     [Serializable]
     public class SDateTime: SData

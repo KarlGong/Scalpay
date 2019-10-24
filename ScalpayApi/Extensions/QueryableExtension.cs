@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using ScalpayApi.Services.Parameters.Criterias;
+using Scalpay.Services.Parameters.Criterias;
 
 namespace System.Linq
 {

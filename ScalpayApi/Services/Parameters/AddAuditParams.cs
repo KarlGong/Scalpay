@@ -1,8 +1,8 @@
 ﻿using System;
-using ScalpayApi.Enums;
-using ScalpayApi.Models;
+using Scalpay.Enums;
+using Scalpay.Models;
 
-namespace ScalpayApi.Services.Parameters
+namespace Scalpay.Services.Parameters
 {
     public class AddAuditParams
     {

@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using ScalpayApi.Models;
-using ScalpayApi.Services;
-using ScalpayApi.Services.Exceptions;
+using Scalpay.Models;
+using Scalpay.Services;
+using Scalpay.Services.Exceptions;
 
-namespace ScalpayApi
+namespace Scalpay
 {
     public class AuthenticationMiddleware
     {

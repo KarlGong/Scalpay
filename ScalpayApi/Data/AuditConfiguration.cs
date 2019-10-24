@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Newtonsoft.Json;
-using ScalpayApi.Models;
+using Scalpay.Models;
 
-namespace ScalpayApi.Data
+namespace Scalpay.Data
 {
     public class AuditConfiguration : IEntityTypeConfiguration<Audit>
     {

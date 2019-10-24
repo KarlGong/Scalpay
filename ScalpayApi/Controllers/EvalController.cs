@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
-using ScalpayApi.Services;
-using ScalpayApi.Services.SExpressions;
+using Scalpay.Services;
+using Scalpay.Services.SExpressions;
 
-namespace ScalpayApi.Controllers
+namespace Scalpay.Controllers
 {
     [Route("api/eval")]
     public class EvalController : Controller

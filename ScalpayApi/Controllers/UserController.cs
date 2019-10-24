@@ -2,13 +2,13 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using ScalpayApi.Controllers.DTOs;
-using ScalpayApi.Enums;
-using ScalpayApi.Services;
-using ScalpayApi.Services.Parameters;
-using ScalpayApi.Services.Parameters.Criterias;
+using Scalpay.Controllers.DTOs;
+using Scalpay.Enums;
+using Scalpay.Services;
+using Scalpay.Services.Parameters;
+using Scalpay.Services.Parameters.Criterias;
 
-namespace ScalpayApi.Controllers
+namespace Scalpay.Controllers
 {
     [Route("api/users")]
     public class UserController : Controller

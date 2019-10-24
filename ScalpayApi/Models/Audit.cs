@@ -1,9 +1,9 @@
 ﻿using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using ScalpayApi.Enums;
+using Scalpay.Enums;
 
-namespace ScalpayApi.Models
+namespace Scalpay.Models
 {
     public class Audit
     {

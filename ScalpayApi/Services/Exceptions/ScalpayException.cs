@@ -1,7 +1,7 @@
 ﻿using System;
-using ScalpayApi.Enums;
+using Scalpay.Enums;
 
-namespace ScalpayApi.Services.Exceptions
+namespace Scalpay.Services.Exceptions
 {
     public class ScalpayException: Exception
     {

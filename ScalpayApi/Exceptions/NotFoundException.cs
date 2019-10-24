@@ -1,4 +1,4 @@
-namespace ScalpayApi.Exceptions
+namespace Scalpay.Exceptions
 {
     public class NotFoundException:ScalpayException
     {

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using ScalpayApi.Enums;
-using ScalpayApi.Models;
-using ScalpayApi.Services.Exceptions;
-using ScalpayApi.Services.SExpressions;
+using Scalpay.Enums;
+using Scalpay.Models;
+using Scalpay.Services.Exceptions;
+using Scalpay.Services.SExpressions;
 
-namespace ScalpayApi.Services
+namespace Scalpay.Services
 {
     public interface IExpressionService
     {

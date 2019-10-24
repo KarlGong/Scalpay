@@ -1,6 +1,6 @@
-﻿using ScalpayApi.Enums;
+﻿using Scalpay.Enums;
 
-namespace ScalpayApi.Services.Parameters
+namespace Scalpay.Services.Parameters
 {
     public class ParameterInfo
     {

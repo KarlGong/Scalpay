@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq.Expressions;
-using ScalpayApi.Enums;
-using ScalpayApi.Models;
+using Scalpay.Models;
+using Scalpay.Enums;
 
-namespace ScalpayApi.Services.Parameters.Criterias
+namespace Scalpay.Services.Parameters.Criterias
 {
     public class AuditCriteria : Criteria<Audit>
     {

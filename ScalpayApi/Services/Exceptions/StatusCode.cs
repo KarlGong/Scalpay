@@ -1,4 +1,4 @@
-﻿namespace ScalpayApi.Services.Exceptions
+﻿namespace Scalpay.Services.Exceptions
 {
     public enum StatusCode
     {

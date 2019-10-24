@@ -2,10 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Newtonsoft.Json;
-using ScalpayApi.Enums;
-using ScalpayApi.Models;
+using Scalpay.Enums;
+using Scalpay.Models;
 
-namespace ScalpayApi.Data
+namespace Scalpay.Data
 {
     public class ItemConfiguration : IEntityTypeConfiguration<Item>
     {

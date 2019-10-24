@@ -12,13 +12,13 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using ScalpayApi.Data;
-using ScalpayApi.Enums;
-using ScalpayApi.Models;
-using ScalpayApi.Services;
+using Scalpay.Data;
+using Scalpay.Enums;
+using Scalpay.Models;
+using Scalpay.Services;
 using Serilog;
 
-namespace ScalpayApi
+namespace Scalpay
 {
     public class Startup
     {
@@ -55,7 +55,22 @@ namespace ScalpayApi
             });
 
             services.AddDbContextPool<ScalpayDbContext>(options =>
-                options.UseMySql(Configuration.GetConnectionString("mysql")));
+            {
+                var dbType = Configuration.GetSection("Database")["Type"];
+                var connectionStrings = Configuration.GetSection("Database")["ConnectionStrings"];
+                switch (dbType)
+                {
+                    case "mysql":
+                        options.UseMySql(connectionStrings);
+                        break;
+                    case "sqlite":
+                        options.UseSqlite(connectionStrings);
+                        break;
+                    default:
+                        options.UseSqlite("Data Source=sqlite.db;");
+                        break;
+                }
+            });
 
             services.AddMemoryCache();
 
@@ -77,15 +92,15 @@ namespace ScalpayApi
             InitApplication(serviceProvider);
 
             loggerFactory.AddSerilog();
-            
+
             app.UseScalpayException();
-            
+
             app.UseScalpayRewrite();
 
             app.UseDefaultFiles();
 
             app.UseStaticFiles();
-            
+
             app.UseScalpayAuthentication();
 
             app.UseMvc();

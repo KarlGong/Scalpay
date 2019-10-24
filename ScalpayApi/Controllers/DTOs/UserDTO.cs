@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using ScalpayApi.Enums;
+using Scalpay.Enums;
 
-namespace ScalpayApi.Controllers.DTOs
+namespace Scalpay.Controllers.DTOs
 {
     public class UserDTO
     {

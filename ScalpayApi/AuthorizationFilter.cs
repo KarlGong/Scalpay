@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
-using ScalpayApi.Services;
+using Scalpay.Services;
 
-namespace ScalpayApi
+namespace Scalpay
 {
     public class AuthorizationFilter : IAsyncActionFilter
     {

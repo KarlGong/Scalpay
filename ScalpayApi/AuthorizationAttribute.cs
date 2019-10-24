@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ScalpayApi.Enums;
+using Scalpay.Enums;
 
-namespace ScalpayApi
+namespace Scalpay
 {
     public class AuthorizationAttribute : Attribute
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ScalpayApi.Models;
+using Scalpay.Models;
 
-namespace ScalpayApi.Data
+namespace Scalpay.Data
 {
     public class ScalpayDbContext: DbContext
     {

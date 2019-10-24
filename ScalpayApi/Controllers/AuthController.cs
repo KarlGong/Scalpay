@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using ScalpayApi.Controllers.DTOs;
-using ScalpayApi.Models;
-using ScalpayApi.Services;
-using ScalpayApi.Services.Parameters;
-using ScalpayApi.Services.Parameters.Criterias;
+using Scalpay.Controllers.DTOs;
+using Scalpay.Services;
+using Scalpay.Models;
+using Scalpay.Services.Parameters;
+using Scalpay.Services.Parameters.Criterias;
 
-namespace ScalpayApi.Controllers
+namespace Scalpay.Controllers
 {
     public class SignInParams
     {

@@ -2,10 +2,10 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ScalpayApi.Enums;
-using ScalpayApi.Models;
+using Scalpay.Enums;
+using Scalpay.Models;
 
-namespace ScalpayApi.Data
+namespace Scalpay.Data
 {
     public class UserConfiguration : IEntityTypeConfiguration<User>
     {

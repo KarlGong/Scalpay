@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using System.Xml;
-using ScalpayApi.Enums;
+using Scalpay.Enums;
 
-namespace ScalpayApi.Services.SExpressions
+namespace Scalpay.Services.SExpressions
 {
     [Serializable]
     public class SDuration: SData

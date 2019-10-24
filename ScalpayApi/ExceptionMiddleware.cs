@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using ScalpayApi.Exceptions;
-using ScalpayApi.Services;
+using Scalpay.Exceptions;
+using Scalpay.Services;
 
-namespace ScalpayApi
+namespace Scalpay
 {
     public class ExceptionMiddleware
     {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using ScalpayApi.Models;
+using Scalpay.Models;
 
-namespace ScalpayApi.Data
+namespace Scalpay.Data
 {
     public class ProjectConfiguration : IEntityTypeConfiguration<Project>
     {

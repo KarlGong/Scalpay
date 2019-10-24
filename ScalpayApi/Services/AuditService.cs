@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using ScalpayApi.Data;
-using ScalpayApi.Models;
-using ScalpayApi.Services.Parameters;
-using ScalpayApi.Services.Parameters.Criterias;
+using Scalpay.Data;
+using Scalpay.Models;
+using Scalpay.Services.Parameters;
+using Scalpay.Services.Parameters.Criterias;
 
-namespace ScalpayApi.Services
+namespace Scalpay.Services
 {
     public interface IAuditService
     {

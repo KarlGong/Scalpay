@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
-namespace ScalpayApi
+namespace Scalpay
 {
     public class RewriteMiddleware
     {

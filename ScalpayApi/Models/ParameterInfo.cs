@@ -1,6 +1,6 @@
-﻿using ScalpayApi.Enums;
+﻿using Scalpay.Enums;
 
-namespace ScalpayApi.Models
+namespace Scalpay.Models
 {
     public class ParameterInfo
     {

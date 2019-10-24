@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using ScalpayApi.Enums;
+using Scalpay.Enums;
 
-namespace ScalpayApi.Services.Parameters
+namespace Scalpay.Services.Parameters
 {
     public class SExpression
     {
