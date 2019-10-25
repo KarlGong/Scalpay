@@ -102,7 +102,7 @@ export default class ExpressionView extends Component {
                         break;
                     case DataType.string:
                         display =
-                            <span><Icon type="quote-left"/>{this.expression.value}<Icon type="quote-right"/></span>;
+                            <span><i className="anticon-quote-left"/>{this.expression.value}<Icon type="quote-right"/></span>;
                         break;
                     case DataType.stringDict:
                         display = <Popover

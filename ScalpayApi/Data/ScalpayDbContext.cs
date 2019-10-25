@@ -18,6 +18,8 @@ namespace Scalpay.Data
         
         public DbSet<Audit> Audits { get; set; }
         
+        public DbSet<Permission> Permissions { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserConfiguration());
@@ -29,6 +31,8 @@ namespace Scalpay.Data
             modelBuilder.ApplyConfiguration(new RuleConfiguration());
 
             modelBuilder.ApplyConfiguration(new AuditConfiguration());
+
+            modelBuilder.ApplyConfiguration(new PermissionConfiguration());
         }
     }
 }

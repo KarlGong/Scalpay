@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using Scalpay.Services;
-using Scalpay.Services.SExpressions;
+using Scalpay.Services.ExpressionService.SExpressions;
+using Scalpay.Services.ItemService;
 
 namespace Scalpay.Controllers
 {
@@ -18,9 +19,9 @@ namespace Scalpay.Controllers
         }
 
         [HttpPost("{itemKey}")]
-        public async Task<Result<SData>> EvalItem([FromRoute] string itemKey, [FromBody] Dictionary<string, JToken> parameters)
+        public async Task<ListResults<SData>> EvalItem([FromRoute] string itemKey, [FromBody] Dictionary<string, JToken> parameters)
         {
-            return new Result<SData>()
+            return new ListResults<SData>()
             {
                 Data = await _itemService.EvalItem(itemKey, parameters)
             };

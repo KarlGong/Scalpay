@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Scalpay.Models;
 using Scalpay.Services;
-using Scalpay.Services.Parameters.Criterias;
+using Scalpay.Services.AuditService;
 
 namespace Scalpay.Controllers
 {
@@ -18,9 +18,9 @@ namespace Scalpay.Controllers
         }
 
         [HttpGet]
-        public async Task<Result<List<Audit>>> GetAudits([FromQuery] AuditCriteria criteria)
+        public async Task<ListResults<List<Audit>>> GetAudits([FromQuery] AuditCriteria criteria)
         {
-            return new Result<List<Audit>>()
+            return new ListResults<List<Audit>>()
             {
                 Data = await _service.GetAuditsAsync(criteria),
                 TotalCount = await _service.GetAuditsCountAsync(criteria)

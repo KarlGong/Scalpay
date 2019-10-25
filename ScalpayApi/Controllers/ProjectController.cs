@@ -5,7 +5,7 @@ using Scalpay.Enums;
 using Scalpay.Models;
 using Scalpay.Services;
 using Scalpay.Services.Parameters;
-using Scalpay.Services.Parameters.Criterias;
+using Scalpay.Services.ProjectService;
 
 namespace Scalpay.Controllers
 {
@@ -20,9 +20,9 @@ namespace Scalpay.Controllers
         }
 
         [HttpGet]
-        public async Task<Result<List<Project>>> GetLatestProjects([FromQuery] ProjectCriteria criteria)
+        public async Task<ListResults<List<Project>>> GetLatestProjects([FromQuery] ProjectCriteria criteria)
         {
-            return new Result<List<Project>>()
+            return new ListResults<List<Project>>()
             {
                 Data = await _service.GetLatestProjectsAsync(criteria),
                 TotalCount = await _service.GetLatestProjectsCountAsync(criteria)
@@ -30,18 +30,18 @@ namespace Scalpay.Controllers
         }
         
         [HttpGet("{projectKey}")]
-        public async Task<Result<Project>> GetLatestProject([FromRoute] string projectKey)
+        public async Task<ListResults<Project>> GetLatestProject([FromRoute] string projectKey)
         {
-            return new Result<Project>()
+            return new ListResults<Project>()
             {
                 Data = await _service.GetProjectAsync(projectKey, null)
             };
         }
 
         [HttpGet("{projectKey}/v{version}")]
-        public async Task<Result<Project>> GetProject([FromRoute] string projectKey, [FromRoute] int version)
+        public async Task<ListResults<Project>> GetProject([FromRoute] string projectKey, [FromRoute] int version)
         {
-            return new Result<Project>()
+            return new ListResults<Project>()
             {
                 Data = await _service.GetProjectAsync(projectKey, version)
             };
@@ -49,9 +49,9 @@ namespace Scalpay.Controllers
 
         [HttpPut]
         [Authorization(Privilege.ProjectManage)]
-        public async Task<Result<Project>> AddProject([FromBody] AddProjectParams ps)
+        public async Task<ListResults<Project>> AddProject([FromBody] AddProjectParams ps)
         {
-            return new Result<Project>()
+            return new ListResults<Project>()
             {
                 Data = await _service.AddProjectAsync(ps)
             };
@@ -59,10 +59,10 @@ namespace Scalpay.Controllers
 
         [HttpPost("{projectKey}")]
         [Authorization(Privilege.ProjectManage)]
-        public async Task<Result<Project>> UpdateProject([FromRoute] string projectKey, [FromBody] UpdateProjectParams ps)
+        public async Task<ListResults<Project>> UpdateProject([FromRoute] string projectKey, [FromBody] UpdateProjectParams ps)
         {
             ps.ProjectKey = projectKey;
-            return new Result<Project>()
+            return new ListResults<Project>()
             {
                 Data = await _service.UpdateProjectAsync(ps)
             };

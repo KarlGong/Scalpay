@@ -1,9 +1,8 @@
-﻿namespace Scalpay.Enums
+namespace Scalpay.Enums
 {
     public enum Privilege
     {
-        ProjectManage = 1 << 0,
-        ItemManage = 1 << 1,
-        UserManage = 1 << 2
+        Read = 1,
+        Admin = 3
     }
 }

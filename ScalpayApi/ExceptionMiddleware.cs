@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Scalpay.Exceptions;
 using Scalpay.Services;
+using Scalpay.Services.UserService;
 
 namespace Scalpay
 {
@@ -17,6 +18,8 @@ namespace Scalpay
         private static readonly Dictionary<Type, HttpStatusCode> EXCEPTION_STATUS_CODE_MAP =
             new Dictionary<Type, HttpStatusCode>()
             {
+                {typeof(ConflictException), HttpStatusCode.Conflict},
+                {typeof(EvalException), HttpStatusCode.InternalServerError},
                 {typeof(NotFoundException), HttpStatusCode.NotFound}
             };
 

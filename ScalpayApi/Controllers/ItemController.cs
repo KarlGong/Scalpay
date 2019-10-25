@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Scalpay.Enums;
 using Scalpay.Models;
 using Scalpay.Services;
+using Scalpay.Services.ItemService;
 using Scalpay.Services.Parameters;
-using Scalpay.Services.Parameters.Criterias;
 
 namespace Scalpay.Controllers
 {
@@ -20,9 +20,9 @@ namespace Scalpay.Controllers
         }
 
         [HttpGet]
-        public async Task<Result<List<Item>>> GetLatestItems([FromQuery] ItemCriteria criteria)
+        public async Task<ListResults<List<Item>>> GetLatestItems([FromQuery] ItemCriteria criteria)
         {
-            return new Result<List<Item>>()
+            return new ListResults<List<Item>>()
             {
                 Data = await _itemService.GetLatestItemsAsync(criteria),
                 TotalCount = await _itemService.GetLatestItemsCountAsync(criteria)
@@ -30,18 +30,18 @@ namespace Scalpay.Controllers
         }
 
         [HttpGet("{itemKey}")]
-        public async Task<Result<Item>> GetLatestItem([FromRoute] string itemKey)
+        public async Task<ListResults<Item>> GetLatestItem([FromRoute] string itemKey)
         {
-            return new Result<Item>()
+            return new ListResults<Item>()
             {
                 Data = await _itemService.GetItemAsync(itemKey, null)
             };
         }
 
         [HttpGet("{itemKey}/v{version}")]
-        public async Task<Result<Item>> GetItem([FromRoute] string itemKey, [FromRoute] int version)
+        public async Task<ListResults<Item>> GetItem([FromRoute] string itemKey, [FromRoute] int version)
         {
-            return new Result<Item>()
+            return new ListResults<Item>()
             {
                 Data = await _itemService.GetItemAsync(itemKey, version)
             };
@@ -49,9 +49,9 @@ namespace Scalpay.Controllers
 
         [HttpPut]
         [Authorization(Privilege.ItemManage)]
-        public async Task<Result<Item>> AddItem([FromBody] AddItemParams ps)
+        public async Task<ListResults<Item>> AddItem([FromBody] AddItemParams ps)
         {
-            return new Result<Item>()
+            return new ListResults<Item>()
             {
                 Data = await _itemService.AddItemAsync(ps)
             };
@@ -59,10 +59,10 @@ namespace Scalpay.Controllers
 
         [HttpPost("{itemKey}")]
         [Authorization(Privilege.ItemManage)]
-        public async Task<Result<Item>> UpdateItem([FromRoute] string itemKey, [FromBody] UpdateItemParams ps)
+        public async Task<ListResults<Item>> UpdateItem([FromRoute] string itemKey, [FromBody] UpdateItemParams ps)
         {
             ps.ItemKey = itemKey;
-            return new Result<Item>()
+            return new ListResults<Item>()
             {
                 Data = await _itemService.UpdateItemAsync(ps)
             };

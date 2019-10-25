@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
+using Scalpay.Enums;
 
 namespace Scalpay.Models
 {
-    public class Project
+    public class Permission
     {
-        public string ProjectKey { get; set; }
-
-        public string Name { get; set; }
+        public int Id { get; set; }
         
-        public string Description { get; set; }
+        public string Username { get; set; }
+        
+        public string ProjectKey { get; set; }
+        
+        public Privilege Privilege { get; set; }
         
         public DateTime InsertTime { get; set; }
         

@@ -16,6 +16,7 @@ import global from "./global";
 import "./index.less";
 import "~/assets/fonts/antd-iconfont/iconfont.css";
 import "~/assets/fonts/extra-iconfont/iconfont.css";
+import "~/assets/fonts/extra-iconfont/iconfont.ttf";
 
 const checkAuth = (nextState, replace) => {
     if (nextState.location.pathname === "/login" && auth.user) {

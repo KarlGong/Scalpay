@@ -4,7 +4,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,9 +12,12 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Scalpay.Data;
-using Scalpay.Enums;
 using Scalpay.Models;
-using Scalpay.Services;
+using Scalpay.Services.AuditService;
+using Scalpay.Services.ExpressionService;
+using Scalpay.Services.ItemService;
+using Scalpay.Services.ProjectService;
+using Scalpay.Services.UserService;
 using Serilog;
 
 namespace Scalpay
@@ -34,9 +36,7 @@ namespace Scalpay
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(
-                options => options.Filters.Add(typeof(AuthorizationFilter))
-            ).AddJsonOptions(
+            services.AddMvc().AddJsonOptions(
                 options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -76,18 +76,17 @@ namespace Scalpay
 
             services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
 
+            services.AddScoped<IAuditService, AuditService>();
+            services.AddScoped<IExpressionService, ExpressionService>();
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IProjectService, ProjectService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IExpressionService, ExpressionService>();
-            services.AddScoped<IAuditService, AuditService>();
 
             return services.BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
-            IServiceProvider serviceProvider)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             InitApplication(serviceProvider);
 
@@ -130,11 +129,9 @@ namespace Scalpay
                 context.Users.Add(new User()
                 {
                     Username = "admin",
-                    ApiKey = Guid.NewGuid().ToString(),
                     Email = "admin@scalpay.com",
                     FullName = "Admin",
                     Password = "1",
-                    Privileges = Enum.GetValues(typeof(Privilege)).Cast<Privilege>().ToList(),
                     InsertTime = DateTime.UtcNow,
                     UpdateTime = DateTime.UtcNow
                 });
@@ -149,8 +146,6 @@ namespace Scalpay
                     ProjectKey = "__scalpay",
                     Name = "Scalpay",
                     Description = "The Scalpay's configurations.",
-                    Version = 1,
-                    IsLatest = true,
                     InsertTime = DateTime.UtcNow,
                     UpdateTime = DateTime.UtcNow
                 });

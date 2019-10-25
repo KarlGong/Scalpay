@@ -19,13 +19,6 @@ namespace Scalpay.Data
 
             builder.Property(u => u.FullName).IsRequired();
 
-            builder.Property(u => u.ApiKey).IsRequired();
-
-            builder.Property(u => u.Privileges).HasConversion(
-                    v => v.Sum(p => (int) p),
-                    v => Enum.GetValues(typeof(Privilege)).Cast<Privilege>().Where(p => (v & (int) p) != 0).ToList())
-                .IsRequired();
-
             builder.Property(u => u.InsertTime).IsRequired();
 
             builder.Property(u => u.UpdateTime).IsRequired();

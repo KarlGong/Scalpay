@@ -6,7 +6,7 @@ using Scalpay.Controllers.DTOs;
 using Scalpay.Enums;
 using Scalpay.Services;
 using Scalpay.Services.Parameters;
-using Scalpay.Services.Parameters.Criterias;
+using Scalpay.Services.UserService;
 
 namespace Scalpay.Controllers
 {
@@ -24,9 +24,9 @@ namespace Scalpay.Controllers
 
         [HttpGet]
         [Authorization(Privilege.UserManage)]
-        public async Task<Result<List<UserDTO>>> GetUsers([FromQuery] UserCriteria criteria)
+        public async Task<ListResults<List<UserDTO>>> GetUsers([FromQuery] UserCriteria criteria)
         {
-            return new Result<List<UserDTO>>()
+            return new ListResults<List<UserDTO>>()
             {
                 Data = _mapper.Map<List<UserDTO>>(await _service.GetUsersAsync(criteria)),
                 TotalCount = await _service.GetUsersCountAsync(criteria)
@@ -34,11 +34,11 @@ namespace Scalpay.Controllers
         }
 
         [HttpGet("{username}")]
-        public async Task<Result<UserDTO>> GetUser([FromRoute] string username)
+        public async Task<ListResults<UserDTO>> GetUser([FromRoute] string username)
         {
             var user = await _service.GetUserByUsernameAsync(username);
 
-            return new Result<UserDTO>()
+            return new ListResults<UserDTO>()
             {
                 Data = _mapper.Map<UserDTO>(user)
             };
@@ -46,11 +46,11 @@ namespace Scalpay.Controllers
 
         [HttpPut]
         [Authorization(Privilege.UserManage)]
-        public async Task<Result<UserDTO>> AddUser([FromBody] AddUserParams ps)
+        public async Task<ListResults<UserDTO>> AddUser([FromBody] AddUserParams ps)
         {
             var user = await _service.AddUserAsync(ps);
 
-            return new Result<UserDTO>()
+            return new ListResults<UserDTO>()
             {
                 Data = _mapper.Map<UserDTO>(user)
             };
@@ -58,24 +58,24 @@ namespace Scalpay.Controllers
 
         [HttpPost("{username}")]
         [Authorization(Privilege.UserManage)]
-        public async Task<Result<UserDTO>> UpdateUser([FromRoute] string username, [FromBody] UpdateUserParams ps)
+        public async Task<ListResults<UserDTO>> UpdateUser([FromRoute] string username, [FromBody] UpdateUserParams ps)
         {
             ps.Username = username;
             var user = await _service.UpdateUserAsync(ps);
 
-            return new Result<UserDTO>()
+            return new ListResults<UserDTO>()
             {
                 Data = _mapper.Map<UserDTO>(user)
             };
         }
         
         [HttpPost("{username}/password")]
-        public async Task<Result<UserDTO>> UpdatePassword([FromRoute] string username, [FromBody] UpdatePasswordParams ps)
+        public async Task<ListResults<UserDTO>> UpdatePassword([FromRoute] string username, [FromBody] UpdatePasswordParams ps)
         {
             ps.Username = username;
             var user = await _service.UpdatePasswordAsync(ps);
 
-            return new Result<UserDTO>()
+            return new ListResults<UserDTO>()
             {
                 Data = _mapper.Map<UserDTO>(user)
             };

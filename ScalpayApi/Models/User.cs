@@ -16,10 +16,6 @@ namespace Scalpay.Models
 
         public string FullName { get; set; }
 
-        public string ApiKey { get; set; }
-
-        public List<Privilege> Privileges { get; set; }
-
         public DateTime InsertTime { get; set; }
 
         public DateTime UpdateTime { get; set; }

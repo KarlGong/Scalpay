@@ -12,15 +12,9 @@ namespace Scalpay.Data
     {
         public void Configure(EntityTypeBuilder<Item> builder)
         {
-            builder.HasKey(i => i.Id);
-
-            builder.Property(i => i.ItemKey).IsRequired();
+            builder.HasKey(i => i.ItemKey);
 
             builder.Property(i => i.Name).IsRequired();
-
-            builder.Property(i => i.Version).IsRequired();
-
-            builder.Property(i => i.IsLatest).IsRequired();
 
             builder.Property(i => i.InsertTime).IsRequired();
 
@@ -48,8 +42,7 @@ namespace Scalpay.Data
 
             builder.Property(i => i.ProjectKey).IsRequired();
 
-            builder.HasMany(i => i.Rules).WithOne(r => r.Item).HasForeignKey(r => r.ItemId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(i => i.Rules).WithOne(r => r.Item).HasForeignKey(r => r.ItemId);
         }
     }
 }

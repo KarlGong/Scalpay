@@ -13,7 +13,7 @@ namespace Scalpay.Data
         {
             builder.HasKey(a => a.Id);
             
-            builder.Property(i => i.AuditType).HasConversion(
+            builder.Property(a => a.AuditType).HasConversion(
                     v => v.ToString(),
                     v => Enum.Parse<AuditType>(v))
                 .IsRequired();

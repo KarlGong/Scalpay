@@ -1,16 +1,12 @@
-﻿using System.Linq;
-using System.Security.Claims;
+﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+using JWT.Algorithms;
+using JWT.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Scalpay.Controllers.DTOs;
-using Scalpay.Services;
-using Scalpay.Models;
-using Scalpay.Services.Parameters;
-using Scalpay.Services.Parameters.Criterias;
+using Microsoft.Extensions.Configuration;
+using Scalpay.Services.UserService;
 
 namespace Scalpay.Controllers
 {
@@ -18,6 +14,7 @@ namespace Scalpay.Controllers
     {
         public string Username { get; set; }
         public string Password { get; set; }
+        public DateTime ExpiredTime { get; set; } = DateTime.UtcNow.AddDays(1);
     }
 
     [Route("api/auth")]
@@ -26,21 +23,30 @@ namespace Scalpay.Controllers
         private readonly HttpContext _httpContext;
         private readonly IUserService _service;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(IHttpContextAccessor accessor, IUserService service, IMapper mapper)
+        public AuthController(IHttpContextAccessor accessor, IUserService service, IMapper mapper, IConfiguration configuration)
         {
             _httpContext = accessor.HttpContext;
             _service = service;
             _mapper = mapper;
+            _configuration = configuration;
         }
 
         [HttpPost("signIn")]
-        public async Task<Result<UserDTO>> SignIn([FromBody] SignInParams ps)
+        public async Task<object> SignIn([FromBody] SignInParams ps)
         {
-            var user = await _service.GetUserByUsernamePasswordAsync(ps.Username, ps.Password);
-            return new Result<UserDTO>()
+            var user = await _service.GetUserAsync(new UserCriteria()
             {
-                Data = _mapper.Map<UserDTO>(user)
+                Username = ps.Username,
+                Password = ps.Password
+            });
+            return new
+            {
+                Token = new JwtBuilder().WithAlgorithm(new HMACSHA256Algorithm()).WithSecret(_configuration["JwtSecret"])
+                    .AddClaim("exp", new DateTimeOffset(ps.ExpiredTime).ToUnixTimeSeconds())
+                    .AddClaim("username", user.Username)
+                    .Build()
             };
         }
     }

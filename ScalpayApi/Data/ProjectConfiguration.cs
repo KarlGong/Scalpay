@@ -8,16 +8,10 @@ namespace Scalpay.Data
     {
         public void Configure(EntityTypeBuilder<Project> builder)
         {
-            builder.HasKey(p => p.Id);
-
-            builder.Property(p => p.ProjectKey).IsRequired();
+            builder.HasKey(p => p.ProjectKey);
 
             builder.Property(p => p.Name).IsRequired();
             
-            builder.Property(p => p.Version).IsRequired();
-            
-            builder.Property(p => p.IsLatest).IsRequired();
-
             builder.Property(p => p.InsertTime).IsRequired();
 
             builder.Property(p => p.UpdateTime).IsRequired();
