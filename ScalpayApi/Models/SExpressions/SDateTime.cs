@@ -2,7 +2,7 @@
 using System.Runtime.Serialization;
 using Scalpay.Enums;
 
-namespace Scalpay.Services.ExpressionService.SExpressions
+namespace Scalpay.Models.SExpressions
 {
     [Serializable]
     public class SDateTime: SData

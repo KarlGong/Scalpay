@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Newtonsoft.Json;
 using Scalpay.Enums;
 using Scalpay.Models;
+using Scalpay.Models.SExpressions;
 
 namespace Scalpay.Data
 {
@@ -42,7 +43,7 @@ namespace Scalpay.Data
 
             builder.Property(i => i.ProjectKey).IsRequired();
 
-            builder.HasMany(i => i.Rules).WithOne(r => r.Item).HasForeignKey(r => r.ItemId);
+            builder.HasMany(i => i.Rules).WithOne(r => r.Item).HasForeignKey(r => r.ItemKey);
         }
     }
 }

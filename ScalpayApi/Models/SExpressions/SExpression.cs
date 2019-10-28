@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Scalpay.Enums;
 
-namespace Scalpay.Models
+namespace Scalpay.Models.SExpressions
 {
     public class SExpression
     {

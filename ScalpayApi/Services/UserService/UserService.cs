@@ -11,11 +11,13 @@ namespace Scalpay.Services.UserService
 {
     public interface IUserService
     {
-        Task<User> GetUserAsync(UserCriteria criteria);
+        Task<User> GetUserAsync(string username);
 
         Task<ListResults<User>> GetUsersAsync(UserCriteria criteria);
 
         Task<User> AddUserAsync(User user);
+
+        Task<User> UpdateUserAsync(User user);
     }
 
     public class UserService : IUserService
@@ -30,12 +32,12 @@ namespace Scalpay.Services.UserService
             _mapper = mapper;
         }
 
-        public async Task<User> GetUserAsync(UserCriteria criteria)
+        public async Task<User> GetUserAsync(string username)
         {
-            var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(criteria);
+            var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Username == username);
             if (user == null)
             {
-                throw new NotFoundException("The user cannot be found.");
+                throw new NotFoundException($"The user {username} cannot be found.");
             }
 
             return user;
@@ -66,6 +68,22 @@ namespace Scalpay.Services.UserService
             await _context.SaveChangesAsync();
 
             return user;
+        }
+
+        public async Task<User> UpdateUserAsync(User user)
+        {
+            var oldUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == user.Username);
+            if (oldUser == null)
+            {
+                throw new NotFoundException($"The user {user.Username} cannot be found.");
+            }
+
+            _mapper.Map(user, oldUser);
+            oldUser.UpdateTime = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return oldUser;
         }
     }
 }

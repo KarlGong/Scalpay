@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Scalpay.Enums;
 
-namespace Scalpay.Services.ExpressionService.SExpressions
+namespace Scalpay.Models.SExpressions
 {
     [Serializable]
-    public class SStringList: SData
+    public class SStringDict: SData
     {
-        public List<string> Inner { get; set; }
+        public Dictionary<string, string> Inner { get; set; }
 
-        public SStringList(List<string> inner)
+        public SStringDict(Dictionary<string, string> inner)
         {
             Inner = inner;
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("dataType", SDataType.StringList);
+            info.AddValue("dataType", SDataType.StringDict);
             info.AddValue("data", Inner);
         }
     }

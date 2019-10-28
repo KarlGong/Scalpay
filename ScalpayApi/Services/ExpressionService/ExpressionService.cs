@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Scalpay.Enums;
 using Scalpay.Exceptions;
-using Scalpay.Models;
-using Scalpay.Services.ExpressionService.SExpressions;
+using Scalpay.Models.SExpressions;
 
 namespace Scalpay.Services.ExpressionService
 {

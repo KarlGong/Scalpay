@@ -18,6 +18,11 @@ namespace Scalpay.Data
             builder.Property(u => u.Password).IsRequired();
 
             builder.Property(u => u.FullName).IsRequired();
+            
+            builder.Property(i => i.Role).HasConversion(
+                    v => v.ToString(),
+                    v => Enum.Parse<UserRole>(v))
+                .IsRequired();
 
             builder.Property(u => u.InsertTime).IsRequired();
 

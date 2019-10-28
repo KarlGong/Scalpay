@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Scalpay.Services.ExpressionService.SExpressions
+namespace Scalpay.Models.SExpressions
 {
     public abstract class SData : ISerializable
     {

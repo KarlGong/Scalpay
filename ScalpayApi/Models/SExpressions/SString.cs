@@ -2,21 +2,21 @@
 using System.Runtime.Serialization;
 using Scalpay.Enums;
 
-namespace Scalpay.Services.ExpressionService.SExpressions
+namespace Scalpay.Models.SExpressions
 {
     [Serializable]
-    public class SBool : SData
+    public class SString: SData
     {
-        public bool Inner { get; set; }
+        public string Inner { get; set; }
 
-        public SBool(bool inner)
+        public SString(string inner)
         {
             Inner = inner;
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("dataType", SDataType.Bool);
+            info.AddValue("dataType", SDataType.String);
             info.AddValue("data", Inner);
         }
     }

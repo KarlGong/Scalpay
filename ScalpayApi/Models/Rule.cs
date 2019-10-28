@@ -1,6 +1,7 @@
 ﻿using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Scalpay.Models.SExpressions;
 
 namespace Scalpay.Models
 {
@@ -8,7 +9,7 @@ namespace Scalpay.Models
     {
         public int Id { get; set; }
 
-        public int ItemId { get; set; }
+        public string ItemKey { get; set; }
 
         public Item Item { get; set; }
 

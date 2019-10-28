@@ -1,22 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Scalpay.Enums;
 
-namespace Scalpay.Services.ExpressionService.SExpressions
+namespace Scalpay.Models.SExpressions
 {
     [Serializable]
-    public class SNumber: SData
+    public class SNumberList: SData
     {
-        public double Inner { get; set; }
-        
-        public SNumber(double inner)
+        public List<double> Inner { get; set; }
+
+        public SNumberList(List<double> inner)
         {
             Inner = inner;
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("dataType", SDataType.Number);
+            info.AddValue("dataType", SDataType.NumberList);
             info.AddValue("data", Inner);
         }
     }

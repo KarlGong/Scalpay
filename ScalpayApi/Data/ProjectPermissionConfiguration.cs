@@ -4,9 +4,9 @@ using Scalpay.Models;
 
 namespace Scalpay.Data
 {
-    public class PermissionConfiguration: IEntityTypeConfiguration<Permission>
+    public class ProjectPermissionConfiguration: IEntityTypeConfiguration<ProjectPermission>
     {
-        public void Configure(EntityTypeBuilder<Permission> builder)
+        public void Configure(EntityTypeBuilder<ProjectPermission> builder)
         {
             builder.HasKey(p => p.Id);
             

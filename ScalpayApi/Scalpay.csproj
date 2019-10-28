@@ -7,7 +7,6 @@
     <RootNamespace>Scalpay</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="Services\PermissionService" />
     <Folder Include="wwwroot" />
   </ItemGroup>
   <ItemGroup>

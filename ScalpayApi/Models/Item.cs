@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Scalpay.Enums;
+using Scalpay.Models.SExpressions;
 
 namespace Scalpay.Models
 {

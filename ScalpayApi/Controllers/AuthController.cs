@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using JWT.Algorithms;
@@ -34,20 +35,36 @@ namespace Scalpay.Controllers
         }
 
         [HttpPost("signIn")]
-        public async Task<object> SignIn([FromBody] SignInParams ps)
+        public async Task<IActionResult> SignIn([FromBody] SignInParams ps)
         {
-            var user = await _service.GetUserAsync(new UserCriteria()
+            if (string.IsNullOrEmpty(ps.Username))
+            {
+                return Unauthorized("Username cannot be empty.");
+            }
+
+            if (string.IsNullOrEmpty(ps.Password))
+            {
+                return Unauthorized("Password cannot be empty.");
+            }
+
+            var users = await _service.GetUsersAsync(new UserCriteria()
             {
                 Username = ps.Username,
                 Password = ps.Password
             });
-            return new
+
+            if (!users.Data.Any())
+            {
+                return Unauthorized("Username or password is incorrect.");
+            }
+
+            return Ok(new
             {
                 Token = new JwtBuilder().WithAlgorithm(new HMACSHA256Algorithm()).WithSecret(_configuration["JwtSecret"])
                     .AddClaim("exp", new DateTimeOffset(ps.ExpiredTime).ToUnixTimeSeconds())
-                    .AddClaim("username", user.Username)
+                    .AddClaim("username", users.Data[0].Username)
                     .Build()
-            };
+            });
         }
     }
 }

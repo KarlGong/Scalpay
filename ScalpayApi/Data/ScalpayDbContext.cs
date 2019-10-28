@@ -16,9 +16,7 @@ namespace Scalpay.Data
         
         public DbSet<Item> Items { get; set; }
         
-        public DbSet<Audit> Audits { get; set; }
-        
-        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<ProjectPermission> ProjectPermissions { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,9 +28,7 @@ namespace Scalpay.Data
             
             modelBuilder.ApplyConfiguration(new RuleConfiguration());
 
-            modelBuilder.ApplyConfiguration(new AuditConfiguration());
-
-            modelBuilder.ApplyConfiguration(new PermissionConfiguration());
+            modelBuilder.ApplyConfiguration(new ProjectPermissionConfiguration());
         }
     }
 }

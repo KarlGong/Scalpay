@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Newtonsoft.Json;
 using Scalpay.Models;
+using Scalpay.Models.SExpressions;
 
 namespace Scalpay.Data
 {

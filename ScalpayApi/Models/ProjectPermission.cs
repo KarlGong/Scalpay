@@ -3,7 +3,7 @@ using Scalpay.Enums;
 
 namespace Scalpay.Models
 {
-    public class Permission
+    public class ProjectPermission
     {
         public int Id { get; set; }
         
@@ -11,10 +11,10 @@ namespace Scalpay.Models
         
         public string ProjectKey { get; set; }
         
-        public Privilege Privilege { get; set; }
+        public ProjectPrivilege Privilege { get; set; }
         
         public DateTime InsertTime { get; set; }
         
         public DateTime UpdateTime { get; set; }
     }
-}
+}    

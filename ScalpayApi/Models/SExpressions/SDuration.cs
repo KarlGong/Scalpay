@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 using System.Xml;
 using Scalpay.Enums;
 
-namespace Scalpay.Services.ExpressionService.SExpressions
+namespace Scalpay.Models.SExpressions
 {
     [Serializable]
     public class SDuration: SData

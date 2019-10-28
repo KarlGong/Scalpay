@@ -13,7 +13,6 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Scalpay.Data;
 using Scalpay.Models;
-using Scalpay.Services.AuditService;
 using Scalpay.Services.ExpressionService;
 using Scalpay.Services.ItemService;
 using Scalpay.Services.ProjectService;
@@ -76,7 +75,6 @@ namespace Scalpay
 
             services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddScoped<IAuditService, AuditService>();
             services.AddScoped<IExpressionService, ExpressionService>();
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IProjectService, ProjectService>();

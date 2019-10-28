@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Scalpay.Controllers.DTOs;
-using Scalpay.Enums;
+using Scalpay.Models;
 using Scalpay.Services;
-using Scalpay.Services.Parameters;
 using Scalpay.Services.UserService;
 
 namespace Scalpay.Controllers
@@ -22,63 +19,38 @@ namespace Scalpay.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        [Authorization(Privilege.UserManage)]
-        public async Task<ListResults<List<UserDTO>>> GetUsers([FromQuery] UserCriteria criteria)
+        [HttpGet()]
+        public async Task<ListResults<User>> GetUsers([FromQuery] UserCriteria criteria)
         {
-            return new ListResults<List<UserDTO>>()
+            var usersList = await _service.GetUsersAsync(criteria);
+            foreach (var user in usersList.Data)
             {
-                Data = _mapper.Map<List<UserDTO>>(await _service.GetUsersAsync(criteria)),
-                TotalCount = await _service.GetUsersCountAsync(criteria)
-            };
+                user.Password = null;
+            }
+
+            return usersList;
         }
 
         [HttpGet("{username}")]
-        public async Task<ListResults<UserDTO>> GetUser([FromRoute] string username)
+        public async Task<User> GetUser([FromRoute] string username)
         {
-            var user = await _service.GetUserByUsernameAsync(username);
+            var user = await _service.GetUserAsync(username);
+            user.Password = null;
 
-            return new ListResults<UserDTO>()
-            {
-                Data = _mapper.Map<UserDTO>(user)
-            };
+            return user;
         }
 
-        [HttpPut]
-        [Authorization(Privilege.UserManage)]
-        public async Task<ListResults<UserDTO>> AddUser([FromBody] AddUserParams ps)
+        [HttpPut()]
+        public async Task<User> AddUser([FromBody] User user)
         {
-            var user = await _service.AddUserAsync(ps);
-
-            return new ListResults<UserDTO>()
-            {
-                Data = _mapper.Map<UserDTO>(user)
-            };
+            return await _service.AddUserAsync(user);
         }
 
         [HttpPost("{username}")]
-        [Authorization(Privilege.UserManage)]
-        public async Task<ListResults<UserDTO>> UpdateUser([FromRoute] string username, [FromBody] UpdateUserParams ps)
+        public async Task<User> UpdateUser([FromRoute] string username, [FromBody] User user)
         {
-            ps.Username = username;
-            var user = await _service.UpdateUserAsync(ps);
-
-            return new ListResults<UserDTO>()
-            {
-                Data = _mapper.Map<UserDTO>(user)
-            };
-        }
-        
-        [HttpPost("{username}/password")]
-        public async Task<ListResults<UserDTO>> UpdatePassword([FromRoute] string username, [FromBody] UpdatePasswordParams ps)
-        {
-            ps.Username = username;
-            var user = await _service.UpdatePasswordAsync(ps);
-
-            return new ListResults<UserDTO>()
-            {
-                Data = _mapper.Map<UserDTO>(user)
-            };
+            user.Username = username;
+            return await _service.UpdateUserAsync(user);
         }
     }
 }
