@@ -114,7 +114,7 @@ namespace Scalpay.Services.ItemService
 
             foreach (var pair in parameters ?? new Dictionary<string, JToken>())
             {
-                var parameterInfo = item.ParameterInfos.SingleOrDefault(p => p.Name == pair.Key);
+                var parameterInfo = item.ParameterInfos?.SingleOrDefault(p => p.Name == pair.Key);
 
                 if (parameterInfo == null)
                     continue; // data type not found, since parameter is not declared in parameter list.
