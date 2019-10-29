@@ -21,7 +21,7 @@ namespace Scalpay.Services.ProjectService
 
         Task<Project> UpdateProjectAsync(Project project);
 
-        Task<ProjectPrivilege> GetProjectPrivilegeAsync(string projectKey, string username);
+        Task<ProjectPermission> GetProjectPermissionAsync(string projectKey, string username);
 
         Task<List<ProjectPermission>> GetProjectPermissionsAsync(string projectKey);
 
@@ -93,15 +93,20 @@ namespace Scalpay.Services.ProjectService
             return oldProject;
         }
 
-        public async Task<ProjectPrivilege> GetProjectPrivilegeAsync(string projectKey, string username)
+        public async Task<ProjectPermission> GetProjectPermissionAsync(string projectKey, string username)
         {
             var permission = await _context.ProjectPermissions.FirstOrDefaultAsync(pp => pp.ProjectKey == projectKey && pp.Username == username);
             if (permission == null)
             {
-                return ProjectPrivilege.None;
+                return new ProjectPermission()
+                {
+                    ProjectKey = projectKey,
+                    Username = username,
+                    Privilege = ProjectPrivilege.None
+                };
             }
 
-            return permission.Privilege;
+            return permission;
         }
 
         public async Task<List<ProjectPermission>> GetProjectPermissionsAsync(string projectKey)

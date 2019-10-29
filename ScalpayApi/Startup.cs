@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Scalpay.Data;
+using Scalpay.Enums;
 using Scalpay.Models;
 using Scalpay.Services.ExpressionService;
 using Scalpay.Services.ItemService;
@@ -130,6 +131,7 @@ namespace Scalpay
                     Email = "admin@scalpay.com",
                     FullName = "Admin",
                     Password = "1",
+                    Role = UserRole.Admin,
                     InsertTime = DateTime.UtcNow,
                     UpdateTime = DateTime.UtcNow
                 });

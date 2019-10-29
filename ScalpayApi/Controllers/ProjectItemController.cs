@@ -81,5 +81,39 @@ namespace Scalpay.Controllers
             var item = await _itemService.GetItemAsync(itemKey);
             return await _itemService.EvalItemAsync(item, parameters);
         }
+        
+        [HttpGet("{projectKey}/permissions")]
+        public async Task<List<ProjectPermission>> GetProjectPermissions([FromRoute] string projectKey)
+        {
+            return await _projectService.GetProjectPermissionsAsync(projectKey);
+        }
+
+        [HttpGet("{projectKey}/permissions/{username}")]
+        public async Task<ProjectPermission> GetProjectPermission([FromRoute] string projectKey, [FromRoute] string username)
+        {
+            return await _projectService.GetProjectPermissionAsync(projectKey, username);
+        }
+
+        [HttpPut("{projectKey}/permissions")]
+        public async Task<ProjectPermission> AddProjectPermissions([FromRoute] string projectKey, [FromBody] ProjectPermission permission)
+        {
+            permission.ProjectKey = projectKey;
+            return await _projectService.AddProjectPermissionAsync(permission);
+        }
+
+        [HttpPost("{projectKey}/permissions/{username}")]
+        public async Task<ProjectPermission> UpdateProjectPermission([FromRoute] string projectKey, [FromRoute] string username,
+            [FromBody] ProjectPermission permission)
+        {
+            permission.ProjectKey = projectKey;
+            permission.Username = username;
+            return await _projectService.UpdateProjectPermissionAsync(permission);
+        }
+
+        [HttpDelete("{projectKey}/permissions/{username}")]
+        public async Task DeleteProjectPermission([FromRoute] string projectKey, [FromRoute] string username)
+        {
+            await _projectService.DeleteProjectPermissionAsync(projectKey, username);
+        }
     }
 }

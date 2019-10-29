@@ -10,7 +10,7 @@ namespace System.Linq
     {
         public static IQueryable<T> WithCriteria<T>(this IQueryable<T> queryable, Criteria<T> criteria)
         {
-            if (string.IsNullOrEmpty(criteria.OrderBy))
+            if (!string.IsNullOrEmpty(criteria.OrderBy))
             {
                 queryable = queryable.OrderByMemberUsing(criteria.OrderBy,
                     criteria.Direction.Equals(OrderingDirection.Asc) ? "OrderBy" : "OrderByDescending");

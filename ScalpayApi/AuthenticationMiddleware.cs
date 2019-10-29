@@ -34,10 +34,10 @@ namespace Scalpay
             context.Request.Headers.TryGetValue("Authorization", out var tokens);
             if (tokens.Any())
             {
-                IDictionary<string, object> json;
+                IDictionary<string, object> payload;
                 try
                 {
-                    json = new JwtBuilder().WithSecret(configuration["JwtSecret"]).MustVerifySignature().Decode<IDictionary<string, object>>(tokens[0]);
+                    payload = new JwtBuilder().WithSecret(configuration["JwtSecret"]).MustVerifySignature().Decode<IDictionary<string, object>>(tokens[0]);
                 }
                 catch (TokenExpiredException e)
                 {
@@ -53,8 +53,8 @@ namespace Scalpay
                     await context.Response.WriteAsync("Token has invalid signature.");
                     return;
                 }
-
-                var claimsIdentity = new ClaimsIdentity(json.Select(pair => new Claim(pair.Key, pair.Value.ToString())));
+                
+                var claimsIdentity = new ClaimsIdentity(new List<Claim>(){new Claim("username", payload["username"].ToString())});
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
                 context.User = claimsPrincipal;
                 await _next(context);

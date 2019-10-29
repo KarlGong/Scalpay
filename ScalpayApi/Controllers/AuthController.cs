@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using JWT.Algorithms;
@@ -7,6 +8,7 @@ using JWT.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Scalpay.Enums;
 using Scalpay.Services.UserService;
 
 namespace Scalpay.Controllers
@@ -15,7 +17,7 @@ namespace Scalpay.Controllers
     {
         public string Username { get; set; }
         public string Password { get; set; }
-        public DateTime ExpiredTime { get; set; } = DateTime.UtcNow.AddDays(1);
+        public DateTime Expiration { get; set; } = DateTime.UtcNow.AddDays(1);
     }
 
     [Route("api/auth")]
@@ -61,9 +63,13 @@ namespace Scalpay.Controllers
             return Ok(new
             {
                 Token = new JwtBuilder().WithAlgorithm(new HMACSHA256Algorithm()).WithSecret(_configuration["JwtSecret"])
-                    .AddClaim("exp", new DateTimeOffset(ps.ExpiredTime).ToUnixTimeSeconds())
+                    .AddClaim("exp", new DateTimeOffset(ps.Expiration).ToUnixTimeSeconds())
                     .AddClaim("username", users.Data[0].Username)
-                    .Build()
+                    .Build(),
+                Username = users.Data[0].Username,
+                Email = users.Data[0].Email,
+                FullName = users.Data[0].FullName,
+                Role = users.Data[0].Role
             });
         }
     }
