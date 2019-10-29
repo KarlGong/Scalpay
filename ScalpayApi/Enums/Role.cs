@@ -1,6 +1,6 @@
 namespace Scalpay.Enums
 {
-    public enum UserRole
+    public enum Role
     {
         Admin,
         User

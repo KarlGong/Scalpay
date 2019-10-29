@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using Scalpay.Enums;
 using Scalpay.Models;
-using Scalpay.Models.SExpressions;
 using Scalpay.Services;
 using Scalpay.Services.ItemService;
 using Scalpay.Services.ProjectService;
@@ -43,9 +42,9 @@ namespace Scalpay.Controllers
         [HttpPut()]
         public async Task<IActionResult> AddProject([FromBody] Project project)
         {
-            if (!_user.Role.Equals(UserRole.Admin))
+            if (!_user.Role.Equals(Role.Admin))
             {
-                return Forbid("You cannot add project.");
+                return Forbid("You have no permission to add project.");
             }
 
             return Ok(await _projectService.AddProjectAsync(project));
@@ -54,10 +53,10 @@ namespace Scalpay.Controllers
         [HttpPost("{projectKey}")]
         public async Task<IActionResult> UpdateProject([FromRoute] string projectKey, [FromBody] Project project)
         {
-            if (!_user.Role.Equals(UserRole.Admin)
-                && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Privilege.Equals(ProjectPrivilege.Admin))
+            if (!_user.Role.Equals(Role.Admin)
+                && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.Admin))
             {
-                return Forbid("You cannot update this project.");
+                return Forbid("You have no permission to update this project.");
             }
 
             project.ProjectKey = projectKey;
@@ -67,10 +66,10 @@ namespace Scalpay.Controllers
         [HttpGet("{projectKey}/items")]
         public async Task<IActionResult> GetItems([FromRoute] string projectKey, [FromQuery] ItemCriteria criteria)
         {
-            if (!_user.Role.Equals(UserRole.Admin)
-                && (await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Privilege.Equals(ProjectPrivilege.None))
+            if (!_user.Role.Equals(Role.Admin)
+                && (await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.None))
             {
-                return Forbid("You cannot view items of this project.");
+                return Forbid("You have no permission to view items of this project.");
             }
 
             criteria.ProjectKey = projectKey;
@@ -80,10 +79,10 @@ namespace Scalpay.Controllers
         [HttpGet("{projectKey}/items/{itemKey}")]
         public async Task<IActionResult> GetItem([FromRoute] string projectKey, [FromRoute] string itemKey)
         {
-            if (!_user.Role.Equals(UserRole.Admin)
-                && (await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Privilege.Equals(ProjectPrivilege.None))
+            if (!_user.Role.Equals(Role.Admin)
+                && (await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.None))
             {
-                return Forbid("You cannot view item of this project.");
+                return Forbid("You have no permission to view item of this project.");
             }
 
             return Ok(await _itemService.GetItemAsync(itemKey));
@@ -92,10 +91,10 @@ namespace Scalpay.Controllers
         [HttpPut("{projectKey}/items")]
         public async Task<IActionResult> AddItem([FromRoute] string projectKey, [FromBody] Item item)
         {
-            if (!_user.Role.Equals(UserRole.Admin)
-                && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Privilege.Equals(ProjectPrivilege.Admin))
+            if (!_user.Role.Equals(Role.Admin)
+                && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.Admin))
             {
-                return Forbid("You cannot add item for this project.");
+                return Forbid("You have no permission to add item for this project.");
             }
 
             item.ProjectKey = projectKey;
@@ -105,10 +104,10 @@ namespace Scalpay.Controllers
         [HttpPost("{projectKey}/items/{itemKey}")]
         public async Task<IActionResult> UpdateItem([FromRoute] string projectKey, [FromRoute] string itemKey, [FromBody] Item item)
         {
-            if (!_user.Role.Equals(UserRole.Admin)
-                && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Privilege.Equals(ProjectPrivilege.Admin))
+            if (!_user.Role.Equals(Role.Admin)
+                && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.Admin))
             {
-                return Forbid("You cannot edit item for this project.");
+                return Forbid("You have no permission to edit item for this project.");
             }
 
             item.ProjectKey = projectKey;
@@ -119,10 +118,10 @@ namespace Scalpay.Controllers
         [HttpPost("{projectKey}/items/{itemKey}/eval")]
         public async Task<IActionResult> EvalItem([FromRoute] string projectKey, [FromRoute] string itemKey, [FromBody] Dictionary<string, JToken> parameters)
         {
-            if (!_user.Role.Equals(UserRole.Admin)
-                && (await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Privilege.Equals(ProjectPrivilege.None))
+            if (!_user.Role.Equals(Role.Admin)
+                && (await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.None))
             {
-                return Forbid("You cannot eval item of this project.");
+                return Forbid("You have no permission to eval item of this project.");
             }
 
             var item = await _itemService.GetItemAsync(itemKey);
@@ -132,10 +131,10 @@ namespace Scalpay.Controllers
         [HttpGet("{projectKey}/permissions")]
         public async Task<IActionResult> GetProjectPermissions([FromRoute] string projectKey)
         {
-            if (!_user.Role.Equals(UserRole.Admin)
-                && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Privilege.Equals(ProjectPrivilege.Admin))
+            if (!_user.Role.Equals(Role.Admin)
+                && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.Admin))
             {
-                return Forbid("You cannot view permissions for this project.");
+                return Forbid("You have no permission to view permissions for this project.");
             }
 
             return Ok(await _projectService.GetProjectPermissionsAsync(projectKey));
@@ -144,11 +143,11 @@ namespace Scalpay.Controllers
         [HttpGet("{projectKey}/permissions/{username}")]
         public async Task<IActionResult> GetProjectPermission([FromRoute] string projectKey, [FromRoute] string username)
         {
-            if (!_user.Role.Equals(UserRole.Admin)
-                && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Privilege.Equals(ProjectPrivilege.Admin)
+            if (!_user.Role.Equals(Role.Admin)
+                && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.Admin)
                 && _user.Username != username)
             {
-                return Forbid("You cannot view permission for this project.");
+                return Forbid("You have no permission to view permission for this project.");
             }
 
             return Ok(await _projectService.GetProjectPermissionAsync(projectKey, username));
@@ -157,10 +156,10 @@ namespace Scalpay.Controllers
         [HttpPut("{projectKey}/permissions")]
         public async Task<IActionResult> AddProjectPermissions([FromRoute] string projectKey, [FromBody] ProjectPermission permission)
         {
-            if (!_user.Role.Equals(UserRole.Admin)
-                && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Privilege.Equals(ProjectPrivilege.Admin))
+            if (!_user.Role.Equals(Role.Admin)
+                && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.Admin))
             {
-                return Forbid("You cannot add permission for this project.");
+                return Forbid("You have no permission to add permission for this project.");
             }
 
             permission.ProjectKey = projectKey;
@@ -171,10 +170,10 @@ namespace Scalpay.Controllers
         public async Task<IActionResult> UpdateProjectPermission([FromRoute] string projectKey, [FromRoute] string username,
             [FromBody] ProjectPermission permission)
         {
-            if (!_user.Role.Equals(UserRole.Admin)
-                && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Privilege.Equals(ProjectPrivilege.Admin))
+            if (!_user.Role.Equals(Role.Admin)
+                && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.Admin))
             {
-                return Forbid("You cannot edit permission for this project.");
+                return Forbid("You have no permission to edit permission for this project.");
             }
 
             permission.ProjectKey = projectKey;
@@ -185,10 +184,10 @@ namespace Scalpay.Controllers
         [HttpDelete("{projectKey}/permissions/{username}")]
         public async Task<IActionResult> DeleteProjectPermission([FromRoute] string projectKey, [FromRoute] string username)
         {
-            if (!_user.Role.Equals(UserRole.Admin)
-                && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Privilege.Equals(ProjectPrivilege.Admin))
+            if (!_user.Role.Equals(Role.Admin)
+                && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.Admin))
             {
-                return Forbid("You cannot delete permission for this project.");
+                return Forbid("You have no permission to delete permission for this project.");
             }
 
             await _projectService.DeleteProjectPermissionAsync(projectKey, username);

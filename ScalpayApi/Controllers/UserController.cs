@@ -48,9 +48,9 @@ namespace Scalpay.Controllers
         [HttpPut()]
         public async Task<IActionResult> AddUser([FromBody] User user)
         {
-            if (!_user.Role.Equals(UserRole.Admin))
+            if (!_user.Role.Equals(Role.Admin))
             {
-                return Forbid("You cannot add user.");
+                return Forbid("You have no permission to add user.");
             }
 
             return Ok(await _service.AddUserAsync(user));
@@ -59,9 +59,9 @@ namespace Scalpay.Controllers
         [HttpPost("{username}")]
         public async Task<IActionResult> UpdateUser([FromRoute] string username, [FromBody] User user)
         {
-            if (!_user.Role.Equals(UserRole.Admin) && _user.Username != username)
+            if (!_user.Role.Equals(Role.Admin) && _user.Username != username)
             {
-                return Forbid("You cannot edit user.");
+                return Forbid("You have no permission to edit user.");
             }
 
             user.Username = username;

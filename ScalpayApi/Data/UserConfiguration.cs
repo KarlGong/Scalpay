@@ -21,7 +21,7 @@ namespace Scalpay.Data
             
             builder.Property(i => i.Role).HasConversion(
                     v => v.ToString(),
-                    v => Enum.Parse<UserRole>(v))
+                    v => Enum.Parse<Role>(v))
                 .IsRequired();
 
             builder.Property(u => u.InsertTime).IsRequired();

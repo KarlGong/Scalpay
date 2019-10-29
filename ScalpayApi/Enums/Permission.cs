@@ -1,6 +1,6 @@
 namespace Scalpay.Enums
 {
-    public enum ProjectPrivilege
+    public enum Permission
     {
         None,
         Read,

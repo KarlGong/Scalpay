@@ -11,7 +11,7 @@ namespace Scalpay.Models
         
         public string ProjectKey { get; set; }
         
-        public ProjectPrivilege Privilege { get; set; }
+        public Permission Permission { get; set; }
         
         public DateTime InsertTime { get; set; }
         

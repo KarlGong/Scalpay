@@ -107,7 +107,7 @@ namespace Scalpay.Services.ProjectService
                     {
                         ProjectKey = projectKey,
                         Username = username,
-                        Privilege = ProjectPrivilege.None
+                        Permission = Permission.None
                     };
                 }
 
@@ -135,7 +135,7 @@ namespace Scalpay.Services.ProjectService
                 return projectPermission;
             }
 
-            oldPermission.Privilege = projectPermission.Privilege;
+            oldPermission.Permission = projectPermission.Permission;
             oldPermission.UpdateTime = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
@@ -158,7 +158,7 @@ namespace Scalpay.Services.ProjectService
                 return projectPermission;
             }
 
-            oldPermission.Privilege = projectPermission.Privilege;
+            oldPermission.Permission = projectPermission.Permission;
             oldPermission.UpdateTime = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();

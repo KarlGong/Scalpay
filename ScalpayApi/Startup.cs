@@ -131,7 +131,7 @@ namespace Scalpay
                     Email = "admin@scalpay.com",
                     FullName = "Admin",
                     Password = "1",
-                    Role = UserRole.Admin,
+                    Role = Role.Admin,
                     InsertTime = DateTime.UtcNow,
                     UpdateTime = DateTime.UtcNow
                 });

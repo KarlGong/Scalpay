@@ -16,7 +16,7 @@ namespace Scalpay.Models
 
         public string FullName { get; set; }
         
-        public UserRole Role { get; set; }
+        public Role Role { get; set; }
 
         public DateTime InsertTime { get; set; }
 
