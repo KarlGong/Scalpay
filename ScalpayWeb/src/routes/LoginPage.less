@@ -1,19 +1,22 @@
 .login-page {
   display: flex;
-  //justify-content: center;
-  align-items: center;
-
-  .ant-input-affix-wrapper .ant-input {
-    min-height: auto !important;
-  }
+  justify-content: center;
+  flex: auto;
 
   .login-form {
-    margin-top: 160px;
+    margin: 80px 0;
     width: 380px;
-    height: 280px;
-    padding: 40px;
-    border: 1px #dadada solid;
-    border-radius: 10px;
+    height: 310px;
+    padding: 20px 40px;
+    border-radius: 5px;
+    box-shadow: 0 1px 1px rgba(9, 30, 66, 0.13), 0 0 0 1px rgba(9, 30, 66, 0.08);
+
+    .title {
+      margin-top: 0;
+      margin-bottom: 25px;
+      color: rgba(0, 0, 0, 0.85);
+      font-weight: 500;
+    }
 
     .input-icon {
       color: rgba(0, 0, 0, .25)

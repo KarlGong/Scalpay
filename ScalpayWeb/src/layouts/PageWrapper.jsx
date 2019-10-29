@@ -13,13 +13,16 @@ export default class PageWrapper extends Component {
     };
 
     render = () => {
-        return <Layout className={cs("page-wrapper", this.props.className)} style={this.props.style}>
-            {this.props.breadcrumb ?
+        return <Layout.Content className="page-wrapper">
+            {
                 <div className="breadcrumb">
                     {this.props.breadcrumb}
+                </div>}
+            <div className="content">
+                <div className={this.props.className} style={this.props.style}>
+                    {this.props.children}
                 </div>
-                : null}
-            {this.props.children}
-        </Layout>
+            </div>
+        </Layout.Content>
     }
 }

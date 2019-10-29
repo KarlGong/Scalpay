@@ -5,7 +5,7 @@ class Auth {
     @observable user = null;
 
     constructor() {
-        this.user = JSON.parse(localStorage.getItem("Scalpay-User"));
+        this.user = JSON.parse(localStorage.getItem("user"));
     }
 
     login = (username, password) => {
@@ -13,19 +13,15 @@ class Auth {
             username,
             password
         }).then(response => {
-            this.user = response.data.data;
-            localStorage.setItem("Scalpay-User", JSON.stringify(this.user));
+            this.user = response.data;
+            localStorage.setItem("user", JSON.stringify(this.user));
         });
     };
 
     logout = () => {
         this.user = null;
-        localStorage.removeItem("Scalpay-User");
+        localStorage.removeItem("user");
     };
-
-    hasPrivileges = (...privileges) => {
-        return this.user && privileges.every(ele => this.user.privileges.indexOf(ele) > -1);
-    }
 }
 
 export default new Auth();

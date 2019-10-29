@@ -21,6 +21,9 @@ export default class LoginPage extends Component {
     render = () => {
         return <PageWrapper className="login-page">
             <Form className="login-form">
+                <div className="title">
+                    Log in
+                </div>
                 <Form.Item validateStatus={this.validator.getResult("username").status}
                            help={this.validator.getResult("username").message}>
                     <Input prefix={<Icon type="user" className="input-icon"/>} placeholder="username"
@@ -40,7 +43,7 @@ export default class LoginPage extends Component {
                            onKeyUp={e => e.keyCode === 13 && this.onSubmit()}/>
                 </Form.Item>
                 <Form.Item>
-                    <Checkbox checked={true}>Remember me</Checkbox>
+                    <Checkbox>Remember me</Checkbox>
                     <a className="forgot" href="">Forgot password</a>
                     <Button type="primary" loading={this.loading} className="login-button"
                             onClick={this.onSubmit}>

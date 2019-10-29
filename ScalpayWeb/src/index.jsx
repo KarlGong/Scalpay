@@ -11,12 +11,11 @@ import ProjectsPage from "~/routes/projects/ProjectsPage";
 import ViewUserPage from "~/routes/users/ViewUserPage";
 import UsersPage from "~/routes/users/UsersPage";
 import LoginPage from "~/routes/LoginPage";
-import HomePage from "~/routes/HomePage";
 import global from "./global";
+
 import "./index.less";
 import "~/assets/fonts/antd-iconfont/iconfont.css";
 import "~/assets/fonts/extra-iconfont/iconfont.css";
-import "~/assets/fonts/extra-iconfont/iconfont.ttf";
 
 const checkAuth = (nextState, replace) => {
     if (nextState.location.pathname === "/login" && auth.user) {
@@ -37,18 +36,11 @@ render(
     <AppContainer>
         <Router history={global.history}>
             <Route path="/" component={App} onEnter={checkAuth}>
-                <IndexRedirect to="home"/>
-                <Route path="home" component={HomePage}/>
+                <IndexRedirect to="projects"/>
                 <Route path="login" component={LoginPage}/>
-                <Route path="items">
-                    <IndexRoute component={ItemsPage}/>
-                    <Route path=":itemKey" component={ViewItemPage}/>
-                    <Route path=":itemKey/v:itemVersion" component={ViewItemPage}/>
-                </Route>
                 <Route path="projects">
                     <IndexRoute component={ProjectsPage}/>
                     <Route path=":projectKey" component={ViewProjectPage}/>
-                    <Route path=":projectKey/v:projectVersion" component={ViewProjectPage}/>
                 </Route>
                 <Route path="users">
                     <IndexRoute component={UsersPage}/>

@@ -16,98 +16,75 @@ import "./SHeader.less";
 @observer
 export default class SHeader extends Component {
     @observable searchLoading = false;
-    @observable currentPath = global.history.getCurrentLocation().pathname;
-
-    componentWillReceiveProps = (props) => {
-        let newPath = global.history.getCurrentLocation().pathname;
-        if (this.currentPath !== newPath) {
-            this.currentPath = newPath;
-        }
-    };
 
     render = () => {
         return <Layout.Header className="header">
-            <div className="wrapper">
-                <div className="left">
-                    <div className="logo item">
-                        <Link to="/"><img src={logo}/></Link>
-                    </div>
-                    <div className={cs("item", "menu", {"selected": this.currentPath.startsWith("/home")})}
-                         onClick={() => global.history.push("/home")}>
-                        <span>Home</span>
-                    </div>
-                    <div className={cs("item", "menu", {"selected": this.currentPath.startsWith("/projects")})}
-                         onClick={() => global.history.push("/projects")}>
-                        <span>Projects</span>
-                    </div>
-                    <div className={cs("item", "menu", {"selected": this.currentPath.startsWith("/items")})}
-                         onClick={() => global.history.push("/items")}>
-                        <span>Items</span>
-                    </div>
-                    {auth.hasPrivileges(Privilege.itemManage) ?
-                        <div className="item">
-                            <Button type="primary" onClick={() => itemModal.add()}>Add</Button>
-                        </div>
-                        : null
-                    }
+            <div className="left">
+                <div className="logo">
+                    <Link to="/"><img src={logo}/></Link>
                 </div>
+                {
+                    auth.user &&
+                    <Menu
+                        theme="dark"
+                        mode="horizontal"
+                        style={{lineHeight: "64px"}}
+                    >
+                        <Menu.Item key="1" onClick={() => global.history.push("/projects")}>Projects</Menu.Item>
+                    </Menu>}
+            </div>
+            {
+                auth.user &&
                 <div className="right">
-                    <span className="item">
-                        <Input
-                            placeholder="Search Item"
-                            suffix={this.searchLoading ? <Spin size="small"/> : <Icon type="search"/>}
-                            onPressEnter={e => {
-                                let value = e.target.value;
-                                this.searchLoading = true;
-                                axios.get("/api/items", {
-                                    params: {itemKey: value}
-                                })
-                                    .then(response => {
-                                        if (response.data.totalCount === 1) {
-                                            global.history.push("/items/" + value);
-                                        } else {
-                                            global.history.push("/items?searchText=" + value)
-                                        }
-                                    }).finally(() => this.searchLoading = false)
-                            }}
-                        />
-                    </span>
-                    {auth.hasPrivileges(Privilege.userManage) ?
-                        <Dropdown overlay={<Menu>
-                            <Menu.Item key="0">
-                                <Link to="/users">Manage Users</Link>
-                            </Menu.Item>
-                        </Menu>} trigger={["click"]} placement="bottomRight">
-                            <span className="item dropdown">
-                                <Icon type="setting" style={{fontSize: "18px"}}/>
-                            </span>
-                        </Dropdown>
-                        : null
-                    }
-                    {auth.user ?
-                        <Dropdown overlay={<Menu>
-                            <Menu.Item key="0">
-                                <Link to={"/users/" + auth.user.username}>My Profile</Link>
-                            </Menu.Item>
-                            <Menu.Item key="1">
-                                <span onClick={e => updatePasswordModal.open(auth.user.username)}>Update Password</span>
-                            </Menu.Item>
-                            <Menu.Divider/>
-                            <Menu.Item key="2">
-                                <a onClick={() => {
-                                    auth.logout();
-                                    global.history.push("/login");
-                                }}>Logout</a>
-                            </Menu.Item>
-                        </Menu>} trigger={["click"]} placement="bottomRight">
+                    <Input
+                        placeholder="Search Item"
+                        suffix={this.searchLoading ? <Spin size="small"/> : <Icon type="search"/>}
+                        onPressEnter={e => {
+                            let value = e.target.value;
+                            this.searchLoading = true;
+                            axios.get("/api/items", {
+                                params: {itemKey: value}
+                            })
+                                .then(response => {
+                                    if (response.data.totalCount === 1) {
+                                        global.history.push("/items/" + value);
+                                    } else {
+                                        global.history.push("/items?searchText=" + value)
+                                    }
+                                }).finally(() => this.searchLoading = false)
+                        }}
+                    />
+                    <Dropdown overlay={<Menu>
+                        <Menu.Item key="0">
+                            <Link to="/users">Manage Users</Link>
+                        </Menu.Item>
+                    </Menu>} trigger={["click"]} placement="bottomRight">
+                        <span className="dropdown">
+                            <Icon type="setting" style={{fontSize: "18px"}}/>
+                        </span>
+                    </Dropdown>
+                    <Dropdown overlay={<Menu>
+                        <Menu.Item key="0">
+                            <Link to={"/users/" + auth.user.username}>My Profile</Link>
+                        </Menu.Item>
+                        <Menu.Item key="1">
+                            <span onClick={e => updatePasswordModal.open(auth.user.username)}>Update Password</span>
+                        </Menu.Item>
+                        <Menu.Divider/>
+                        <Menu.Item key="2">
+                            <a onClick={() => {
+                                auth.logout();
+                                global.history.push("/login");
+                            }}>Logout</a>
+                        </Menu.Item>
+                    </Menu>} trigger={["click"]} placement="bottomRight">
                         <span className="item dropdown">
                             <Avatar size="small" style={{backgroundColor: "#87d068"}} icon="user"/>
                             <span style={{marginLeft: "5px"}}>{auth.user.fullName}</span>
                         </span>
-                        </Dropdown>
-                        : null}
+                    </Dropdown>
                 </div>
-            </div>
+            }
         </Layout.Header>
     }
 }
