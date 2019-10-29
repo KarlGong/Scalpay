@@ -44,13 +44,18 @@ namespace Scalpay.Services.ItemService
 
         public async Task<Item> GetItemAsync(string itemKey)
         {
-            var item = await _context.Items.AsNoTracking().Include(i => i.Rules).FirstOrDefaultAsync(i => i.ItemKey == itemKey);
-            if (item == null)
+            return await _cache.GetOrCreateAsync($"item-{itemKey}", async entry =>
             {
-                throw new NotFoundException($"The item {itemKey} cannot be found.");
-            }
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
+                
+                var item = await _context.Items.AsNoTracking().Include(i => i.Rules).FirstOrDefaultAsync(i => i.ItemKey == itemKey);
+                if (item == null)
+                {
+                    throw new NotFoundException($"The item {itemKey} cannot be found.");
+                }
 
-            return item;
+                return item;
+            });
         }
 
         public async Task<ListResults<Item>> GetItemsAsync(ItemCriteria criteria)
@@ -97,6 +102,8 @@ namespace Scalpay.Services.ItemService
             oldItem.UpdateTime = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
+            
+            _cache.Remove($"item-{item.ItemKey}");
 
             return oldItem;
         }

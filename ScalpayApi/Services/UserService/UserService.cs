@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Scalpay.Data;
 using Scalpay.Exceptions;
 using Scalpay.Models;
@@ -25,22 +26,29 @@ namespace Scalpay.Services.UserService
         private readonly ScalpayDbContext _context;
 
         private readonly IMapper _mapper;
+        private readonly IMemoryCache _cache;
 
-        public UserService(ScalpayDbContext context, IMapper mapper)
+        public UserService(ScalpayDbContext context, IMapper mapper, IMemoryCache cache)
         {
             _context = context;
             _mapper = mapper;
+            _cache = cache;
         }
 
         public async Task<User> GetUserAsync(string username)
         {
-            var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Username == username);
-            if (user == null)
+            return await _cache.GetOrCreateAsync($"user-{username}", async entry =>
             {
-                throw new NotFoundException($"The user {username} cannot be found.");
-            }
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
+                
+                var user = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Username == username);
+                if (user == null)
+                {
+                    throw new NotFoundException($"The user {username} cannot be found.");
+                }
 
-            return user;
+                return user;
+            });
         }
 
         public async Task<ListResults<User>> GetUsersAsync(UserCriteria criteria)
@@ -82,6 +90,8 @@ namespace Scalpay.Services.UserService
             oldUser.UpdateTime = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
+            
+            _cache.Remove($"user-{user.Username}");
 
             return oldUser;
         }
