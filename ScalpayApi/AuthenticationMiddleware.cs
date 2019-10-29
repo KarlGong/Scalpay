@@ -43,14 +43,14 @@ namespace Scalpay
                 {
                     context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
                     context.Response.ContentType = "text/plain";
-                    await context.Response.WriteAsync("Token has expired.");
+                    await context.Response.WriteAsync("Authorization token has expired.");
                     return;
                 }
                 catch (SignatureVerificationException e)
                 {
                     context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
                     context.Response.ContentType = "text/plain";
-                    await context.Response.WriteAsync("Token has invalid signature.");
+                    await context.Response.WriteAsync("Authorization token has invalid signature.");
                     return;
                 }
                 
@@ -63,7 +63,7 @@ namespace Scalpay
             {
                 context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
                 context.Response.ContentType = "text/plain";
-                await context.Response.WriteAsync("No token found.");
+                await context.Response.WriteAsync("No authorization token found.");
             }
         }
     }

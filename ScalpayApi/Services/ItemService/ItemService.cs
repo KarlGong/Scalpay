@@ -91,6 +91,8 @@ namespace Scalpay.Services.ItemService
 
         public async Task<Item> UpdateItemAsync(Item item)
         {
+            _cache.Remove($"item-{item.ItemKey}");
+            
             var oldItem = await _context.Items.Include(i => i.Rules).FirstOrDefaultAsync(i => i.ItemKey == item.ItemKey);
 
             if (oldItem == null)
@@ -102,8 +104,6 @@ namespace Scalpay.Services.ItemService
             oldItem.UpdateTime = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
-            
-            _cache.Remove($"item-{item.ItemKey}");
 
             return oldItem;
         }

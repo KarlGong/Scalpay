@@ -80,6 +80,8 @@ namespace Scalpay.Services.UserService
 
         public async Task<User> UpdateUserAsync(User user)
         {
+            _cache.Remove($"user-{user.Username}");
+            
             var oldUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == user.Username);
             if (oldUser == null)
             {
@@ -91,8 +93,6 @@ namespace Scalpay.Services.UserService
 
             await _context.SaveChangesAsync();
             
-            _cache.Remove($"user-{user.Username}");
-
             return oldUser;
         }
     }

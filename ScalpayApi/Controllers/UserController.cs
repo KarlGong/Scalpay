@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Scalpay.Enums;
 using Scalpay.Models;
 using Scalpay.Services;
 using Scalpay.Services.UserService;
@@ -10,11 +13,13 @@ namespace Scalpay.Controllers
     [Route("api/users")]
     public class UserController : Controller
     {
+        private readonly User _user;
         private readonly IUserService _service;
         private readonly IMapper _mapper;
 
-        public UserController(IUserService service, IMapper mapper)
+        public UserController(IHttpContextAccessor accessor, IUserService service, IMapper mapper)
         {
+            _user = service.GetUserAsync(accessor.HttpContext.User.FindFirstValue("username")).Result;
             _service = service;
             _mapper = mapper;
         }
@@ -41,16 +46,26 @@ namespace Scalpay.Controllers
         }
 
         [HttpPut()]
-        public async Task<User> AddUser([FromBody] User user)
+        public async Task<IActionResult> AddUser([FromBody] User user)
         {
-            return await _service.AddUserAsync(user);
+            if (!_user.Role.Equals(UserRole.Admin))
+            {
+                return Forbid("You cannot add user.");
+            }
+
+            return Ok(await _service.AddUserAsync(user));
         }
 
         [HttpPost("{username}")]
-        public async Task<User> UpdateUser([FromRoute] string username, [FromBody] User user)
+        public async Task<IActionResult> UpdateUser([FromRoute] string username, [FromBody] User user)
         {
+            if (!_user.Role.Equals(UserRole.Admin) && _user.Username != username)
+            {
+                return Forbid("You cannot edit user.");
+            }
+
             user.Username = username;
-            return await _service.UpdateUserAsync(user);
+            return Ok(await _service.UpdateUserAsync(user));
         }
     }
 }
