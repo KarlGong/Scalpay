@@ -1,9 +1,8 @@
 import moment from "moment";
 
-export const Privilege = {
-    projectManage: "projectManage",
-    itemManage: "itemManage",
-    userManage: "userManage"
+export const Role = {
+    admin: "admin",
+    user: "user"
 };
 
 export const ItemMode = {

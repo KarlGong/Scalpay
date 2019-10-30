@@ -12,27 +12,34 @@
 
   .right {
     display: flex;
-  }
+    align-items: center;
 
+    .user-dropdown {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      padding: 0 10px;
+      margin-left: 10px;
+      transition: color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), background 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 
-  .dropdown {
-    cursor: pointer;
 
     &:hover {
-      background-color: #e6f7ff;
+        background-color: #595959;
+        .full-name {
+          color: #fff;
+        }
+      }
+
+      .full-name {
+        margin-left: 5px;
+        color: rgba(255, 255, 255, 0.65);
+      }
     }
   }
 
-  .menu {
-    cursor: pointer;
-
+  .ant-menu-item {
     &:hover {
-      color: #1890ff;
-      background-color: #e6f7ff;
-    }
-
-    &.selected {
-      background-color: #e6f7ff;
+      background-color: #595959;
     }
   }
 }

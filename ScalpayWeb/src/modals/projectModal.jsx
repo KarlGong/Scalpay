@@ -6,12 +6,13 @@ import {observable, untracked} from "mobx";
 import axios from "axios";
 import Validator from "~/utils/Validator";
 import ProjectInfo from "~/components/ProjectInfo";
+import global from "~/global";
 
 function add(onSuccess) {
     const target = document.createElement("div");
     document.body.appendChild(target);
 
-    render(<EditProjectModal addMode onSuccess={onSuccess} afterClose={() => {
+    render(<ProjectModal addMode onSuccess={onSuccess} afterClose={() => {
         unmountComponentAtNode(target);
         target.remove()
     }}/>, target);
@@ -25,7 +26,7 @@ function edit(project, onSuccess) {
 
     axios.get("/api/projects/" + project.projectKey)
         .then(res =>
-            render(<EditProjectModal project={res.data.data} onSuccess={onSuccess} afterClose={() => {
+            render(<ProjectModal project={res.data.data} onSuccess={onSuccess} afterClose={() => {
                 unmountComponentAtNode(target);
                 target.remove()
             }}/>, target))
@@ -34,7 +35,7 @@ function edit(project, onSuccess) {
 }
 
 @observer
-class EditProjectModal extends Component {
+class ProjectModal extends Component {
     static defaultProps = {
         project: {
             projectKey: null,
@@ -122,12 +123,13 @@ class EditProjectModal extends Component {
                     this.loading = true;
                     axios.put("/api/projects", this.project)
                         .then(res => {
-                            let project = res.data.data;
+                            let project = res.data;
                             this.loading = false;
                             this.visible = false;
-                            message.success(<span>
-                        Project <ProjectInfo projectKey={project.projectKey}/> is added successfully!
-                    </span>);
+                            message.success(<span>Project&nbsp;
+                                <a onClick={() => global.history.push("/projects/" + project.projectKey)}>
+                                    {project.name}
+                                </a> is created successfully!</span>);
                             this.props.onSuccess(project);
                         }, () => this.loading = false);
                 });
@@ -138,12 +140,13 @@ class EditProjectModal extends Component {
                     this.loading = true;
                     axios.post("/api/projects/" + this.project.projectKey, this.project)
                         .then(res => {
-                            let project = res.data.data;
+                            let project = res.data;
                             this.loading = false;
                             this.visible = false;
-                            message.success(<span>
-                        Project <ProjectInfo projectKey={project.projectKey}/> is updated successfully!
-                    </span>);
+                            message.success(<span>Project&nbsp;
+                                <a onClick={() => global.history.push("/projects/" + project.projectKey)}>
+                                    {project.name}
+                                </a> is updated successfully!</span>);
                             this.props.onSuccess(project);
                         }, () => this.loading = false);
                 });

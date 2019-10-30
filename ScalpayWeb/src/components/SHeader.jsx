@@ -56,15 +56,6 @@ export default class SHeader extends Component {
                     />
                     <Dropdown overlay={<Menu>
                         <Menu.Item key="0">
-                            <Link to="/users">Manage Users</Link>
-                        </Menu.Item>
-                    </Menu>} trigger={["click"]} placement="bottomRight">
-                        <span className="dropdown">
-                            <Icon type="setting" style={{fontSize: "18px"}}/>
-                        </span>
-                    </Dropdown>
-                    <Dropdown overlay={<Menu>
-                        <Menu.Item key="0">
                             <Link to={"/users/" + auth.user.username}>My Profile</Link>
                         </Menu.Item>
                         <Menu.Item key="1">
@@ -78,9 +69,9 @@ export default class SHeader extends Component {
                             }}>Logout</a>
                         </Menu.Item>
                     </Menu>} trigger={["click"]} placement="bottomRight">
-                        <span className="item dropdown">
+                        <span className="user-dropdown">
                             <Avatar size="small" style={{backgroundColor: "#87d068"}} icon="user"/>
-                            <span style={{marginLeft: "5px"}}>{auth.user.fullName}</span>
+                            <span className="full-name">{auth.user.fullName}</span>
                         </span>
                     </Dropdown>
                 </div>

@@ -11,7 +11,7 @@ import global from "~/global";
 @observer
 export default class LoginPage extends Component {
 
-    user = {username: null, password: null};
+    user = {username: null, password: null, isKeepLogin: null};
     validator = new Validator(this.user, {
         username: {required: true},
         password: {required: true}
@@ -43,8 +43,7 @@ export default class LoginPage extends Component {
                            onKeyUp={e => e.keyCode === 13 && this.onSubmit()}/>
                 </Form.Item>
                 <Form.Item>
-                    <Checkbox>Remember me</Checkbox>
-                    <a className="forgot" href="">Forgot password</a>
+                    <Checkbox defaultChecked onChange={e => this.user.isKeepLogin = e.target.value}>Keep me logged in</Checkbox>
                     <Button type="primary" loading={this.loading} className="login-button"
                             onClick={this.onSubmit}>
                         Log in
@@ -57,7 +56,7 @@ export default class LoginPage extends Component {
     onSubmit = () => {
         this.validator.validateAll().then(() => {
             this.loading = true;
-            auth.login(this.user.username, this.user.password)
+            auth.login(this.user.username, this.user.password, this.user.isKeepLogin)
                 .then(() => global.history.push(this.props.router.location.query.returnUrl || "/"))
                 .finally(() => this.loading = false);
         });

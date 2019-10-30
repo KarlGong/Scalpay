@@ -18,7 +18,7 @@ export default class PageWrapper extends Component {
                 <div className="breadcrumb">
                     {this.props.breadcrumb}
                 </div>}
-            <div className={cs("content", this.props.className)} style={this.props.style}>
+            <div className={cs("page", this.props.className)} style={this.props.style}>
                 {this.props.children}
             </div>
         </Layout.Content>
