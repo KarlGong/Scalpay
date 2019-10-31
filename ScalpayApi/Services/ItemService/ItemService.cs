@@ -74,7 +74,7 @@ namespace Scalpay.Services.ItemService
                 throw new ConflictException($"Item with key {item.ItemKey} is already existing.");
             }
 
-            item.Rules.ForEach(rule =>
+            item.Rules?.ForEach(rule =>
             {
                 rule.InsertTime = DateTime.UtcNow;
                 rule.UpdateTime = DateTime.UtcNow;
@@ -112,21 +112,27 @@ namespace Scalpay.Services.ItemService
         {
             var variables = new Dictionary<string, SData>();
 
-            foreach (var pair in parameters ?? new Dictionary<string, JToken>())
+            if (parameters != null)
             {
-                var parameterInfo = item.ParameterInfos?.SingleOrDefault(p => p.Name == pair.Key);
+                foreach (var pair in parameters)
+                {
+                    var parameterInfo = item.ParameterInfos?.SingleOrDefault(p => p.Name == pair.Key);
 
-                if (parameterInfo == null)
-                    continue; // data type not found, since parameter is not declared in parameter list.
+                    if (parameterInfo == null)
+                        continue; // data type not found, since parameter is not declared in parameter list.
 
-                variables.Add(pair.Key, await _expService.ConvertToSDataAsync(pair.Value, parameterInfo.DataType));
+                    variables.Add(pair.Key, await _expService.ConvertToSDataAsync(pair.Value, parameterInfo.DataType));
+                }
             }
 
-            foreach (var rule in item.Rules.OrderBy(r => r.Order))
+            if (item.Rules != null)
             {
-                if (((SBool) await _expService.EvalExpressionAsync(rule.Condition, variables)).Inner)
+                foreach (var rule in item.Rules.OrderBy(r => r.Order))
                 {
-                    return await _expService.EvalExpressionAsync(rule.Result, variables);
+                    if (((SBool) await _expService.EvalExpressionAsync(rule.Condition, variables)).Inner)
+                    {
+                        return await _expService.EvalExpressionAsync(rule.Result, variables);
+                    }
                 }
             }
 

@@ -6,7 +6,7 @@ import auth from "~/utils/auth";
 import App from "~/routes/App";
 import ItemsPage from "~/routes/items/ItemsPage";
 import ViewItemPage from "~/routes/items/ViewItemPage";
-import ViewProjectPage from "~/routes/projects/ViewProjectPage";
+import ProjectPage from "~/routes/projects/ProjectPage";
 import ProjectsPage from "~/routes/projects/ProjectsPage";
 import ViewUserPage from "~/routes/users/ViewUserPage";
 import UsersPage from "~/routes/users/UsersPage";
@@ -40,7 +40,7 @@ render(
                 <Route path="login" component={LoginPage}/>
                 <Route path="projects">
                     <IndexRoute component={ProjectsPage}/>
-                    <Route path=":projectKey" component={ViewProjectPage}/>
+                    <Route path=":projectKey" component={ProjectPage}/>
                 </Route>
                 <Route path="users">
                     <IndexRoute component={UsersPage}/>

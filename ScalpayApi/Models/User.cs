@@ -15,11 +15,13 @@ namespace Scalpay.Models
         public string Password { get; set; }
 
         public string FullName { get; set; }
-        
+
         public Role Role { get; set; }
 
         public DateTime InsertTime { get; set; }
 
         public DateTime UpdateTime { get; set; }
+
+        public List<ProjectPermission> ProjectPermissions { get; set; }
     }
 }

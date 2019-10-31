@@ -19,7 +19,7 @@ namespace Scalpay.Data
 
             builder.Property(u => u.FullName).IsRequired();
             
-            builder.Property(i => i.Role).HasConversion(
+            builder.Property(u => u.Role).HasConversion(
                     v => v.ToString(),
                     v => Enum.Parse<Role>(v))
                 .IsRequired();
@@ -27,6 +27,8 @@ namespace Scalpay.Data
             builder.Property(u => u.InsertTime).IsRequired();
 
             builder.Property(u => u.UpdateTime).IsRequired();
+
+            builder.HasMany(u => u.ProjectPermissions).WithOne(pp => pp.User).HasForeignKey(pp => pp.Username);
         }
     }
 }

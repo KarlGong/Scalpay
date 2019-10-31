@@ -14,11 +14,11 @@ export default class Block extends Component {
         loading: false
     };
 
-    @observable loading = this.props.loading;
+    @observable loading = this.props.isLoadingItems;
 
     componentWillReceiveProps = (props) => {
-        if (this.props.loading !== props.loading) {
-            this.loading = props.loading;
+        if (this.props.isLoadingItems !== props.isLoadingItems) {
+            this.loading = props.isLoadingItems;
         }
     };
 

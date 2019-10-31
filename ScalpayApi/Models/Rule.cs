@@ -9,10 +9,6 @@ namespace Scalpay.Models
     {
         public int Id { get; set; }
 
-        public string ItemKey { get; set; }
-
-        public Item Item { get; set; }
-
         public SExpression Condition { get; set; }
 
         public SExpression Result { get; set; }
@@ -22,5 +18,9 @@ namespace Scalpay.Models
         public DateTime InsertTime { get; set; }
 
         public DateTime UpdateTime { get; set; }
+        
+        public string ItemKey { get; set; }
+
+        public Item Item { get; set; }
     }
 }

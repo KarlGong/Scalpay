@@ -13,6 +13,12 @@ namespace Scalpay.Data
             builder.Property(p => p.InsertTime).IsRequired();
 
             builder.Property(p => p.UpdateTime).IsRequired();
+
+            builder.Property(p => p.ProjectKey).IsRequired();
+            builder.HasIndex(p => p.ProjectKey);
+
+            builder.Property(p => p.ProjectKey).IsRequired();
+            builder.HasIndex(p => p.Username);
         }
     }
 }

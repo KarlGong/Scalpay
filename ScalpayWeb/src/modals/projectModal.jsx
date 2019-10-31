@@ -1,4 +1,4 @@
-import {Form, Input, message, Modal} from "antd";
+import {Form, Input, message, Drawer, Button} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {render, unmountComponentAtNode} from "react-dom";
@@ -31,7 +31,6 @@ function edit(project, onSuccess) {
                 target.remove()
             }}/>, target))
         .finally(() => hide());
-
 }
 
 @observer
@@ -39,10 +38,7 @@ class ProjectModal extends Component {
     static defaultProps = {
         project: {
             projectKey: null,
-            name: null,
-            description: null,
-            version: null,
-            isLatest: false
+            description: null
         },
         addMode: false,
         onSuccess: (project) => {},
@@ -60,23 +56,19 @@ class ProjectModal extends Component {
                 errors.push(new Error("project key can only contain alphanumeric characters, - and _"))
             }
             callback(errors);
-        },
-        name: {required: true}
+        }
     });
     @observable loading = false;
     @observable visible = true;
 
     render = () => {
-        return <Modal
-            title={this.props.addMode ? "Add Project" : "Edit Project"}
-            okText={this.props.addMode ? "Add Project" : "Update Project"}
-            cancelText="Cancel"
+        return <Drawer
+            title={this.props.addMode ? "Create Project" : "Edit Project"}
             visible={this.visible}
+            width={500}
             maskClosable={false}
-            confirmLoading={this.loading}
-            onOk={this.handleOk}
-            onCancel={this.handleCancel}
-            afterClose={() => this.props.afterClose()}
+            onClose={this.handleCancel}
+            afterVisibleChange={visible => !visible && this.props.afterClose()}
         >
             <Form>
                 <Form.Item
@@ -91,17 +83,6 @@ class ProjectModal extends Component {
                             this.validator.resetResult("projectKey");
                         }} onBlur={() => this.validator.validate("projectKey")}/>
                 </Form.Item>
-                <Form.Item
-                    label="Name"
-                    validateStatus={this.validator.getResult("name").status}
-                    help={this.validator.getResult("name").message}>
-                    <Input
-                        defaultValue={untracked(() => this.project.name)}
-                        onChange={(e) => {
-                            this.project.name = e.target.value;
-                            this.validator.resetResult("name");
-                        }} onBlur={() => this.validator.validate("name")}/>
-                </Form.Item>
                 <Form.Item label="Description">
                     <Input.TextArea
                         defaultValue={untracked(() => this.project.description)}
@@ -112,7 +93,26 @@ class ProjectModal extends Component {
                         }}/>
                 </Form.Item>
             </Form>
-        </Modal>
+            <div
+                style={{
+                    position: "absolute",
+                    left: 0,
+                    bottom: 0,
+                    width: "100%",
+                    borderTop: "1px solid #e9e9e9",
+                    padding: "10px 16px",
+                    background: "#fff",
+                    textAlign: "right",
+                }}
+            >
+                <Button onClick={this.handleCancel} style={{marginRight: 8}}>
+                    Cancel
+                </Button>
+                <Button onClick={this.handleOk} type="primary" loading={this.loading}>
+                    Submit
+                </Button>
+            </div>
+        </Drawer>
     };
 
     handleOk = () => {
@@ -126,10 +126,7 @@ class ProjectModal extends Component {
                             let project = res.data;
                             this.loading = false;
                             this.visible = false;
-                            message.success(<span>Project&nbsp;
-                                <a onClick={() => global.history.push("/projects/" + project.projectKey)}>
-                                    {project.name}
-                                </a> is created successfully!</span>);
+                            message.success(<span>Project <ProjectInfo project={project}/> is created successfully!</span>);
                             this.props.onSuccess(project);
                         }, () => this.loading = false);
                 });
@@ -143,10 +140,7 @@ class ProjectModal extends Component {
                             let project = res.data;
                             this.loading = false;
                             this.visible = false;
-                            message.success(<span>Project&nbsp;
-                                <a onClick={() => global.history.push("/projects/" + project.projectKey)}>
-                                    {project.name}
-                                </a> is updated successfully!</span>);
+                            message.success(<span>Project <ProjectInfo project={project}/> is updated successfully!</span>);
                             this.props.onSuccess(project);
                         }, () => this.loading = false);
                 });

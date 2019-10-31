@@ -9,7 +9,7 @@ using Scalpay.Data;
 namespace Scalpay.Migrations
 {
     [DbContext(typeof(ScalpayDbContext))]
-    [Migration("20191029025139_init")]
+    [Migration("20191031034520_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,7 +20,7 @@ namespace Scalpay.Migrations
 
             modelBuilder.Entity("Scalpay.Models.Item", b =>
                 {
-                    b.Property<string>("ItemKey")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("DefaultResult")
@@ -30,10 +30,10 @@ namespace Scalpay.Migrations
 
                     b.Property<DateTime>("InsertTime");
 
-                    b.Property<string>("Mode")
+                    b.Property<string>("ItemKey")
                         .IsRequired();
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Mode")
                         .IsRequired();
 
                     b.Property<string>("ParameterInfos")
@@ -47,26 +47,34 @@ namespace Scalpay.Migrations
 
                     b.Property<DateTime>("UpdateTime");
 
-                    b.HasKey("ItemKey");
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemKey")
+                        .IsUnique();
+
+                    b.HasIndex("ProjectKey");
 
                     b.ToTable("Items");
                 });
 
             modelBuilder.Entity("Scalpay.Models.Project", b =>
                 {
-                    b.Property<string>("ProjectKey")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description");
 
                     b.Property<DateTime>("InsertTime");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("ProjectKey")
                         .IsRequired();
 
                     b.Property<DateTime>("UpdateTime");
 
-                    b.HasKey("ProjectKey");
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectKey")
+                        .IsUnique();
 
                     b.ToTable("Projects");
                 });
@@ -78,15 +86,20 @@ namespace Scalpay.Migrations
 
                     b.Property<DateTime>("InsertTime");
 
-                    b.Property<int>("Privilege");
+                    b.Property<int>("Permission");
 
-                    b.Property<string>("ProjectKey");
+                    b.Property<string>("ProjectKey")
+                        .IsRequired();
 
                     b.Property<DateTime>("UpdateTime");
 
                     b.Property<string>("Username");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjectKey");
+
+                    b.HasIndex("Username");
 
                     b.ToTable("ProjectPermissions");
                 });
@@ -101,7 +114,8 @@ namespace Scalpay.Migrations
 
                     b.Property<DateTime>("InsertTime");
 
-                    b.Property<string>("ItemKey");
+                    b.Property<string>("ItemKey")
+                        .IsRequired();
 
                     b.Property<int>("Order");
 
@@ -143,11 +157,35 @@ namespace Scalpay.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Scalpay.Models.Item", b =>
+                {
+                    b.HasOne("Scalpay.Models.Project", "Project")
+                        .WithMany("Items")
+                        .HasForeignKey("ProjectKey")
+                        .HasPrincipalKey("ProjectKey")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Scalpay.Models.ProjectPermission", b =>
+                {
+                    b.HasOne("Scalpay.Models.Project", "Project")
+                        .WithMany("ProjectPermissions")
+                        .HasForeignKey("ProjectKey")
+                        .HasPrincipalKey("ProjectKey")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Scalpay.Models.User", "User")
+                        .WithMany("ProjectPermissions")
+                        .HasForeignKey("Username");
+                });
+
             modelBuilder.Entity("Scalpay.Models.Rule", b =>
                 {
                     b.HasOne("Scalpay.Models.Item", "Item")
                         .WithMany("Rules")
-                        .HasForeignKey("ItemKey");
+                        .HasForeignKey("ItemKey")
+                        .HasPrincipalKey("ItemKey")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

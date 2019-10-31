@@ -1,4 +1,4 @@
-import {Collapse, message, Modal, Radio} from "antd";
+import {Collapse, message, Modal, Radio, Drawer, Button} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, untracked} from "mobx";
@@ -14,12 +14,13 @@ import ParameterPanel from "./ParameterPanel";
 import RawRulePanel from "./RawRulePanel";
 import PropertyPanel from "./PropertyPanel";
 import "./itemModal.less";
+import global from "~/global";
 
-function add(onSuccess) {
+function add(projectKey, onSuccess) {
     const target = document.createElement("div");
     document.body.appendChild(target);
 
-    render(<EditItemModal addMode onSuccess={onSuccess} afterClose={() => {
+    render(<ItemModal addMode projectKey={projectKey} onSuccess={onSuccess} afterClose={() => {
         unmountComponentAtNode(target);
         target.remove()
     }}/>, target);
@@ -33,7 +34,7 @@ function edit(item, onSuccess) {
 
     axios.get("/api/items/" + item.itemKey)
         .then(res =>
-            render(<EditItemModal item={res.data.data} onSuccess={onSuccess} afterClose={() => {
+            render(<ItemModal projectKey={res.data.projectKey} item={res.data} onSuccess={onSuccess} afterClose={() => {
                 unmountComponentAtNode(target);
                 target.remove()
             }}/>, target))
@@ -41,7 +42,7 @@ function edit(item, onSuccess) {
 }
 
 @observer
-class EditItemModal extends Component {
+class ItemModal extends Component {
     static defaultProps = {
         item: {
             projectKey: null,
@@ -57,6 +58,7 @@ class EditItemModal extends Component {
             defaultResult: DefaultExp.string
         },
         addMode: false,
+        projectKey: "",
         onSuccess: (item) => {
         },
         afterClose: () => {
@@ -82,17 +84,13 @@ class EditItemModal extends Component {
     }
 
     render = () => {
-        return <Modal
+        return <Drawer
             title={this.props.addMode ? "Add Item" : "Edit Item"}
-            okText={this.props.addMode ? "Add Item" : "Update Item"}
-            cancelText="Cancel"
             visible={this.visible}
-            maskClosable={false}
             width={1000}
-            confirmLoading={this.loading}
-            onOk={this.handleOk}
-            onCancel={this.handleCancel}
-            afterClose={() => this.props.afterClose()}
+            maskClosable={false}
+            onClose={this.handleCancel}
+            afterVisibleChange={visible => !visible && this.props.afterClose()}
         >
             <div className="item-modal">
                 <div style={{float: "right"}}>
@@ -180,7 +178,26 @@ class EditItemModal extends Component {
                     }
                 </Collapse>
             </div>
-        </Modal>
+            <div
+                style={{
+                    position: "absolute",
+                    left: 0,
+                    bottom: 0,
+                    width: "100%",
+                    borderTop: "1px solid #e9e9e9",
+                    padding: "10px 16px",
+                    background: "#fff",
+                    textAlign: "right",
+                }}
+            >
+                <Button onClick={this.handleCancel} style={{marginRight: 8}}>
+                    Cancel
+                </Button>
+                <Button onClick={this.handleOk} type="primary" loading={this.loading}>
+                    Submit
+                </Button>
+            </div>
+        </Drawer>
     };
 
     handleOk = () => {
@@ -193,24 +210,24 @@ class EditItemModal extends Component {
         if (this.props.addMode) {
             componentValidator.validate().then(() => {
                 this.loading = true;
-                axios.put("/api/items", this.item)
+                axios.put("/api/projects/" + this.props.projectKey + "/items", this.item)
                     .then(res => {
                         let item = res.data.data;
                         this.loading = false;
                         this.visible = false;
-                        message.success(<span>Item <ItemInfo itemKey={item.itemKey}/> is added successfully!</span>);
+                        message.success(<span>Item <ItemInfo item={item}/> is added successfully!</span>);
                         this.props.onSuccess(item);
                     }, () => this.loading = false)
             });
         } else {
             componentValidator.validate().then(() => {
                 this.loading = true;
-                axios.post("/api/items/" + this.item.itemKey, this.item)
+                axios.post("/api/projects/" + this.props.projectKey + "/items/" + this.item.itemKey, this.item)
                     .then(res => {
                         let item = res.data.data;
                         this.loading = false;
                         this.visible = false;
-                        message.success(<span>Item <ItemInfo itemKey={item.itemKey}/> is updated successfully!</span>);
+                        message.success(<span>Item <ItemInfo item={item}/> is updated successfully!</span>);
                         this.props.onSuccess(item);
                     }, () => this.loading = false)
             });

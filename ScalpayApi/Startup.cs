@@ -144,7 +144,6 @@ namespace Scalpay
                 context.Projects.Add(new Project()
                 {
                     ProjectKey = "__scalpay",
-                    Name = "Scalpay",
                     Description = "The Scalpay's configurations.",
                     InsertTime = DateTime.UtcNow,
                     UpdateTime = DateTime.UtcNow

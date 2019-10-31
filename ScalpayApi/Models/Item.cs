@@ -8,15 +8,11 @@ namespace Scalpay.Models
 {
     public class Item
     {
+        public int Id { get; set; }
+
         public string ItemKey { get; set; }
 
-        public string Name { get; set; }
-
         public string Description { get; set; }
-        
-        public DateTime InsertTime { get; set; }
-
-        public DateTime UpdateTime { get; set; }
 
         public ItemMode Mode { get; set; }
 
@@ -25,9 +21,15 @@ namespace Scalpay.Models
         public SDataType ResultDataType { get; set; }
 
         public SExpression DefaultResult { get; set; }
+        
+        public DateTime InsertTime { get; set; }
+
+        public DateTime UpdateTime { get; set; }
 
         public string ProjectKey { get; set; }
 
-        public List<Rule> Rules { get; set; } = new List<Rule>();
+        public Project Project { get; set; }
+
+        public List<Rule> Rules { get; set; }
     }
 }
