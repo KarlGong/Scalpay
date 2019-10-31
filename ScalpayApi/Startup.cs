@@ -41,7 +41,7 @@ namespace Scalpay
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter(new CamelCaseNamingStrategy(), false));
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
                     options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 }
             );
@@ -112,7 +112,7 @@ namespace Scalpay
                 var settings = new JsonSerializerSettings();
                 settings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 settings.NullValueHandling = NullValueHandling.Ignore;
-                settings.Converters.Add(new StringEnumConverter(new CamelCaseNamingStrategy(), false));
+                settings.Converters.Add(new StringEnumConverter());
                 settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
                 return settings;
             });

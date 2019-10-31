@@ -4,7 +4,7 @@ import {observer} from "mobx-react";
 import {observable} from "mobx";
 import axios from "axios";
 import auth from "~/utils/auth";
-import {DataType, DefaultExp, ItemMode, Privilege} from "~/utils/store";
+import {DataType, DefaultExp} from "~/utils/store";
 import PageWrapper from "~/layouts/PageWrapper";
 import {Link} from "react-router";
 import guid from "~/utils/guid";
@@ -28,13 +28,10 @@ export default class ViewItemPage extends Component {
         itemKey: this.params.itemKey,
         name: null,
         description: null,
-        version: null,
-        isLatest: false,
-        mode: ItemMode.property,
         parameterInfos: [],
-        resultDataType: DataType.string,
+        resultDataType: DataType.String,
         rules: [],
-        defaultResult: DefaultExp.string
+        defaultResult: DefaultExp.String
     };
     @observable loading = false;
 
@@ -90,62 +87,37 @@ export default class ViewItemPage extends Component {
                         ["Description", this.item.description]
                     ]}/>
                 </Block>
-                {
-                    this.item.mode === ItemMode.property ?
-                        <Block name="Property">
-                            <FieldsViewer fields={[
-                                ["Result Data Type", this.item.resultDataType],
-                                ["Result", <ExpressionView topLevel expression={this.item.defaultResult}/>]
-                            ]}/>
-                        </Block>
-                        : null
-                }
-                {
-                    this.item.mode === ItemMode.raw ?
-                        <Block name="Parameters & Result">
-                            <FieldsViewer
-                                fields={this.item.parameterInfos.map(info => [info.name, info.dataType])}/>
-                            <FieldsViewer fields={[[
-                                <b>Result Data Type</b>,
-                                <b>{this.item.resultDataType}</b>
-                            ]]}/>
-                        </Block>
-                        : null
-                }
-                {
-                    this.item.mode === ItemMode.raw ?
-                        <Block name="Rules" className="rules">
-                            <Row type="flex" align="middle" className="rule">
-                                <Col span={conditionWidth}><b>Condition</b></Col>
-                                <Col span={resultWidth}><b>Result</b></Col>
-                            </Row>
-                            {
-                                this.item.rules.map(rule =>
-                                    <Row key={rule.key} type="flex" align="middle"
-                                         className="rule">
-                                        <Col span={conditionWidth}><ExpressionView
-                                            topLevel
-                                            expression={rule.condition}/></Col>
-                                        <Col span={resultWidth}><ExpressionView
-                                            topLevel
-                                            expression={rule.result}/></Col>
-                                    </Row>)
-                            }
-                            <Row type="flex" align="middle"
+                <Block name="Parameters & Result">
+                    <FieldsViewer
+                        fields={this.item.parameterInfos.map(info => [info.name, info.dataType])}/>
+                    <FieldsViewer fields={[[
+                        <b>Result Data Type</b>,
+                        <b>{this.item.resultDataType}</b>
+                    ]]}/>
+                </Block>
+                <Block name="Rules" className="rules">
+                    <Row type="flex" align="middle" className="rule">
+                        <Col span={conditionWidth}><b>Condition</b></Col>
+                        <Col span={resultWidth}><b>Result</b></Col>
+                    </Row>
+                    {
+                        this.item.rules.map(rule =>
+                            <Row key={rule.key} type="flex" align="middle"
                                  className="rule">
-                                <Col span={conditionWidth}><b>Default</b></Col>
-                                <Col span={resultWidth}><ExpressionView topLevel expression={this.item.defaultResult}/></Col>
-                            </Row>
-                        </Block>
-                        : null
-                }
-                {
-                    !this.params.itemVersion ?
-                        <Block name="Activity">
-                            <AuditsView itemKey={this.item.itemKey}/>
-                        </Block>
-                        : null
-                }
+                                <Col span={conditionWidth}><ExpressionView
+                                    topLevel
+                                    expression={rule.condition}/></Col>
+                                <Col span={resultWidth}><ExpressionView
+                                    topLevel
+                                    expression={rule.result}/></Col>
+                            </Row>)
+                    }
+                    <Row type="flex" align="middle"
+                         className="rule">
+                        <Col span={conditionWidth}><b>Default</b></Col>
+                        <Col span={resultWidth}><ExpressionView topLevel expression={this.item.defaultResult}/></Col>
+                    </Row>
+                </Block>
             </Layout>
         </PageWrapper>
     };

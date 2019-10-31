@@ -1,20 +1,19 @@
-import {Collapse, message, Modal, Radio, Drawer, Button} from "antd";
+import {message, Modal, Radio, Drawer, Button, Form, Input} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, untracked} from "mobx";
 import axios from "axios";
 import cs from "classnames";
 import {render, unmountComponentAtNode} from "react-dom";
-import {DataType, DefaultExp, ItemMode} from "~/utils/store";
+import {DataType, DefaultExp} from "~/utils/store";
 import guid from "~/utils/guid";
 import ComponentValidator from "~/utils/ComponentValidator";
 import ItemInfo from "~/components/ItemInfo";
-import BasicPanel from "./BasicPanel";
 import ParameterPanel from "./ParameterPanel";
 import RawRulePanel from "./RawRulePanel";
-import PropertyPanel from "./PropertyPanel";
 import "./itemModal.less";
 import global from "~/global";
+import Validator from "~/utils/Validator";
 
 function add(projectKey, onSuccess) {
     const target = document.createElement("div");
@@ -32,7 +31,7 @@ function edit(item, onSuccess) {
     const target = document.createElement("div");
     document.body.appendChild(target);
 
-    axios.get("/api/items/" + item.itemKey)
+    axios.get(`/api/projects/${item.projectKey()}/items/${item.itemKey}` + item.itemKey)
         .then(res =>
             render(<ItemModal projectKey={res.data.projectKey} item={res.data} onSuccess={onSuccess} afterClose={() => {
                 unmountComponentAtNode(target);
@@ -49,41 +48,49 @@ class ItemModal extends Component {
             itemKey: null,
             name: null,
             description: null,
-            version: null,
-            isLatest: false,
-            mode: ItemMode.property,
             parameterInfos: [],
-            resultDataType: DataType.string,
+            resultDataType: DataType.String,
             rules: [],
-            defaultResult: DefaultExp.string
+            defaultResult: DefaultExp.String
         },
         addMode: false,
         projectKey: "",
-        onSuccess: (item) => {
-        },
-        afterClose: () => {
-        }
+        onSuccess: (item) => { },
+        afterClose: () => { }
     };
 
     @observable loading = false;
     @observable visible = true;
-
-    // they should not be observable, but they are lazy loaded,
-    // then this.basicPanelValidator && this.basicPanelValidator.hasError() will not add this component as derived component
-    // call this.forceUpdate() in setValidator can also solve the issue.
-    @observable basicPanelValidator = null;
-    @observable parameterPanelValidator = null;
-
-    @observable modeResetKey = guid();
+    @observable item = this.props.item;
+    validator = new Validator(this.item, {
+        partialItemKey: (rule, value, callback, source, options) => {
+            let errors = [];
+            if (!value) {
+                errors.push(new Error("item key is required"));
+            }
+            if (!/^[a-zA-Z0-9-_.]+?$/.test(value)) {
+                errors.push(new Error("item key can only contain alphanumeric characters, - , _ and ."))
+            }
+            callback(errors);
+        }
+    });
 
     constructor(props) {
         super(props);
-        this.props.item.parameterInfos.map(p => p.key = p.key || guid());
-        this.props.item.rules.map(r => r.key = r.key || guid());
-        this.item = observable(this.props.item);
+        this.item.projectKey = this.props.projectKey;
+        this.item.partialItemKey = this.item.itemKey && this.item.itemKey.split(".").slice(1).join(".");
     }
 
     render = () => {
+        const formItemLayout = {
+            labelCol: {
+                span: 5
+            },
+            wrapperCol: {
+                span: 19
+            },
+        };
+
         return <Drawer
             title={this.props.addMode ? "Add Item" : "Edit Item"}
             visible={this.visible}
@@ -93,124 +100,66 @@ class ItemModal extends Component {
             afterVisibleChange={visible => !visible && this.props.afterClose()}
         >
             <div className="item-modal">
-                <div style={{float: "right"}}>
-                    <Radio.Group
-                        key={this.modeResetKey}
-                        onChange={(e) => {
-                            let targetMode = e.target.value;
-                            if (targetMode === ItemMode.property) {
-                                Modal.confirm({
-                                    title: "Are you sure to change to Property mode?",
-                                    content: "All the parameters and rules of this item will be cleared.",
-                                    okText: "Change",
-                                    okType: "danger",
-                                    cancelText: "No",
-                                    onOk: () => {
-                                        this.item.mode = targetMode;
-                                        this.item.parameterInfos = [];
-                                        this.item.rules = [];
-                                    },
-                                    onCancel: () => {
-                                        this.modeResetKey = guid();
-                                    },
-                                });
-                            } else {
-                                this.item.mode = targetMode;
-                            }
-                        }}
-                        defaultValue={untracked(() => this.item.mode)}>
-                        <Radio.Button value={ItemMode.property}>Property</Radio.Button>
-                        <Radio.Button value={ItemMode.raw}>Raw</Radio.Button>
-                    </Radio.Group>
+                <div className="form">
+                    <Form>
+                        <Form.Item label="Item Key"
+                                   {...formItemLayout}
+                                   validateStatus={this.validator.getResult("partialItemKey").status}
+                                   help={this.validator.getResult("partialItemKey").message}
+                        >
+                            <Input
+                                addonBefore={this.item.projectKey + "."}
+                                style={{width: "500px"}}
+                                // foo.bar to bar
+                                defaultValue={untracked(() => this.item.partialItemKey)}
+                                onChange={(e) => {
+                                    this.item.partialItemKey = e.target.value;
+                                    // bar to foo.bar
+                                    this.item.itemKey = this.item.projectKey + "." + this.item.partialItemKey;
+                                    this.validator.resetResult("partialItemKey")
+                                }}
+                                onBlur={() => this.validator.validate("partialItemKey")}
+                            />
+                        </Form.Item>
+                        <Form.Item label="Description"
+                                   {...formItemLayout}
+                        >
+                            <Input.TextArea
+                                rows={4}
+                                placeholder="Optional"
+                                style={{width: "500px"}}
+                                defaultValue={untracked(() => this.item.description)}
+                                onChange={(e) => this.item.description = e.target.value}
+                            />
+                        </Form.Item>
+                    </Form>
+                    <ParameterPanel
+                        item={this.item}
+                        setValidator={(validator) => {this.parameterPanelValidator = validator}}
+                    />
+                    <RawRulePanel item={this.item}/>
                 </div>
-                <div style={{clear: "both"}}/>
-                <Collapse
-                    bordered={false}
-                    accordion
-                    defaultActiveKey={["basic"]}>
-                    <Collapse.Panel
-                        forceRender
-                        header="Basic"
-                        key="basic"
-                        className={cs({"error": this.basicPanelValidator && this.basicPanelValidator.hasError()})}>
-                        <BasicPanel
-                            item={this.item}
-                            addMode={this.props.addMode}
-                            setValidator={(validator) => {this.basicPanelValidator = validator}}
-                        />
-                    </Collapse.Panel>
-                    {
-                        this.item.mode === ItemMode.property ?
-                            <Collapse.Panel
-                                forceRender
-                                header="Property"
-                                key="property">
-                                <PropertyPanel
-                                    item={this.item}
-                                />
-                            </Collapse.Panel>
-                            : null
-                    }
-                    {
-                        this.item.mode === ItemMode.raw ?
-                            <Collapse.Panel
-                                forceRender
-                                header="Parameters & Result"
-                                key="parameter"
-                                className={cs({"error": this.parameterPanelValidator && this.parameterPanelValidator.hasError()})}>
-                                <ParameterPanel
-                                    item={this.item}
-                                    setValidator={(validator) => {this.parameterPanelValidator = validator}}
-                                />
-                            </Collapse.Panel>
-                            : null
-                    }
-                    {
-                        this.item.mode === ItemMode.raw ?
-                            <Collapse.Panel
-                                forceRender
-                                header="Rules"
-                                key="raw-rule"
-                                disabled={this.parameterPanelValidator && this.parameterPanelValidator.hasError()}>
-                                <RawRulePanel item={this.item}/>
-                            </Collapse.Panel>
-                            : null
-                    }
-                </Collapse>
-            </div>
-            <div
-                style={{
-                    position: "absolute",
-                    left: 0,
-                    bottom: 0,
-                    width: "100%",
-                    borderTop: "1px solid #e9e9e9",
-                    padding: "10px 16px",
-                    background: "#fff",
-                    textAlign: "right",
-                }}
-            >
-                <Button onClick={this.handleCancel} style={{marginRight: 8}}>
-                    Cancel
-                </Button>
-                <Button onClick={this.handleOk} type="primary" loading={this.loading}>
-                    Submit
-                </Button>
+                <div className="actions">
+                    <Button onClick={this.handleCancel} style={{marginRight: 8}}>
+                        Cancel
+                    </Button>
+                    <Button onClick={this.handleOk} type="primary" loading={this.loading}>
+                        Submit
+                    </Button>
+                </div>
             </div>
         </Drawer>
     };
 
     handleOk = () => {
         let validators = [this.basicPanelValidator];
-        if (this.item.mode === ItemMode.raw) {
-            validators.push(this.parameterPanelValidator);
-        }
+        validators.push(this.parameterPanelValidator);
         let componentValidator = new ComponentValidator(validators);
 
         if (this.props.addMode) {
             componentValidator.validate().then(() => {
                 this.loading = true;
-                axios.put("/api/projects/" + this.props.projectKey + "/items", this.item)
+                axios.put(`/api/projects/${this.props.projectKey}/items/`, this.item)
                     .then(res => {
                         let item = res.data.data;
                         this.loading = false;
@@ -222,7 +171,7 @@ class ItemModal extends Component {
         } else {
             componentValidator.validate().then(() => {
                 this.loading = true;
-                axios.post("/api/projects/" + this.props.projectKey + "/items/" + this.item.itemKey, this.item)
+                axios.post(`/api/projects/${this.props.projectKey}/items/${this.item.itemKey}`, this.item)
                     .then(res => {
                         let item = res.data.data;
                         this.loading = false;

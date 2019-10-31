@@ -55,6 +55,33 @@ export default class ParameterPanel extends Component {
         };
         return <div className="parameter-panel">
             <Form>
+                <Form.Item label="Result Data Type"
+                           {...formItemLayout}
+                >
+                    <DataTypeSelect
+                        key={this.resultDataTypeResetKey}
+                        style={{width: "150px"}}
+                        defaultValue={untracked(() => this.item.resultDataType)}
+                        onChange={(dataType) => {
+                            Modal.confirm({
+                                title: "Are you sure to change the result data type?",
+                                content: "The result expression of all rules will be reset.",
+                                okText: "Change",
+                                okType: "danger",
+                                cancelText: "No",
+                                onOk: () => {
+                                    this.item.resultDataType = dataType;
+                                    this.item.rules.map(rule => {
+                                        rule.result = DefaultExp[dataType];
+                                    });
+                                    this.item.defaultResult = DefaultExp[dataType];
+                                },
+                                onCancel: () => {
+                                    this.resultDataTypeResetKey = guid();
+                                },
+                            });
+                        }}/>
+                </Form.Item>
                 <Form.Item label="Parameters" {...formItemLayout}>
                     <div className="scalpay-list draggable">
                         <DragListView
@@ -117,7 +144,7 @@ export default class ParameterPanel extends Component {
                                                         paramInfo.dataType = value;
                                                         this.item.rules.map(rule => {
                                                             if (isVariableUsed(rule.condition, paramInfo.oldName)) {
-                                                                rule.condition = DefaultExp.bool;
+                                                                rule.condition = DefaultExp.Bool;
                                                             }
                                                             if (isVariableUsed(rule.result, paramInfo.oldName)) {
                                                                 rule.result = DefaultExp[this.item.resultDataType];
@@ -149,7 +176,7 @@ export default class ParameterPanel extends Component {
                                                 onOk: () => {
                                                     this.item.rules.map(rule => {
                                                         if (isVariableUsed(rule.condition, paramInfo.oldName)) {
-                                                            rule.condition = DefaultExp.bool;
+                                                            rule.condition = DefaultExp.Bool;
                                                         }
                                                         if (isVariableUsed(rule.result, paramInfo.oldName)) {
                                                             rule.result = DefaultExp[this.item.resultDataType];
@@ -189,33 +216,6 @@ export default class ParameterPanel extends Component {
                             >Add Parameter</Button>
                         </DragListView>
                     </div>
-                </Form.Item>
-                <Form.Item label="Result Data Type"
-                           {...formItemLayout}
-                >
-                    <DataTypeSelect
-                        key={this.resultDataTypeResetKey}
-                        style={{width: "150px"}}
-                        defaultValue={untracked(() => this.item.resultDataType)}
-                        onChange={(dataType) => {
-                            Modal.confirm({
-                                title: "Are you sure to change the result data type?",
-                                content: "The result expression of all rules will be reset.",
-                                okText: "Change",
-                                okType: "danger",
-                                cancelText: "No",
-                                onOk: () => {
-                                    this.item.resultDataType = dataType;
-                                    this.item.rules.map(rule => {
-                                        rule.result = DefaultExp[dataType];
-                                    });
-                                    this.item.defaultResult = DefaultExp[dataType];
-                                },
-                                onCancel: () => {
-                                    this.resultDataTypeResetKey = guid();
-                                },
-                            });
-                        }}/>
                 </Form.Item>
             </Form>
         </div>

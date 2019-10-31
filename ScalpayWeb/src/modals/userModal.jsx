@@ -47,7 +47,7 @@ class EditUserModal extends Component {
         afterClose: () => {}
     };
 
-    @observable user = this.props.user;
+    @observable user = this.props.loginParams;
     validator = new Validator(this.user, {
         username: (rule, value, callback, source, options) => {
             let errors = [];

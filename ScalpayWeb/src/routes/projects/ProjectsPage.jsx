@@ -42,7 +42,7 @@ export default class ProjectsPage extends Component {
                                 placeholder="Filter"
                                 onChange={(e) => this.filterText = e.target.value || ""}/>
                     {
-                        auth.user.role == Role.admin &&
+                        auth.user.role == Role.Admin &&
                         <Button
                             style={{float: "right"}}
                             onClick={() => this.addProject()}>

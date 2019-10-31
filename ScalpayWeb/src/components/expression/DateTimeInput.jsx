@@ -39,6 +39,7 @@ export default class DateTimeInput extends Component {
                 <span>
                     <DatePicker
                         showTime
+                        allowClear={false}
                         className={cs(this.props.className, this.validator.getResult("value").status)}
                         defaultValue={this.props.defaultValue && moment(this.props.defaultValue).utc()}
                         format="YYYY-MM-DD HH:mm:ss"

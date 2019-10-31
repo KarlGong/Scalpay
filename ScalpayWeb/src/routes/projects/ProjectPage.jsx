@@ -59,7 +59,7 @@ export default class ProjectPage extends Component {
                                 placeholder="Filter"
                                 onChange={(e) => this.filterText = e.target.value || ""}/>
                     {
-                        auth.user.role == Role.admin &&
+                        auth.user.role == Role.Admin &&
                         <Button
                             style={{float: "right"}}
                             onClick={() => this.addItem()}>
@@ -96,7 +96,7 @@ export default class ProjectPage extends Component {
     };
 
     addItem = () => {
-        itemModal.add(() => this.loadItems());
+        itemModal.add(this.project.projectKey, () => this.loadItems());
     };
 
     editProject = () => {

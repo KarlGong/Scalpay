@@ -66,14 +66,14 @@ class EditExpressionModal extends Component {
         };
 
         const valueInput = {
-            [DataType.bool]: <BoolSelect {...valueInputProps} />,
-            [DataType.dateTime]: <DateTimeInput {...valueInputProps} className="datetime-input"/>,
-            [DataType.duration]: <DurationInput {...valueInputProps}/>,
-            [DataType.number]: <NumberInput {...valueInputProps} className="number-input"/>,
-            [DataType.numberList]: <NumberListInput {...valueInputProps}/>,
-            [DataType.string]: <StringInput {...valueInputProps} className="string-input"/>,
-            [DataType.stringDict]: <StringDictInput {...valueInputProps}/>,
-            [DataType.stringList]: <StringListInput {...valueInputProps}/>
+            [DataType.Bool]: <BoolSelect {...valueInputProps} />,
+            [DataType.DateTime]: <DateTimeInput {...valueInputProps} className="datetime-input"/>,
+            [DataType.Duration]: <DurationInput {...valueInputProps}/>,
+            [DataType.Number]: <NumberInput {...valueInputProps} className="number-input"/>,
+            [DataType.NumberList]: <NumberListInput {...valueInputProps}/>,
+            [DataType.String]: <StringInput {...valueInputProps} className="string-input"/>,
+            [DataType.StringDict]: <StringDictInput {...valueInputProps}/>,
+            [DataType.StringList]: <StringListInput {...valueInputProps}/>
         }[this.expression.returnType];
 
         return <Modal
@@ -90,13 +90,13 @@ class EditExpressionModal extends Component {
             <Radio.Group
                 defaultValue={untracked(() => this.expression.expType)}
                 onChange={(e) => this.expression.expType = e.target.value}>
-                <Radio value={ExpType.value}>Value</Radio>
-                <Radio value={ExpType.var}>Variable</Radio>
-                <Radio value={ExpType.func}>Function</Radio>
+                <Radio value={ExpType.Value}>Value</Radio>
+                <Radio value={ExpType.Var}>Variable</Radio>
+                <Radio value={ExpType.Func}>Function</Radio>
             </Radio.Group>
             <div className="panel-body">
-                {this.expression.expType === ExpType.value ? valueInput : null}
-                {this.expression.expType === ExpType.var ?
+                {this.expression.expType === ExpType.Value ? valueInput : null}
+                {this.expression.expType === ExpType.Var ?
                     <VariableSelect
                         className="var-select"
                         variables={this.props.item.parameterInfos
@@ -107,7 +107,7 @@ class EditExpressionModal extends Component {
                     />
                     : null
                 }
-                {this.expression.expType === ExpType.func ?
+                {this.expression.expType === ExpType.Func ?
                     <div>
                         <FunctionSelect
                             className="func-select"
@@ -141,9 +141,9 @@ class EditExpressionModal extends Component {
 
     handleOk = () => {
         const validator = {
-            [ExpType.value]: this.valueInputValidator,
-            [ExpType.var]: this.variableValidator,
-            [ExpType.func]: this.functionValidator
+            [ExpType.Value]: this.valueInputValidator,
+            [ExpType.Var]: this.variableValidator,
+            [ExpType.Func]: this.functionValidator
         }[this.expression.expType];
 
         validator.validate().then(() => {
@@ -153,13 +153,13 @@ class EditExpressionModal extends Component {
                 expType: this.expression.expType
             };
             switch (this.expression.expType) {
-                case ExpType.value:
+                case ExpType.Value:
                     returnExpression.value = this.expression.value;
                     break;
-                case ExpType.var:
+                case ExpType.Var:
                     returnExpression.var = this.expression.var;
                     break;
-                case ExpType.func:
+                case ExpType.Func:
                     returnExpression.funcName = this.expression.funcName;
                     returnExpression.funcArgs = this.expression.funcArgs;
                     break;
