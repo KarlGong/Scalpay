@@ -14,8 +14,6 @@ namespace Scalpay.Models
 
         public string Description { get; set; }
 
-        public ItemMode Mode { get; set; }
-
         public List<ParameterInfo> ParameterInfos { get; set; }
 
         public SDataType ResultDataType { get; set; }

@@ -49,7 +49,6 @@ namespace Scalpay.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     ItemKey = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true),
-                    Mode = table.Column<string>(nullable: false),
                     ParameterInfos = table.Column<string>(nullable: false),
                     ResultDataType = table.Column<string>(nullable: false),
                     DefaultResult = table.Column<string>(nullable: false),

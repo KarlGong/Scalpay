@@ -31,9 +31,6 @@ namespace Scalpay.Migrations
                     b.Property<string>("ItemKey")
                         .IsRequired();
 
-                    b.Property<string>("Mode")
-                        .IsRequired();
-
                     b.Property<string>("ParameterInfos")
                         .IsRequired();
 

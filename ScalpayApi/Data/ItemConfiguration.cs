@@ -22,11 +22,6 @@ namespace Scalpay.Data
 
             builder.Property(i => i.UpdateTime).IsRequired();
 
-            builder.Property(i => i.Mode).HasConversion(
-                    v => v.ToString(),
-                    v => Enum.Parse<ItemMode>(v))
-                .IsRequired();
-
             builder.Property(i => i.ParameterInfos).HasConversion(
                     v => v == null ? null: JsonConvert.SerializeObject(v),
                     v => v == null ? null: JsonConvert.DeserializeObject<List<ParameterInfo>>(v))
