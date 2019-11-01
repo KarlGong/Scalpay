@@ -24,7 +24,7 @@ namespace Scalpay.Services.ProjectService
 
         Task<ProjectPermission> GetProjectPermissionAsync(string projectKey, string username);
 
-        Task<List<ProjectPermission>> GetProjectPermissionsAsync(string projectKey);
+        Task<List<ProjectPermission>> GetProjectPermissionsAsync(ProjectPermissionCriteria criteria);
 
         Task<ProjectPermission> AddProjectPermissionAsync(ProjectPermission projectPermission);
 
@@ -124,9 +124,9 @@ namespace Scalpay.Services.ProjectService
             });
         }
 
-        public async Task<List<ProjectPermission>> GetProjectPermissionsAsync(string projectKey)
+        public async Task<List<ProjectPermission>> GetProjectPermissionsAsync(ProjectPermissionCriteria criteria)
         {
-            return await _context.ProjectPermissions.AsNoTracking().Where(pp => pp.ProjectKey == projectKey).ToListAsync();
+            return await _context.ProjectPermissions.AsNoTracking().WithCriteria(criteria).ToListAsync();
         }
 
         public async Task<ProjectPermission> AddProjectPermissionAsync(ProjectPermission projectPermission)

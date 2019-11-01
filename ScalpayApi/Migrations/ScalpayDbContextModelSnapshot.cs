@@ -81,7 +81,8 @@ namespace Scalpay.Migrations
 
                     b.Property<DateTime>("InsertTime");
 
-                    b.Property<int>("Permission");
+                    b.Property<string>("Permission")
+                        .IsRequired();
 
                     b.Property<string>("ProjectKey")
                         .IsRequired();

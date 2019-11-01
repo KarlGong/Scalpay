@@ -35,7 +35,7 @@ namespace Scalpay.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     ProjectKey = table.Column<string>(nullable: false),
                     Username = table.Column<string>(nullable: true),
-                    Permission = table.Column<int>(nullable: false),
+                    Permission = table.Column<string>(nullable: false),
                     InsertTime = table.Column<DateTime>(nullable: false),
                     UpdateTime = table.Column<DateTime>(nullable: false)
                 },

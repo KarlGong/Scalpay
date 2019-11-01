@@ -5,6 +5,11 @@ export const Role = {
     Admin: "Admin"
 };
 
+export const Permission = {
+    Read: "Read",
+    Admin: "Admin"
+};
+
 export const ExpType = {
     Func: "Func",
     Value: "Value",

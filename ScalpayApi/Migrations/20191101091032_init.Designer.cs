@@ -9,7 +9,7 @@ using Scalpay.Data;
 namespace Scalpay.Migrations
 {
     [DbContext(typeof(ScalpayDbContext))]
-    [Migration("20191101063838_init")]
+    [Migration("20191101091032_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,7 +83,8 @@ namespace Scalpay.Migrations
 
                     b.Property<DateTime>("InsertTime");
 
-                    b.Property<int>("Permission");
+                    b.Property<string>("Permission")
+                        .IsRequired();
 
                     b.Property<string>("ProjectKey")
                         .IsRequired();

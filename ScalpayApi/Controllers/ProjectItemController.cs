@@ -135,7 +135,11 @@ namespace Scalpay.Controllers
                 return Forbid("You have no permission to view permissions for this project.");
             }
 
-            return Ok(await _projectService.GetProjectPermissionsAsync(projectKey));
+            return Ok(await _projectService.GetProjectPermissionsAsync(new ProjectPermissionCriteria()
+            {
+                ProjectKey = projectKey,
+                PageSize = 999999
+            }));
         }
 
         [HttpGet("{projectKey}/permissions/{username}")]

@@ -11,9 +11,10 @@ import {Link} from "react-router";
 import global from "~/global";
 import itemModal from "~/modals/itemModal/itemModal";
 import projectModal from "~/modals/projectModal";
-import "./ProjectPage.less";
+import permissionModal from "~/modals/permissionModal";
 import {Role} from "~/const";
 import ItemInfo from "~/components/ItemInfo";
+import "./ProjectPage.less";
 
 @observer
 export default class ProjectPage extends Component {
@@ -62,7 +63,7 @@ export default class ProjectPage extends Component {
                             <Button icon="setting" onClick={() => this.editProject()}>
                                 Edit Project
                             </Button>
-                            <Button icon="team" style={{marginLeft: "10px"}} onClick={() => this.addItem()}>
+                            <Button icon="team" style={{marginLeft: "10px"}} onClick={() => permissionModal.open(this.project.projectKey)}>
                                 Manage Permission
                             </Button>
                         </span>
@@ -147,6 +148,6 @@ export default class ProjectPage extends Component {
     };
 
     editProject = () => {
-        projectModal.edit(this.project, (project) => this.loadProject());
+        projectModal.edit(this.project, (project) => this.project = project);
     };
 }

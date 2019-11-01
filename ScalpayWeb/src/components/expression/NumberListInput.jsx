@@ -5,7 +5,7 @@ import {observable, untracked} from "mobx";
 import cs from "classnames";
 import DragListView from "react-drag-listview";
 import NumberInput from "./NumberInput";
-import guid from "../../utils/guid";
+import guid from "~/utils/guid";
 import ComponentValidator from "~/utils/ComponentValidator";
 import "./NumberListInput.less";
 

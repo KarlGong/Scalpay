@@ -62,26 +62,15 @@ class ItemModal extends Component {
 
     @observable loading = false;
     @observable visible = true;
-    @observable item = this.props.item;
-    validator = new Validator(this.item, {
-        partialItemKey: (rule, value, callback, source, options) => {
-            let errors = [];
-            if (!value) {
-                errors.push(new Error("item key is required"));
-            }
-            if (!/^[a-zA-Z0-9-_.]+?$/.test(value)) {
-                errors.push(new Error("item key can only contain alphanumeric characters, - , _ and ."))
-            }
-            callback(errors);
-        }
-    });
 
     constructor(props) {
         super(props);
         this.basicSectionValidator = null;
         this.parameterSectionValidator = null;
-        this.item.projectKey = this.props.projectKey;
-        this.item.partialItemKey = this.item.itemKey && this.item.itemKey.split(".").slice(1).join(".");
+        this.props.item.projectKey = this.props.projectKey;
+        this.props.item.parameterInfos.map(p => p.key = p.key || guid());
+        this.props.item.rules.map(r => r.key = r.key || guid());
+        this.item = observable(this.props.item);
     }
 
     render = () => {

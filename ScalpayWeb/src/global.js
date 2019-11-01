@@ -18,12 +18,8 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
     response => response,
     error => {
-        if (error.response.data.statusCode) {
-            notification.error({
-                message: "Error code " + error.response.data.statusCode,
-                description: error.response.data.message,
-                duration: 0,
-            });
+        if (error.response.status === 401) {
+            history.push(`/login?returnUrl=${history.getCurrentLocation().pathname}`);
         } else {
             notification.error({
                 message: error.message,

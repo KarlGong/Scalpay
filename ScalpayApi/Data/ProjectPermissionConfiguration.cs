@@ -1,5 +1,7 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Scalpay.Enums;
 using Scalpay.Models;
 
 namespace Scalpay.Data
@@ -15,6 +17,11 @@ namespace Scalpay.Data
 
             builder.Property(p => p.ProjectKey).IsRequired();
             builder.HasIndex(p => p.Username);
+            
+            builder.Property(u => u.Permission).HasConversion(
+                    v => v.ToString(),
+                    v => Enum.Parse<Permission>(v))
+                .IsRequired();
             
             builder.Property(p => p.InsertTime).IsRequired();
 
