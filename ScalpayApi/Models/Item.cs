@@ -11,6 +11,8 @@ namespace Scalpay.Models
         public int Id { get; set; }
 
         public string ItemKey { get; set; }
+        
+        public string ProjectKey { get; set; }
 
         public string Description { get; set; }
 
@@ -23,10 +25,6 @@ namespace Scalpay.Models
         public DateTime InsertTime { get; set; }
 
         public DateTime UpdateTime { get; set; }
-
-        public string ProjectKey { get; set; }
-
-        public Project Project { get; set; }
 
         public List<Rule> Rules { get; set; }
     }

@@ -16,6 +16,8 @@ namespace Scalpay.Data
         
         public DbSet<Item> Items { get; set; }
         
+        public DbSet<Rule> Rules { get; set; }
+        
         public DbSet<ProjectPermission> ProjectPermissions { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)

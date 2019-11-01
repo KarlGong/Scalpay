@@ -10,6 +10,7 @@ import CommandBar from "~/layouts/CommandBar";
 import {Link} from "react-router";
 import global from "~/global";
 import itemModal from "~/modals/itemModal/itemModal";
+import projectModal from "~/modals/projectModal";
 import "./ProjectPage.less";
 import {Role} from "~/const";
 import ItemInfo from "~/components/ItemInfo";
@@ -29,7 +30,8 @@ export default class ProjectPage extends Component {
     @observable criteria = {
         searchText: "",
         pageIndex: 0,
-        pageSize: 20
+        pageSize: 20,
+        orderBy: "itemKey"
     };
 
     componentDidMount = () => {
@@ -45,13 +47,27 @@ export default class ProjectPage extends Component {
                 <Breadcrumb.Item>{this.project.projectKey}</Breadcrumb.Item>
             </Breadcrumb>}>
             <div className="info">
-                <List.Item.Meta
-                    avatar={
-                        <Avatar size="large" src="https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png"/>
+                <List.Item>
+                    <List.Item.Meta
+                        avatar={
+                            <Avatar size="large"
+                                    src="https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png"/>
+                        }
+                        title={this.project.projectKey}
+                        description={this.project.description}
+                    />
+                    {
+                        auth.user.role == Role.Admin &&
+                        <span>
+                            <Button icon="setting" onClick={() => this.editProject()}>
+                                Edit Project
+                            </Button>
+                            <Button icon="team" style={{marginLeft: "10px"}} onClick={() => this.addItem()}>
+                                Manage Permission
+                            </Button>
+                        </span>
                     }
-                    title={this.project.projectKey}
-                    description={this.project.description}
-                />
+                </List.Item>
             </div>
             <List
                 pagination={this.totalCount && {
@@ -69,32 +85,35 @@ export default class ProjectPage extends Component {
                 loading={this.isLoadingItems}
                 itemLayout="horizontal"
                 dataSource={this.items}
-                header={<span>
-                            <Input
-                                style={{width: "250px"}}
-                                prefix={<Icon type="search" style={{color: "rgba(0, 0, 0, .25)"}}/>}
-                                allowClear
-                                placeholder="Search"
-                                onChange={(e) => this.searchText = e.target.value || ""}/>
-                            <Button
-                                    style={{marginLeft: "10px"}}
-                                    type="primary"
-                                    onClick={() => {
-                                        this.criteria.pageIndex = 0;
-                                        this.criteria.searchText = this.searchText;
-                                        this.loadItems()
-                                    }}>
-                            Search
-                            </Button>
-                    {
-                        auth.user.role == Role.Admin &&
+                header={
+                    <span>
+                        <Input
+                            style={{width: "250px"}}
+                            prefix={<Icon type="search" style={{color: "rgba(0, 0, 0, .25)"}}/>}
+                            allowClear
+                            placeholder="Search"
+                            onChange={(e) => this.searchText = e.target.value || ""}/>
                         <Button
-                            style={{float: "right"}}
-                            onClick={() => this.addItem()}>
-                            Add Item
+                            style={{marginLeft: "10px"}}
+                            type="primary"
+                            onClick={() => {
+                                this.criteria.pageIndex = 0;
+                                this.criteria.searchText = this.searchText;
+                                this.loadItems()
+                            }}>
+                            Search
                         </Button>
-                    }
-                            </span>}
+                        {
+                            auth.user.role == Role.Admin &&
+                            <Button
+                                style={{float: "right"}}
+                                icon="plus"
+                                onClick={() => this.addItem()}>
+                                Add Item
+                            </Button>
+                        }
+                    </span>
+                }
                 renderItem={item => {
                     return <List.Item>
                         <List.Item.Meta

@@ -11,6 +11,9 @@ namespace Scalpay.Data
         public void Configure(EntityTypeBuilder<Rule> builder)
         {
             builder.HasKey(r => r.Id);
+            
+            builder.Property(r => r.ItemKey).IsRequired();
+            builder.HasIndex(r => r.ItemKey);
 
             builder.Property(r => r.Condition).HasConversion(
                 v => JsonConvert.SerializeObject(v),
@@ -27,9 +30,6 @@ namespace Scalpay.Data
             builder.Property(r => r.InsertTime).IsRequired();
 
             builder.Property(r => r.UpdateTime).IsRequired();
-
-            builder.Property(r => r.ItemKey).IsRequired();
-            builder.HasIndex(r => r.ItemKey);
         }
     }
 }

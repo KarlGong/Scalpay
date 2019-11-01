@@ -9,7 +9,7 @@ using Scalpay.Data;
 namespace Scalpay.Migrations
 {
     [DbContext(typeof(ScalpayDbContext))]
-    [Migration("20191031072838_init")]
+    [Migration("20191101063838_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -125,7 +125,7 @@ namespace Scalpay.Migrations
 
                     b.HasIndex("ItemKey");
 
-                    b.ToTable("Rule");
+                    b.ToTable("Rules");
                 });
 
             modelBuilder.Entity("Scalpay.Models.User", b =>
@@ -152,37 +152,6 @@ namespace Scalpay.Migrations
                     b.HasKey("Username");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Scalpay.Models.Item", b =>
-                {
-                    b.HasOne("Scalpay.Models.Project", "Project")
-                        .WithMany("Items")
-                        .HasForeignKey("ProjectKey")
-                        .HasPrincipalKey("ProjectKey")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Scalpay.Models.ProjectPermission", b =>
-                {
-                    b.HasOne("Scalpay.Models.Project", "Project")
-                        .WithMany("ProjectPermissions")
-                        .HasForeignKey("ProjectKey")
-                        .HasPrincipalKey("ProjectKey")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Scalpay.Models.User", "User")
-                        .WithMany("ProjectPermissions")
-                        .HasForeignKey("Username");
-                });
-
-            modelBuilder.Entity("Scalpay.Models.Rule", b =>
-                {
-                    b.HasOne("Scalpay.Models.Item", "Item")
-                        .WithMany("Rules")
-                        .HasForeignKey("ItemKey")
-                        .HasPrincipalKey("ItemKey")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

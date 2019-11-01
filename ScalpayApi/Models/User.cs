@@ -21,7 +21,5 @@ namespace Scalpay.Models
         public DateTime InsertTime { get; set; }
 
         public DateTime UpdateTime { get; set; }
-
-        public List<ProjectPermission> ProjectPermissions { get; set; }
     }
 }

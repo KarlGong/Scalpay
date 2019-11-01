@@ -17,10 +17,9 @@ namespace Scalpay.Data
 
             builder.Property(i => i.ItemKey).IsRequired();
             builder.HasIndex(i => i.ItemKey).IsUnique();
-
-            builder.Property(i => i.InsertTime).IsRequired();
-
-            builder.Property(i => i.UpdateTime).IsRequired();
+            
+            builder.Property(i => i.ProjectKey).IsRequired();
+            builder.HasIndex(i => i.ProjectKey);
 
             builder.Property(i => i.ParameterInfos).HasConversion(
                     v => JsonConvert.SerializeObject(v),
@@ -36,11 +35,12 @@ namespace Scalpay.Data
                     v => JsonConvert.SerializeObject(v),
                     v => JsonConvert.DeserializeObject<SExpression>(v))
                 .IsRequired();
+            
+            builder.Property(i => i.InsertTime).IsRequired();
 
-            builder.Property(i => i.ProjectKey).IsRequired();
-            builder.HasIndex(i => i.ProjectKey);
+            builder.Property(i => i.UpdateTime).IsRequired();
 
-            builder.HasMany(i => i.Rules).WithOne(r => r.Item).HasForeignKey(r => r.ItemKey).HasPrincipalKey(i => i.ItemKey);
+            builder.Ignore(i => i.Rules);
         }
     }
 }

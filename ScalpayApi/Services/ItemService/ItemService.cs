@@ -22,7 +22,7 @@ namespace Scalpay.Services.ItemService
 
         Task<Item> AddItemAsync(Item item);
 
-        Task<Item> UpdateItemAsync(Item item);
+        Task<Item> UpdateItemAsync(string itemKey, Item item);
 
         Task<SData> EvalItemAsync(Item item, Dictionary<string, JToken> parameters);
     }
@@ -48,12 +48,13 @@ namespace Scalpay.Services.ItemService
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1);
                 
-                var item = await _context.Items.AsNoTracking().Include(i => i.Rules).FirstOrDefaultAsync(i => i.ItemKey == itemKey);
+                var item = await _context.Items.AsNoTracking().FirstOrDefaultAsync(i => i.ItemKey == itemKey);
                 if (item == null)
                 {
                     throw new NotFoundException($"The item {itemKey} cannot be found.");
                 }
 
+                item.Rules = await _context.Rules.AsNoTracking().Where(r => r.ItemKey == itemKey).ToListAsync();
                 return item;
             });
         }
@@ -74,36 +75,55 @@ namespace Scalpay.Services.ItemService
                 throw new ConflictException($"Item with key {item.ItemKey} is already existing.");
             }
 
+            item.InsertTime = DateTime.UtcNow;
+            item.UpdateTime = DateTime.UtcNow;
+            await _context.Items.AddAsync(item);
+            
             var order = 0;
-            item.Rules?.ForEach(rule =>
+            item.Rules.ForEach(rule =>
             {
+                rule.ItemKey = item.ItemKey;
                 rule.Order = order++;
                 rule.InsertTime = DateTime.UtcNow;
                 rule.UpdateTime = DateTime.UtcNow;
             });
-            item.InsertTime = DateTime.UtcNow;
-            item.UpdateTime = DateTime.UtcNow;
-
-            await _context.Items.AddAsync(item);
+            await _context.Rules.AddRangeAsync(item.Rules);
 
             await _context.SaveChangesAsync();
 
             return item;
         }
 
-        public async Task<Item> UpdateItemAsync(Item item)
+        public async Task<Item> UpdateItemAsync(string itemKey, Item item)
         {
             _cache.Remove($"item-{item.ItemKey}");
             
-            var oldItem = await _context.Items.Include(i => i.Rules).FirstOrDefaultAsync(i => i.ItemKey == item.ItemKey);
+            var oldItem = await _context.Items.FirstOrDefaultAsync(i => i.ItemKey == itemKey);
 
             if (oldItem == null)
             {
-                throw new NotFoundException($"Item {item.ItemKey} cannot be found.");
+                throw new NotFoundException($"Item {itemKey} cannot be found.");
+            }
+            
+            if (itemKey != item.ItemKey && await _context.Items.AsNoTracking().AnyAsync(i => i.ItemKey == item.ItemKey))
+            {
+                throw new ConflictException($"Item with key {item.ItemKey} is already existing.");
             }
 
             _mapper.Map(item, oldItem);
             oldItem.UpdateTime = DateTime.UtcNow;
+            
+            _context.Rules.RemoveRange(_context.Rules.AsNoTracking().Where(r => r.ItemKey == itemKey));
+            var order = 0;
+            item.Rules.ForEach(rule =>
+            {
+                rule.Id = 0;
+                rule.ItemKey = item.ItemKey;
+                rule.Order = order++;
+                rule.InsertTime = DateTime.UtcNow;
+                rule.UpdateTime = DateTime.UtcNow;
+            });
+            await _context.Rules.AddRangeAsync(item.Rules);
 
             await _context.SaveChangesAsync();
 

@@ -20,7 +20,7 @@ namespace Scalpay.Services.ProjectService
 
         Task<Project> AddProjectAsync(Project project);
 
-        Task<Project> UpdateProjectAsync(Project project);
+        Task<Project> UpdateProjectAsync(string projectKey, Project project);
 
         Task<ProjectPermission> GetProjectPermissionAsync(string projectKey, string username);
 
@@ -73,6 +73,9 @@ namespace Scalpay.Services.ProjectService
                 throw new ConflictException($"Project with key {project.ProjectKey} is already existing.");
             }
 
+            project.InsertTime = DateTime.UtcNow;
+            project.UpdateTime = DateTime.UtcNow;
+
             await _context.Projects.AddAsync(project);
 
             await _context.SaveChangesAsync();
@@ -80,13 +83,19 @@ namespace Scalpay.Services.ProjectService
             return project;
         }
 
-        public async Task<Project> UpdateProjectAsync(Project project)
+        public async Task<Project> UpdateProjectAsync(string projectKey, Project project)
         {
-            var oldProject = await _context.Projects.FirstOrDefaultAsync(p => p.ProjectKey == project.ProjectKey);
+            var oldProject = await _context.Projects.FirstOrDefaultAsync(p => p.ProjectKey == projectKey);
             if (oldProject == null)
             {
-                throw new NotFoundException($"The project {project.ProjectKey} cannot be found.");
+                throw new NotFoundException($"The project {projectKey} cannot be found.");
             }
+
+            if (projectKey != project.ProjectKey && await _context.Projects.AsNoTracking().AnyAsync(p => p.ProjectKey == project.ProjectKey))
+            {
+                throw new ConflictException($"Project with key {project.ProjectKey} is already existing.");
+            }
+            // currently do not support update project key
 
             _mapper.Map(project, oldProject);
             oldProject.UpdateTime = DateTime.UtcNow;

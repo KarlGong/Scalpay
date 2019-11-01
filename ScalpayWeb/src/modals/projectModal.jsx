@@ -26,7 +26,7 @@ function edit(project, onSuccess) {
 
     axios.get("/api/projects/" + project.projectKey)
         .then(res =>
-            render(<ProjectModal project={res.data.data} onSuccess={onSuccess} afterClose={() => {
+            render(<ProjectModal project={res.data} onSuccess={onSuccess} afterClose={() => {
                 unmountComponentAtNode(target);
                 target.remove()
             }}/>, target))

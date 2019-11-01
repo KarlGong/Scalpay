@@ -52,6 +52,9 @@ namespace Scalpay
                 config.AllowNullDestinationValues = true;
                 config.CreateMissingTypeMaps = true;
                 config.ValidateInlineMaps = false;
+                // fix mapping same type
+                config.CreateMap<Project, Project>();
+                config.CreateMap<Item, Item>();
             });
 
             services.AddDbContextPool<ScalpayDbContext>(options =>

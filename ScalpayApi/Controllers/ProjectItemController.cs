@@ -59,8 +59,7 @@ namespace Scalpay.Controllers
                 return Forbid("You have no permission to update this project.");
             }
 
-            project.ProjectKey = projectKey;
-            return Ok(await _projectService.UpdateProjectAsync(project));
+            return Ok(await _projectService.UpdateProjectAsync(projectKey, project));
         }
 
         [HttpGet("{projectKey}/items")]
@@ -111,8 +110,7 @@ namespace Scalpay.Controllers
             }
 
             item.ProjectKey = projectKey;
-            item.ItemKey = itemKey;
-            return Ok(await _itemService.UpdateItemAsync(item));
+            return Ok(await _itemService.UpdateItemAsync(itemKey, item));
         }
 
         [HttpPost("{projectKey}/items/{itemKey}/eval")]

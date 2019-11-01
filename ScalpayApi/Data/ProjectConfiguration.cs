@@ -16,10 +16,6 @@ namespace Scalpay.Data
             builder.Property(p => p.InsertTime).IsRequired();
 
             builder.Property(p => p.UpdateTime).IsRequired();
-
-            builder.HasMany(p => p.Items).WithOne(i => i.Project).HasForeignKey(i => i.ProjectKey).HasPrincipalKey(p => p.ProjectKey);
-
-            builder.HasMany(p => p.ProjectPermissions).WithOne(pp => pp.Project).HasForeignKey(p => p.ProjectKey).HasPrincipalKey(pp => pp.ProjectKey);
         }
     }
 }

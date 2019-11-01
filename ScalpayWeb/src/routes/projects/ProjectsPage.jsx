@@ -44,6 +44,7 @@ export default class ProjectsPage extends Component {
                     {
                         auth.user.role == Role.Admin &&
                         <Button
+                            icon="plus"
                             style={{float: "right"}}
                             onClick={() => this.addProject()}>
                             Create Project
@@ -66,7 +67,7 @@ export default class ProjectsPage extends Component {
 
     loadProjects = () => {
         this.loading = true;
-        axios.get("/api/projects")
+        axios.get("/api/projects?orderBy=projectKey")
             .then(response => {
                 this.projects = response.data.data;
             })
