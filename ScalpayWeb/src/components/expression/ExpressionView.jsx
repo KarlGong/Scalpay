@@ -3,7 +3,7 @@ import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable} from "mobx";
 import replace from "string-replace-to-array";
-import {DataType, ExpType, Func} from "~/utils/store";
+import {DataType, ExpType, Func} from "~/const";
 import editExpressionModal from "~/modals/editExpressionModal";
 import cs from "classnames";
 import moment from "moment";

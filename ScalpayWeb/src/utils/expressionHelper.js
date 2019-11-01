@@ -1,4 +1,4 @@
-import {ExpType} from "./store";
+import {ExpType} from "../const";
 
 export function isVariableUsed(expression, variable) {
     if (!expression) return false;

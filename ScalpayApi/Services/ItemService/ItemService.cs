@@ -74,8 +74,10 @@ namespace Scalpay.Services.ItemService
                 throw new ConflictException($"Item with key {item.ItemKey} is already existing.");
             }
 
+            var order = 0;
             item.Rules?.ForEach(rule =>
             {
+                rule.Order = order++;
                 rule.InsertTime = DateTime.UtcNow;
                 rule.UpdateTime = DateTime.UtcNow;
             });

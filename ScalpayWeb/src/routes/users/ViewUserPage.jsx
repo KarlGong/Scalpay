@@ -5,7 +5,7 @@ import {observable} from "mobx";
 import axios from "axios";
 import {Link} from "react-router";
 import auth from "~/utils/auth";
-import {Privilege} from "~/utils/store";
+import {Privilege} from "~/const";
 import PageWrapper from "~/layouts/PageWrapper";
 import CommandBar from "~/layouts/CommandBar";
 import "./ViewUserPage.less";

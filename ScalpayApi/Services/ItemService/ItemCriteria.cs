@@ -9,11 +9,16 @@ namespace Scalpay.Services.ItemService
         public string ItemKey { get; set; }
 
         public string ProjectKey { get; set; }
+        
+        public string SearchText { get; set; }
 
         public override Expression<Func<Item, bool>> ToWherePredicate()
         {
             return i => (ItemKey == null || ItemKey == i.ItemKey)
-                        && (ProjectKey == null || ProjectKey == i.ProjectKey);
+                        && (ProjectKey == null || ProjectKey == i.ProjectKey)
+                        && (SearchText == null
+                            || i.ItemKey.Contains(SearchText)
+                            || i.Description.Contains(SearchText));
         }
     }
 }

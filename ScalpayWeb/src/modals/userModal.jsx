@@ -3,7 +3,7 @@ import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked} from "mobx";
 import axios from "axios";
-import {Privilege} from "~/utils/store";
+import {Privilege} from "~/const";
 import {render, unmountComponentAtNode} from "react-dom";
 import Validator from "~/utils/Validator";
 import UserInfo from "~/components/UserInfo";

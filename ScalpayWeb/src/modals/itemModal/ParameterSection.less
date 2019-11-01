@@ -1,0 +1,42 @@
+.parameter-section{
+  .parameter-list{
+    &.draggable .item {
+      cursor: move;
+    }
+
+    .item {
+      padding: 5px;
+      border-radius: 5px;
+
+      &:hover {
+        background-color: #e6f7ff;
+      }
+
+      .name-input {
+        width: 150px;
+      }
+
+      .type-selector {
+        margin-left: 10px;
+        width: 150px;
+      }
+
+      .delete {
+        margin-left: 10px;
+        color: rgba(255, 0, 0, 0.5);
+        cursor: pointer;
+        font-size: 18px;
+
+        &:hover {
+          color: #f00;
+        }
+      }
+    }
+
+    .add {
+      margin: 5px 0 5px 5px;
+      width: 310px;
+    }
+
+  }
+}

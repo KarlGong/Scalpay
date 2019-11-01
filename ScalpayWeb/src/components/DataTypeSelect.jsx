@@ -1,7 +1,7 @@
 import {Select} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {DataType} from "~/utils/store";
+import {DataType} from "~/const";
 
 @observer
 export default class DataTypeSelect extends Component {

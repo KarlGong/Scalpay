@@ -5,7 +5,7 @@ import {observable} from "mobx";
 import ItemInfo from "./ItemInfo";
 import ProjectInfo from "./ProjectInfo";
 import UserInfo from "./UserInfo";
-import {AuditType} from "~/utils/store";
+import {AuditType} from "~/const";
 import axios from "axios";
 import moment from "moment";
 

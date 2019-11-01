@@ -1,7 +1,7 @@
 import {Select, Tooltip} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {Func} from "~/utils/store";
+import {Func} from "~/const";
 import Validator from "~/utils/Validator";
 import cs from "classnames";
 import ComponentValidator from "~/utils/ComponentValidator";

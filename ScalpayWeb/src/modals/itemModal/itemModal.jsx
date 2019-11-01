@@ -5,12 +5,13 @@ import {observable, untracked} from "mobx";
 import axios from "axios";
 import cs from "classnames";
 import {render, unmountComponentAtNode} from "react-dom";
-import {DataType, DefaultExp} from "~/utils/store";
+import {DataType, DefaultExp} from "~/const";
 import guid from "~/utils/guid";
 import ComponentValidator from "~/utils/ComponentValidator";
 import ItemInfo from "~/components/ItemInfo";
-import ParameterPanel from "./ParameterPanel";
-import RawRulePanel from "./RawRulePanel";
+import ParameterSection from "./ParameterSection";
+import BasicSection from "./BasicSection";
+import RuleSection from "./RuleSection";
 import "./itemModal.less";
 import global from "~/global";
 import Validator from "~/utils/Validator";
@@ -77,20 +78,13 @@ class ItemModal extends Component {
 
     constructor(props) {
         super(props);
+        this.basicSectionValidator = null;
+        this.parameterSectionValidator = null;
         this.item.projectKey = this.props.projectKey;
         this.item.partialItemKey = this.item.itemKey && this.item.itemKey.split(".").slice(1).join(".");
     }
 
     render = () => {
-        const formItemLayout = {
-            labelCol: {
-                span: 5
-            },
-            wrapperCol: {
-                span: 19
-            },
-        };
-
         return <Drawer
             title={this.props.addMode ? "Add Item" : "Edit Item"}
             visible={this.visible}
@@ -101,43 +95,15 @@ class ItemModal extends Component {
         >
             <div className="item-modal">
                 <div className="form">
-                    <Form>
-                        <Form.Item label="Item Key"
-                                   {...formItemLayout}
-                                   validateStatus={this.validator.getResult("partialItemKey").status}
-                                   help={this.validator.getResult("partialItemKey").message}
-                        >
-                            <Input
-                                addonBefore={this.item.projectKey + "."}
-                                style={{width: "500px"}}
-                                // foo.bar to bar
-                                defaultValue={untracked(() => this.item.partialItemKey)}
-                                onChange={(e) => {
-                                    this.item.partialItemKey = e.target.value;
-                                    // bar to foo.bar
-                                    this.item.itemKey = this.item.projectKey + "." + this.item.partialItemKey;
-                                    this.validator.resetResult("partialItemKey")
-                                }}
-                                onBlur={() => this.validator.validate("partialItemKey")}
-                            />
-                        </Form.Item>
-                        <Form.Item label="Description"
-                                   {...formItemLayout}
-                        >
-                            <Input.TextArea
-                                rows={4}
-                                placeholder="Optional"
-                                style={{width: "500px"}}
-                                defaultValue={untracked(() => this.item.description)}
-                                onChange={(e) => this.item.description = e.target.value}
-                            />
-                        </Form.Item>
-                    </Form>
-                    <ParameterPanel
+                    <BasicSection
                         item={this.item}
-                        setValidator={(validator) => {this.parameterPanelValidator = validator}}
+                        setValidator={(validator) => {this.basicSectionValidator = validator}}
                     />
-                    <RawRulePanel item={this.item}/>
+                    <ParameterSection
+                        item={this.item}
+                        setValidator={(validator) => {this.parameterSectionValidator = validator}}
+                    />
+                    <RuleSection item={this.item}/>
                 </div>
                 <div className="actions">
                     <Button onClick={this.handleCancel} style={{marginRight: 8}}>
@@ -152,9 +118,7 @@ class ItemModal extends Component {
     };
 
     handleOk = () => {
-        let validators = [this.basicPanelValidator];
-        validators.push(this.parameterPanelValidator);
-        let componentValidator = new ComponentValidator(validators);
+        let componentValidator = new ComponentValidator([this.basicSectionValidator, this.parameterSectionValidator]);
 
         if (this.props.addMode) {
             componentValidator.validate().then(() => {

@@ -23,8 +23,8 @@ namespace Scalpay.Data
             builder.Property(i => i.UpdateTime).IsRequired();
 
             builder.Property(i => i.ParameterInfos).HasConversion(
-                    v => v == null ? null: JsonConvert.SerializeObject(v),
-                    v => v == null ? null: JsonConvert.DeserializeObject<List<ParameterInfo>>(v))
+                    v => JsonConvert.SerializeObject(v),
+                    v => JsonConvert.DeserializeObject<List<ParameterInfo>>(v))
                 .IsRequired();
 
             builder.Property(i => i.ResultDataType).HasConversion(

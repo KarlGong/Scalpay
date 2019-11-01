@@ -3,7 +3,7 @@ import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {render, unmountComponentAtNode} from "react-dom";
 import {observable, untracked} from "mobx";
-import {DataType, ExpType, Func} from "~/utils/store";
+import {DataType, ExpType, Func} from "~/const";
 import BoolSelect from "~/components/expression/BoolSelect";
 import DateTimeInput from "~/components/expression/DateTimeInput";
 import DurationInput from "~/components/expression/DurationInput";

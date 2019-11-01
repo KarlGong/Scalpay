@@ -5,7 +5,7 @@ import {observer} from "mobx-react";
 import axios from "axios";
 import cs from "classnames";
 import auth from "~/utils/auth";
-import {Privilege} from "~/utils/store";
+import {Privilege} from "~/const";
 import {Link} from "react-router";
 import global from "~/global";
 import itemModal from "~/modals/itemModal/itemModal";

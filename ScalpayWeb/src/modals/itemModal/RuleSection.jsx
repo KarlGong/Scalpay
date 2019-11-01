@@ -1,27 +1,27 @@
 import {Button, Col, Icon, Row} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {DefaultExp} from "~/utils/store";
+import {DefaultExp} from "~/const";
 import ExpressionView from "~/components/expression/ExpressionView";
 import DragListView from "react-drag-listview";
 import guid from "~/utils/guid";
 import "./itemModal.less";
-import "./RawRulePanel.less";
+import "./RuleSection.less";
 
 @observer
-export default class RawRulePanel extends Component {
+export default class RuleSection extends Component {
     static defaultProps = {
         item: {} // observable
     };
 
-    item = this.props.item; // observable
+    item = this.props.item; // observable, changes affect the input item, onXXChange can solve this, but it's too complex
 
     render = () => {
         let conditionWidth = 16;
         let resultWidth = 7;
         let deleteWidth = 1;
 
-        return <div className="raw-rule-panel">
+        return <div className="rule-section">
             <Row className="rule-header">
                 <Col span={conditionWidth}>
                     <b>Condition</b>

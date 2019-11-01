@@ -11,7 +11,8 @@ import {Link} from "react-router";
 import global from "~/global";
 import itemModal from "~/modals/itemModal/itemModal";
 import "./ProjectPage.less";
-import {Role} from "~/utils/store";
+import {Role} from "~/const";
+import ItemInfo from "~/components/ItemInfo";
 
 @observer
 export default class ProjectPage extends Component {
@@ -22,7 +23,14 @@ export default class ProjectPage extends Component {
         description: "",
     };
     @observable items = [];
+    @observable totalCount = 0;
     @observable isLoadingItems = false;
+    searchText = "";
+    @observable criteria = {
+        searchText: "",
+        pageIndex: 0,
+        pageSize: 20
+    };
 
     componentDidMount = () => {
         this.loadProject();
@@ -45,8 +53,18 @@ export default class ProjectPage extends Component {
                     description={this.project.description}
                 />
             </div>
-            {/*<CommandBar leftItems={leftCommands} rightItems={rightCommands}/>*/}
             <List
+                pagination={this.totalCount && {
+                    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                    pageSize: this.criteria.pageSize,
+                    current: this.criteria.pageIndex + 1,
+                    total: this.totalCount,
+                    onChange: (page, pageSize) => {
+                        this.criteria.pageIndex = page - 1;
+                        this.criteria.pageSize = pageSize;
+                        this.loadItems();
+                    }
+                }}
                 className="list"
                 loading={this.isLoadingItems}
                 itemLayout="horizontal"
@@ -56,8 +74,18 @@ export default class ProjectPage extends Component {
                                 style={{width: "250px"}}
                                 prefix={<Icon type="search" style={{color: "rgba(0, 0, 0, .25)"}}/>}
                                 allowClear
-                                placeholder="Filter"
-                                onChange={(e) => this.filterText = e.target.value || ""}/>
+                                placeholder="Search"
+                                onChange={(e) => this.searchText = e.target.value || ""}/>
+                            <Button
+                                    style={{marginLeft: "10px"}}
+                                    type="primary"
+                                    onClick={() => {
+                                        this.criteria.pageIndex = 0;
+                                        this.criteria.searchText = this.searchText;
+                                        this.loadItems()
+                                    }}>
+                            Search
+                            </Button>
                     {
                         auth.user.role == Role.Admin &&
                         <Button
@@ -67,15 +95,12 @@ export default class ProjectPage extends Component {
                         </Button>
                     }
                             </span>}
-                renderItem={project => {
+                renderItem={item => {
                     return <List.Item>
                         <List.Item.Meta
-                            avatar={<Avatar style={{backgroundColor: "#87d068"}} icon="user"/>}
-                            title={<a onClick={() => global.history.push("/projects/" + project.projectKey)}>
-                                {project.projectKey}
-                            </a>}
+                            title={<ItemInfo item={item}/>}
                         />
-                        <div>{project.description}</div>
+                        <div>{item.description}</div>
                     </List.Item>
                 }}
             >
@@ -90,9 +115,12 @@ export default class ProjectPage extends Component {
 
     loadItems = () => {
         this.isLoadingItems = true;
-        axios.get("/api/projects/" + this.props.params.projectKey + "/items")
-            .then((res) => this.items = res.data.data)
-            .finally(() => this.isLoadingItems = false);
+        axios.get("/api/projects/" + this.props.params.projectKey + "/items", {
+            params: this.criteria
+        }).then((res) => {
+            this.items = res.data.data;
+            this.totalCount = res.data.totalCount;
+        }).finally(() => this.isLoadingItems = false);
     };
 
     addItem = () => {

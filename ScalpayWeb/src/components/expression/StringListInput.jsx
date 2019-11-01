@@ -7,6 +7,7 @@ import StringInput from "./StringInput";
 import cs from "classnames";
 import guid from "../../utils/guid";
 import ComponentValidator from "~/utils/ComponentValidator";
+import "./StringListInput.less";
 
 @observer
 export default class StringListInput extends Component {
@@ -24,7 +25,7 @@ export default class StringListInput extends Component {
     validators = {};
 
     render = () => {
-        return <div className={cs("scalpay-list", "draggable", this.props.className)}>
+        return <div className={cs("string-list-input", "draggable", this.props.className)}>
             <DragListView
                 style={this.props.style}
                 onDragEnd={(fromIndex, toIndex) => {
@@ -40,7 +41,7 @@ export default class StringListInput extends Component {
                     this.items.map((item, index) => {
                         return <div key={item.key} className="item">
                             <StringInput
-                                className="single"
+                                className="input"
                                 defaultValue={untracked(() => item.value)}
                                 onChange={(value) => {
                                     item.value = value;

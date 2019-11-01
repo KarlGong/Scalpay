@@ -6,6 +6,7 @@ import guid from "../../utils/guid";
 import Validator from "../../utils/Validator";
 import cs from "classnames";
 import ComponentValidator from "~/utils/ComponentValidator";
+import "./StringDictInput.less";
 
 @observer
 export default class StringDictInput extends Component {
@@ -48,7 +49,7 @@ export default class StringDictInput extends Component {
     }
 
     render = () => {
-        return <div className={cs("scalpay-list", this.props.className)} style={this.props.style}>
+        return <div className={cs("string-dict-input", this.props.className)} style={this.props.style}>
             {
                 this.items.map((item, index) => {
                     return <div key={item.key} className="item">
@@ -56,7 +57,7 @@ export default class StringDictInput extends Component {
                             placement="topLeft"
                             title={this.validators[index].getResult("dictKey").message}>
                             <Input
-                                className={cs("first", this.validators[index].getResult("dictKey").status)}
+                                className={cs("input-key", this.validators[index].getResult("dictKey").status)}
                                 defaultValue={untracked(() => item.dictKey)}
                                 onChange={(e) => {
                                     item.dictKey = e.target.value;
@@ -70,7 +71,7 @@ export default class StringDictInput extends Component {
                             placement="topLeft"
                             title={this.validators[index].getResult("dictValue").message}>
                             <Input
-                                className={cs("second", this.validators[index].getResult("dictValue").status)}
+                                className={cs("input-value", this.validators[index].getResult("dictValue").status)}
                                 defaultValue={untracked(() => item.dictValue)}
                                 onChange={(e) => {
                                     item.dictValue = e.target.value;

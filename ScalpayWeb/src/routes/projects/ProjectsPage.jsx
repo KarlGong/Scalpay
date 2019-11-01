@@ -4,7 +4,7 @@ import {observer} from "mobx-react";
 import {observable, untracked} from "mobx";
 import axios from "axios";
 import auth from "~/utils/auth";
-import {Role} from "~/utils/store";
+import {Role} from "~/const";
 import "./ProjectsPage.less";
 import PageWrapper from "~/layouts/PageWrapper";
 import projectModal from "~/modals/projectModal";

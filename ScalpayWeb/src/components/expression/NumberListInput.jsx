@@ -7,6 +7,7 @@ import DragListView from "react-drag-listview";
 import NumberInput from "./NumberInput";
 import guid from "../../utils/guid";
 import ComponentValidator from "~/utils/ComponentValidator";
+import "./NumberListInput.less";
 
 @observer
 export default class NumberListInput extends Component {
@@ -24,7 +25,7 @@ export default class NumberListInput extends Component {
     validators = {};
 
     render = () => {
-        return <div className={cs("scalpay-list", "draggable", this.props.className)}>
+        return <div className={cs("number-list-input", "draggable", this.props.className)}>
             <DragListView
                 style={this.props.style}
                 onDragEnd={(fromIndex, toIndex) => {
@@ -40,7 +41,7 @@ export default class NumberListInput extends Component {
                     this.items.map((item, index) => {
                         return <div key={item.key} className="item">
                             <NumberInput
-                                className="single"
+                                className="input"
                                 defaultValue={untracked(() => item.value)}
                                 onChange={(value) => {
                                     item.value = value;

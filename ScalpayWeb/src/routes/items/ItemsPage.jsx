@@ -5,7 +5,7 @@ import {observable, untracked} from "mobx";
 import {Link} from "react-router";
 import axios from "axios";
 import auth from "~/utils/auth";
-import {Privilege} from "~/utils/store";
+import {Privilege} from "~/const";
 import PageWrapper from "~/layouts/PageWrapper";
 import ProjectSelect from "~/components/ProjectSelect";
 import ItemInfo from "~/components/ItemInfo";

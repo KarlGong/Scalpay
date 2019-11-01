@@ -3,7 +3,7 @@ import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, runInAction, untracked} from "mobx";
 import cs from "classnames";
-import {DataType, DefaultExp} from "~/utils/store";
+import {DataType, DefaultExp} from "~/const";
 import DataTypeSelect from "~/components/DataTypeSelect";
 import DragListView from "react-drag-listview";
 import guid from "~/utils/guid";
@@ -11,9 +11,10 @@ import "./itemModal.less";
 import Validator from "~/utils/Validator";
 import {isVariableUsed, updateVariable} from "~/utils/expressionHelper";
 import ComponentValidator from "~/utils/ComponentValidator";
+import "./ParameterSection.less";
 
 @observer
-export default class ParameterPanel extends Component {
+export default class ParameterSection extends Component {
     static defaultProps = {
         item: {},
         setValidator: (validator) => {}
@@ -53,37 +54,10 @@ export default class ParameterPanel extends Component {
                 span: 19
             },
         };
-        return <div className="parameter-panel">
+        return <div className="parameter-section">
             <Form>
-                <Form.Item label="Result Data Type"
-                           {...formItemLayout}
-                >
-                    <DataTypeSelect
-                        key={this.resultDataTypeResetKey}
-                        style={{width: "150px"}}
-                        defaultValue={untracked(() => this.item.resultDataType)}
-                        onChange={(dataType) => {
-                            Modal.confirm({
-                                title: "Are you sure to change the result data type?",
-                                content: "The result expression of all rules will be reset.",
-                                okText: "Change",
-                                okType: "danger",
-                                cancelText: "No",
-                                onOk: () => {
-                                    this.item.resultDataType = dataType;
-                                    this.item.rules.map(rule => {
-                                        rule.result = DefaultExp[dataType];
-                                    });
-                                    this.item.defaultResult = DefaultExp[dataType];
-                                },
-                                onCancel: () => {
-                                    this.resultDataTypeResetKey = guid();
-                                },
-                            });
-                        }}/>
-                </Form.Item>
                 <Form.Item label="Parameters" {...formItemLayout}>
-                    <div className="scalpay-list draggable">
+                    <div className="parameter-list draggable">
                         <DragListView
                             onDragEnd={(fromIndex, toIndex) => {
                                 runInAction(() => {
@@ -104,7 +78,7 @@ export default class ParameterPanel extends Component {
                                             placement="topLeft"
                                             title={this.validators[index].getResult("name").message}>
                                             <Input
-                                                className={cs("first", this.validators[index].getResult("name").status)}
+                                                className={cs("name-input", this.validators[index].getResult("name").status)}
                                                 defaultValue={untracked(() => paramInfo.name)}
                                                 onChange={(e) => {
                                                     paramInfo.name = e.target.value;
@@ -130,7 +104,7 @@ export default class ParameterPanel extends Component {
                                             />
                                         </Tooltip>
                                         <DataTypeSelect
-                                            className="second"
+                                            className="type-selector"
                                             defaultValue={untracked(() => paramInfo.dataType)}
                                             onChange={(value) => {
                                                 if (!paramInfo.oldName) return; // for the new added parameter
@@ -203,7 +177,7 @@ export default class ParameterPanel extends Component {
                                 onClick={() => {
                                     this.item.parameterInfos.push({
                                         key: guid(),
-                                        dataType: DataType.string
+                                        dataType: DataType.String
                                     });
                                     let validator = new Validator(
                                         this.item.parameterInfos.slice(-1)[0],

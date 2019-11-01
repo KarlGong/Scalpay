@@ -4,7 +4,7 @@ import {observer} from "mobx-react";
 import {observable} from "mobx";
 import axios from "axios";
 import auth from "~/utils/auth";
-import {DataType, DefaultExp} from "~/utils/store";
+import {DataType, DefaultExp} from "~/const";
 import PageWrapper from "~/layouts/PageWrapper";
 import {Link} from "react-router";
 import guid from "~/utils/guid";
