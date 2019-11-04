@@ -1,5 +1,53 @@
 .permission-modal {
-  .permission-selector {
-    width: 120px;
+  .add-user {
+    .user-selector {
+      width: 550px;
+      margin-right: 10px;
+    }
+
+    .permission-selector {
+      width: 120px;
+      margin-right: 10px;
+    }
+
+    .add {
+    }
+  }
+
+  .ant-list-item {
+    padding: 0;
+  }
+
+  .permission {
+    width: 100%;
+    padding: 6px 0;
+    .user {
+      display: inline-block;
+      width: 550px;
+      margin-right: 10px;
+      padding: 0 3px;
+    }
+    .permission-selector {
+      width: 120px;
+      margin-right: 10px;
+    }
+    .delete {
+      visibility: hidden;
+      margin-left: 20px;
+      opacity: 0.7;
+      cursor: pointer;
+      font-size: 16px;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    &:hover {
+      background-color: #EBECF0;
+      .delete {
+        visibility: visible;
+      }
+    }
   }
 }
