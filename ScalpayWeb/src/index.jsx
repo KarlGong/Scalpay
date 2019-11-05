@@ -13,10 +13,7 @@ import LoginPage from "~/routes/LoginPage";
 import Page403 from "~/routes/Page403";
 import Page404 from "~/routes/Page404";
 import global from "./global";
-
 import "./index.less";
-import "~/assets/fonts/antd-iconfont/iconfont.css";
-import "~/assets/fonts/extra-iconfont/iconfont.css";
 
 const checkAuth = (nextState, replace) => {
     if (nextState.location.pathname === "/login" && auth.user) {

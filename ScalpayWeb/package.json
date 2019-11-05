@@ -40,7 +40,8 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.2.5",
-    "antd": "^3.24.2",
+    "@svgr/webpack": "^4.3.3",
+    "antd": "^3.25.0",
     "async-validator": "^1.8.5",
     "axios": "^0.18.0",
     "classnames": "^2.2.5",

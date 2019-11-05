@@ -14,7 +14,6 @@ import ProjectInfo from "~/components/ProjectInfo";
 import Block from "~/layouts/Block";
 import ExpressionView from "~/components/expression/ExpressionView";
 import AuditsView from "~/components/AuditsView";
-import VersionSelect from "~/components/VersionSelect";
 import "./ItemPage.less";
 
 @observer
@@ -102,7 +101,7 @@ export default class ItemPage extends Component {
                 </Row>
                 {
                     this.item.rules.map(rule =>
-                        <Row key={rule.key} type="flex" align="middle" className="rule">
+                        <Row key={rule.id} type="flex" align="middle" className="rule">
                             <Col span={conditionWidth}><ExpressionView
                                 topLevel
                                 expression={rule.condition}/></Col>

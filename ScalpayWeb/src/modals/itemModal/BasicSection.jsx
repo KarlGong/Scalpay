@@ -2,7 +2,6 @@ import {Form, Input, Modal} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {untracked} from "mobx";
-import ProjectSelect from "~/components/ProjectSelect";
 import "./itemModal.less";
 import Validator from "~/utils/Validator";
 import ComponentValidator from "~/utils/ComponentValidator";
