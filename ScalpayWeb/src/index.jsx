@@ -10,6 +10,8 @@ import ProjectsPage from "~/routes/projects/ProjectsPage";
 import ViewUserPage from "~/routes/users/ViewUserPage";
 import UsersPage from "~/routes/users/UsersPage";
 import LoginPage from "~/routes/LoginPage";
+import Page403 from "~/routes/Page403";
+import Page404 from "~/routes/Page404";
 import global from "./global";
 
 import "./index.less";
@@ -44,6 +46,8 @@ render(
                         <Route path=":itemKey" component={ItemPage}/>
                     </Route>
                 </Route>
+                <Route path="403" component={Page403}/>
+                <Route path="404" component={Page404}/>
                 <Route path="users">
                     <IndexRoute component={UsersPage}/>
                     <Route path=":username" component={ViewUserPage}/>
