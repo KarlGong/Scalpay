@@ -43,6 +43,7 @@ namespace Scalpay
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
                     options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                    options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                 }
             );
 
@@ -117,6 +118,7 @@ namespace Scalpay
                 settings.NullValueHandling = NullValueHandling.Ignore;
                 settings.Converters.Add(new StringEnumConverter());
                 settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                settings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
                 return settings;
             });
 

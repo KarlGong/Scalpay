@@ -24,10 +24,10 @@ export default class RuleSection extends Component {
         return <div className="rule-section">
             <Row className="rule-header">
                 <Col span={conditionWidth}>
-                    <b>Condition</b>
+                    Condition
                 </Col>
                 <Col span={resultWidth}>
-                    <b>Result</b>
+                    Result
                 </Col>
             </Row>
             <div className="rules">
@@ -83,7 +83,7 @@ export default class RuleSection extends Component {
             </div>
             <Row className="rule-default">
                 <Col span={conditionWidth}>
-                    <b>Default</b>
+                    Default
                 </Col>
                 <Col span={resultWidth}>
                     <ExpressionView

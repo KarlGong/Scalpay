@@ -5,13 +5,9 @@ import {observable} from "mobx";
 import axios from "axios";
 import {Link} from "react-router";
 import auth from "~/utils/auth";
-import {Privilege} from "~/const";
 import PageWrapper from "~/layouts/PageWrapper";
-import CommandBar from "~/layouts/CommandBar";
 import "./ViewUserPage.less";
 import userModal from "~/modals/userModal";
-import FieldsViewer from "~/layouts/FieldsViewer";
-import Block from "~/layouts/Block";
 import AuditsView from "~/components/AuditsView";
 
 @observer
@@ -30,29 +26,8 @@ export default class ViewUserPage extends Component {
     };
 
     render = () => {
-        let commands = [];
-        if (auth.hasPrivileges(Privilege.userManage)) {
-            commands.push(<Button onClick={() => this.editUser()}>Edit</Button>);
-        }
-        return <PageWrapper
-            className="view-user-page"
-            breadcrumb={<Breadcrumb>
-                <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
-                <Breadcrumb.Item><Link to="/users">Users</Link></Breadcrumb.Item>
-                <Breadcrumb.Item>{this.props.params.username}</Breadcrumb.Item>
-            </Breadcrumb>}>
-            <CommandBar leftItems={commands}/>
-            <Block name="Basic" loading={this.loading}>
-                <FieldsViewer fields={[
-                    ["Username", this.user.username],
-                    ["Full Name", this.user.fullName],
-                    ["Email", this.user.email],
-                ]}/>
-            </Block>
-            <Block name="Activity">
-                <AuditsView OperatorUserName={this.user.username}/>
-            </Block>
-        </PageWrapper>
+
+
     };
 
     loadUser = () => {

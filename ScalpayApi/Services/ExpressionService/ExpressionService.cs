@@ -76,7 +76,7 @@ namespace Scalpay.Services.ExpressionService
                         result = new SBool(value.Value<bool>());
                         break;
                     case SDataType.DateTime:
-                        result = new SDateTime(value.Value<string>());
+                        result = new SDateTime(value.Value<DateTime>());
                         break;
                     case SDataType.Duration:
                         result = new SDuration(value.Value<string>());

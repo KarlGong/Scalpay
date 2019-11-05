@@ -10,16 +10,7 @@ export default class Block extends Component {
     static defaultProps = {
         name: "",
         className: "",
-        style: {},
-        loading: false
-    };
-
-    @observable loading = this.props.isLoadingItems;
-
-    componentWillReceiveProps = (props) => {
-        if (this.props.isLoadingItems !== props.isLoadingItems) {
-            this.loading = props.isLoadingItems;
-        }
+        style: {}
     };
 
     render = () => {
@@ -27,12 +18,9 @@ export default class Block extends Component {
             <div className="block-header">
                 <span className="name">{this.props.name}</span>
             </div>
-            <Spin spinning={this.loading}>
-                <div className="block-content">
-                    {this.props.children}
-                </div>
-            </Spin>
+            <div className="block-content">
+                {this.props.children}
+            </div>
         </div>
-
     }
 }

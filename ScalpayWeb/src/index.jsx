@@ -4,8 +4,7 @@ import {render} from "react-dom";
 import {AppContainer} from "react-hot-loader";
 import auth from "~/utils/auth";
 import App from "~/routes/App";
-import ItemsPage from "~/routes/items/ItemsPage";
-import ViewItemPage from "~/routes/items/ViewItemPage";
+import ItemPage from "~/routes/items/ItemPage";
 import ProjectPage from "~/routes/projects/ProjectPage";
 import ProjectsPage from "~/routes/projects/ProjectsPage";
 import ViewUserPage from "~/routes/users/ViewUserPage";
@@ -40,7 +39,10 @@ render(
                 <Route path="login" component={LoginPage}/>
                 <Route path="projects">
                     <IndexRoute component={ProjectsPage}/>
-                    <Route path=":projectKey" component={ProjectPage}/>
+                    <Route path=":projectKey">
+                        <IndexRoute component={ProjectPage}/>
+                        <Route path=":itemKey" component={ItemPage}/>
+                    </Route>
                 </Route>
                 <Route path="users">
                     <IndexRoute component={UsersPage}/>

@@ -13,7 +13,7 @@ export default class ItemInfo extends Component {
 
     render = () => {
         return <span>
-            <a onClick={() => global.history.push(`/projects/${this.props.item.projectKey}/items/${this.props.item.itemKey}`)}>
+            <a onClick={() => global.history.push(`/projects/${this.props.item.projectKey}/${this.props.item.itemKey}`)}>
                 {this.props.item.itemKey}
             </a>
         </span>

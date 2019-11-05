@@ -96,7 +96,7 @@ namespace Scalpay.Services.ItemService
 
         public async Task<Item> UpdateItemAsync(string itemKey, Item item)
         {
-            _cache.Remove($"item-{item.ItemKey}");
+            _cache.Remove($"item-{itemKey}");
             
             var oldItem = await _context.Items.FirstOrDefaultAsync(i => i.ItemKey == itemKey);
 
@@ -110,6 +110,7 @@ namespace Scalpay.Services.ItemService
                 throw new ConflictException($"Item with key {item.ItemKey} is already existing.");
             }
 
+            _context.Entry(oldItem).State = EntityState.Modified; // fix cannot track ParametersInfo's change
             _mapper.Map(item, oldItem);
             oldItem.UpdateTime = DateTime.UtcNow;
             

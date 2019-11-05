@@ -128,7 +128,7 @@ namespace Scalpay.Models.SExpressions
 
         public static SDateTime DateTimeNow()
         {
-            return new SDateTime(DateTimeOffset.UtcNow);
+            return new SDateTime(DateTime.UtcNow);
         }
 
         #endregion

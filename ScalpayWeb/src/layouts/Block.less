@@ -1,20 +1,22 @@
 .block {
+  margin-bottom: 20px;
   .block-header {
     display: table;
+
     .name {
       display: inline-block;
       white-space: nowrap;
-      padding-right: 5px;
+      padding:0 10px;
       font-weight: 500;
     }
     &::after {
-      content: '';
-      display: table-cell;
-      position: relative;
-      top: 11px;
-      width: 100%;
-      border-top: 1px solid #dadada;
-    }
+       content: '';
+       display: table-cell;
+       position: relative;
+       top: 11px;
+       width: 100%;
+       border-top: 1px solid #dadada;
+     }
   }
   .block-content {
     padding: 10px;

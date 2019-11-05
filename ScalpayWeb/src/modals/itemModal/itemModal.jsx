@@ -1,4 +1,4 @@
-import {message, Modal, Radio, Drawer, Button, Form, Input} from "antd";
+import {message, Modal, Radio, Drawer, Button, Form, Divider} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, untracked} from "mobx";
@@ -12,6 +12,7 @@ import ItemInfo from "~/components/ItemInfo";
 import ParameterSection from "./ParameterSection";
 import BasicSection from "./BasicSection";
 import RuleSection from "./RuleSection";
+import Block from "~/layouts/Block";
 import "./itemModal.less";
 import global from "~/global";
 import Validator from "~/utils/Validator";
@@ -32,9 +33,9 @@ function edit(item, onSuccess) {
     const target = document.createElement("div");
     document.body.appendChild(target);
 
-    axios.get(`/api/projects/${item.projectKey()}/items/${item.itemKey}` + item.itemKey)
+    axios.get(`/api/projects/${item.projectKey}/items/${item.itemKey}`)
         .then(res =>
-            render(<ItemModal projectKey={res.data.projectKey} item={res.data} onSuccess={onSuccess} afterClose={() => {
+            render(<ItemModal item={res.data} onSuccess={onSuccess} afterClose={() => {
                 unmountComponentAtNode(target);
                 target.remove()
             }}/>, target))
@@ -67,7 +68,9 @@ class ItemModal extends Component {
         super(props);
         this.basicSectionValidator = null;
         this.parameterSectionValidator = null;
-        this.props.item.projectKey = this.props.projectKey;
+        this.oldItemKey = this.props.item.itemKey;
+
+        this.props.item.projectKey = this.props.item.projectKey || this.props.projectKey;
         this.props.item.parameterInfos.map(p => p.key = p.key || guid());
         this.props.item.rules.map(r => r.key = r.key || guid());
         this.item = observable(this.props.item);
@@ -112,9 +115,9 @@ class ItemModal extends Component {
         if (this.props.addMode) {
             componentValidator.validate().then(() => {
                 this.loading = true;
-                axios.put(`/api/projects/${this.props.projectKey}/items/`, this.item)
+                axios.put(`/api/projects/${this.item.projectKey}/items/`, this.item)
                     .then(res => {
-                        let item = res.data.data;
+                        let item = res.data;
                         this.loading = false;
                         this.visible = false;
                         message.success(<span>Item <ItemInfo item={item}/> is added successfully!</span>);
@@ -124,9 +127,9 @@ class ItemModal extends Component {
         } else {
             componentValidator.validate().then(() => {
                 this.loading = true;
-                axios.post(`/api/projects/${this.props.projectKey}/items/${this.item.itemKey}`, this.item)
+                axios.post(`/api/projects/${this.item.projectKey}/items/${this.oldItemKey}`, this.item)
                     .then(res => {
-                        let item = res.data.data;
+                        let item = res.data;
                         this.loading = false;
                         this.visible = false;
                         message.success(<span>Item <ItemInfo item={item}/> is updated successfully!</span>);

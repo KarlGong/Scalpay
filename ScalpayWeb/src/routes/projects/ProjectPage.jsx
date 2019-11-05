@@ -5,8 +5,6 @@ import {observable} from "mobx";
 import axios from "axios";
 import auth from "~/utils/auth";
 import PageWrapper from "~/layouts/PageWrapper";
-import FieldsViewer from "~/layouts/FieldsViewer";
-import CommandBar from "~/layouts/CommandBar";
 import {Link} from "react-router";
 import global from "~/global";
 import itemModal from "~/modals/itemModal/itemModal";
