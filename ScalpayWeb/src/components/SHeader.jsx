@@ -1,4 +1,4 @@
-import {Avatar, Button, Dropdown, Icon, Input, Layout, Menu, Spin} from "antd";
+import {Avatar, Button, Dropdown, Icon, Input, Layout, Menu, Spin, message} from "antd";
 import React, {Component} from "react";
 import {observable} from "mobx";
 import {observer} from "mobx-react";
@@ -37,21 +37,17 @@ export default class SHeader extends Component {
                 auth.user &&
                 <div className="right">
                     <Input
-                        placeholder="Search Item"
+                        placeholder="Search Item Key"
                         suffix={this.searchLoading ? <Spin size="small"/> : <Icon type="search"/>}
                         onPressEnter={e => {
-                            let value = e.target.value;
+                            let itemKey = e.target.value;
+                            let projectKey = itemKey.split(".")[0];
                             this.searchLoading = true;
-                            axios.get("/api/items", {
-                                params: {itemKey: value}
-                            })
-                                .then(response => {
-                                    if (response.data.totalCount === 1) {
-                                        global.history.push("/items/" + value);
-                                    } else {
-                                        global.history.push("/items?searchText=" + value)
-                                    }
-                                }).finally(() => this.searchLoading = false)
+                            axios.get(`/api/projects/${projectKey}/items/${itemKey}`, {
+                                skipInterceptor: true
+                            }).then(response => global.history.push(`/projects/${projectKey}/${itemKey}`),
+                                error => {message.error(error.response.data)}
+                            ).finally(() => this.searchLoading = false)
                         }}
                     />
                     <Dropdown overlay={<Menu>
