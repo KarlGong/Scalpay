@@ -29,7 +29,7 @@ export default class LoginPage extends Component {
                     <Input prefix={<Icon type="user" className="input-icon"/>} placeholder="username"
                            onChange={(e) => {
                                this.loginParams.username = e.target.value;
-                               this.validator.resetResult("username");
+                               this.validator.resetResults();
                            }} onBlur={() => this.validator.validate("username")}/>
                 </Form.Item>
                 <Form.Item validateStatus={this.validator.getResult("password").status}
@@ -38,7 +38,7 @@ export default class LoginPage extends Component {
                            placeholder="Password"
                            onChange={(e) => {
                                this.loginParams.password = e.target.value;
-                               this.validator.resetResult("password");
+                               this.validator.resetResults();
                            }} onBlur={() => this.validator.validate("password")}
                            onKeyUp={e => e.keyCode === 13 && this.onSubmit()}/>
                 </Form.Item>
@@ -58,8 +58,11 @@ export default class LoginPage extends Component {
         this.validator.validateAll().then(() => {
             this.loading = true;
             auth.login(this.loginParams.username, this.loginParams.password, this.loginParams.isKeepLogin)
-                .then(() => global.history.push(this.props.router.location.query.returnUrl || "/"))
-                .finally(() => this.loading = false);
+                .then(() => global.history.push(this.props.router.location.query.returnUrl || "/"),
+                    (res) => {
+                        this.validator.setResult("username", {status: "error", message: res.response.data});
+                        this.validator.setResult("password", {status: "error"});
+                    }).finally(() => this.loading = false);
         });
     }
 }

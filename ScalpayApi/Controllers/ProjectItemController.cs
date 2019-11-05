@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -44,7 +45,7 @@ namespace Scalpay.Controllers
         {
             if (!_user.Role.Equals(Role.Admin))
             {
-                return Forbid("You have no permission to add project.");
+                return StatusCode(403, "You have no permission to add project.");
             }
 
             return Ok(await _projectService.AddProjectAsync(project));
@@ -56,7 +57,7 @@ namespace Scalpay.Controllers
             if (!_user.Role.Equals(Role.Admin)
                 && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.Admin))
             {
-                return Forbid("You have no permission to update this project.");
+                return StatusCode(403, "You have no permission to update this project.");
             }
 
             return Ok(await _projectService.UpdateProjectAsync(projectKey, project));
@@ -68,7 +69,7 @@ namespace Scalpay.Controllers
             if (!_user.Role.Equals(Role.Admin)
                 && (await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.None))
             {
-                return Forbid("You have no permission to view items of this project.");
+                return StatusCode(403, "You have no permission to view items of this project.");
             }
 
             criteria.ProjectKey = projectKey;
@@ -81,7 +82,7 @@ namespace Scalpay.Controllers
             if (!_user.Role.Equals(Role.Admin)
                 && (await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.None))
             {
-                return Forbid("You have no permission to view item of this project.");
+                return StatusCode(403, "You have no permission to view item of this project.");
             }
 
             return Ok(await _itemService.GetItemAsync(itemKey));
@@ -93,7 +94,7 @@ namespace Scalpay.Controllers
             if (!_user.Role.Equals(Role.Admin)
                 && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.Admin))
             {
-                return Forbid("You have no permission to add item for this project.");
+                return StatusCode(403, "You have no permission to add item for this project.");
             }
 
             item.ProjectKey = projectKey;
@@ -106,7 +107,7 @@ namespace Scalpay.Controllers
             if (!_user.Role.Equals(Role.Admin)
                 && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.Admin))
             {
-                return Forbid("You have no permission to edit item for this project.");
+                return StatusCode(403, "You have no permission to edit item for this project.");
             }
 
             item.ProjectKey = projectKey;
@@ -119,7 +120,7 @@ namespace Scalpay.Controllers
             if (!_user.Role.Equals(Role.Admin)
                 && (await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.None))
             {
-                return Forbid("You have no permission to eval item of this project.");
+                return StatusCode(403, "You have no permission to eval item of this project.");
             }
 
             var item = await _itemService.GetItemAsync(itemKey);
@@ -132,7 +133,7 @@ namespace Scalpay.Controllers
             if (!_user.Role.Equals(Role.Admin)
                 && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.Admin))
             {
-                return Forbid("You have no permission to view permissions for this project.");
+                return StatusCode(403, "You have no permission to view permissions for this project.");
             }
 
             return Ok(await _projectService.GetProjectPermissionsAsync(new ProjectPermissionCriteria()
@@ -149,7 +150,7 @@ namespace Scalpay.Controllers
                 && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.Admin)
                 && _user.Username != username)
             {
-                return Forbid("You have no permission to view permission for this project.");
+                return StatusCode(403, "You have no permission to view permission for this project.");
             }
 
             return Ok(await _projectService.GetProjectPermissionAsync(projectKey, username));
@@ -161,7 +162,7 @@ namespace Scalpay.Controllers
             if (!_user.Role.Equals(Role.Admin)
                 && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.Admin))
             {
-                return Forbid("You have no permission to add permission for this project.");
+                return StatusCode(403, "You have no permission to add permission for this project.");
             }
 
             permission.ProjectKey = projectKey;
@@ -175,7 +176,7 @@ namespace Scalpay.Controllers
             if (!_user.Role.Equals(Role.Admin)
                 && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.Admin))
             {
-                return Forbid("You have no permission to edit permission for this project.");
+                return StatusCode(403, "You have no permission to edit permission for this project.");
             }
 
             permission.ProjectKey = projectKey;
@@ -189,7 +190,7 @@ namespace Scalpay.Controllers
             if (!_user.Role.Equals(Role.Admin)
                 && !(await _projectService.GetProjectPermissionAsync(projectKey, _user.Username)).Permission.Equals(Permission.Admin))
             {
-                return Forbid("You have no permission to delete permission for this project.");
+                return StatusCode(403, "You have no permission to delete permission for this project.");
             }
 
             await _projectService.DeleteProjectPermissionAsync(projectKey, username);

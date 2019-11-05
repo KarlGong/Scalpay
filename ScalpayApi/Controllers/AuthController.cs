@@ -57,7 +57,7 @@ namespace Scalpay.Controllers
 
             if (!users.Data.Any())
             {
-                return Unauthorized("Username or password is incorrect.");
+                return Unauthorized("Username and password are incorrect.");
             }
 
             return Ok(new

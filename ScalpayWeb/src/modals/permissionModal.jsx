@@ -80,11 +80,14 @@ class PermissionModal extends Component {
                     <Select className="permission-selector" onChange={value => this.selectedPermission = value}
                             defaultValue={this.selectedPermission}>
                         {
-                            Object.entries(Permission).map(([key, value]) =>
-                                <Select.Option key={value} value={value}>{key}</Select.Option>)
+                            Object.entries(Permission)
+                                .filter(([key, value]) => key !== Permission.None)
+                                .map(([key, value]) =>
+                                    <Select.Option key={value} value={value}>{key}</Select.Option>)
                         }
                     </Select>
-                    <Button className="add" type="primary" onClick={this.addPermissions}>Add</Button>
+                    <Button className="add" type="primary" disabled={!this.selectedUsers.length}
+                            onClick={this.addPermissions}>Add</Button>
                 </div>}
                 renderItem={projectPermission =>
                     <List.Item key={projectPermission.key}>
@@ -92,10 +95,18 @@ class PermissionModal extends Component {
                             <div className="user">
                                 {projectPermission.username}
                             </div>
-                            <Select className="permission-selector" defaultValue={projectPermission.permission}>
+                            <Select
+                                className="permission-selector"
+                                onChange={value => {
+                                    projectPermission.permission = value;
+                                    this.updatePermission(projectPermission)
+                                }}
+                                defaultValue={projectPermission.permission}>
                                 {
-                                    Object.entries(Permission).map(([key, value]) =>
-                                        <Select.Option key={value} value={value}>{key}</Select.Option>)
+                                    Object.entries(Permission)
+                                        .filter(([key, value]) => key !== Permission.None)
+                                        .map(([key, value]) =>
+                                            <Select.Option key={value} value={value}>{key}</Select.Option>)
                                 }
                             </Select>
                             <Icon className="delete" type="close-circle"
@@ -144,7 +155,7 @@ class PermissionModal extends Component {
                 permission: this.selectedPermission
             }).then(res => {
                 this.loadPermissions();
-                message.success(<span><b>{this.selectedUsers[0]}</b> has been added.</span>)
+                message.success(<span><b>{this.selectedUsers[0]}</b> has been added.</span>);
                 this.selectedUsers = [];
             });
         } else {
@@ -162,11 +173,16 @@ class PermissionModal extends Component {
         }
     };
 
+    updatePermission = (permission) => {
+        axios.post(`/api/projects/${permission.projectKey}/permissions/${permission.username}`, permission)
+            .then(res => message.success(<span><b>{permission.username}</b> has been updated.</span>))
+    };
+
     deletePermission = (permission) => {
         axios.delete(`/api/projects/${permission.projectKey}/permissions/${permission.username}`)
             .then(res => {
                 this.loadPermissions();
-                message.success(<span><b>{permission.username}</b> has been removed.</span>)
+                message.success(<span><b>{permission.username}</b> has been removed.</span>);
             });
     }
 }

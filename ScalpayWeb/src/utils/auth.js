@@ -1,5 +1,6 @@
 import {observable} from "mobx";
 import axios from "axios";
+import {Role, Permission} from "~/const";
 
 class Auth {
     @observable user = null;
@@ -24,6 +25,15 @@ class Auth {
         localStorage.removeItem("user");
         sessionStorage.removeItem("user");
     };
+
+    getProjectPermission = (projectKey) => {
+        if (this.user.role === Role.Admin) {
+            return Promise.resolve(Permission.Admin);
+        } else {
+            return axios.get(`/api/projects/${projectKey}/permissions/${this.user.username}`)
+                .then((res) => Promise.resolve(res.data.permission));
+        }
+    }
 }
 
 export default new Auth();

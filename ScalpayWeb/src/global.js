@@ -19,7 +19,9 @@ axios.interceptors.response.use(
     response => response,
     error => {
         if (error.response.status === 401) {
-            history.push(`/login?returnUrl=${history.getCurrentLocation().pathname}`);
+            if (history.getCurrentLocation().pathname !== "/login") {
+                history.push(`/login?returnUrl=${history.getCurrentLocation().pathname}`);
+            }
         } else if ([403, 404].includes(error.response.status)) {
             history.replace(`/${error.response.status}`);
         } else {

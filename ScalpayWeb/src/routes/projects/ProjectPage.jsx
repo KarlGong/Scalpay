@@ -10,13 +10,14 @@ import global from "~/global";
 import itemModal from "~/modals/itemModal/itemModal";
 import projectModal from "~/modals/projectModal";
 import permissionModal from "~/modals/permissionModal";
-import {Role} from "~/const";
+import {Role, Permission} from "~/const";
 import ItemInfo from "~/components/ItemInfo";
 import "./ProjectPage.less";
 
 @observer
 export default class ProjectPage extends Component {
 
+    @observable permission = "";
     @observable project = {
         projectKey: this.props.params.projectKey,
         name: "",
@@ -34,8 +35,15 @@ export default class ProjectPage extends Component {
     };
 
     componentDidMount = () => {
-        this.loadProject();
-        this.loadItems();
+        auth.getProjectPermission(this.project.projectKey).then((permission) => {
+            this.permission = permission;
+            if (this.permission !== Permission.None) {
+                this.loadProject();
+                this.loadItems();
+            } else {
+                global.history.replace("/403");
+            }
+        });
     };
 
     render = () => {
@@ -56,7 +64,7 @@ export default class ProjectPage extends Component {
                         description={this.project.description}
                     />
                     {
-                        auth.user.role == Role.Admin &&
+                        this.permission === Role.Admin &&
                         <span>
                             <Button icon="setting" onClick={() => this.editProject()}>
                                 Edit Project
@@ -103,7 +111,7 @@ export default class ProjectPage extends Component {
                             Search
                         </Button>
                         {
-                            auth.user.role == Role.Admin &&
+                            this.permission === Role.Admin &&
                             <Button
                                 style={{float: "right"}}
                                 icon="plus"

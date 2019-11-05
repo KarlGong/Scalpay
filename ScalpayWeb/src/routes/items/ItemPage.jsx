@@ -4,7 +4,7 @@ import {observer} from "mobx-react";
 import {observable} from "mobx";
 import axios from "axios";
 import auth from "~/utils/auth";
-import {DataType, DefaultExp, Role} from "~/const";
+import {DataType, DefaultExp, Role, Permission} from "~/const";
 import PageWrapper from "~/layouts/PageWrapper";
 import {Link} from "react-router";
 import guid from "~/utils/guid";
@@ -16,12 +16,11 @@ import ExpressionView from "~/components/expression/ExpressionView";
 import AuditsView from "~/components/AuditsView";
 import VersionSelect from "~/components/VersionSelect";
 import "./ItemPage.less";
-import permissionModal from "~/modals/permissionModal";
-import moment from "moment";
 
 @observer
 export default class ItemPage extends Component {
 
+    @observable permission = "";
     @observable item = {
         projectKey: this.props.params.projectKey,
         itemKey: this.props.params.itemKey,
@@ -35,7 +34,14 @@ export default class ItemPage extends Component {
     @observable loading = false;
 
     componentDidMount = () => {
-        this.loadItem();
+        auth.getProjectPermission(this.item.projectKey).then((permission) => {
+            this.permission = permission;
+            if (this.permission !== Permission.None) {
+                this.loadItem();
+            } else {
+                global.history.replace("/403");
+            }
+        });
     };
 
     render = () => {
@@ -58,7 +64,7 @@ export default class ItemPage extends Component {
                         description={this.item.description || ""}
                     />
                     {
-                        auth.user.role == Role.Admin &&
+                        this.permission === Permission.Admin &&
                         <span>
                             <Button icon="setting" onClick={() => this.editItem()}>
                                 Edit Item
