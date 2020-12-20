@@ -5,11 +5,14 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using JWT;
+using JWT.Algorithms;
 using JWT.Builder;
+using JWT.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Scalpay.Services.UserService;
+using Scalpay.Services;
 
 namespace Scalpay
 {
@@ -24,8 +27,8 @@ namespace Scalpay
 
         public async Task Invoke(HttpContext context, IUserService userService, IConfiguration configuration)
         {
-            var path = context.Request.Path.ToString();
-            if (path.Equals("/api/auth/signIn", StringComparison.OrdinalIgnoreCase))
+            var allowNoneRoleAttribute = context.GetEndpoint()?.Metadata?.GetMetadata<AllowAnonymousAttribute>();
+            if (allowNoneRoleAttribute != null)
             {
                 await _next(context);
                 return;
@@ -37,32 +40,50 @@ namespace Scalpay
                 IDictionary<string, object> payload;
                 try
                 {
-                    payload = new JwtBuilder().WithSecret(configuration["JwtSecret"]).MustVerifySignature().Decode<IDictionary<string, object>>(tokens[0]);
+                    payload = new JwtBuilder()
+                        .WithAlgorithm(new HMACSHA256Algorithm())
+                        .WithSecret(configuration["JwtSecret"])
+                        .MustVerifySignature()
+                        .Decode<IDictionary<string, object>>(tokens[0]);
                 }
                 catch (TokenExpiredException e)
                 {
                     context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
-                    context.Response.ContentType = "text/plain";
+                    context.Response.ContentType = "text/plain; charset=UTF-8";
                     await context.Response.WriteAsync("Authorization token has expired.");
                     return;
                 }
                 catch (SignatureVerificationException e)
                 {
                     context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
-                    context.Response.ContentType = "text/plain";
+                    context.Response.ContentType = "text/plain; charset=UTF-8";
                     await context.Response.WriteAsync("Authorization token has invalid signature.");
                     return;
                 }
-                
-                var claimsIdentity = new ClaimsIdentity(new List<Claim>(){new Claim("username", payload["username"].ToString())});
-                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-                context.User = claimsPrincipal;
-                await _next(context);
+
+                if (payload.TryGetValue("id", out var id))
+                {
+                    var claimsIdentity = new ClaimsIdentity(new List<Claim>() {new Claim("id", id.ToString())});
+                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                    context.User = claimsPrincipal;
+                }
+
+                try
+                {
+                    var user = await userService.GetCurrentUserAsync();
+                    await _next(context);
+                }
+                catch (Exception ex)
+                {
+                    context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
+                    context.Response.ContentType = "text/plain; charset=UTF-8";
+                    await context.Response.WriteAsync(ex.Message);  
+                }
             }
             else
             {
                 context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
-                context.Response.ContentType = "text/plain";
+                context.Response.ContentType = "text/plain; charset=UTF-8";
                 await context.Response.WriteAsync("No authorization token found.");
             }
         }

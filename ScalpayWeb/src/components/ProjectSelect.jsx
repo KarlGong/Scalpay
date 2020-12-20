@@ -32,7 +32,7 @@ export default class ProjectSelect extends Component {
         this.debounceSearchProjects = debounce(this.searchProjects, 500);
     };
 
-    render = () => {
+    render() {
         return <Select
             showSearch
             disabled={this.props.disabled}

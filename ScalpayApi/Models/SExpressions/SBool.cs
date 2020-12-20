@@ -7,17 +7,17 @@ namespace Scalpay.Models.SExpressions
     [Serializable]
     public class SBool : SData
     {
-        public bool Inner { get; set; }
+        public bool Value { get; set; }
 
-        public SBool(bool inner)
+        public SBool(bool value)
         {
-            Inner = inner;
+            Value = value;
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("dataType", SDataType.Bool);
-            info.AddValue("data", Inner);
+            info.AddValue("type", SDataType.Bool);
+            info.AddValue("value", Value);
         }
     }
 }

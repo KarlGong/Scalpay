@@ -45,7 +45,7 @@ export default class ParameterSection extends Component {
         this.item.parameterInfos.map(info => info.oldName = info.name); // prevent the parameter's old name
     }
 
-    render = () => {
+    render() {
         const formItemLayout = {
             labelCol: {
                 span: 5

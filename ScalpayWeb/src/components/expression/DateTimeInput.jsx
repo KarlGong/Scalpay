@@ -31,7 +31,7 @@ export default class DateTimeInput extends Component {
         this.props.setValidator(new ComponentValidator(this.validator));
     }
 
-    render = () => {
+    render() {
         return <span>
             <Tooltip
                 placement="topLeft"

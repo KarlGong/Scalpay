@@ -49,7 +49,7 @@ class PermissionModal extends Component {
         this.loadPermissions();
     };
 
-    render = () => {
+    render() {
         return <Drawer
             title="Manage Permission"
             visible={this.visible}

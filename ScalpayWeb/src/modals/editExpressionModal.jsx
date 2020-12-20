@@ -58,7 +58,7 @@ class EditExpressionModal extends Component {
     variableValidator = null;
     functionValidator = null;
 
-    render = () => {
+    render() {
         const valueInputProps = {
             defaultValue: untracked(() => this.expression.value),
             onChange: (value) => this.expression.value = value,

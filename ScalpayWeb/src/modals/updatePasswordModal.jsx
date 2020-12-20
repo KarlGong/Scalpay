@@ -54,7 +54,7 @@ class UpdatePasswordModal extends Component {
     @observable loading = false;
     @observable visible = true;
 
-    render = () => {
+    render() {
         return <Modal
             title="Update Password"
             okText="Update Password"

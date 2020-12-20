@@ -76,7 +76,7 @@ class ItemModal extends Component {
         this.item = observable(this.props.item);
     }
 
-    render = () => {
+    render() {
         return <Drawer
             title={this.props.addMode ? "Add Item" : "Edit Item"}
             visible={this.visible}

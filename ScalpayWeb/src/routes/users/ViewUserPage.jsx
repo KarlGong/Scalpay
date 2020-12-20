@@ -25,7 +25,7 @@ export default class ViewUserPage extends Component {
         this.loadUser();
     };
 
-    render = () => {
+    render() {
 
 
     };

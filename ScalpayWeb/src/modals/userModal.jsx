@@ -65,7 +65,7 @@ class EditUserModal extends Component {
     @observable loading = false;
     @observable visible = true;
 
-    render = () => {
+    render() {
         return <Modal
             title={this.props.addMode ? "Add User" : "Edit User"}
             okText={this.props.addMode ? "Add User" : "Update User"}

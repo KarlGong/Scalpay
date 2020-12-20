@@ -14,7 +14,7 @@ export default class UserInfo extends Component {
     @observable loading = false;
     @observable userInfo = {};
 
-    render = () => {
+    render() {
         return <Popover
             title={this.loading ? null : this.userInfo.fullName}
             content={this.loading ? <Spin size="small"/> : this.userInfo.email}

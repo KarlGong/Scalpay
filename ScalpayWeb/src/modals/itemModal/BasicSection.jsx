@@ -36,7 +36,7 @@ export default class BasicSection extends Component {
         this.props.setValidator(new ComponentValidator(this.validator));
     }
 
-    render = () => {
+    render() {
         const formItemLayout = {
             labelCol: {
                 span: 5

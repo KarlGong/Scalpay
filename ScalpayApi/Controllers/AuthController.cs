@@ -1,19 +1,19 @@
 ﻿using System;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using JWT.Algorithms;
 using JWT.Builder;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Scalpay.Enums;
-using Scalpay.Services.UserService;
+using Scalpay.Exceptions;
+using Scalpay.Models;
+using Scalpay.Services;
 
 namespace Scalpay.Controllers
 {
-    public class SignInParams
+    public class SignInByUsernameParams
     {
         public string Username { get; set; }
         public string Password { get; set; }
@@ -23,21 +23,18 @@ namespace Scalpay.Controllers
     [Route("api/auth")]
     public class AuthController : Controller
     {
-        private readonly HttpContext _httpContext;
         private readonly IUserService _service;
-        private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
-        public AuthController(IHttpContextAccessor accessor, IUserService service, IMapper mapper, IConfiguration configuration)
+        public AuthController(IUserService service, IConfiguration configuration)
         {
-            _httpContext = accessor.HttpContext;
             _service = service;
-            _mapper = mapper;
             _configuration = configuration;
         }
 
-        [HttpPost("signIn")]
-        public async Task<IActionResult> SignIn([FromBody] SignInParams ps)
+        [HttpPost("username")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SignInByUsername([FromBody] SignInByUsernameParams ps)
         {
             if (string.IsNullOrEmpty(ps.Username))
             {
@@ -49,13 +46,12 @@ namespace Scalpay.Controllers
                 return Unauthorized("Password cannot be empty.");
             }
 
-            var users = await _service.GetUsersAsync(new UserCriteria()
+            User user = null;
+            try
             {
-                Username = ps.Username,
-                Password = ps.Password
-            });
-
-            if (!users.Data.Any())
+                user = await _service.GetUserByUsernameAndPasswordAsync(ps.Username, ps.Password);
+            }
+            catch (NotFoundException ex)
             {
                 return Unauthorized("Username and password are incorrect.");
             }
@@ -64,12 +60,12 @@ namespace Scalpay.Controllers
             {
                 Token = new JwtBuilder().WithAlgorithm(new HMACSHA256Algorithm()).WithSecret(_configuration["JwtSecret"])
                     .AddClaim("exp", new DateTimeOffset(ps.Expiration).ToUnixTimeSeconds())
-                    .AddClaim("username", users.Data[0].Username)
-                    .Build(),
-                Username = users.Data[0].Username,
-                Email = users.Data[0].Email,
-                FullName = users.Data[0].FullName,
-                Role = users.Data[0].Role
+                    .AddClaim("id", user.Id)
+                    .Encode(),
+                Username = user.Username,
+                Email = user.Email,
+                FullName = user.FullName,
+                Role = user.Role
             });
         }
     }

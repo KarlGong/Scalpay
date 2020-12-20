@@ -29,7 +29,7 @@ export default class DurationInput extends Component {
         this.seconds = duration.seconds();
     }
 
-    render = () => {
+    render() {
         return <div
             style={this.props.style}
             className={cs("duration-input", this.props.className)}

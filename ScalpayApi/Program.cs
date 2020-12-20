@@ -15,10 +15,9 @@ namespace Scalpay
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
-            var isDevelopment = string.Equals(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"),
-                "Development", StringComparison.OrdinalIgnoreCase);
+            var isDevelopment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")?.RoughEquals("Development");
 
-            var appSettings = isDevelopment ? "appsettings.Development.json" : "appsettings.json";
+            var appSettings = isDevelopment.HasValue && isDevelopment.Value ? "appsettings.Development.json" : "appsettings.json";
 
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())

@@ -7,7 +7,7 @@ import PageWrapper from "~/layouts/PageWrapper";
 
 @observer
 export default class Page403 extends Component {
-    render = () => {
+    render() {
         return <PageWrapper style={{background: "#f0f2f5", justifyContent: "center", alignItems: "center"}}>
             <Result
                 status="403"

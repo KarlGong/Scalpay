@@ -33,7 +33,7 @@ export default class AuditsView extends Component {
         this.fetchAudits();
     };
 
-    render = () => {
+    render() {
         return <List
             pagination={this.totalCount ? {
                 size: "small",

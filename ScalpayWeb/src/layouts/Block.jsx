@@ -13,7 +13,7 @@ export default class Block extends Component {
         style: {}
     };
 
-    render = () => {
+    render() {
         return <div className={cs("block", this.props.className)} style={this.props.style}>
             <div className="block-header">
                 <span className="name">{this.props.name}</span>

@@ -12,7 +12,7 @@ export default class DataTypeSelect extends Component {
         defaultValue: null
     };
 
-    render = () => {
+    render() {
         return <Select
             showSearch
             dropdownMatchSelectWidth={false}

@@ -3,10 +3,11 @@ const srcPath = path.join(__dirname, "src");
 const libPath = path.join(__dirname, "node_modules");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
+    mode: "production",
     entry: [
-        "@babel/polyfill",
         path.join(__dirname, "src/index")
     ],
     output: {
@@ -20,12 +21,21 @@ module.exports = {
             inject: "body",
             filename: "index.html"
         }),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
-        })
     ],
+    optimization: {
+        minimize: true,
+        minimizer: [new TerserPlugin()],
+        runtimeChunk: "single", // enable "runtime" chunk
+        splitChunks: {
+            cacheGroups: {
+                vendor: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: "vendor",
+                    chunks: "all"
+                }
+            }
+        }
+    },
     resolve: {
         extensions: [".js", ".jsx"],
         alias: {
@@ -63,31 +73,18 @@ module.exports = {
                 include: [srcPath, libPath]
             },
             {
-                test: /\.(jpe?g|png|gif|eot|ttf|woff)$/,
+                test: /\.(jpe?g|png|gif|ico|svg|eot|ttf|woff)$/,
                 use: [{
                     loader: "file-loader",
                     query: {
                         name: function (file) {
-                            return file.replace(/\\/g, "/").split("/src/")[1];
+                            let path = require("path");
+                            let dir = path.parse(file).dir.replace(/\\/g, "/").split("/src/")[1];
+                            return dir + "/[name].[hash].[ext]";
                         },
                     }
                 }],
                 include: srcPath
-            },
-            {
-                test: /\.svg$/,
-                use: [
-                    {
-                        loader: "babel-loader",
-                    },
-                    {
-                        loader: "@svgr/webpack",
-                        options: {
-                            babel: false,
-                            icon: true,
-                        },
-                    },
-                ],
             }
         ]
     }

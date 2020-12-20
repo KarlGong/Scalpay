@@ -10,22 +10,14 @@ namespace Scalpay.Data
     {
         public void Configure(EntityTypeBuilder<ProjectPermission> builder)
         {
-            builder.HasKey(p => p.Id);
-            
-            builder.Property(p => p.ProjectKey).IsRequired();
-            builder.HasIndex(p => p.ProjectKey);
-
-            builder.Property(p => p.ProjectKey).IsRequired();
-            builder.HasIndex(p => p.Username);
-            
-            builder.Property(u => u.Permission).HasConversion(
+            builder.Property(pp => pp.Permission).HasConversion(
                     v => v.ToString(),
                     v => Enum.Parse<Permission>(v))
                 .IsRequired();
-            
-            builder.Property(p => p.InsertTime).IsRequired();
 
-            builder.Property(p => p.UpdateTime).IsRequired();
+            builder.HasOne(pp => pp.Project).WithMany(p => p.Permissions).HasForeignKey(pp => pp.ProjectId);
+
+            builder.HasOne(pp => pp.User).WithMany(u => u.ProjectPermissions).HasForeignKey(pp => pp.UserId);
         }
     }
 }

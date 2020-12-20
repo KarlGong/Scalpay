@@ -8,17 +8,17 @@ namespace Scalpay.Models.SExpressions
     [Serializable]
     public class SStringList: SData
     {
-        public List<string> Inner { get; set; }
+        public List<string> Value { get; set; }
 
-        public SStringList(List<string> inner)
+        public SStringList(List<string> value)
         {
-            Inner = inner;
+            Value = value;
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("dataType", SDataType.StringList);
-            info.AddValue("data", Inner);
+            info.AddValue("type", SDataType.StringList);
+            info.AddValue("value", Value);
         }
     }
 }

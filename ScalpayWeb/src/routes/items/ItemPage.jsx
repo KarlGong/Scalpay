@@ -43,7 +43,7 @@ export default class ItemPage extends Component {
         });
     };
 
-    render = () => {
+    render() {
         let conditionWidth = 16;
         let resultWidth = 8;
 

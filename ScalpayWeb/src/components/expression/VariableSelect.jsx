@@ -31,7 +31,7 @@ export default class VariableSelect extends Component {
         this.props.setValidator(new ComponentValidator(this.validator));
     }
 
-    render = () => {
+    render() {
         return <Tooltip
             placement="topLeft"
             title={this.validator.getResult("value").message}>

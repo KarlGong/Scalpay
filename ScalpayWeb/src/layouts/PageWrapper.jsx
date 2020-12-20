@@ -12,7 +12,7 @@ export default class PageWrapper extends Component {
         breadcrumb: null
     };
 
-    render = () => {
+    render() {
         return <Layout.Content className="page-wrapper">
             {
                 <div className="breadcrumb">

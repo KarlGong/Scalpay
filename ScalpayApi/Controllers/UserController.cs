@@ -1,71 +1,80 @@
-﻿using System.Security.Claims;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNet.OData;
+using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc;
+using Scalpay.Data;
 using Scalpay.Enums;
 using Scalpay.Models;
 using Scalpay.Services;
-using Scalpay.Services.UserService;
 
 namespace Scalpay.Controllers
 {
+    public class UserODataController : ODataController
+    {
+        private readonly ScalpayDbContext _context;
+        private readonly User _user;
+
+        public UserODataController(ScalpayDbContext context, IUserService service)
+        {
+            _context = context;
+            _user = service.GetCurrentUserAsync().Result;
+        }
+
+        [HttpGet]
+        [EnableQuery]
+        [ODataRoute("users")]
+        public IActionResult GetUsers()
+        {
+            if (!_user.Role.Equals(Role.Admin))
+            {
+                return Forbid("You have no permission to view users.");
+            }
+            
+            return Ok(_context.Users);
+        }
+        
+        [HttpGet]
+        [EnableQuery]
+        [ODataRoute("users/{id}")]
+        public IActionResult GetUser([FromRoute] int id)
+        {
+            return Ok(_context.Users.Where(u => u.Id == id));
+        }
+    }
+
     [Route("api/users")]
     public class UserController : Controller
     {
         private readonly User _user;
         private readonly IUserService _service;
-        private readonly IMapper _mapper;
 
-        public UserController(IHttpContextAccessor accessor, IUserService service, IMapper mapper)
+        public UserController(IUserService service)
         {
-            _user = service.GetUserAsync(accessor.HttpContext.User.FindFirstValue("username")).Result;
+            _user = service.GetCurrentUserAsync().Result;
             _service = service;
-            _mapper = mapper;
         }
 
-        [HttpGet()]
-        public async Task<ListResults<User>> GetUsers([FromQuery] UserCriteria criteria)
-        {
-            var usersList = await _service.GetUsersAsync(criteria);
-            foreach (var user in usersList.Data)
-            {
-                user.Password = null;
-            }
-
-            return usersList;
-        }
-
-        [HttpGet("{username}")]
-        public async Task<User> GetUser([FromRoute] string username)
-        {
-            var user = await _service.GetUserAsync(username);
-            user.Password = null;
-
-            return user;
-        }
-
-        [HttpPut()]
-        public async Task<IActionResult> AddUser([FromBody] User user)
+        [HttpPost]
+        public async Task<IActionResult> AddUser([FromBody] UpsertUserParams ps)
         {
             if (!_user.Role.Equals(Role.Admin))
             {
                 return Forbid("You have no permission to add user.");
             }
 
-            return Ok(await _service.AddUserAsync(user));
+            return Ok(await _service.AddUserAsync(ps));
         }
 
-        [HttpPost("{username}")]
-        public async Task<IActionResult> UpdateUser([FromRoute] string username, [FromBody] User user)
+        [HttpPut("{username}")]
+        public async Task<IActionResult> UpdateUser([FromRoute] int id, [FromBody] UpsertUserParams ps)
         {
-            if (!_user.Role.Equals(Role.Admin) && _user.Username != username)
+            if (!(_user.Role.Equals(Role.Admin) || _user.Id == id))
             {
-                return Forbid("You have no permission to edit user.");
+                return Forbid("You have no permission to update this user.");
             }
 
-            user.Username = username;
-            return Ok(await _service.UpdateUserAsync(user));
+            return Ok(await _service.UpdateUserAsync(id, ps));
         }
     }
 }

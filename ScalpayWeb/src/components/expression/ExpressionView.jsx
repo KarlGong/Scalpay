@@ -42,7 +42,7 @@ export default class ExpressionView extends Component {
         this.expression = nextProps.expression;
     }
 
-    render = () => {
+    render() {
         const editProps = {
             onClick: this.props.allowEdit ? this.handleClick : undefined,
             className: this.props.allowEdit ? "expression editable" : "expression"

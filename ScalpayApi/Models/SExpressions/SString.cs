@@ -7,17 +7,17 @@ namespace Scalpay.Models.SExpressions
     [Serializable]
     public class SString: SData
     {
-        public string Inner { get; set; }
+        public string Value { get; set; }
 
-        public SString(string inner)
+        public SString(string value)
         {
-            Inner = inner;
+            Value = value;
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("dataType", SDataType.String);
-            info.AddValue("data", Inner);
+            info.AddValue("type", SDataType.String);
+            info.AddValue("value", Value);
         }
     }
 }

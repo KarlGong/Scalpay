@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Scalpay.Exceptions;
 using Scalpay.Services;
-using Scalpay.Services.UserService;
 
 namespace Scalpay
 {
@@ -18,9 +17,9 @@ namespace Scalpay
         private static readonly Dictionary<Type, HttpStatusCode> EXCEPTION_STATUS_CODE_MAP =
             new Dictionary<Type, HttpStatusCode>()
             {
+                {typeof(InvalidParamsException), HttpStatusCode.BadRequest},
+                {typeof(NotFoundException), HttpStatusCode.NotFound},
                 {typeof(ConflictException), HttpStatusCode.Conflict},
-                {typeof(EvalException), HttpStatusCode.InternalServerError},
-                {typeof(NotFoundException), HttpStatusCode.NotFound}
             };
 
         public ExceptionMiddleware(RequestDelegate next)
@@ -28,28 +27,32 @@ namespace Scalpay
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context, IUserService userService, IMapper mapper)
+        public async Task Invoke(HttpContext context)
         {
             try
             {
                 await _next(context);
             }
-            catch (ScalpayException ex)
+            catch (Exception ex)
             {
                 if (EXCEPTION_STATUS_CODE_MAP.TryGetValue(ex.GetType(), out var code))
                 {
                     context.Response.StatusCode = (int) code;
+                    context.Response.ContentType = "text/plain; charset=UTF-8";
                     await context.Response.WriteAsync(ex.Message);
                 }
                 else
                 {
+                    context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
+                    context.Response.ContentType = "text/plain; charset=UTF-8";
+                    await context.Response.WriteAsync(ex.Message);
                     throw;
                 }
             }
         }
     }
 
-    public static class ExceptionMiddlewareExtensions
+    public static class ExceptionMiddlewareExtension
     {
         public static IApplicationBuilder UseScalpayException(this IApplicationBuilder builder)
         {

@@ -22,7 +22,7 @@ export default class ProjectsPage extends Component {
         this.loadProjects();
     };
 
-    render = () => {
+    render() {
         return <PageWrapper
             className="projects-page"
             breadcrumb={<Breadcrumb>

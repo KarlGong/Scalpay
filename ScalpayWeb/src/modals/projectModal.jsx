@@ -61,7 +61,7 @@ class ProjectModal extends Component {
     @observable loading = false;
     @observable visible = true;
 
-    render = () => {
+    render() {
         return <Drawer
             title={this.props.addMode ? "Create Project" : "Edit Project"}
             visible={this.visible}

@@ -24,7 +24,7 @@ export default class StringListInput extends Component {
     });
     validators = {};
 
-    render = () => {
+    render() {
         return <div className={cs("string-list-input", "draggable", this.props.className)}>
             <DragListView
                 style={this.props.style}

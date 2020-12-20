@@ -46,7 +46,7 @@ export default class ProjectPage extends Component {
         });
     };
 
-    render = () => {
+    render() {
         return <PageWrapper
             className="project-page"
             breadcrumb={<Breadcrumb>

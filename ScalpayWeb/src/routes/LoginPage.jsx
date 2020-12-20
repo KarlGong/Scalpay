@@ -18,7 +18,7 @@ export default class LoginPage extends Component {
     });
     @observable loading = false;
 
-    render = () => {
+    render() {
         return <PageWrapper className="login-page">
             <Form className="login-form">
                 <div className="title">

@@ -7,17 +7,17 @@ namespace Scalpay.Models.SExpressions
     [Serializable]
     public class SDateTime: SData
     {
-        public DateTime Inner { get; set; }
+        public DateTime Value { get; set; }
 
-        public SDateTime(DateTime inner)
+        public SDateTime(DateTime value)
         {
-            Inner = inner.ToUniversalTime();
+            Value = value.ToUniversalTime();
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("dataType", SDataType.DateTime);
-            info.AddValue("data", Inner);
+            info.AddValue("type", SDataType.DateTime);
+            info.AddValue("value", Value);
         }
     }
 }

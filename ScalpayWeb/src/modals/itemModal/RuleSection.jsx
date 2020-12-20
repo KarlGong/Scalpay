@@ -16,7 +16,7 @@ export default class RuleSection extends Component {
 
     item = this.props.item; // observable, changes affect the input item, onXXChange can solve this, but it's too complex
 
-    render = () => {
+    render() {
         let conditionWidth = 16;
         let resultWidth = 7;
         let deleteWidth = 1;

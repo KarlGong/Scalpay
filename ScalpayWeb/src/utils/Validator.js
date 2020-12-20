@@ -1,17 +1,16 @@
 import Schema from "async-validator";
-import {observable} from "mobx";
+import {observable, toJS} from "mobx";
 
 export default class Validator {
     static defaultResult = {status: null, message: null};
 
     subject = {};
-    descriptor;
-    _results = {};
+    descriptor = {};
     @observable results = {};
 
     constructor(subject, descriptor) {
         this.subject = subject || {};
-        this.descriptor = descriptor;
+        this.descriptor = descriptor || {};
     }
 
     hasError = () => {
@@ -23,20 +22,17 @@ export default class Validator {
     };
 
     resetResult = (fieldName) => {
-        if (!this._results[fieldName]) return;
+        if (!this.results[fieldName]) return;
 
-        delete this._results[fieldName];
-        this.results = this._results;
+        delete this.results[fieldName];
     };
 
     resetResults = () => {
-        this._results = {};
-        this.results = this._results;
+        this.results = {};
     };
 
     setResult = (fieldName, result) => {
-        this._results[fieldName] = result;
-        this.results = this._results;
+        this.results[fieldName] = result;
     };
 
     validate = (fieldName) => {
@@ -44,9 +40,9 @@ export default class Validator {
             if (this.descriptor[fieldName]) {
                 let status = this.getResult(fieldName).status;
                 if (status === "success") {
-                    resolve(this._results[fieldName]);
+                    resolve(toJS(this.results[fieldName]));
                 } else if (status === "validating" || status === "error"){
-                    reject(this._results[fieldName]);
+                    reject(toJS(this.results[fieldName]));
                 } else  {
                     let descriptor = {[fieldName]: this.descriptor[fieldName]};
                     this.setResult(fieldName, {status: "validating", message: null});
@@ -54,11 +50,11 @@ export default class Validator {
                         if (errors) {
                             // error
                             this.setResult(fieldName, {status: "error", message: errors[0].message});
-                            reject(this._results[fieldName]);
+                            reject(toJS(this.results[fieldName]));
                         } else {
                             // success
                             this.setResult(fieldName, {status: "success", message: null});
-                            resolve(this._results[fieldName]);
+                            resolve(toJS(this.results[fieldName]));
                         }
                     });
                 }

@@ -43,7 +43,7 @@ export default class UsersPage extends Component {
         this.searchUsers();
     };
 
-    render = () => {
+    render() {
         return <PageWrapper
             className="users-page"
             breadcrumb={<Breadcrumb>

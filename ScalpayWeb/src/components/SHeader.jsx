@@ -17,7 +17,7 @@ import "./SHeader.less";
 export default class SHeader extends Component {
     @observable searchLoading = false;
 
-    render = () => {
+    render() {
         return <Layout.Header className="header">
             <div className="left">
                 <div className="logo">

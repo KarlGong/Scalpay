@@ -7,17 +7,17 @@ namespace Scalpay.Models.SExpressions
     [Serializable]
     public class SNumber: SData
     {
-        public double Inner { get; set; }
+        public double Value { get; set; }
         
-        public SNumber(double inner)
+        public SNumber(double value)
         {
-            Inner = inner;
+            Value = value;
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("dataType", SDataType.Number);
-            info.AddValue("data", Inner);
+            info.AddValue("type", SDataType.Number);
+            info.AddValue("value", Value);
         }
     }
 }

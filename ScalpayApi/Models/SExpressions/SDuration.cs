@@ -8,22 +8,22 @@ namespace Scalpay.Models.SExpressions
     [Serializable]
     public class SDuration: SData
     {
-        public TimeSpan Inner { get; set; }
+        public TimeSpan Value { get; set; }
 
-        public SDuration(string inner)
+        public SDuration(string value)
         {
-            Inner = XmlConvert.ToTimeSpan(inner);
+            Value = XmlConvert.ToTimeSpan(value);
         }
 
-        public SDuration(TimeSpan inner)
+        public SDuration(TimeSpan value)
         {
-            Inner = inner;
+            Value = value;
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("dataType", SDataType.Duration);
-            info.AddValue("data", XmlConvert.ToString(Inner));
+            info.AddValue("type", SDataType.Duration);
+            info.AddValue("value", XmlConvert.ToString(Value));
         }
     }
 }

@@ -5,20 +5,50 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Scalpay.Enums;
 using Scalpay.Exceptions;
+using Scalpay.Models;
 using Scalpay.Models.SExpressions;
 
-namespace Scalpay.Services.ExpressionService
+namespace Scalpay.Services
 {
-    public interface IExpressionService
+    public interface IEvalService
     {
-        Task<SData> EvalExpressionAsync(SExpression exp, Dictionary<string, SData> variables);
-
-        Task<SData> ConvertToSDataAsync(JToken value, SDataType dataType);
+        Task<SData> EvalItemAsync(Item item, Dictionary<string, JToken> parameters);
     }
 
-    public class ExpressionService : IExpressionService
+    public class EvalService : IEvalService
     {
-        public async Task<SData> EvalExpressionAsync(SExpression exp, Dictionary<string, SData> variables)
+        public async Task<SData> EvalItemAsync(Item item, Dictionary<string, JToken> parameters)
+        {
+            var variables = new Dictionary<string, SData>();
+
+            if (parameters != null)
+            {
+                foreach (var (key, value) in parameters)
+                {
+                    var parameterInfo = item.ParameterInfos?.SingleOrDefault(p => p.Name == key);
+
+                    if (parameterInfo == null)
+                        continue; // data type not found, since parameter is not declared in parameter list.
+
+                    variables.Add(key, await ConvertToSDataAsync(value, parameterInfo.DataType));
+                }
+            }
+
+            if (item.Rules != null)
+            {
+                foreach (var rule in item.Rules)
+                {
+                    if (((SBool) await EvalExpressionAsync(rule.Condition, variables)).Value)
+                    {
+                        return await EvalExpressionAsync(rule.Result, variables);
+                    }
+                }
+            }
+
+            return await EvalExpressionAsync(item.DefaultResult, variables);
+        }
+
+        private async Task<SData> EvalExpressionAsync(SExpression exp, Dictionary<string, SData> variables)
         {
             SData result = null;
 
@@ -64,7 +94,7 @@ namespace Scalpay.Services.ExpressionService
             return await Task.FromResult(result);
         }
 
-        public async Task<SData> ConvertToSDataAsync(JToken value, SDataType dataType)
+        private async Task<SData> ConvertToSDataAsync(JToken value, SDataType dataType)
         {
             SData result = null;
 

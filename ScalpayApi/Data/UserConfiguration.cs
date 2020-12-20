@@ -11,22 +11,10 @@ namespace Scalpay.Data
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(u => u.Username);
-
-            builder.Property(u => u.Email).IsRequired();
-
-            builder.Property(u => u.Password).IsRequired();
-
-            builder.Property(u => u.FullName).IsRequired();
-            
             builder.Property(u => u.Role).HasConversion(
                     v => v.ToString(),
                     v => Enum.Parse<Role>(v))
                 .IsRequired();
-
-            builder.Property(u => u.InsertTime).IsRequired();
-
-            builder.Property(u => u.UpdateTime).IsRequired();
         }
     }
 }

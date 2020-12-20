@@ -13,34 +13,23 @@ namespace Scalpay.Data
     {
         public void Configure(EntityTypeBuilder<Item> builder)
         {
-            builder.HasKey(i => i.Id);
-
-            builder.Property(i => i.ItemKey).IsRequired();
-            builder.HasIndex(i => i.ItemKey).IsUnique();
-            
-            builder.Property(i => i.ProjectKey).IsRequired();
-            builder.HasIndex(i => i.ProjectKey);
-
             builder.Property(i => i.ParameterInfos).HasConversion(
                     v => JsonConvert.SerializeObject(v),
-                    v => JsonConvert.DeserializeObject<List<ParameterInfo>>(v))
-                .IsRequired();
+                    v => JsonConvert.DeserializeObject<List<ParameterInfo>>(v));
 
             builder.Property(i => i.ResultDataType).HasConversion(
                     v => v.ToString(),
-                    v => Enum.Parse<SDataType>(v))
-                .IsRequired();
+                    v => Enum.Parse<SDataType>(v));
 
             builder.Property(i => i.DefaultResult).HasConversion(
                     v => JsonConvert.SerializeObject(v),
-                    v => JsonConvert.DeserializeObject<SExpression>(v))
-                .IsRequired();
+                    v => JsonConvert.DeserializeObject<SExpression>(v));
             
-            builder.Property(i => i.InsertTime).IsRequired();
-
-            builder.Property(i => i.UpdateTime).IsRequired();
-
-            builder.Ignore(i => i.Rules);
+            builder.Property(i => i.Rules).HasConversion(
+                    v => JsonConvert.SerializeObject(v),
+                    v => JsonConvert.DeserializeObject<List<Rule>>(v));
+            
+            builder.HasOne(i => i.Project).WithMany(p => p.Items).HasForeignKey(i => i.ProjectId);
         }
     }
 }

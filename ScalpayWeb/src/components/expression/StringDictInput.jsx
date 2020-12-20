@@ -48,7 +48,7 @@ export default class StringDictInput extends Component {
         this.setValidator();
     }
 
-    render = () => {
+    render() {
         return <div className={cs("string-dict-input", this.props.className)} style={this.props.style}>
             {
                 this.items.map((item, index) => {

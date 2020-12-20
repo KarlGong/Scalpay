@@ -8,17 +8,17 @@ namespace Scalpay.Models.SExpressions
     [Serializable]
     public class SStringDict: SData
     {
-        public Dictionary<string, string> Inner { get; set; }
+        public Dictionary<string, string> Value { get; set; }
 
-        public SStringDict(Dictionary<string, string> inner)
+        public SStringDict(Dictionary<string, string> value)
         {
-            Inner = inner;
+            Value = value;
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("dataType", SDataType.StringDict);
-            info.AddValue("data", Inner);
+            info.AddValue("type", SDataType.StringDict);
+            info.AddValue("value", Value);
         }
     }
 }

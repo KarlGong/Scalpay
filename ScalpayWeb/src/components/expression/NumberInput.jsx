@@ -34,7 +34,7 @@ export default class NumberInput extends Component {
         this.props.setValidator(new ComponentValidator(this.validator));
     }
 
-    render = () => {
+    render() {
         let precisionProps = {};
         if (this.props.precision || this.props.precision === 0) {
             precisionProps = {precision: this.props.precision};

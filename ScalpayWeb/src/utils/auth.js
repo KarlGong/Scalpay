@@ -10,7 +10,7 @@ class Auth {
     }
 
     login = (username, password, isKeepLogin) => {
-        return axios.post("/api/auth/signIn", {
+        return axios.post("/api/auth/signin", {
             username,
             password
         }).then(response => {
