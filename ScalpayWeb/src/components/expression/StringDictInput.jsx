@@ -1,9 +1,10 @@
-import {Button, Icon, Input, Tooltip} from "antd";
+import {Button, Input, Tooltip} from "antd";
+import {CloseCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, untracked} from "mobx";
-import guid from "../../utils/guid";
-import Validator from "../../utils/Validator";
+import guid from "~/utils/guid";
+import Validator from "~/utils/Validator";
 import cs from "classnames";
 import ComponentValidator from "~/utils/ComponentValidator";
 import "./StringDictInput.less";
@@ -81,9 +82,8 @@ export default class StringDictInput extends Component {
                                 onBlur={(e) => this.validators[index].validate("dictValue")}
                             />
                         </Tooltip>
-                        <Icon
+                        <CloseCircleOutlined
                             className="delete"
-                            type="minus-circle-o"
                             onClick={() => {
                                 this.items.splice(index, 1);
                                 this.validators.splice(index, 1);
@@ -103,7 +103,7 @@ export default class StringDictInput extends Component {
                     this.setValidator();
                     this.handleChange();
                 }}>
-                <Icon type="plus"/> Add Key Value Pair
+                <PlusOutlined /> Add Key Value Pair
             </Button>
         </div>
     };

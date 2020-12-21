@@ -1,4 +1,5 @@
-import {Button, Form, Icon, Input, message, Modal, Tooltip} from "antd";
+import {Button, Form, Input, message, Modal, Tooltip} from "antd";
+import {CloseCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, runInAction, untracked} from "mobx";
@@ -69,11 +70,12 @@ export default class ParameterSection extends Component {
                             }}
                             scrollSpeed={3}
                             nodeSelector=".item"
-                            handleSelector=".item"
+                            handleSelector=".item .dragger"
                         >
                             {
                                 this.item.parameterInfos.map((paramInfo, index) => {
                                     return <div className="item" key={paramInfo.key}>
+                                        <div className="dragger"></div>
                                         <Tooltip
                                             placement="topLeft"
                                             title={this.validators[index].getResult("name").message}>
@@ -134,7 +136,7 @@ export default class ParameterSection extends Component {
                                                 });
                                             }}
                                         />
-                                        <span className="delete" onClick={() => {
+                                        <div className="delete" onClick={() => {
                                             if (!paramInfo.oldName) { // for the new added parameter
                                                 this.item.parameterInfos.splice(index, 1);
                                                 this.validators.splice(index, 1);
@@ -165,13 +167,13 @@ export default class ParameterSection extends Component {
                                                 }
                                             });
                                         }}>
-                                    <Icon type="minus-circle-o"/>
-                                </span>
+                                            <CloseCircleOutlined/>
+                                        </div>
                                     </div>
                                 })
                             }
                             <Button
-                                icon="plus"
+                                icon={<PlusOutlined/>}
                                 type="dashed"
                                 className="add"
                                 onClick={() => {

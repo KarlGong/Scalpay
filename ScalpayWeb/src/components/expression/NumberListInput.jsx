@@ -1,4 +1,5 @@
-import {Button, Icon} from "antd";
+import {Button} from "antd";
+import {CloseCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, untracked} from "mobx";
@@ -35,11 +36,12 @@ export default class NumberListInput extends Component {
                 }}
                 scrollSpeed={3}
                 nodeSelector=".item"
-                handleSelector=".item"
+                handleSelector=".item .dragger"
             >
                 {
                     this.items.map((item, index) => {
                         return <div key={item.key} className="item">
+                            <div className="dragger"></div>
                             <NumberInput
                                 className="input"
                                 defaultValue={untracked(() => item.value)}
@@ -52,9 +54,8 @@ export default class NumberListInput extends Component {
                                     this.setValidator();
                                 }}
                             />
-                            <Icon
+                            <CloseCircleOutlined
                                 className="delete"
-                                type="minus-circle-o"
                                 onClick={() => {
                                     this.items.remove(item);
                                     delete this.validators[item.key];
@@ -65,12 +66,12 @@ export default class NumberListInput extends Component {
                         </div>
                     })
                 }
-                    <Button type="dashed" className="add" onClick={() => {
-                        this.items.push({key: guid(), value: 0});
-                        this.handleChange();
-                    }}>
-                        <Icon type="plus"/> Add Number
-                    </Button>
+                <Button type="dashed" className="add" onClick={() => {
+                    this.items.push({key: guid(), value: 0});
+                    this.handleChange();
+                }}>
+                    <PlusOutlined /> Add Number
+                </Button>
             </DragListView>
         </div>
     };

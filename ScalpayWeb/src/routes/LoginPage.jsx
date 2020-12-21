@@ -1,4 +1,5 @@
-import {Button, Checkbox, Form, Icon, Input} from "antd";
+import {Button, Checkbox, Form, Input, Space} from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, untracked} from "mobx";
@@ -26,7 +27,7 @@ export default class LoginPage extends Component {
                 </div>
                 <Form.Item validateStatus={this.validator.getResult("username").status}
                            help={this.validator.getResult("username").message}>
-                    <Input prefix={<Icon type="user" className="input-icon"/>} placeholder="username"
+                    <Input prefix={<UserOutlined />} placeholder="username"
                            onChange={(e) => {
                                this.loginParams.username = e.target.value;
                                this.validator.resetResults();
@@ -34,7 +35,7 @@ export default class LoginPage extends Component {
                 </Form.Item>
                 <Form.Item validateStatus={this.validator.getResult("password").status}
                            help={this.validator.getResult("password").message}>
-                    <Input prefix={<Icon type="lock" className="input-icon"/>} type="password"
+                    <Input prefix={<LockOutlined />} type="password"
                            placeholder="Password"
                            onChange={(e) => {
                                this.loginParams.password = e.target.value;

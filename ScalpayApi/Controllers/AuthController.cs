@@ -60,7 +60,7 @@ namespace Scalpay.Controllers
             {
                 Token = new JwtBuilder().WithAlgorithm(new HMACSHA256Algorithm()).WithSecret(_configuration["JwtSecret"])
                     .AddClaim("exp", new DateTimeOffset(ps.Expiration).ToUnixTimeSeconds())
-                    .AddClaim("id", user.Id)
+                    .AddClaim("username", user.Username)
                     .Encode(),
                 Username = user.Username,
                 Email = user.Email,

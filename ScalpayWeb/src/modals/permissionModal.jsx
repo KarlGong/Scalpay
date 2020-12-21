@@ -149,7 +149,7 @@ class PermissionModal extends Component {
     addPermissions = () => {
         if (!this.selectedUsers.length) return;
         if (this.selectedUsers.length === 1) {
-            axios.put(`/api/projects/${this.props.projectKey}/permissions`, {
+            axios.post(`/api/projects/${this.props.projectKey}/permissions`, {
                 projectKey: this.props.projectKey,
                 username: this.selectedUsers[0],
                 permission: this.selectedPermission
@@ -161,7 +161,7 @@ class PermissionModal extends Component {
         } else {
             Promise.all(
                 this.selectedUsers.map(user => {
-                    return axios.put(`/api/projects/${this.props.projectKey}/permissions`, {
+                    return axios.post(`/api/projects/${this.props.projectKey}/permissions`, {
                         projectKey: this.props.projectKey,
                         username: user
                     })
@@ -174,7 +174,7 @@ class PermissionModal extends Component {
     };
 
     updatePermission = (permission) => {
-        axios.post(`/api/projects/${permission.projectKey}/permissions/${permission.username}`, permission)
+        axios.put(`/api/projects/${permission.projectKey}/permissions/${permission.username}`, permission)
             .then(res => message.success(<span><b>{permission.username}</b> has been updated.</span>))
     };
 

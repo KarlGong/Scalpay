@@ -1,4 +1,5 @@
-import {Button, Col, Icon, Row} from "antd";
+import {Button, Col, Row} from "antd";
+import {CloseCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {DefaultExp} from "~/const";
@@ -60,9 +61,8 @@ export default class RuleSection extends Component {
                                         onChange={(exp) => rule.result = exp}/>
                                 </Col>
                                 <Col span={deleteWidth}>
-                                    <Icon
+                                    <CloseCircleOutlined
                                         className="delete"
-                                        type="minus-circle-o"
                                         onClick={() => this.item.rules.remove(rule)}
                                     />
                                 </Col>
@@ -72,7 +72,7 @@ export default class RuleSection extends Component {
                 </DragListView>
                 <Row>
                     <Col span={conditionWidth + resultWidth}>
-                        <Button icon="plus" type="dashed" className="rule-add"
+                        <Button icon={<PlusOutlined />} type="dashed" className="rule-add"
                                 onClick={() => this.item.rules.push({
                                     key: guid(),
                                     condition: DefaultExp.Bool,

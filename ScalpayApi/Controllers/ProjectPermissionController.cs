@@ -1,67 +1,71 @@
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNet.OData;
-using Microsoft.AspNet.OData.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Scalpay.Data;
 using Scalpay.Enums;
-using Scalpay.Models;
 using Scalpay.Services;
 
 namespace Scalpay.Controllers
 {
-    public class ProjectPermissionODataController: ODataController
-    {
-        private readonly ScalpayDbContext _context;
-        private readonly User _user;
-        private readonly IProjectPermissionService _permissionService;
-
-        public ProjectPermissionODataController(ScalpayDbContext context, IUserService userService, IProjectPermissionService permissionService)
-        {
-            _context = context;
-            _permissionService = permissionService;
-            _user = userService.GetCurrentUserAsync().Result;
-        }
-        
-        [HttpGet]
-        [EnableQuery]
-        [ODataRoute("projects/{projectId}/permissions")]
-        public async Task<IActionResult> GetPermissions([FromRoute] string projectId)
-        {
-            if (!(_user.Role.Equals(Role.Admin) || (await _permissionService.GetCachedProjectPermissionAsync(projectId, _user.Id)).Permission == Permission.Admin))
-            {
-                return Forbid("You have no permission to permission in this project.");
-            }
-            
-            return Ok(_context.ProjectPermissions.Where(i => i.ProjectId == projectId));
-        }
-        
-    }
-    
     [Route("api/projects")]
     public class ProjectPermissionController: Controller
     {
-        private readonly ScalpayDbContext _context;
-        private readonly User _user;
-        private readonly IProjectPermissionService _permissionService;
+        private readonly IPermissionService _permissionService;
+        private readonly IProjectPermissionService _projectPermissionService;
 
-        public ProjectPermissionController(ScalpayDbContext context, IUserService service, IProjectPermissionService permissionService)
+        public ProjectPermissionController(IPermissionService permissionService, IProjectPermissionService projectPermissionService)
         {
-            _context = context;
-            _user = service.GetCurrentUserAsync().Result;
             _permissionService = permissionService;
+            _projectPermissionService = projectPermissionService;
         }
-        
-        [HttpPost("{projectId}/permissions")]
-        public async Task<IActionResult> GetProjectPermissions([FromRoute] string projectId, [FromBody] UpsertProjectPermissionParams ps)
+
+        [HttpGet("{projectKey}/permissions")]
+        public async Task<IActionResult> GetProjectPermissions([FromRoute] string projectKey, [FromQuery] ProjectPermissionCriteria criteria)
         {
-            if (!(_user.Role.Equals(Role.Admin) || (await _permissionService.GetCachedProjectPermissionAsync(projectId, _user.Id)).Permission == Permission.Admin))
+            if (!await _permissionService.HasProjectPermissionAsync(projectKey, Permission.Admin))
             {
                 return Forbid("You have no permission to view project permissions.");
             }
 
-            ps.ProjectId = projectId;
-            return Ok(await _permissionService.UpdateProjectPermissionAsync(ps));
+            return Ok(await _projectPermissionService.GetProjectPermissionsAsync(criteria));
+        }
+
+        [HttpPost("{projectKey}/permissions")]
+        public async Task<IActionResult> AddProjectPermission([FromRoute] string projectKey, [FromBody] UpsertProjectPermissionParams ps)
+        {
+            if (!await _permissionService.HasProjectPermissionAsync(projectKey, Permission.Admin))
+            {
+                return Forbid("You have no permission to add project permissions.");
+            }
+
+            ps.ProjectKey = projectKey;
+            return Ok(await _projectPermissionService.AddProjectPermissionAsync(ps));
+        }
+        
+        [HttpPut("{projectKey}/permissions/{username}")]
+        public async Task<IActionResult> UpdateProjectPermission([FromRoute] string projectKey, [FromRoute] string username, [FromBody] UpsertProjectPermissionParams ps)
+        {
+            if (!await _permissionService.HasProjectPermissionAsync(projectKey, Permission.Admin))
+            {
+                return Forbid("You have no permission to update this project permissions.");
+            }
+            
+            ps.ProjectKey = projectKey;
+            ps.Username = username;
+            return Ok(await _projectPermissionService.UpdateProjectPermissionAsync(ps));
+        }
+        
+        [HttpDelete("{projectKey}/permissions/{username}")]
+        public async Task<IActionResult> DeleteProjectPermission([FromRoute] string projectKey, [FromRoute] string username)
+        {
+            if (!await _permissionService.HasProjectPermissionAsync(projectKey, Permission.Admin))
+            {
+                return Forbid("You have no permission to delete this project permissions.");
+            }
+
+            await _projectPermissionService.DeleteProjectPermissionAsync(projectKey, username);
+                
+            return Ok();
         }
     }
 }

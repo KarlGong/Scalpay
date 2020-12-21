@@ -1,9 +1,11 @@
+using System;
+
 namespace Scalpay.Enums
 {
+    [Flags]
     public enum Permission
     {
-        None,
-        Read,
-        Admin
+        Read = 1,
+        Admin = 3
     }
 }

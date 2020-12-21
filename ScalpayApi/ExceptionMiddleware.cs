@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Scalpay.Exceptions;
-using Scalpay.Services;
+using Serilog;
 
 namespace Scalpay
 {
@@ -27,7 +26,7 @@ namespace Scalpay
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, ILogger logger)
         {
             try
             {
@@ -46,7 +45,7 @@ namespace Scalpay
                     context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
                     context.Response.ContentType = "text/plain; charset=UTF-8";
                     await context.Response.WriteAsync(ex.Message);
-                    throw;
+                    logger.Error(ex, ex.Message);
                 }
             }
         }

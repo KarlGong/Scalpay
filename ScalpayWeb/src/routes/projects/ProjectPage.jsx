@@ -1,4 +1,5 @@
-import {Breadcrumb, Button, List, Avatar, Input, Icon} from "antd";
+import {Breadcrumb, Button, List, Avatar, Input} from "antd";
+import {EditOutlined, PlusOutlined, SearchOutlined, TeamOutlined} from "@ant-design/icons";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable} from "mobx";
@@ -66,10 +67,10 @@ export default class ProjectPage extends Component {
                     {
                         this.permission === Role.Admin &&
                         <span>
-                            <Button icon="setting" onClick={() => this.editProject()}>
+                            <Button icon={<EditOutlined />} onClick={() => this.editProject()}>
                                 Edit Project
                             </Button>
-                            <Button icon="team" style={{marginLeft: "10px"}} onClick={() => permissionModal.open(this.project.projectKey)}>
+                            <Button icon={<TeamOutlined />} style={{marginLeft: "10px"}} onClick={() => permissionModal.open(this.project.projectKey)}>
                                 Manage Permission
                             </Button>
                         </span>
@@ -96,7 +97,7 @@ export default class ProjectPage extends Component {
                     <span>
                         <Input
                             style={{width: "250px"}}
-                            prefix={<Icon type="search" style={{color: "rgba(0, 0, 0, .25)"}}/>}
+                            prefix={<SearchOutlined style={{color: "rgba(0, 0, 0, .25)"}}/>}
                             allowClear
                             placeholder="Search"
                             onChange={(e) => this.searchText = e.target.value || ""}/>
@@ -114,7 +115,7 @@ export default class ProjectPage extends Component {
                             this.permission === Role.Admin &&
                             <Button
                                 style={{float: "right"}}
-                                icon="plus"
+                                icon={<PlusOutlined />}
                                 onClick={() => this.addItem()}>
                                 Add Item
                             </Button>
@@ -144,7 +145,7 @@ export default class ProjectPage extends Component {
         axios.get("/api/projects/" + this.props.params.projectKey + "/items", {
             params: this.criteria
         }).then((res) => {
-            this.items = res.data.data;
+            this.items = res.data.value;
             this.totalCount = res.data.totalCount;
         }).finally(() => this.isLoadingItems = false);
     };

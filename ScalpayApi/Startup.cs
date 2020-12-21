@@ -1,18 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 using AutoMapper;
-using Microsoft.AspNet.OData.Builder;
-using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.OData.Edm;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -21,6 +14,7 @@ using Scalpay.Enums;
 using Scalpay.Models;
 using Scalpay.Services;
 using Serilog;
+using ILogger = Serilog.ILogger;
 
 namespace Scalpay
 {
@@ -31,8 +25,6 @@ namespace Scalpay
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
-            Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -49,8 +41,6 @@ namespace Scalpay
                 }
             );
             
-            services.AddOData();
-
             services.AddAutoMapper(config =>
             {
                 config.AllowNullCollections = true;
@@ -58,8 +48,10 @@ namespace Scalpay
                 // config.CreateMissingTypeMaps = true;
                 // config.ValidateInlineMaps = false;
                 // fix mapping same type
-                config.CreateMap<Project, Project>();
-                config.CreateMap<Item, Item>();
+                config.CreateMap<UpsertProjectParams, Project>();
+                config.CreateMap<UpsertItemParams, Item>();
+                config.CreateMap<UpsertProjectPermissionParams, ProjectPermission>();
+                config.CreateMap<UpsertUserParams, User>();
             });
 
             services.AddDbContextPool<ScalpayDbContext>(options =>
@@ -74,15 +66,19 @@ namespace Scalpay
             services.AddScoped<IEvalService, EvalService>();
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IProjectService, ProjectService>();
+            services.AddScoped<IProjectPermissionService, ProjectPermissionService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPermissionService, PermissionService>();
+
+            services.AddSingleton<ILogger>(new LoggerConfiguration().ReadFrom.Configuration(Configuration).CreateLogger());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, ScalpayDbContext dbContext)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory, ScalpayDbContext dbContext, ILogger logger)
         {
             InitApplication(dbContext, env);
 
-            loggerFactory.AddSerilog();
+            loggerFactory.AddSerilog(logger);
 
             app.UseScalpayException();
 
@@ -90,36 +86,12 @@ namespace Scalpay
 
             app.UseScalpayAuthentication();
             
-            app.UseODataResultRewrite();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                
-                // odata
-                endpoints.SetTimeZoneInfo(TimeZoneInfo.Utc);
-                endpoints.Select().Expand().Filter().OrderBy().MaxTop(100).Count();
-                endpoints.MapODataRoute("odata", "api/odata", GetEdmModel());
             });
         }
         
-        private IEdmModel GetEdmModel()
-        {
-            var builder = new ODataConventionModelBuilder();
-            builder.EnableLowerCamelCase();
-
-            var users = builder.EntitySet<User>("users");
-            users.HasManyBinding(u => u.ProjectPermissions, "projectPermissions");
-
-            var items = builder.EntitySet<Item>("items");
-
-            var projects = builder.EntitySet<Project>("projects");
-            projects.HasManyBinding(p => p.Items, "items");
-            projects.HasManyBinding(p => p.Permissions, "permissions");
-            
-            return builder.GetEdmModel();
-        }
-
         public void InitApplication(ScalpayDbContext context, IWebHostEnvironment env)
         {
             // json.net default settings
@@ -156,7 +128,7 @@ namespace Scalpay
             {
                 context.Projects.Add(new Project()
                 {
-                    Id = "__scalpay",
+                    ProjectKey = "__scalpay",
                     Description = "The Scalpay's configurations."
                 });
                 context.SaveChanges();

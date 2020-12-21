@@ -58,14 +58,14 @@ class ProjectModal extends Component {
             callback(errors);
         }
     });
-    @observable loading = false;
+    @observable isSubmitting = false;
     @observable visible = true;
 
     render() {
         return <Drawer
             title={this.props.addMode ? "Create Project" : "Edit Project"}
             visible={this.visible}
-            width={500}
+            width={600}
             maskClosable={false}
             onClose={this.handleCancel}
             afterVisibleChange={visible => !visible && this.props.afterClose()}
@@ -108,7 +108,7 @@ class ProjectModal extends Component {
                 <Button onClick={this.handleCancel} style={{marginRight: 8}}>
                     Cancel
                 </Button>
-                <Button onClick={this.handleOk} type="primary" loading={this.loading}>
+                <Button onClick={this.handleOk} type="primary" loading={this.isSubmitting}>
                     Submit
                 </Button>
             </div>
@@ -120,29 +120,29 @@ class ProjectModal extends Component {
             this.validator
                 .validateAll()
                 .then(() => {
-                    this.loading = true;
-                    axios.put("/api/projects", this.project)
+                    this.isSubmitting = true;
+                    axios.post("/api/projects", this.project)
                         .then(res => {
                             let project = res.data;
-                            this.loading = false;
+                            this.isSubmitting = false;
                             this.visible = false;
                             message.success(<span>Project <ProjectInfo project={project}/> is created successfully!</span>);
                             this.props.onSuccess(project);
-                        }, () => this.loading = false);
+                        }, () => this.isSubmitting = false);
                 });
         } else {
             this.validator
                 .validateAll()
                 .then(() => {
-                    this.loading = true;
-                    axios.post("/api/projects/" + this.project.projectKey, this.project)
+                    this.isSubmitting = true;
+                    axios.put("/api/projects/" + this.project.projectKey, this.project)
                         .then(res => {
                             let project = res.data;
-                            this.loading = false;
+                            this.isSubmitting = false;
                             this.visible = false;
                             message.success(<span>Project <ProjectInfo project={project}/> is updated successfully!</span>);
                             this.props.onSuccess(project);
-                        }, () => this.loading = false);
+                        }, () => this.isSubmitting = false);
                 });
         }
     };

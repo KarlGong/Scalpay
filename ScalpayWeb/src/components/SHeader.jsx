@@ -1,11 +1,11 @@
-import {Avatar, Button, Dropdown, Icon, Input, Layout, Menu, Spin, message} from "antd";
+import {Avatar, Button, Dropdown, Input, Layout, Menu, Spin, message} from "antd";
+import {SearchOutlined, UserOutlined} from "@ant-design/icons";
 import React, {Component} from "react";
 import {observable} from "mobx";
 import {observer} from "mobx-react";
 import axios from "axios";
 import cs from "classnames";
 import auth from "~/utils/auth";
-import {Privilege} from "~/const";
 import {Link} from "react-router";
 import global from "~/global";
 import itemModal from "~/modals/itemModal/itemModal";
@@ -38,7 +38,7 @@ export default class SHeader extends Component {
                 <div className="right">
                     <Input
                         placeholder="Search Item Key"
-                        suffix={this.searchLoading ? <Spin size="small"/> : <Icon type="search"/>}
+                        suffix={this.searchLoading ? <Spin size="small"/> : <SearchOutlined />}
                         onPressEnter={e => {
                             let itemKey = e.target.value;
                             let projectKey = itemKey.split(".")[0];
@@ -66,7 +66,7 @@ export default class SHeader extends Component {
                         </Menu.Item>
                     </Menu>} trigger={["click"]} placement="bottomRight">
                         <span className="user-dropdown">
-                            <Avatar size="small" style={{backgroundColor: "#87d068"}} icon="user"/>
+                            <Avatar size="small" style={{backgroundColor: "#87d068"}} icon={<UserOutlined />}/>
                             <span className="full-name">{auth.user.fullName}</span>
                         </span>
                     </Dropdown>

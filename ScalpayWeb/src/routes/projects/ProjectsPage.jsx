@@ -1,4 +1,5 @@
-import {Avatar, Breadcrumb, Button, Icon, Input, List} from "antd";
+import {Avatar, Breadcrumb, Button, Input, List} from "antd";
+import {PlusOutlined, SearchOutlined, UserOutlined} from "@ant-design/icons";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, untracked} from "mobx";
@@ -37,14 +38,14 @@ export default class ProjectsPage extends Component {
                 header={<span>
                             <Input
                                 style={{width: "250px"}}
-                                prefix={<Icon type="search" style={{color: "rgba(0, 0, 0, .25)"}}/>}
+                                prefix={<SearchOutlined style={{color: "rgba(0, 0, 0, .25)"}}/>}
                                 allowClear
                                 placeholder="Filter"
                                 onChange={(e) => this.filterText = e.target.value || ""}/>
                     {
-                        auth.user.role == Role.Admin &&
+                        auth.user.role === Role.Admin &&
                         <Button
-                            icon="plus"
+                            icon={<PlusOutlined />}
                             style={{float: "right"}}
                             onClick={() => this.addProject()}>
                             Create Project
@@ -54,7 +55,7 @@ export default class ProjectsPage extends Component {
                 renderItem={project => {
                     return <List.Item>
                         <List.Item.Meta
-                            avatar={<Avatar style={{backgroundColor: "#87d068"}} icon="user"/>}
+                            avatar={<Avatar style={{backgroundColor: "#87d068"}} icon={<UserOutlined />}/>}
                             title={<ProjectInfo project={project}/>}
                         />
                         <div>{project.description}</div>
@@ -69,7 +70,7 @@ export default class ProjectsPage extends Component {
         this.loading = true;
         axios.get("/api/projects?orderBy=projectKey")
             .then(response => {
-                this.projects = response.data.data;
+                this.projects = response.data.value;
             })
             .finally(() => this.loading = false);
     };

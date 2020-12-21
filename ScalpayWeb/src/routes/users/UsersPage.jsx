@@ -103,7 +103,7 @@ export default class UsersPage extends Component {
             params: this.criteria
         })
             .then(response => {
-                this.users = response.data.data;
+                this.users = response.data.value;
                 this.totalCount = response.data.totalCount;
             })
             .finally(() => this.loading = false);

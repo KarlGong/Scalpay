@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Scalpay.Exceptions;
 using Scalpay.Services;
 
 namespace Scalpay
@@ -61,24 +62,26 @@ namespace Scalpay
                     return;
                 }
 
-                if (payload.TryGetValue("id", out var id))
+                if (payload.TryGetValue("username", out var username))
                 {
-                    var claimsIdentity = new ClaimsIdentity(new List<Claim>() {new Claim("id", id.ToString())});
+                    var claimsIdentity = new ClaimsIdentity(new List<Claim>() {new Claim("username", username.ToString())});
                     var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
                     context.User = claimsPrincipal;
                 }
 
                 try
                 {
-                    var user = await userService.GetCurrentUserAsync();
-                    await _next(context);
+                    await userService.GetCurrentUserAsync();
                 }
-                catch (Exception ex)
+                catch (NotFoundException ex)
                 {
                     context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
                     context.Response.ContentType = "text/plain; charset=UTF-8";
-                    await context.Response.WriteAsync(ex.Message);  
+                    await context.Response.WriteAsync(ex.Message); 
+                    return;
                 }
+                
+                await _next(context);
             }
             else
             {

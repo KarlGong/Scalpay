@@ -115,7 +115,7 @@ class ItemModal extends Component {
         if (this.props.addMode) {
             componentValidator.validate().then(() => {
                 this.loading = true;
-                axios.put(`/api/projects/${this.item.projectKey}/items/`, this.item)
+                axios.post(`/api/projects/${this.item.projectKey}/items/`, this.item)
                     .then(res => {
                         let item = res.data;
                         this.loading = false;
@@ -127,7 +127,7 @@ class ItemModal extends Component {
         } else {
             componentValidator.validate().then(() => {
                 this.loading = true;
-                axios.post(`/api/projects/${this.item.projectKey}/items/${this.oldItemKey}`, this.item)
+                axios.put(`/api/projects/${this.item.projectKey}/items/${this.oldItemKey}`, this.item)
                     .then(res => {
                         let item = res.data;
                         this.loading = false;

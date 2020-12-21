@@ -10,10 +10,13 @@ class Auth {
     }
 
     login = (username, password, isKeepLogin) => {
-        return axios.post("/api/auth/signin", {
+        localStorage.removeItem("user");
+        sessionStorage.removeItem("user");
+
+        return axios.post("/api/auth/username", {
             username,
             password
-        }).then(response => {
+        }, {skipInterceptor: true}).then(response => {
             this.user = response.data;
             let storage = isKeepLogin ? localStorage : sessionStorage;
             storage.setItem("user", JSON.stringify(this.user));

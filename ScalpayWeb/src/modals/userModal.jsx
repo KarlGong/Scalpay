@@ -130,7 +130,7 @@ class EditUserModal extends Component {
                 .validateAll()
                 .then(() => {
                     this.loading = true;
-                    axios.put("/api/users", this.user)
+                    axios.post("/api/users", this.user)
                         .then(res => {
                             let user = res.data.data;
                             this.loading = false;
@@ -144,7 +144,7 @@ class EditUserModal extends Component {
                 .validateAll()
                 .then(() => {
                     this.loading = true;
-                    axios.post("/api/users/" + this.user.username, this.user)
+                    axios.put("/api/users/" + this.user.username, this.user)
                         .then(res => {
                             let user = res.data.data;
                             this.loading = false;

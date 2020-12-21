@@ -2,6 +2,7 @@ import {browserHistory} from "react-router";
 import {notification} from "antd";
 import axios from "axios";
 import auth from "~/utils/auth";
+import {toString} from "~/utils/util";
 
 const history = browserHistory;
 
@@ -19,7 +20,7 @@ axios.interceptors.response.use(
     response => response,
     error => {
         if (!error.config.skipInterceptor) {
-            if (error.response.status === 401) {
+            if (error.response && error.response.status === 401) {
                 if (history.getCurrentLocation().pathname !== "/login") {
                     history.push(`/login?returnUrl=${history.getCurrentLocation().pathname}`);
                 }
@@ -28,7 +29,7 @@ axios.interceptors.response.use(
             } else {
                 notification.error({
                     message: error.message,
-                    description: error.response.data,
+                    description: error.response && toString(error.response.data),
                     duration: 0,
                 });
             }

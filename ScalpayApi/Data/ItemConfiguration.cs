@@ -13,6 +13,8 @@ namespace Scalpay.Data
     {
         public void Configure(EntityTypeBuilder<Item> builder)
         {
+            builder.HasIndex(i => i.ItemKey).IsUnique();
+            
             builder.Property(i => i.ParameterInfos).HasConversion(
                     v => JsonConvert.SerializeObject(v),
                     v => JsonConvert.DeserializeObject<List<ParameterInfo>>(v));
@@ -28,8 +30,6 @@ namespace Scalpay.Data
             builder.Property(i => i.Rules).HasConversion(
                     v => JsonConvert.SerializeObject(v),
                     v => JsonConvert.DeserializeObject<List<Rule>>(v));
-            
-            builder.HasOne(i => i.Project).WithMany(p => p.Items).HasForeignKey(i => i.ProjectId);
         }
     }
 }

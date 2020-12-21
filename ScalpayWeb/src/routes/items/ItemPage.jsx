@@ -1,4 +1,5 @@
 import {Avatar, Breadcrumb, Button, Col, Layout, List, Row, Descriptions} from "antd";
+import {EditOutlined} from "@ant-design/icons";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable} from "mobx";
@@ -65,7 +66,7 @@ export default class ItemPage extends Component {
                     {
                         this.permission === Permission.Admin &&
                         <span>
-                            <Button icon="setting" onClick={() => this.editItem()}>
+                            <Button icon={<EditOutlined />} onClick={() => this.editItem()}>
                                 Edit Item
                             </Button>
                         </span>
@@ -101,7 +102,7 @@ export default class ItemPage extends Component {
                 </Row>
                 {
                     this.item.rules.map(rule =>
-                        <Row key={rule.id} type="flex" align="middle" className="rule">
+                        <Row key={rule.key} type="flex" align="middle" className="rule">
                             <Col span={conditionWidth}><ExpressionView
                                 topLevel
                                 expression={rule.condition}/></Col>
@@ -121,7 +122,10 @@ export default class ItemPage extends Component {
     loadItem = () => {
         this.loading = true;
         axios.get(`/api/projects/${this.item.projectKey}/items/${this.item.itemKey}`)
-            .then((res) => this.item = res.data)
+            .then((res) => {
+                res.data.rules.map(r => r.key = r.key || guid());
+                this.item = res.data;
+            })
             .finally(() => this.loading = false);
     };
 

@@ -1,64 +1,51 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.OData;
-using Microsoft.AspNet.OData.Routing;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Scalpay.Data;
 using Scalpay.Enums;
 using Scalpay.Models;
 using Scalpay.Services;
 
 namespace Scalpay.Controllers
 {
-    public class UserODataController : ODataController
-    {
-        private readonly ScalpayDbContext _context;
-        private readonly User _user;
-
-        public UserODataController(ScalpayDbContext context, IUserService service)
-        {
-            _context = context;
-            _user = service.GetCurrentUserAsync().Result;
-        }
-
-        [HttpGet]
-        [EnableQuery]
-        [ODataRoute("users")]
-        public IActionResult GetUsers()
-        {
-            if (!_user.Role.Equals(Role.Admin))
-            {
-                return Forbid("You have no permission to view users.");
-            }
-            
-            return Ok(_context.Users);
-        }
-        
-        [HttpGet]
-        [EnableQuery]
-        [ODataRoute("users/{id}")]
-        public IActionResult GetUser([FromRoute] int id)
-        {
-            return Ok(_context.Users.Where(u => u.Id == id));
-        }
-    }
-
     [Route("api/users")]
     public class UserController : Controller
     {
+        private readonly IPermissionService _permissionService;
         private readonly User _user;
         private readonly IUserService _service;
 
-        public UserController(IUserService service)
+        public UserController(IPermissionService permissionService, IUserService service)
         {
+            _permissionService = permissionService;
             _user = service.GetCurrentUserAsync().Result;
             _service = service;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUsers([FromQuery] UserCriteria criteria)
+        {
+            if (!await _permissionService.HasGlobalPermissionAsync(Permission.Admin))
+            {
+                return Forbid("You have no permission to view users.");
+            }
+
+            return Ok(await _service.GetUsersAsync(criteria));
+        }
+
+        [HttpGet("{username}")]
+        public async Task<IActionResult> GetUser([FromRoute] string username)
+        {
+            if (!await _permissionService.HasGlobalPermissionAsync(Permission.Read))
+            {
+                return Forbid("You have no permission to view this user.");
+            }
+
+            return Ok(await _service.GetUserAsync(username));
         }
 
         [HttpPost]
         public async Task<IActionResult> AddUser([FromBody] UpsertUserParams ps)
         {
-            if (!_user.Role.Equals(Role.Admin))
+            if (!await _permissionService.HasGlobalPermissionAsync(Permission.Admin))
             {
                 return Forbid("You have no permission to add user.");
             }
@@ -67,14 +54,15 @@ namespace Scalpay.Controllers
         }
 
         [HttpPut("{username}")]
-        public async Task<IActionResult> UpdateUser([FromRoute] int id, [FromBody] UpsertUserParams ps)
+        public async Task<IActionResult> UpdateUser([FromRoute] string username, [FromBody] UpsertUserParams ps)
         {
-            if (!(_user.Role.Equals(Role.Admin) || _user.Id == id))
+            if (!(await _permissionService.HasGlobalPermissionAsync(Permission.Admin) || _user.Username == username))
             {
                 return Forbid("You have no permission to update this user.");
             }
 
-            return Ok(await _service.UpdateUserAsync(id, ps));
+            ps.Username = username;
+            return Ok(await _service.UpdateUserAsync(ps));
         }
     }
 }

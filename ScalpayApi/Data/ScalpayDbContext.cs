@@ -37,14 +37,14 @@ namespace Scalpay.Data
             {
                 if (entry.OriginalValues["InsertTime"] == null || entry.OriginalValues["InsertTime"].ToString().RoughEquals(DateTime.MinValue.ToString()))
                 {
-                    entry.CurrentValues["InsertTime"] = DateTime.Now;
+                    entry.CurrentValues["InsertTime"] = DateTime.UtcNow;
                 }
                 else
                 {
                     entry.CurrentValues["InsertTime"] = entry.OriginalValues["InsertTime"];
                 }
 
-                entry.CurrentValues["UpdateTime"] = DateTime.Now;
+                entry.CurrentValues["UpdateTime"] = DateTime.UtcNow;
             }
 
             return base.SaveChangesAsync(cancellationToken);
@@ -56,14 +56,14 @@ namespace Scalpay.Data
             {
                 if (entry.OriginalValues["InsertTime"] == null || entry.OriginalValues["InsertTime"].ToString().RoughEquals(DateTime.MinValue.ToString()))
                 {
-                    entry.CurrentValues["InsertTime"] = DateTime.Now;
+                    entry.CurrentValues["InsertTime"] = DateTime.UtcNow;
                 }
                 else
                 {
                     entry.CurrentValues["InsertTime"] = entry.OriginalValues["InsertTime"];
                 }
 
-                entry.CurrentValues["UpdateTime"] = DateTime.Now;
+                entry.CurrentValues["UpdateTime"] = DateTime.UtcNow;
             }
 
             return base.SaveChanges();

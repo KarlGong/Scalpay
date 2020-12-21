@@ -1,15 +1,23 @@
 .number-list-input {
 
-  &.draggable .item {
-    cursor: move;
-  }
-
   .item {
     padding: 5px;
     border-radius: 5px;
+    position: relative;
+    display: flex;
+    align-items: center;
 
     &:hover {
       background-color: #e6f7ff;
+    }
+
+    .dragger {
+      cursor: move;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
     }
 
     .input {
@@ -17,6 +25,7 @@
     }
 
     .delete {
+      z-index: 1;
       margin-left: 10px;
       color: rgba(255, 0, 0, 0.5);
       cursor: pointer;
