@@ -12,6 +12,7 @@ import guid from "~/utils/guid";
 @observer
 export default class BasicSection extends Component {
     static defaultProps = {
+        addMode: false,
         item: {},
         setValidator: (validator) => {}
     };
@@ -55,6 +56,7 @@ export default class BasicSection extends Component {
                            help={this.validator.getResult("partialItemKey").message}
                 >
                     <Input
+                        disabled={!this.props.addMode}
                         addonBefore={this.item.projectKey + "."}
                         style={{width: "500px"}}
                         // foo.bar to bar

@@ -106,7 +106,7 @@ export default class AuditsView extends Component {
         axios.get("/api/audits", {
             params: this.criteria
         }).then((res) => {
-            this.audits = res.data.data;
+            this.audits = res.data.value;
             this.totalCount = res.data.totalCount;
         }).finally(() => this.loading = false);
     }

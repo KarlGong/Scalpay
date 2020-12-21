@@ -12,6 +12,7 @@ import "./RuleSection.less";
 @observer
 export default class RuleSection extends Component {
     static defaultProps = {
+        addMode: false,
         item: {} // observable
     };
 

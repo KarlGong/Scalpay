@@ -117,7 +117,7 @@ class UpdatePasswordModal extends Component {
                 this.loading = true;
                 axios.post("/api/users/" + this.props.username + "/password", this.fields)
                     .then(res => {
-                        let user = res.data.data;
+                        let user = res.data;
                         this.loading = false;
                         this.visible = false;
                         message.success("Your password is updated successfully!");

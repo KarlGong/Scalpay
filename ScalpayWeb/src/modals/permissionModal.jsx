@@ -135,14 +135,14 @@ class PermissionModal extends Component {
         this.isFetchingUser = true;
         axios.get("/api/users", {
             params: {
-                searchText: value,
+                keyword: value,
                 orderBy: "username",
                 pageIndex: 0,
                 pageSize: 10
             }
         }).then((res) => {
             if (fetchUserId !== this.lastFetchUserId) return;
-            this.optionalUsers = res.data.data;
+            this.optionalUsers = res.data.value;
         }).finally(() => this.isFetchingUser = false);
     };
 

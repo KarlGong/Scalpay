@@ -17,6 +17,7 @@ import "./ParameterSection.less";
 @observer
 export default class ParameterSection extends Component {
     static defaultProps = {
+        addMode: false,
         item: {},
         setValidator: (validator) => {}
     };

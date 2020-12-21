@@ -29,7 +29,7 @@ export default class ProjectPage extends Component {
     @observable isLoadingItems = false;
     searchText = "";
     @observable criteria = {
-        searchText: "",
+        keyword: "",
         pageIndex: 0,
         pageSize: 20,
         orderBy: "itemKey"
@@ -106,7 +106,7 @@ export default class ProjectPage extends Component {
                             type="primary"
                             onClick={() => {
                                 this.criteria.pageIndex = 0;
-                                this.criteria.searchText = this.searchText;
+                                this.criteria.keyword = this.searchText;
                                 this.loadItems()
                             }}>
                             Search

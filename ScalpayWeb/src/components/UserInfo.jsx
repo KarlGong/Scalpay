@@ -31,7 +31,7 @@ export default class UserInfo extends Component {
         this.loading = true;
         axios.get("/api/users/" + this.props.username)
             .then((res) => {
-                this.userInfo = res.data.data;
+                this.userInfo = res.data;
             })
             .finally(() => this.loading = false);
     }

@@ -88,14 +88,16 @@ class ItemModal extends Component {
             <div className="item-modal">
                 <div className="form">
                     <BasicSection
+                        addMode={this.props.addMode}
                         item={this.item}
                         setValidator={(validator) => {this.basicSectionValidator = validator}}
                     />
                     <ParameterSection
+                        addMode={this.props.addMode}
                         item={this.item}
                         setValidator={(validator) => {this.parameterSectionValidator = validator}}
                     />
-                    <RuleSection item={this.item}/>
+                    <RuleSection addMode={this.props.addMode} item={this.item}/>
                 </div>
                 <div className="actions">
                     <Button onClick={this.handleCancel} style={{marginRight: 8}}>
