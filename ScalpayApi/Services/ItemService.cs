@@ -150,6 +150,9 @@ namespace Scalpay.Services
             }
 
             _mapper.Map(ps, oldItem);
+            // make the list be tracked
+            oldItem.ParameterInfos = ps.ParameterInfos;
+            oldItem.Rules = ps.Rules;
 
             await _context.SaveChangesAsync();
 

@@ -1,7 +1,7 @@
 import {Form, Input, Modal} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
-import {untracked} from "mobx";
+import {observable, untracked} from "mobx";
 import "./itemModal.less";
 import Validator from "~/utils/Validator";
 import ComponentValidator from "~/utils/ComponentValidator";
@@ -17,6 +17,7 @@ export default class BasicSection extends Component {
     };
 
     item = this.props.item; // observable, changes affect the input item, onXXChange can solve this, but it's too complex
+    @observable resultDataTypeResetKey = guid();
 
     constructor(props) {
         super(props);
@@ -67,9 +68,7 @@ export default class BasicSection extends Component {
                         onBlur={() => this.validator.validate("partialItemKey")}
                     />
                 </Form.Item>
-                <Form.Item label="Description"
-                           {...formItemLayout}
-                >
+                <Form.Item label="Description" {...formItemLayout}>
                     <Input.TextArea
                         rows={4}
                         placeholder="Optional"
@@ -78,9 +77,7 @@ export default class BasicSection extends Component {
                         onChange={(e) => this.item.description = e.target.value}
                     />
                 </Form.Item>
-                <Form.Item label="Result Data Type"
-                           {...formItemLayout}
-                >
+                <Form.Item label="Result Data Type" {...formItemLayout}>
                     <DataTypeSelect
                         key={this.resultDataTypeResetKey}
                         style={{width: "150px"}}

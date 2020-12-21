@@ -134,6 +134,7 @@ export default class ItemPage extends Component {
             if (this.item.itemKey !== item.itemKey) {
                 global.history.replace(`/projects/${item.projectKey}/${item.itemKey}`);
             }
+            item.rules.map(r => r.key = r.key || guid());
             this.item = item;
         });
     };

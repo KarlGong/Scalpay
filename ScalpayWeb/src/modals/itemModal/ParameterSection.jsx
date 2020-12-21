@@ -22,7 +22,6 @@ export default class ParameterSection extends Component {
     };
 
     item = this.props.item; // observable, changes affect the input item, onXXChange can solve this, but it's too complex
-    @observable resultDataTypeResetKey = guid();
 
     constructor(props) {
         super(props);
