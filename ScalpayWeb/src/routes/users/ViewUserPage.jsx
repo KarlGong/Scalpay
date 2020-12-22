@@ -32,7 +32,7 @@ export default class ViewUserPage extends Component {
 
     loadUser = () => {
         this.loading = true;
-        axios.get("/api/users/" + this.props.params.username)
+        axios.get("/api/users/" + this.props.params.username, {redirectOnError: true})
             .then((res) => this.user = res.data.data)
             .finally(() => this.loading = false);
     };

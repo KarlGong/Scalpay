@@ -100,7 +100,8 @@ export default class UsersPage extends Component {
     searchUsers = () => {
         this.loading = true;
         axios.get("/api/users", {
-            params: this.criteria
+            params: this.criteria,
+            redirectOnError: true
         })
             .then(response => {
                 this.users = response.data.value;

@@ -24,6 +24,8 @@ axios.interceptors.response.use(
                 if (history.getCurrentLocation().pathname !== "/login") {
                     history.push(`/login?returnUrl=${history.getCurrentLocation().pathname}`);
                 }
+            } else if (error.config.redirectOnError && [403, 404].includes(error.response.status)) {
+                history.replace(`/${error.response.status}`);
             } else {
                 notification.error({
                     message: error.message,

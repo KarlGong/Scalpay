@@ -129,7 +129,7 @@ export default class ProjectPage extends Component {
     };
 
     loadProject = () => {
-        axios.get("/api/projects/" + this.props.params.projectKey)
+        axios.get("/api/projects/" + this.props.params.projectKey, {redirectOnError: true})
             .then((res) => this.project = res.data);
     };
 

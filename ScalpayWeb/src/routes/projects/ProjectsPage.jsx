@@ -68,7 +68,7 @@ export default class ProjectsPage extends Component {
 
     loadProjects = () => {
         this.loading = true;
-        axios.get("/api/projects?orderBy=projectKey")
+        axios.get("/api/projects?orderBy=projectKey", {redirectOnError: true})
             .then(response => {
                 this.projects = response.data.value;
             })

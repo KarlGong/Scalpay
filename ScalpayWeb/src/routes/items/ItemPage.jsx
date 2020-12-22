@@ -114,7 +114,7 @@ export default class ItemPage extends Component {
 
     loadItem = () => {
         this.loading = true;
-        axios.get(`/api/projects/${this.item.projectKey}/items/${this.item.itemKey}`)
+        axios.get(`/api/projects/${this.item.projectKey}/items/${this.item.itemKey}`, {redirectOnError: true})
             .then((res) => {
                 res.data.rules.map(r => r.key = r.key || guid());
                 this.item = res.data;
