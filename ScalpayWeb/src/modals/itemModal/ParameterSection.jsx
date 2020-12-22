@@ -43,7 +43,10 @@ export default class ParameterSection extends Component {
         };
         this.validators = this.item.parameterInfos.map((info, index) => new Validator(info, this.validatorDescriptor));
         this.setValidator();
-        this.item.parameterInfos.map(info => info.oldName = info.name); // prevent the parameter's old name
+        this.item.parameterInfos.map(p => {
+            p.oldName = p.name; // prevent the parameter's old name
+            p.isValid = function () {return this.name && this.name === this.oldName}; // name && name === oldName means the parameter is valid
+        });
     }
 
     render() {
@@ -179,7 +182,8 @@ export default class ParameterSection extends Component {
                                 onClick={() => {
                                     this.item.parameterInfos.push({
                                         key: guid(),
-                                        dataType: DataType.String
+                                        dataType: DataType.String,
+                                        isValid: function () {return this.name && this.name === this.oldName} // name && name === oldName means the parameter is valid
                                     });
                                     let validator = new Validator(
                                         this.item.parameterInfos.slice(-1)[0],

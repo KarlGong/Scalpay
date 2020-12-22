@@ -100,7 +100,7 @@ class EditExpressionModal extends Component {
                     <VariableSelect
                         className="var-select"
                         variables={this.props.item.parameterInfos
-                            .filter(p => p.dataType === this.expression.returnType)}
+                            .filter(p => p.dataType === this.expression.returnType && p.isValid())}
                         defaultValue={untracked(() => this.expression.var)}
                         onChange={(variableName) => this.expression.var = variableName}
                         setValidator={validator => this.variableValidator = validator}
