@@ -4,12 +4,11 @@ import {observer} from "mobx-react";
 import cs from "classnames";
 import Validator from "~/utils/Validator";
 import ComponentValidator from "~/utils/ComponentValidator";
+import "./StringInput.less";
 
 @observer
 export default class StringInput extends Component {
     static defaultProps = {
-        style: {},
-        className: "",
         defaultValue: "",
         onChange: (value) => { },
         setValidator: (validator) => {}
@@ -31,23 +30,24 @@ export default class StringInput extends Component {
     }
 
     render() {
-        return <Tooltip
-            placement="topLeft"
-            title={this.validator.getResult("value").message}>
-            <Input
-                placeholder="String"
-                style={this.props.style}
-                className={cs(this.props.className, this.validator.getResult("value").status)}
-                defaultValue={this.props.defaultValue}
-                onChange={(e) => {
-                    this.item.value = e.target.value;
-                    this.validator.resetResult("value");
-                    this.props.onChange(e.target.value);
-                }}
-                onBlur={() => {
-                    this.validator.validate("value");
-                }}
-            />
-        </Tooltip>
+        return <span className="string-input">
+            <Tooltip
+                placement="topLeft"
+                title={this.validator.getResult("value").message}>
+                <Input
+                    placeholder="String"
+                    className={cs("input", this.validator.getResult("value").status)}
+                    defaultValue={this.props.defaultValue}
+                    onChange={(e) => {
+                        this.item.value = e.target.value;
+                        this.validator.resetResult("value");
+                        this.props.onChange(e.target.value);
+                    }}
+                    onBlur={() => {
+                        this.validator.validate("value");
+                    }}
+                />
+            </Tooltip>
+        </span>
     };
 }

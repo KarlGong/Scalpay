@@ -1,16 +1,16 @@
-import {DatePicker, Icon, Tooltip} from "antd";
+import {DatePicker, Space, Tooltip} from "antd";
+import {QuestionCircleOutlined} from "@ant-design/icons";
 import React, {Component} from "react";
 import moment from "moment";
 import {observer} from "mobx-react";
 import Validator from "~/utils/Validator";
 import cs from "classnames";
 import ComponentValidator from "~/utils/ComponentValidator";
+import "./DateTimeInput.less";
 
 @observer
 export default class DateTimeInput extends Component {
     static defaultProps = {
-        style: {},
-        className: "",
         defaultValue: "",
         onChange: (value) => { },
         setValidator: (validator) => {}
@@ -32,34 +32,36 @@ export default class DateTimeInput extends Component {
     }
 
     render() {
-        return <span>
-            <Tooltip
-                placement="topLeft"
-                title={this.validator.getResult("value").message}>
-                <span>
-                    <DatePicker
-                        showTime
-                        allowClear={false}
-                        className={cs(this.props.className, this.validator.getResult("value").status)}
-                        defaultValue={this.props.defaultValue && moment(this.props.defaultValue).utc()}
-                        format="YYYY-MM-DD HH:mm:ss"
-                        placeholder="Select Date Time"
-                        onChange={(value) => {
-                            let val = value && value.utc().format();
-                            this.item.value = val;
-                            this.validator.validate("value");
-                            this.props.onChange(val);
-                        }}
-                        onOk={(value) => {
-                            let val = value && value.utc().format();
-                            this.item.value = val;
-                            this.validator.validate("value");
-                            this.props.onChange(val);
-                        }}
-                    />
-                </span>
-            </Tooltip>
-            <Tooltip title="UTC time"><Icon type="question-circle" style={{marginLeft: "10px"}}/></Tooltip>
+        return <span className="datetime-input">
+            <Space>
+                <Tooltip
+                    placement="topLeft"
+                    title={this.validator.getResult("value").message}>
+                    <span>
+                        <DatePicker
+                            showTime
+                            allowClear={false}
+                            className={cs("input", this.validator.getResult("value").status)}
+                            defaultValue={this.props.defaultValue && moment(this.props.defaultValue).utc()}
+                            format="YYYY-MM-DD HH:mm:ss"
+                            placeholder="Select Date Time"
+                            onChange={(value) => {
+                                let val = value && value.utc().format();
+                                this.item.value = val;
+                                this.validator.validate("value");
+                                this.props.onChange(val);
+                            }}
+                            onOk={(value) => {
+                                let val = value && value.utc().format();
+                                this.item.value = val;
+                                this.validator.validate("value");
+                                this.props.onChange(val);
+                            }}
+                        />
+                    </span>
+                </Tooltip>
+                <Tooltip title="UTC time"><QuestionCircleOutlined className="tooltip-icon"/></Tooltip>
+            </Space>
         </span>
     };
 }

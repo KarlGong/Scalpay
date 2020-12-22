@@ -4,12 +4,11 @@ import {observer} from "mobx-react";
 import Validator from "~/utils/Validator";
 import cs from "classnames";
 import ComponentValidator from "~/utils/ComponentValidator";
+import "./VariableSelect.less";
 
 @observer
 export default class VariableSelect extends Component {
     static defaultProps = {
-        style: {},
-        className: "",
         defaultValue: undefined,
         variables: [],
         onChange: (variableName) => {},
@@ -32,30 +31,31 @@ export default class VariableSelect extends Component {
     }
 
     render() {
-        return <Tooltip
-            placement="topLeft"
-            title={this.validator.getResult("value").message}>
-            <Select
-                style={this.props.style}
-                className={cs(this.props.className, this.validator.getResult("value").status)}
-                defaultValue={this.props.defaultValue || undefined}
-                showSearch
-                placeholder="Variable"
-                dropdownMatchSelectWidth={false}
-                onChange={(value) => {
-                    this.item.value = value;
-                    this.validator.resetResult("value");
-                    this.props.onChange(value);
-                }}
-                onBlur={() => {
-                    this.validator.validate("value");
-                }}>
-                {
-                    this.props.variables.map((variable) =>
-                        <Select.Option value={variable.name} key={variable.name}>{variable.name}</Select.Option>
-                    )
-                }
-            </Select>
-        </Tooltip>
+        return <span className="variable-select">
+            <Tooltip
+                placement="topLeft"
+                title={this.validator.getResult("value").message}>
+                <Select
+                    className={cs("input", this.validator.getResult("value").status)}
+                    defaultValue={this.props.defaultValue || undefined}
+                    showSearch
+                    placeholder="Variable"
+                    dropdownMatchSelectWidth={false}
+                    onChange={(value) => {
+                        this.item.value = value;
+                        this.validator.resetResult("value");
+                        this.props.onChange(value);
+                    }}
+                    onBlur={() => {
+                        this.validator.validate("value");
+                    }}>
+                    {
+                        this.props.variables.map((variable) =>
+                            <Select.Option value={variable.name} key={variable.name}>{variable.name}</Select.Option>
+                        )
+                    }
+                </Select>
+            </Tooltip>
+        </span>
     };
 }

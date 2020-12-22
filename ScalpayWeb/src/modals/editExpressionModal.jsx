@@ -67,11 +67,11 @@ class EditExpressionModal extends Component {
 
         const valueInput = {
             [DataType.Bool]: <BoolSelect {...valueInputProps} />,
-            [DataType.DateTime]: <DateTimeInput {...valueInputProps} className="datetime-input"/>,
+            [DataType.DateTime]: <DateTimeInput {...valueInputProps} />,
             [DataType.Duration]: <DurationInput {...valueInputProps}/>,
-            [DataType.Number]: <NumberInput {...valueInputProps} className="number-input"/>,
+            [DataType.Number]: <NumberInput {...valueInputProps} />,
             [DataType.NumberList]: <NumberListInput {...valueInputProps}/>,
-            [DataType.String]: <StringInput {...valueInputProps} className="string-input"/>,
+            [DataType.String]: <StringInput {...valueInputProps} />,
             [DataType.StringDict]: <StringDictInput {...valueInputProps}/>,
             [DataType.StringList]: <StringListInput {...valueInputProps}/>
         }[this.expression.returnType];
@@ -98,7 +98,6 @@ class EditExpressionModal extends Component {
                 {this.expression.expType === ExpType.Value ? valueInput : null}
                 {this.expression.expType === ExpType.Var ?
                     <VariableSelect
-                        className="var-select"
                         variables={this.props.item.parameterInfos
                             .filter(p => p.dataType === this.expression.returnType && p.isValid())}
                         defaultValue={untracked(() => this.expression.var)}
@@ -110,7 +109,6 @@ class EditExpressionModal extends Component {
                 {this.expression.expType === ExpType.Func ?
                     <div>
                         <FunctionSelect
-                            className="func-select"
                             returnType={this.expression.returnType}
                             defaultValue={untracked(() => this.expression.funcName)}
                             onChange={(functionName) => {

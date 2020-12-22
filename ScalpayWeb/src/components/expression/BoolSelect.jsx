@@ -4,15 +4,14 @@ import {observer} from "mobx-react";
 import cs from "classnames";
 import Validator from "~/utils/Validator";
 import ComponentValidator from "~/utils/ComponentValidator";
+import "./BoolSelect.less";
 
 @observer
 export default class BoolSelect extends Component {
     static defaultProps = {
-        style: {},
-        className: "",
+        defaultValue: true,
         onChange: (value) => {
         },
-        defaultValue: true,
         setValidator: (validator) => {}
     };
 
@@ -32,24 +31,25 @@ export default class BoolSelect extends Component {
     }
 
     render() {
-        return <Tooltip
-            placement="topLeft"
-            title={this.validator.getResult("value").message}>
-            <Radio.Group
-                style={this.props.style}
-                className={cs(this.props.className, this.validator.getResult("value").status)}
-                defaultValue={this.props.defaultValue}
-                onChange={(e) => {
-                    this.item.value = e.target.value;
-                    this.validator.resetResult("value");
-                    this.props.onChange(e.target.value);
-                }}
-                onBlur={() => {
-                    this.validator.validate("value");
-                }}>
-                <Radio.Button value={true}>True</Radio.Button>
-                <Radio.Button value={false}>False</Radio.Button>
-            </Radio.Group>
-        </Tooltip>
+        return <span className="bool-select">
+            <Tooltip
+                placement="topLeft"
+                title={this.validator.getResult("value").message}>
+                <Radio.Group
+                    className={cs("input", this.validator.getResult("value").status)}
+                    defaultValue={this.props.defaultValue}
+                    onChange={(e) => {
+                        this.item.value = e.target.value;
+                        this.validator.resetResult("value");
+                        this.props.onChange(e.target.value);
+                    }}
+                    onBlur={() => {
+                        this.validator.validate("value");
+                    }}>
+                    <Radio.Button value={true}>True</Radio.Button>
+                    <Radio.Button value={false}>False</Radio.Button>
+                </Radio.Group>
+            </Tooltip>
+        </span>
     };
 }

@@ -13,8 +13,6 @@ import "./StringListInput.less";
 @observer
 export default class StringListInput extends Component {
     static defaultProps = {
-        style: {},
-        className: "",
         defaultValue: [],
         onChange: (values) => {}
     };
@@ -26,9 +24,8 @@ export default class StringListInput extends Component {
     validators = {};
 
     render() {
-        return <div className={cs("string-list-input", "draggable", this.props.className)}>
+        return <div className="string-list-input">
             <DragListView
-                style={this.props.style}
                 onDragEnd={(fromIndex, toIndex) => {
                     let item = this.items.splice(fromIndex, 1)[0];
                     this.items.splice(toIndex, 0, item);
@@ -41,9 +38,8 @@ export default class StringListInput extends Component {
                 {
                     this.items.map((item, index) => {
                         return <div key={item.key} className="item">
-                            <div className="dragger"></div>
+                            <div className="dragger"/>
                             <StringInput
-                                className="input"
                                 defaultValue={untracked(() => item.value)}
                                 onChange={(value) => {
                                     item.value = value;

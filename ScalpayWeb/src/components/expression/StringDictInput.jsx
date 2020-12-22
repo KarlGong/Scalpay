@@ -12,8 +12,6 @@ import "./StringDictInput.less";
 @observer
 export default class StringDictInput extends Component {
     static defaultProps = {
-        style: {},
-        className: "",
         defaultValue: {},
         onChange: (value) => { },
         setValidator: (validator) => {}
@@ -50,7 +48,7 @@ export default class StringDictInput extends Component {
     }
 
     render() {
-        return <div className={cs("string-dict-input", this.props.className)} style={this.props.style}>
+        return <div className="string-dict-input">
             {
                 this.items.map((item, index) => {
                     return <div key={item.key} className="item">

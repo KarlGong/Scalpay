@@ -13,8 +13,6 @@ import "./NumberListInput.less";
 @observer
 export default class NumberListInput extends Component {
     static defaultProps = {
-        style: {},
-        className: "",
         defaultValue: [],
         onChange: (values) => {},
         setValidator: (validator) => {}
@@ -26,7 +24,7 @@ export default class NumberListInput extends Component {
     validators = {};
 
     render() {
-        return <div className={cs("number-list-input", "draggable", this.props.className)}>
+        return <div className="number-list-input">
             <DragListView
                 style={this.props.style}
                 onDragEnd={(fromIndex, toIndex) => {
@@ -41,9 +39,8 @@ export default class NumberListInput extends Component {
                 {
                     this.items.map((item, index) => {
                         return <div key={item.key} className="item">
-                            <div className="dragger"></div>
+                            <div className="dragger"/>
                             <NumberInput
-                                className="input"
                                 defaultValue={untracked(() => item.value)}
                                 onChange={(value) => {
                                     item.value = value;

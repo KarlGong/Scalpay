@@ -5,12 +5,11 @@ import {Func} from "~/const";
 import Validator from "~/utils/Validator";
 import cs from "classnames";
 import ComponentValidator from "~/utils/ComponentValidator";
+import "./FunctionSelect.less";
 
 @observer
 export default class FunctionSelect extends Component {
     static defaultProps = {
-        style: {},
-        className: "",
         returnType: "",
         defaultValue: undefined,
         onChange: (functionName) => { },
@@ -33,30 +32,31 @@ export default class FunctionSelect extends Component {
     }
 
     render() {
-        return <Tooltip
-            placement="topLeft"
-            title={this.validator.getResult("value").message}>
-            <Select
-                style={this.props.style}
-                className={cs(this.props.className, this.validator.getResult("value").status)}
-                showSearch
-                placeholder="Function"
-                dropdownMatchSelectWidth={false}
-                defaultValue={this.props.defaultValue || undefined}
-                onChange={(value) => {
-                    this.item.value = value;
-                    this.validator.resetResult("value");
-                    this.props.onChange(value);
-                }}
-                onBlur={() => {
-                    this.validator.validate("value");
-                }}>
-                {
-                    Object.entries(Func[this.props.returnType]).map(([name, func]) => {
-                        return <Select.Option value={name} key={name}>{func.displayName}</Select.Option>
-                    })
-                }
-            </Select>
-        </Tooltip>
+        return <span className="function-select">
+            <Tooltip
+                placement="topLeft"
+                title={this.validator.getResult("value").message}>
+                <Select
+                    className={cs("input", this.validator.getResult("value").status)}
+                    showSearch
+                    placeholder="Function"
+                    dropdownMatchSelectWidth={false}
+                    defaultValue={this.props.defaultValue || undefined}
+                    onChange={(value) => {
+                        this.item.value = value;
+                        this.validator.resetResult("value");
+                        this.props.onChange(value);
+                    }}
+                    onBlur={() => {
+                        this.validator.validate("value");
+                    }}>
+                    {
+                        Object.entries(Func[this.props.returnType]).map(([name, func]) => {
+                            return <Select.Option value={name} key={name}>{func.displayName}</Select.Option>
+                        })
+                    }
+                </Select>
+            </Tooltip>
+        </span>
     };
 }

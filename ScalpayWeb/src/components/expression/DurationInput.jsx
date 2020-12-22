@@ -3,14 +3,12 @@ import {observer} from "mobx-react";
 import cs from "classnames";
 import moment from "moment";
 import NumberInput from "./NumberInput";
-import "./DurationInput.less";
 import ComponentValidator from "~/utils/ComponentValidator";
+import "./DurationInput.less";
 
 @observer
 export default class DurationInput extends Component {
     static defaultProps = {
-        style: {},
-        className: "",
         defaultValue: "P0Y0M0DT0H0M0S",
         onChange: (value) => {},
         setValidator: (validator) => {}
@@ -31,10 +29,9 @@ export default class DurationInput extends Component {
 
     render() {
         return <div
-            style={this.props.style}
-            className={cs("duration-input", this.props.className)}
+            className="duration-input"
         >
-            <div className="row">
+            <div className="unit">
                 <NumberInput
                     precision={0}
                     step={1}
@@ -49,6 +46,8 @@ export default class DurationInput extends Component {
                     }}
                 />
                 <div className="label">Years</div>
+            </div>
+            <div className="unit">
                 <NumberInput
                     precision={0}
                     step={1}
@@ -63,6 +62,8 @@ export default class DurationInput extends Component {
                     }}
                 />
                 <div className="label">Months</div>
+            </div>
+            <div className="unit">
                 <NumberInput
                     precision={0}
                     step={1}
@@ -78,7 +79,7 @@ export default class DurationInput extends Component {
                 />
                 <div className="label">Days</div>
             </div>
-            <div className="row">
+            <div className="unit">
                 <NumberInput
                     precision={0}
                     step={1}
@@ -93,6 +94,8 @@ export default class DurationInput extends Component {
                     }}
                 />
                 <div className="label">Hours</div>
+            </div>
+            <div className="unit">
                 <NumberInput
                     precision={0}
                     step={10}
@@ -107,6 +110,8 @@ export default class DurationInput extends Component {
                     }}
                 />
                 <div className="label">Minutes</div>
+            </div>
+            <div className="unit">
                 <NumberInput
                     precision={0}
                     step={10}
