@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Scalpay.Exceptions;
 using Scalpay.Services;
 
@@ -59,6 +60,13 @@ namespace Scalpay
                     context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
                     context.Response.ContentType = "text/plain; charset=UTF-8";
                     await context.Response.WriteAsync("Authorization token has invalid signature.");
+                    return;
+                }
+                catch (JsonReaderException e)
+                {
+                    context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
+                    context.Response.ContentType = "text/plain; charset=UTF-8";
+                    await context.Response.WriteAsync("Authorization token is invalid.");
                     return;
                 }
 

@@ -63,7 +63,7 @@ module.exports = {
                 include: [srcPath, libPath]
             },
             {
-                test: /\.(jpe?g|png|gif|ico|svg|eot|ttf|woff)$/,
+                test: /\.(jpe?g|png|gif|ico|eot|ttf|woff)$/,
                 use: [{
                     loader: "file-loader",
                     query: {
@@ -75,6 +75,21 @@ module.exports = {
                     }
                 }],
                 include: srcPath
+            },
+            {
+                test: /\.svg$/,
+                use: [
+                    {
+                        loader: "babel-loader",
+                    },
+                    {
+                        loader: "@svgr/webpack",
+                        options: {
+                            babel: false,
+                            icon: true,
+                        },
+                    },
+                ],
             }
         ]
     }

@@ -14,6 +14,10 @@ namespace Scalpay.Data
                     v => v.ToString(),
                     v => Enum.Parse<Permission>(v))
                 .IsRequired();
+            
+            builder.HasOne(pp => pp.Project).WithMany(p => p.Permissions).HasForeignKey(pp => pp.ProjectKey);
+
+            builder.HasOne(pp => pp.User).WithMany(u => u.ProjectPermissions).HasForeignKey(pp => pp.Username);
         }
     }
 }

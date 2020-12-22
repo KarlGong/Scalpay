@@ -9,7 +9,7 @@ using Scalpay.Data;
 namespace Scalpay.Migrations
 {
     [DbContext(typeof(ScalpayDbContext))]
-    [Migration("20201221092212_Init")]
+    [Migration("20201222030319_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,9 +21,8 @@ namespace Scalpay.Migrations
 
             modelBuilder.Entity("Scalpay.Models.Item", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("ItemKey")
+                        .HasColumnType("varchar(200)");
 
                     b.Property<string>("DefaultResult")
                         .IsRequired()
@@ -35,16 +34,9 @@ namespace Scalpay.Migrations
                     b.Property<DateTime>("InsertTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("ItemKey")
-                        .IsRequired()
-                        .HasColumnType("varchar(200)");
-
                     b.Property<string>("ParameterInfos")
                         .IsRequired()
                         .HasColumnType("varchar(1000)");
-
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("int");
 
                     b.Property<string>("ProjectKey")
                         .IsRequired()
@@ -61,21 +53,17 @@ namespace Scalpay.Migrations
                     b.Property<DateTime>("UpdateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.HasKey("Id");
+                    b.HasKey("ItemKey");
 
-                    b.HasIndex("ItemKey")
-                        .IsUnique();
-
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("ProjectKey");
 
                     b.ToTable("Items");
                 });
 
             modelBuilder.Entity("Scalpay.Models.Project", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("ProjectKey")
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Description")
                         .HasColumnType("varchar(1000)");
@@ -83,17 +71,10 @@ namespace Scalpay.Migrations
                     b.Property<DateTime>("InsertTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("ProjectKey")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
-
                     b.Property<DateTime>("UpdateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectKey")
-                        .IsUnique();
+                    b.HasKey("ProjectKey");
 
                     b.ToTable("Projects");
                 });
@@ -111,9 +92,6 @@ namespace Scalpay.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(10)");
 
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ProjectKey")
                         .IsRequired()
                         .HasColumnType("varchar(50)");
@@ -121,27 +99,23 @@ namespace Scalpay.Migrations
                     b.Property<DateTime>("UpdateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("ProjectKey");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("Username");
 
                     b.ToTable("ProjectPermissions");
                 });
 
             modelBuilder.Entity("Scalpay.Models.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                    b.Property<string>("Username")
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -165,34 +139,33 @@ namespace Scalpay.Migrations
                     b.Property<DateTime>("UpdateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Username")
-                        .IsUnique();
+                    b.HasKey("Username");
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Scalpay.Models.Item", b =>
                 {
-                    b.HasOne("Scalpay.Models.Project", null)
+                    b.HasOne("Scalpay.Models.Project", "Project")
                         .WithMany("Items")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectKey")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Scalpay.Models.ProjectPermission", b =>
                 {
-                    b.HasOne("Scalpay.Models.Project", null)
+                    b.HasOne("Scalpay.Models.Project", "Project")
                         .WithMany("Permissions")
-                        .HasForeignKey("ProjectId");
+                        .HasForeignKey("ProjectKey")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("Scalpay.Models.User", null)
+                    b.HasOne("Scalpay.Models.User", "User")
                         .WithMany("ProjectPermissions")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("Username")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

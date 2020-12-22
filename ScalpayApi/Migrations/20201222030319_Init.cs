@@ -12,8 +12,6 @@ namespace Scalpay.Migrations
                 name: "Projects",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ProjectKey = table.Column<string>(type: "varchar(50)", nullable: false),
                     Description = table.Column<string>(type: "varchar(1000)", nullable: true),
                     InsertTime = table.Column<DateTime>(nullable: false),
@@ -21,15 +19,13 @@ namespace Scalpay.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Projects", x => x.Id);
+                    table.PrimaryKey("PK_Projects", x => x.ProjectKey);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Username = table.Column<string>(type: "varchar(50)", nullable: false),
                     Email = table.Column<string>(type: "varchar(50)", nullable: false),
                     Password = table.Column<string>(type: "varchar(50)", nullable: false),
@@ -40,17 +36,14 @@ namespace Scalpay.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Username);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Items",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ItemKey = table.Column<string>(type: "varchar(200)", nullable: false),
-                    ProjectKey = table.Column<string>(type: "varchar(50)", nullable: false),
                     Description = table.Column<string>(type: "varchar(1000)", nullable: true),
                     ParameterInfos = table.Column<string>(type: "varchar(1000)", nullable: false),
                     ResultDataType = table.Column<string>(type: "varchar(20)", nullable: false),
@@ -58,17 +51,17 @@ namespace Scalpay.Migrations
                     Rules = table.Column<string>(type: "varchar(10000)", nullable: false),
                     InsertTime = table.Column<DateTime>(nullable: false),
                     UpdateTime = table.Column<DateTime>(nullable: false),
-                    ProjectId = table.Column<int>(nullable: true)
+                    ProjectKey = table.Column<string>(type: "varchar(50)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Items", x => x.Id);
+                    table.PrimaryKey("PK_Items", x => x.ItemKey);
                     table.ForeignKey(
-                        name: "FK_Items_Projects_ProjectId",
-                        column: x => x.ProjectId,
+                        name: "FK_Items_Projects_ProjectKey",
+                        column: x => x.ProjectKey,
                         principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "ProjectKey",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -77,63 +70,43 @@ namespace Scalpay.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    ProjectKey = table.Column<string>(type: "varchar(50)", nullable: false),
-                    Username = table.Column<string>(type: "varchar(50)", nullable: false),
                     Permission = table.Column<string>(type: "varchar(10)", nullable: false),
                     InsertTime = table.Column<DateTime>(nullable: false),
                     UpdateTime = table.Column<DateTime>(nullable: false),
-                    ProjectId = table.Column<int>(nullable: true),
-                    UserId = table.Column<int>(nullable: true)
+                    ProjectKey = table.Column<string>(type: "varchar(50)", nullable: false),
+                    Username = table.Column<string>(type: "varchar(50)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProjectPermissions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProjectPermissions_Projects_ProjectId",
-                        column: x => x.ProjectId,
+                        name: "FK_ProjectPermissions_Projects_ProjectKey",
+                        column: x => x.ProjectKey,
                         principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "ProjectKey",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProjectPermissions_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_ProjectPermissions_Users_Username",
+                        column: x => x.Username,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Username",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Items_ItemKey",
+                name: "IX_Items_ProjectKey",
                 table: "Items",
-                column: "ItemKey",
-                unique: true);
+                column: "ProjectKey");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Items_ProjectId",
-                table: "Items",
-                column: "ProjectId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProjectPermissions_ProjectId",
+                name: "IX_ProjectPermissions_ProjectKey",
                 table: "ProjectPermissions",
-                column: "ProjectId");
+                column: "ProjectKey");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProjectPermissions_UserId",
+                name: "IX_ProjectPermissions_Username",
                 table: "ProjectPermissions",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Projects_ProjectKey",
-                table: "Projects",
-                column: "ProjectKey",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_Username",
-                table: "Users",
-                column: "Username",
-                unique: true);
+                column: "Username");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

@@ -11,8 +11,6 @@ namespace Scalpay.Data
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasIndex(u => u.Username).IsUnique();
-            
             builder.Property(u => u.Role).HasConversion(
                     v => v.ToString(),
                     v => Enum.Parse<Role>(v))

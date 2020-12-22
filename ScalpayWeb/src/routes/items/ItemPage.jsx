@@ -34,14 +34,7 @@ export default class ItemPage extends Component {
     @observable loading = false;
 
     componentDidMount = () => {
-        auth.getProjectPermission(this.item.projectKey).then((permission) => {
-            this.permission = permission;
-            if (this.permission !== Permission.None) {
-                this.loadItem();
-            } else {
-                global.history.replace("/403");
-            }
-        });
+        this.loadItem();
     };
 
     render() {

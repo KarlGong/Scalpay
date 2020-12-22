@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.2.1",
-    "@svgr/webpack": "^4.3.3",
+    "@svgr/webpack": "^5.5.0",
     "antd": "^4.9.4",
     "async-validator": "^1.8.5",
     "axios": "^0.18.0",

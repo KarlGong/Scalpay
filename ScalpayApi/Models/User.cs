@@ -10,9 +10,6 @@ namespace Scalpay.Models
     public class User
     {
         [Key]
-        public int Id { get; set; }
-        
-        [Required]
         [Column(TypeName = "varchar(50)")]
         public string Username { get; set; }
 

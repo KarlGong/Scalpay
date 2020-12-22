@@ -8,7 +8,6 @@ namespace Scalpay.Data
     {
         public void Configure(EntityTypeBuilder<Project> builder)
         {
-            builder.HasIndex(p => p.ProjectKey).IsUnique();
         }
     }
 }

@@ -36,15 +36,8 @@ export default class ProjectPage extends Component {
     };
 
     componentDidMount = () => {
-        auth.getProjectPermission(this.project.projectKey).then((permission) => {
-            this.permission = permission;
-            if (this.permission !== Permission.None) {
-                this.loadProject();
-                this.loadItems();
-            } else {
-                global.history.replace("/403");
-            }
-        });
+        this.loadProject();
+        this.loadItems();
     };
 
     render() {

@@ -72,14 +72,12 @@ namespace Scalpay.Services
         private readonly ScalpayDbContext _context;
         private readonly IMemoryCache _cache;
         private readonly IMapper _mapper;
-        private readonly IEvalService _expService;
 
-        public ItemService(ScalpayDbContext context, IMemoryCache cache, IMapper mapper, IEvalService expService)
+        public ItemService(ScalpayDbContext context, IMemoryCache cache, IMapper mapper)
         {
             _context = context;
             _cache = cache;
             _mapper = mapper;
-            _expService = expService;
         }
 
         public async Task<Item> GetItemAsync(string itemKey)

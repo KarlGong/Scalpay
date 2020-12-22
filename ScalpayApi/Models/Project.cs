@@ -8,9 +8,6 @@ namespace Scalpay.Models
     public class Project
     {
         [Key]
-        public int Id { get; set; }
-        
-        [Required]
         [Column(TypeName = "varchar(50)")]
         public string ProjectKey { get; set; }
         
