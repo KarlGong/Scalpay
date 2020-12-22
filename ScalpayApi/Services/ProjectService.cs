@@ -15,10 +15,15 @@ namespace Scalpay.Services
     public class ProjectCriteria : Criteria<Project>
     {
         public string ProjectKey { get; set; }
+        
+        public string Keyword { get; set; }
 
         public override Expression<Func<Project, bool>> ToWherePredicate()
         {
-            return p => (ProjectKey == null || ProjectKey == p.ProjectKey);
+            return p => (ProjectKey == null || ProjectKey == p.ProjectKey)
+                        && (Keyword == null
+                            || p.ProjectKey.Contains(Keyword)
+                            || p.Description.Contains(Keyword));
         }
     }
     

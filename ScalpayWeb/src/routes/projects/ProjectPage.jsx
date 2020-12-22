@@ -25,7 +25,6 @@ export default class ProjectPage extends Component {
         description: "",
     };
     @observable items = [];
-    @observable totalCount = 0;
     @observable isLoadingItems = false;
     searchText = "";
     @observable criteria = {
@@ -34,6 +33,7 @@ export default class ProjectPage extends Component {
         pageSize: 20,
         orderBy: "itemKey"
     };
+    @observable totalCount = 0;
 
     componentDidMount = () => {
         this.loadProject();
@@ -100,7 +100,7 @@ export default class ProjectPage extends Component {
                             onClick={() => {
                                 this.criteria.pageIndex = 0;
                                 this.criteria.keyword = this.searchText;
-                                this.loadItems()
+                                this.loadItems();
                             }}>
                             Search
                         </Button>
@@ -148,6 +148,6 @@ export default class ProjectPage extends Component {
     };
 
     editProject = () => {
-        projectModal.edit(this.project, (project) => this.project = project);
+        projectModal.edit(this.project, () => this.loadProject());
     };
 }

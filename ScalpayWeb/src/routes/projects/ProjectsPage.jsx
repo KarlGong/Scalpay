@@ -15,9 +15,16 @@ import global from "~/global";
 @observer
 export default class ProjectsPage extends Component {
 
-    @observable loading = false;
+    @observable isLoading = false;
     @observable projects = [];
-    @observable filterText = "";
+    searchText = "";
+    @observable criteria = {
+        keyword: "",
+        pageIndex: 0,
+        pageSize: 20,
+        orderBy: "projectKey"
+    };
+    @observable totalCount = 0;
 
     componentDidMount = () => {
         this.loadProjects();
@@ -30,28 +37,48 @@ export default class ProjectsPage extends Component {
                 <Breadcrumb.Item>Projects</Breadcrumb.Item>
             </Breadcrumb>}>
             <List
+                pagination={this.totalCount && {
+                    showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
+                    pageSize: this.criteria.pageSize,
+                    current: this.criteria.pageIndex + 1,
+                    total: this.totalCount,
+                    onChange: (page, pageSize) => {
+                        this.criteria.pageIndex = page - 1;
+                        this.criteria.pageSize = pageSize;
+                        this.loadProjects();
+                    }
+                }}
                 className="list"
-                loading={this.loading}
+                loading={this.isLoading}
                 itemLayout="horizontal"
-                dataSource={this.projects.filter(p => p.projectKey.toLowerCase().includes(this.filterText.toLowerCase())
-                    || (p.description || "").toLowerCase().includes(this.filterText.toLowerCase()))}
+                dataSource={this.projects}
                 header={<span>
                             <Input
-                                style={{width: "250px"}}
-                                prefix={<SearchOutlined style={{color: "rgba(0, 0, 0, .25)"}}/>}
-                                allowClear
-                                placeholder="Filter"
-                                onChange={(e) => this.filterText = e.target.value || ""}/>
-                    {
-                        auth.user.role === Role.Admin &&
-                        <Button
-                            icon={<PlusOutlined />}
-                            style={{float: "right"}}
-                            onClick={() => this.addProject()}>
-                            Create Project
-                        </Button>
-                    }
-                            </span>}
+                               style={{width: "250px"}}
+                               prefix={<SearchOutlined style={{color: "rgba(0, 0, 0, .25)"}}/>}
+                               allowClear
+                               placeholder="Search"
+                               onChange={(e) => this.searchText = e.target.value || ""}/>
+                           <Button
+                            style={{marginLeft: "10px"}}
+                            type="primary"
+                            onClick={() => {
+                                this.criteria.pageIndex = 0;
+                                this.criteria.keyword = this.searchText;
+                                this.loadProjects();
+                            }}>
+                                Search
+                            </Button>
+                            {
+                                auth.user.role === Role.Admin &&
+                                <Button
+                                    icon={<PlusOutlined/>}
+                                    style={{float: "right"}}
+                                    onClick={() => this.addProject()}>
+                                    Create Project
+                                </Button>
+                            }
+                        </span>}
                 renderItem={project => {
                     return <List.Item>
                         <List.Item.Meta
@@ -67,12 +94,14 @@ export default class ProjectsPage extends Component {
     };
 
     loadProjects = () => {
-        this.loading = true;
-        axios.get("/api/projects?orderBy=projectKey", {redirectOnError: true})
-            .then(response => {
-                this.projects = response.data.value;
-            })
-            .finally(() => this.loading = false);
+        this.isLoading = true;
+        axios.get("/api/projects", {
+            params: this.criteria,
+            redirectOnError: true
+        }).then(res => {
+            this.projects = res.data.value;
+            this.totalCount = res.data.totalCount;
+        }).finally(() => this.isLoading = false);
     };
 
     addProject = () => {

@@ -20,7 +20,7 @@ import "./ItemPage.less";
 @observer
 export default class ItemPage extends Component {
 
-    @observable permission = "";
+    @observable permission = Permission.Admin;
     @observable item = {
         projectKey: this.props.params.projectKey,
         itemKey: this.props.params.itemKey,
@@ -57,7 +57,6 @@ export default class ItemPage extends Component {
                         description={this.item.description || ""}
                     />
                     {
-                        this.permission === Permission.Admin &&
                         <span>
                             <Button icon={<EditOutlined />} onClick={() => this.editItem()}>
                                 Edit Item
@@ -118,17 +117,10 @@ export default class ItemPage extends Component {
             .then((res) => {
                 res.data.rules.map(r => r.key = r.key || guid());
                 this.item = res.data;
-            })
-            .finally(() => this.loading = false);
+            }).finally(() => this.loading = false);
     };
 
     editItem = () => {
-        itemModal.edit(this.item, (item) => {
-            if (this.item.itemKey !== item.itemKey) {
-                global.history.replace(`/projects/${item.projectKey}/${item.itemKey}`);
-            }
-            item.rules.map(r => r.key = r.key || guid());
-            this.item = item;
-        });
+        itemModal.edit(this.item, () => this.loadItem());
     };
 }

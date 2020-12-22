@@ -27,6 +27,7 @@ namespace Scalpay.Controllers
                 return Forbid("You have no permission to view project permissions.");
             }
 
+            criteria.ProjectKey = projectKey;
             return Ok(await _projectPermissionService.GetProjectPermissionsAsync(criteria));
         }
 

@@ -30,6 +30,7 @@ namespace Scalpay.Controllers
                 return Forbid("You have no permission to view items.");
             }
 
+            criteria.ProjectKey = projectKey;
             return Ok(await _itemService.GetItemsAsync(criteria));
         }
 
