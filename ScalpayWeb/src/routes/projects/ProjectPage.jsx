@@ -26,9 +26,8 @@ export default class ProjectPage extends Component {
     };
     @observable items = [];
     @observable isLoadingItems = false;
-    searchText = "";
     @observable criteria = {
-        keyword: "",
+        keyword: null,
         pageIndex: 0,
         pageSize: 20,
         orderBy: "itemKey"
@@ -93,13 +92,12 @@ export default class ProjectPage extends Component {
                             prefix={<SearchOutlined style={{color: "rgba(0, 0, 0, .25)"}}/>}
                             allowClear
                             placeholder="Search"
-                            onChange={(e) => this.searchText = e.target.value || ""}/>
+                            onChange={(e) => this.criteria.keyword = e.target.value || null}/>
                         <Button
                             style={{marginLeft: "10px"}}
                             type="primary"
                             onClick={() => {
                                 this.criteria.pageIndex = 0;
-                                this.criteria.keyword = this.searchText;
                                 this.loadItems();
                             }}>
                             Search

@@ -1,4 +1,5 @@
-import {Breadcrumb, Button, Input, List} from "antd";
+import {Breadcrumb, Button, Input, List, Tooltip} from "antd";
+import {PlusOutlined, SearchOutlined, UserOutlined} from "@ant-design/icons";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, untracked} from "mobx";
@@ -10,6 +11,7 @@ import global from "~/global";
 import userModal from "~/modals/userModal";
 import UserInfo from "~/components/UserInfo";
 import guid from "~/utils/guid";
+import {Permission, Role} from "~/const";
 
 @observer
 export default class UsersPage extends Component {
@@ -17,37 +19,21 @@ export default class UsersPage extends Component {
     @observable loading = false;
     @observable users = [];
     @observable totalCount = 0;
-    @observable filterRestKey = guid();
-
     @observable criteria = {
-        searchText: this.props.location.query.searchText || null,
-        pageIndex: parseInt(this.props.location.query.pageIndex) || 0,
-        pageSize: parseInt(this.props.location.query.pageSize) || 20
+        keyword: null,
+        pageIndex: 0,
+        pageSize: 20,
+        orderBy: "username"
     };
-    filter = {searchText: this.criteria.searchText};
 
     componentDidMount = () => {
-        this.searchUsers();
-    };
-
-    componentWillReceiveProps = (props) => {
-        if (JSON.stringify(this.props.location.query) !== JSON.stringify(props.location.query)) {
-            this.criteria = {
-                searchText: props.location.query.searchText || null,
-                pageIndex: parseInt(props.location.query.pageIndex) || 0,
-                pageSize: parseInt(props.location.query.pageSize) || 20
-            };
-            this.filter = {searchText: this.criteria.searchText};
-            this.filterRestKey = guid();
-        }
-        this.searchUsers();
+        this.loadUsers();
     };
 
     render() {
         return <PageWrapper
             className="users-page"
             breadcrumb={<Breadcrumb>
-                <Breadcrumb.Item><Link to="/">Home</Link></Breadcrumb.Item>
                 <Breadcrumb.Item>Users</Breadcrumb.Item>
             </Breadcrumb>}>
             <List
@@ -59,35 +45,36 @@ export default class UsersPage extends Component {
                     onChange: (page, pageSize) => {
                         this.criteria.pageIndex = page - 1;
                         this.criteria.pageSize = pageSize;
-                        global.history.pushQueryParams(this.criteria);
+                        this.loadUsers();
                     }
                 }: null}
                 className="list"
                 loading={this.loading}
                 itemLayout="horizontal"
                 dataSource={this.users}
-                header={<span key={this.filterRestKey}>
+                header={<span>
                         <Input
                             style={{width: "250px"}}
-                            placeholder="Search by username/full name/email"
-                            defaultValue={untracked(() => this.criteria.searchText)}
-                            onChange={(e) => this.filter.searchText = e.target.value || null}/>
+                            placeholder="Search"
+                            prefix={<SearchOutlined style={{color: "rgba(0, 0, 0, .25)"}}/>}
+                            allowClear
+                            onChange={(e) => this.criteria.keyword = e.target.value || null}/>
                         <Button
                             style={{marginLeft: "10px"}}
                             type="primary"
                             onClick={() => {
-                                this.criteria = Object.assign(this.criteria, this.filter);
                                 this.criteria.pageIndex = 0;
-                                global.history.pushQueryParams(this.criteria);
+                                this.loadUsers();
                             }}>Search</Button>
                         <Button
+                            icon={<PlusOutlined/>}
                             style={{float: "right"}}
                             onClick={() => this.addUser()}>Add User</Button>
                     </span>}
                 renderItem={user => {
                     return <List.Item actions={[<a className="edit" onClick={() => this.editUser(user)}>edit</a>]}>
                         <List.Item.Meta
-                            title={<span><UserInfo username={user.username}/> - {user.fullName}</span>}
+                            title={<span><UserInfo username={user.username}/> - {user.fullName} {user.role === Role.Admin && <Tooltip title="Admin"><UserOutlined /></Tooltip>}</span>}
                             description={user.email}
                         />
                     </List.Item>
@@ -97,24 +84,22 @@ export default class UsersPage extends Component {
         </PageWrapper>
     };
 
-    searchUsers = () => {
+    loadUsers = () => {
         this.loading = true;
         axios.get("/api/users", {
             params: this.criteria,
             redirectOnError: true
-        })
-            .then(response => {
-                this.users = response.data.value;
-                this.totalCount = response.data.totalCount;
-            })
-            .finally(() => this.loading = false);
+        }).then(response => {
+            this.users = response.data.value;
+            this.totalCount = response.data.totalCount;
+        }).finally(() => this.loading = false);
     };
 
     addUser = () => {
-        userModal.add();
+        userModal.add(() => this.loadUsers());
     };
 
     editUser = (user) => {
-        userModal.edit(user);
+        userModal.edit(user, () => this.loadUsers());
     };
 }

@@ -49,9 +49,8 @@ export default class BasicSection extends Component {
         };
 
         return <div className="basic-panel">
-            <Form>
+            <Form {...formItemLayout}>
                 <Form.Item label="Item Key"
-                           {...formItemLayout}
                            validateStatus={this.validator.getResult("partialItemKey").status}
                            help={this.validator.getResult("partialItemKey").message}
                 >
@@ -70,7 +69,7 @@ export default class BasicSection extends Component {
                         onBlur={() => this.validator.validate("partialItemKey")}
                     />
                 </Form.Item>
-                <Form.Item label="Description" {...formItemLayout}>
+                <Form.Item label="Description">
                     <Input.TextArea
                         rows={4}
                         placeholder="Optional"
@@ -79,7 +78,7 @@ export default class BasicSection extends Component {
                         onChange={(e) => this.item.description = e.target.value}
                     />
                 </Form.Item>
-                <Form.Item label="Result Data Type" {...formItemLayout}>
+                <Form.Item label="Result Data Type">
                     <DataTypeSelect
                         key={this.resultDataTypeResetKey}
                         style={{width: "150px"}}

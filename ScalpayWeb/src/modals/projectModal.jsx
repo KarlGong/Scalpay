@@ -62,15 +62,23 @@ class ProjectModal extends Component {
     @observable visible = true;
 
     render() {
+        const formItemLayout = {
+            labelCol: {
+                span: 5
+            },
+            wrapperCol: {
+                span: 19
+            },
+        };
         return <Drawer
-            title={this.props.addMode ? "Create Project" : "Edit Project"}
+            title={this.props.addMode ? "Add Project" : "Edit Project"}
             visible={this.visible}
             width={600}
             maskClosable={false}
             onClose={this.handleCancel}
             afterVisibleChange={visible => !visible && this.props.afterClose()}
         >
-            <Form>
+            <Form {...formItemLayout}>
                 <Form.Item
                     label="Project Key"
                     validateStatus={this.validator.getResult("projectKey").status}
@@ -126,7 +134,7 @@ class ProjectModal extends Component {
                             let project = res.data;
                             this.isSubmitting = false;
                             this.visible = false;
-                            message.success(<span>Project <ProjectInfo project={project}/> is created successfully!</span>);
+                            message.success(<span>Project <ProjectInfo project={project}/> is added successfully!</span>);
                             this.props.onSuccess(project);
                         }, () => this.isSubmitting = false);
                 });

@@ -34,8 +34,6 @@ namespace Scalpay.Services
 
         public string Email { get; set; }
 
-        public string Password { get; set; }
-
         public string FullName { get; set; }
 
         public Role Role { get; set; }
@@ -136,6 +134,7 @@ namespace Scalpay.Services
             }
 
             var user = _mapper.Map<User>(ps);
+            user.Password = "1"; // todo: use item in __scalpay
 
             await _context.Users.AddAsync(user);
 
@@ -155,7 +154,7 @@ namespace Scalpay.Services
             }
             
             // verification
-            if (await _context.Users.AsNoTracking().AnyAsync(u => u.Email == ps.Email))
+            if (!oldUser.Email.RoughEquals(ps.Email) && await _context.Users.AsNoTracking().AnyAsync(u => u.Email == ps.Email))
             {
                 throw new ConflictException($"User with email {ps.Email} is already existing.");
             }

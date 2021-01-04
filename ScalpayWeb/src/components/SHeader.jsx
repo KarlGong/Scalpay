@@ -31,6 +31,7 @@ export default class SHeader extends Component {
                         style={{lineHeight: "64px"}}
                     >
                         <Menu.Item key="1" onClick={() => global.history.push("/projects")}>Projects</Menu.Item>
+                        <Menu.Item key="2" onClick={() => global.history.push("/users")}>Users</Menu.Item>
                     </Menu>}
             </div>
             {

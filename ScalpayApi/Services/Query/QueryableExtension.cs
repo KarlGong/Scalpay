@@ -32,18 +32,18 @@ namespace Scalpay.Services.Query
 
         private static IOrderedQueryable<T> OrderByMemberUsing<T>(this IQueryable<T> source, string memberPath, string method)
         {
-            // try
-            // {
+            try
+            {
                 var parameter = Expression.Parameter(typeof(T), "item");
                 var member = memberPath.Split('.').Aggregate((Expression) parameter, Expression.PropertyOrField);
                 var keySelector = Expression.Lambda(member, parameter);
                 var methodCall = Expression.Call(typeof(Queryable), method, new[] {parameter.Type, member.Type}, source.Expression, Expression.Quote(keySelector));
                 return (IOrderedQueryable<T>) source.Provider.CreateQuery(methodCall);
-            // }
-            // catch (ArgumentException ex)
-            // {
-            //     throw new InvalidParamsException(ex.Message, ex);
-            // }
+            }
+            catch (ArgumentException ex)
+            {
+                throw new InvalidParamsException(ex.Message, ex);
+            }
         }
     }
 }

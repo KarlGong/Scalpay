@@ -1,18 +1,18 @@
-import {Checkbox, Form, Input, message, Modal} from "antd";
+import {Checkbox, Form, Input, message, Drawer, Button, Radio, Select} from "antd";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked} from "mobx";
 import axios from "axios";
-import {Privilege} from "~/const";
 import {render, unmountComponentAtNode} from "react-dom";
 import Validator from "~/utils/Validator";
 import UserInfo from "~/components/UserInfo";
+import {Permission, Role} from "~/const";
 
 function add(onSuccess) {
     const target = document.createElement("div");
     document.body.appendChild(target);
 
-    render(<EditUserModal addMode onSuccess={onSuccess} afterClose={() => {
+    render(<UserModal addMode onSuccess={onSuccess} afterClose={() => {
         unmountComponentAtNode(target);
         target.remove()
     }}/>, target);
@@ -26,7 +26,7 @@ function edit(user, onSuccess) {
 
     axios.get("/api/users/" + user.username)
         .then(res =>
-            render(<EditUserModal user={res.data.data} onSuccess={onSuccess} afterClose={() => {
+            render(<UserModal user={res.data} onSuccess={onSuccess} afterClose={() => {
                 unmountComponentAtNode(target);
                 target.remove()
             }}/>, target))
@@ -34,20 +34,20 @@ function edit(user, onSuccess) {
 }
 
 @observer
-class EditUserModal extends Component {
+class UserModal extends Component {
     static defaultProps = {
         user: {
             username: null,
             fullName: null,
             email: null,
-            privileges: []
+            role: Role.User,
         },
         addMode: false,
         onSuccess: (user) => {},
         afterClose: () => {}
     };
 
-    @observable user = this.props.loginParams;
+    @observable user = this.props.user;
     validator = new Validator(this.user, {
         username: (rule, value, callback, source, options) => {
             let errors = [];
@@ -66,18 +66,23 @@ class EditUserModal extends Component {
     @observable visible = true;
 
     render() {
-        return <Modal
+        const formItemLayout = {
+            labelCol: {
+                span: 5
+            },
+            wrapperCol: {
+                span: 19
+            },
+        };
+        return <Drawer
             title={this.props.addMode ? "Add User" : "Edit User"}
-            okText={this.props.addMode ? "Add User" : "Update User"}
-            cancelText="Cancel"
             visible={this.visible}
+            width={500}
             maskClosable={false}
-            confirmLoading={this.loading}
-            onOk={this.handleOk}
-            onCancel={this.handleCancel}
-            afterClose={() => this.props.afterClose()}
+            onClose={this.handleCancel}
+            afterVisibleChange={visible => !visible && this.props.afterClose()}
         >
-            <Form>
+            <Form {...formItemLayout}>
                 <Form.Item label="Username"
                            validateStatus={this.validator.getResult("username").status}
                            help={this.validator.getResult("username").message}>
@@ -111,17 +116,34 @@ class EditUserModal extends Component {
                             this.validator.resetResult("email");
                         }} onBlur={() => this.validator.validate("email")}/>
                 </Form.Item>
-                <Form.Item label="Privileges">
-                    <Checkbox.Group
-                        defaultValue={untracked(() => toJS(this.user.privileges))}
-                        onChange={e => this.user.privileges = e}>
-                        <Checkbox value={Privilege.projectManage}>Manage Projects</Checkbox>
-                        <Checkbox value={Privilege.itemManage}>Manage Items</Checkbox>
-                        <Checkbox value={Privilege.userManage}>Manage Users</Checkbox>
-                    </Checkbox.Group>
+                <Form.Item label="Role">
+                    <Select style={{width: "120px"}} onChange={value => this.user.role = value} defaultValue={this.user.role}>
+                        {
+                            Object.entries(Role).map(([key, value]) => <Select.Option key={value} value={value}>{key}</Select.Option>)
+                        }
+                    </Select>
                 </Form.Item>
             </Form>
-        </Modal>
+            <div
+                style={{
+                    position: "absolute",
+                    left: 0,
+                    bottom: 0,
+                    width: "100%",
+                    borderTop: "1px solid #e9e9e9",
+                    padding: "10px 16px",
+                    background: "#fff",
+                    textAlign: "right",
+                }}
+            >
+                <Button onClick={this.handleCancel} style={{marginRight: 8}}>
+                    Cancel
+                </Button>
+                <Button onClick={this.handleOk} type="primary" loading={this.isSubmitting}>
+                    Submit
+                </Button>
+            </div>
+        </Drawer>
     };
 
     handleOk = () => {
@@ -132,7 +154,7 @@ class EditUserModal extends Component {
                     this.loading = true;
                     axios.post("/api/users", this.user)
                         .then(res => {
-                            let user = res.data.data;
+                            let user = res.data;
                             this.loading = false;
                             this.visible = false;
                             message.success(<span>User <UserInfo username={user.username}/> is added successfully!</span>);
@@ -146,7 +168,7 @@ class EditUserModal extends Component {
                     this.loading = true;
                     axios.put("/api/users/" + this.user.username, this.user)
                         .then(res => {
-                            let user = res.data.data;
+                            let user = res.data;
                             this.loading = false;
                             this.visible = false;
                             message.success(<span>User <UserInfo username={user.username}/> is updated successfully!</span>);
