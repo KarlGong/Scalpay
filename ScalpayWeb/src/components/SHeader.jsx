@@ -56,7 +56,7 @@ export default class SHeader extends Component {
                             <Link to={"/users/" + auth.user.username}>My Profile</Link>
                         </Menu.Item>
                         <Menu.Item key="1">
-                            <span onClick={e => updatePasswordModal.open(auth.user.username)}>Update Password</span>
+                            <a onClick={e => updatePasswordModal.open(auth.user.username)}>Update Password</a>
                         </Menu.Item>
                         <Menu.Divider/>
                         <Menu.Item key="2">
