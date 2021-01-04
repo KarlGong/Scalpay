@@ -55,6 +55,15 @@ class UpdatePasswordModal extends Component {
     @observable visible = true;
 
     render() {
+        const formItemLayout = {
+            labelCol: {
+                span: 8
+            },
+            wrapperCol: {
+                span: 16
+            },
+        };
+
         return <Modal
             title="Update Password"
             okText="Update Password"
@@ -66,7 +75,7 @@ class UpdatePasswordModal extends Component {
             onCancel={this.handleCancel}
             afterClose={() => this.props.afterClose()}
         >
-            <Form>
+            <Form {...formItemLayout}>
                 <Form.Item label="Current Password"
                            validateStatus={this.validator.getResult("currentPassword").status}
                            help={this.validator.getResult("currentPassword").message}
@@ -89,6 +98,7 @@ class UpdatePasswordModal extends Component {
                         onChange={e => {
                             this.fields.newPassword = e.target.value;
                             this.validator.resetResult("newPassword");
+                            this.validator.resetResult("confirmPassword");
                         }}
                         onBlur={e => this.validator.validate("newPassword")}
                     />
@@ -101,6 +111,7 @@ class UpdatePasswordModal extends Component {
                         type="password"
                         onChange={e => {
                             this.fields.confirmPassword = e.target.value;
+                            this.validator.resetResult("newPassword");
                             this.validator.resetResult("confirmPassword");
                         }}
                         onBlur={e => this.validator.validate("confirmPassword")}
@@ -115,14 +126,17 @@ class UpdatePasswordModal extends Component {
             .validateAll()
             .then(() => {
                 this.loading = true;
-                axios.post("/api/users/" + this.props.username + "/password", this.fields)
+                axios.patch("/api/users/" + this.props.username + "/password", this.fields, {skipInterceptor: true})
                     .then(res => {
                         let user = res.data;
                         this.loading = false;
                         this.visible = false;
                         message.success("Your password is updated successfully!");
                         this.props.onSuccess(user);
-                    }, () => this.loading = false)
+                    }, (error) => {
+                        this.validator.setResult("currentPassword", {status: "error", message: error.response.data});
+                        this.loading = false;
+                    });
             })
     };
 

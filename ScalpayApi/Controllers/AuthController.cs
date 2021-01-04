@@ -53,7 +53,7 @@ namespace Scalpay.Controllers
             }
             catch (NotFoundException ex)
             {
-                return Unauthorized("Username and password are incorrect.");
+                return Unauthorized("Username or password is incorrect.");
             }
 
             return Ok(new

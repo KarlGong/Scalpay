@@ -60,8 +60,8 @@ export default class LoginPage extends Component {
             this.loading = true;
             auth.login(this.loginParams.username, this.loginParams.password, this.loginParams.isKeepLogin)
                 .then(() => global.history.push(this.props.router.location.query.returnUrl || "/"),
-                    (res) => {
-                        this.validator.setResult("username", {status: "error", message: res.response.data});
+                    (error) => {
+                        this.validator.setResult("username", {status: "error", message: error.response.data});
                         this.validator.setResult("password", {status: "error"});
                     }).finally(() => this.loading = false);
         });

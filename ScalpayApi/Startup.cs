@@ -52,6 +52,7 @@ namespace Scalpay
                 config.CreateMap<UpsertItemParams, Item>();
                 config.CreateMap<UpsertProjectPermissionParams, ProjectPermission>();
                 config.CreateMap<UpsertUserParams, User>();
+                config.CreateMap<User, UpsertUserParams>();
             });
 
             services.AddDbContextPool<ScalpayDbContext>(options =>

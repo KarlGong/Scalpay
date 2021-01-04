@@ -1,20 +1,31 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Scalpay.Enums;
+using Scalpay.Exceptions;
 using Scalpay.Models;
 using Scalpay.Services;
 
 namespace Scalpay.Controllers
 {
+    public class UpdateUserPasswordParams
+    {
+        public string CurrentPassword { get; set; }
+        
+        public string NewPassword { get; set; }
+    }
+    
     [Route("api/users")]
     public class UserController : Controller
     {
+        private readonly IMapper _mapper;
         private readonly IPermissionService _permissionService;
         private readonly User _user;
         private readonly IUserService _service;
 
-        public UserController(IPermissionService permissionService, IUserService service)
+        public UserController(IMapper mapper, IPermissionService permissionService, IUserService service)
         {
+            _mapper = mapper;
             _permissionService = permissionService;
             _user = service.GetCurrentUserAsync().Result;
             _service = service;
@@ -62,7 +73,29 @@ namespace Scalpay.Controllers
             }
 
             ps.Username = username;
+            ps.Password = (await _service.GetUserAsync(username)).Password;
             return Ok(await _service.UpdateUserAsync(ps));
+        }
+        
+        [HttpPatch("{username}/password")]
+        public async Task<IActionResult> UpdateUserPassword([FromRoute] string username, [FromBody] UpdateUserPasswordParams ps)
+        {
+            if (_user.Username != username)
+            {
+                return Forbid("You have no permission to update password of this user.");
+            }
+            
+            var user = await _service.GetUserAsync(username);
+
+            if (user.Password != ps.CurrentPassword)
+            {
+                throw new InvalidParamsException("Current password is incorrect.");
+            }
+
+            var upsertUserParams = _mapper.Map<UpsertUserParams>(user);
+            upsertUserParams.Password = ps.NewPassword;
+
+            return Ok(await _service.UpdateUserAsync(upsertUserParams));
         }
     }
 }

@@ -35,6 +35,8 @@ namespace Scalpay.Services
         public string Email { get; set; }
 
         public string FullName { get; set; }
+        
+        public string Password { get; set; }
 
         public Role Role { get; set; }
     }
@@ -134,7 +136,7 @@ namespace Scalpay.Services
             }
 
             var user = _mapper.Map<User>(ps);
-            user.Password = "1"; // todo: use item in __scalpay
+            user.Password ??= "1"; // todo: use item in __scalpay
 
             await _context.Users.AddAsync(user);
 
