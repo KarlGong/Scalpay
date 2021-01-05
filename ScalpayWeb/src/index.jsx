@@ -1,5 +1,5 @@
 import React from "react";
-import {IndexRedirect, IndexRoute, Route, Router} from "react-router";
+import {IndexRedirect, IndexRoute, Redirect, Route, Router} from "react-router";
 import {render} from "react-dom";
 import {AppContainer} from "react-hot-loader";
 import auth from "~/utils/auth";
@@ -14,6 +14,7 @@ import Page403 from "~/routes/Page403";
 import Page404 from "~/routes/Page404";
 import global from "./global";
 import "./index.less";
+import {Switch} from "antd";
 
 const checkAuth = (nextState, replace) => {
     if (nextState.location.pathname === "/login" && auth.user) {
@@ -49,6 +50,7 @@ render(
                 </Route>
                 <Route path="403" component={Page403}/>
                 <Route path="404" component={Page404}/>
+                <Route path='*' exact component={Page404} />
             </Route>
         </Router>
     </AppContainer>,

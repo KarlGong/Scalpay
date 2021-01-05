@@ -24,7 +24,7 @@ namespace Scalpay.Services
                         && (Username == null || Username == p.Username);
         }
     }
-    
+
     public class UpsertProjectPermissionParams
     {
         public string ProjectKey { set; get; }
@@ -39,11 +39,11 @@ namespace Scalpay.Services
         Task<ProjectPermission> GetProjectPermissionAsync(string projectKey, string username);
 
         Task<ProjectPermission> GetCachedProjectPermissionAsync(string projectKey, string username);
-        
+
         Task<QueryResults<ProjectPermission>> GetProjectPermissionsAsync(ProjectPermissionCriteria criteria);
 
         Task<ProjectPermission> AddProjectPermissionAsync(UpsertProjectPermissionParams ps);
-        
+
         Task<ProjectPermission> UpdateProjectPermissionAsync(UpsertProjectPermissionParams ps);
 
         Task DeleteProjectPermissionAsync(string projectKey, string username);
@@ -53,14 +53,12 @@ namespace Scalpay.Services
     public class ProjectPermissionService : IProjectPermissionService
     {
         private readonly ScalpayDbContext _context;
-        private readonly IUserService _userService;
         private readonly IMemoryCache _cache;
         private readonly IMapper _mapper;
 
-        public ProjectPermissionService(ScalpayDbContext context, IUserService userService, IMemoryCache cache, IMapper mapper)
+        public ProjectPermissionService(ScalpayDbContext context, IMemoryCache cache, IMapper mapper)
         {
             _context = context;
-            _userService = userService;
             _cache = cache;
             _mapper = mapper;
         }
@@ -104,17 +102,16 @@ namespace Scalpay.Services
             var permission = _mapper.Map<ProjectPermission>(ps);
 
             await _context.ProjectPermissions.AddAsync(permission);
-            
+
             await _context.SaveChangesAsync();
 
             return permission;
-            
         }
 
         public async Task<ProjectPermission> UpdateProjectPermissionAsync(UpsertProjectPermissionParams ps)
         {
             _cache.Remove($"project-permission-{ps.ProjectKey}-{ps.Username}");
-            
+
             var oldPermission = await _context.ProjectPermissions.FirstOrDefaultAsync(pp => pp.ProjectKey == ps.ProjectKey && pp.Username == ps.Username);
             if (oldPermission == null)
             {
@@ -131,13 +128,13 @@ namespace Scalpay.Services
         public async Task DeleteProjectPermissionAsync(string projectKey, string username)
         {
             _cache.Remove($"project-permission-{projectKey}-{username}");
-            
+
             var oldPermission = await _context.ProjectPermissions.FirstOrDefaultAsync(pp => pp.ProjectKey == projectKey && pp.Username == username);
             if (oldPermission == null)
             {
                 throw new NotFoundException($"Project permission {username}@{projectKey} cannot be found.");
             }
-            
+
             _context.ProjectPermissions.Remove(oldPermission);
             await _context.SaveChangesAsync();
         }

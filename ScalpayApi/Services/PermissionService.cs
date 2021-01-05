@@ -8,7 +8,7 @@ namespace Scalpay.Services
     {
         Task<bool> HasGlobalPermissionAsync(Permission permission);
 
-        Task<bool> HasProjectPermissionAsync(string projectId, Permission permission);
+        Task<bool> HasProjectPermissionAsync(string projectKey, Permission permission);
     }
 
     public class PermissionService : IPermissionService
@@ -35,12 +35,12 @@ namespace Scalpay.Services
             }
         }
 
-        public async Task<bool> HasProjectPermissionAsync(string projectId, Permission permission)
+        public async Task<bool> HasProjectPermissionAsync(string projectKey, Permission permission)
         {
             try
             {
                 var user = await _userService.GetCurrentUserAsync();
-                return user.Role == Role.Admin || (await _projectPermissionService.GetCachedProjectPermissionAsync(projectId, user.Username)).Permission.HasFlag(permission);
+                return user.Role == Role.Admin || (await _projectPermissionService.GetCachedProjectPermissionAsync(projectKey, user.Username)).Permission.HasFlag(permission);
             }
             catch (NotFoundException ex)
             {

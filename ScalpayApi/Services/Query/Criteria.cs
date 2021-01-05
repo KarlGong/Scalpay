@@ -7,9 +7,9 @@ namespace Scalpay.Services.Query
     {
         public abstract Expression<Func<T, bool>> ToWherePredicate();
 
-        public int PageIndex { get; set; } = 0;
+        public int? PageIndex { get; set; }
 
-        public int PageSize { get; set; } = 20;
+        public int? PageSize { get; set; }
 
         public string OrderBy { get; set; }
 

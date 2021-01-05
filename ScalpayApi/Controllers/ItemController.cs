@@ -27,7 +27,7 @@ namespace Scalpay.Controllers
         {
             if (!await _permissionService.HasProjectPermissionAsync(projectKey, Permission.Read))
             {
-                return Forbid("You have no permission to view items.");
+                return StatusCode(403, "You have no permission to view items.");
             }
 
             criteria.ProjectKey = projectKey;
@@ -44,7 +44,7 @@ namespace Scalpay.Controllers
             
             if (!await _permissionService.HasProjectPermissionAsync(projectKey, Permission.Read))
             {
-                return Forbid("You have no permission to view this item.");
+                return StatusCode(403, "You have no permission to view this item.");
             }
 
             return Ok(await _itemService.GetItemAsync(itemKey));
@@ -55,7 +55,7 @@ namespace Scalpay.Controllers
         {
             if (!await _permissionService.HasProjectPermissionAsync(projectKey, Permission.Admin))
             {
-                return Forbid("You have no permission to add item.");
+                return StatusCode(403, "You have no permission to add item.");
             }
 
             ps.ProjectKey = projectKey;
@@ -72,7 +72,7 @@ namespace Scalpay.Controllers
             
             if (!await _permissionService.HasProjectPermissionAsync(projectKey, Permission.Admin))
             {
-                return Forbid("You have no permission to edit this item.");
+                return StatusCode(403, "You have no permission to edit this item.");
             }
 
             ps.ProjectKey = projectKey;
@@ -90,7 +90,7 @@ namespace Scalpay.Controllers
             
             if (!await _permissionService.HasProjectPermissionAsync(projectKey, Permission.Admin))
             {
-                return Forbid("You have no permission to delete this item.");
+                return StatusCode(403, "You have no permission to delete this item.");
             }
 
             await _itemService.DeleteItemAsync(itemKey);
@@ -108,7 +108,7 @@ namespace Scalpay.Controllers
             
             if (!await _permissionService.HasProjectPermissionAsync(projectKey, Permission.Read))
             {
-                return Forbid("You have no permission to eval this item.");
+                return StatusCode(403, "You have no permission to eval this item.");
             }
 
             var item = await _itemService.GetCachedItemAsync(itemKey);

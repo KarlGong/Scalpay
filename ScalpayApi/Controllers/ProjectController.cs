@@ -22,7 +22,7 @@ namespace Scalpay.Controllers
         {
             if (!await _permissionService.HasGlobalPermissionAsync(Permission.Read))
             {
-                return Forbid("You have no permission to view projects.");
+                return StatusCode(403, "You have no permission to view projects.");
             }
 
             return Ok(await _projectService.GetProjectsAsync(criteria));
@@ -33,7 +33,7 @@ namespace Scalpay.Controllers
         {
             if (!await _permissionService.HasProjectPermissionAsync(projectKey, Permission.Read))
             {
-                return Forbid("You have no permission to view this project.");
+                return StatusCode(403, "You have no permission to view this project.");
             }
 
             return Ok(await _projectService.GetProjectAsync(projectKey));
@@ -44,7 +44,7 @@ namespace Scalpay.Controllers
         {
             if (!await _permissionService.HasGlobalPermissionAsync(Permission.Admin))
             {
-                return Forbid("You have no permission to add project.");
+                return StatusCode(403, "You have no permission to add project.");
             }
             
             return Ok(await _projectService.AddProjectAsync(ps));
@@ -55,7 +55,7 @@ namespace Scalpay.Controllers
         {
             if (!await _permissionService.HasProjectPermissionAsync(projectKey, Permission.Admin))
             {
-                return Forbid("You have no permission to update this project.");
+                return StatusCode(403, "You have no permission to update this project.");
             }
 
             ps.ProjectKey = projectKey;
@@ -67,7 +67,7 @@ namespace Scalpay.Controllers
         {
             if (!await _permissionService.HasProjectPermissionAsync(projectKey, Permission.Admin))
             {
-                return Forbid("You have no permission to delete this project.");
+                return StatusCode(403, "You have no permission to delete this project.");
             }
 
             await _projectService.DeleteProjectAsync(projectKey);

@@ -34,9 +34,9 @@ namespace Scalpay.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers([FromQuery] UserCriteria criteria)
         {
-            if (!await _permissionService.HasGlobalPermissionAsync(Permission.Admin))
+            if (!await _permissionService.HasGlobalPermissionAsync(Permission.Read))
             {
-                return Forbid("You have no permission to view users.");
+                return StatusCode(403, "You have no permission to view users.");
             }
 
             return Ok(await _service.GetUsersAsync(criteria));
@@ -47,7 +47,7 @@ namespace Scalpay.Controllers
         {
             if (!await _permissionService.HasGlobalPermissionAsync(Permission.Read))
             {
-                return Forbid("You have no permission to view this user.");
+                return StatusCode(403, "You have no permission to view this user.");
             }
 
             return Ok(await _service.GetUserAsync(username));
@@ -58,7 +58,7 @@ namespace Scalpay.Controllers
         {
             if (!await _permissionService.HasGlobalPermissionAsync(Permission.Admin))
             {
-                return Forbid("You have no permission to add user.");
+                return StatusCode(403, "You have no permission to add user.");
             }
 
             return Ok(await _service.AddUserAsync(ps));
@@ -69,7 +69,7 @@ namespace Scalpay.Controllers
         {
             if (!(await _permissionService.HasGlobalPermissionAsync(Permission.Admin) || _user.Username == username))
             {
-                return Forbid("You have no permission to update this user.");
+                return StatusCode(403, "You have no permission to update this user.");
             }
 
             ps.Username = username;
@@ -82,7 +82,7 @@ namespace Scalpay.Controllers
         {
             if (_user.Username != username)
             {
-                return Forbid("You have no permission to update password of this user.");
+                return StatusCode(403, "You have no permission to update password of this user.");
             }
             
             var user = await _service.GetUserAsync(username);

@@ -1,4 +1,4 @@
-import {Breadcrumb, Button, List, Avatar, Input} from "antd";
+import {Breadcrumb, Button, List, Avatar, Input, Result} from "antd";
 import {EditOutlined, PlusOutlined, SearchOutlined, TeamOutlined} from "@ant-design/icons";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
@@ -10,15 +10,15 @@ import {Link} from "react-router";
 import global from "~/global";
 import itemModal from "~/modals/itemModal/itemModal";
 import projectModal from "~/modals/projectModal";
-import permissionModal from "~/modals/permissionModal";
+import projectPermissionModal from "~/modals/projectPermissionModal";
 import {Role, Permission} from "~/const";
 import ItemInfo from "~/components/ItemInfo";
 import "./ProjectPage.less";
+import ExpressionView from "~/components/expression/ExpressionView";
 
 @observer
 export default class ProjectPage extends Component {
 
-    @observable permission = "";
     @observable project = {
         projectKey: this.props.params.projectKey,
         name: "",
@@ -35,11 +35,27 @@ export default class ProjectPage extends Component {
     @observable totalCount = 0;
 
     componentDidMount = () => {
-        this.loadProject();
-        this.loadItems();
+        if (this.checkPermission()) {
+            this.loadProject();
+            this.loadItems();
+        }
     };
 
+    checkPermission = () => {
+        return auth.hasProjectPermission(this.props.params.projectKey, Permission.Read);
+    }
+
     render() {
+        if (!this.checkPermission()) {
+            return <PageWrapper style={{background: "#f0f2f5", justifyContent: "center", alignItems: "center"}}>
+                <Result
+                    status="403"
+                    title="403"
+                    subTitle="Sorry, you are not authorized to access this page."
+                />
+            </PageWrapper>
+        }
+
         return <PageWrapper
             className="project-page"
             breadcrumb={<Breadcrumb>
@@ -57,12 +73,12 @@ export default class ProjectPage extends Component {
                         description={this.project.description}
                     />
                     {
-                        this.permission === Role.Admin &&
+                        auth.hasProjectPermission(this.project.projectKey, Permission.Admin) &&
                         <span>
                             <Button icon={<EditOutlined />} onClick={() => this.editProject()}>
                                 Edit Project
                             </Button>
-                            <Button icon={<TeamOutlined />} style={{marginLeft: "10px"}} onClick={() => permissionModal.open(this.project.projectKey)}>
+                            <Button icon={<TeamOutlined />} style={{marginLeft: "10px"}} onClick={() => projectPermissionModal.open(this.project.projectKey)}>
                                 Manage Permission
                             </Button>
                         </span>
@@ -103,7 +119,7 @@ export default class ProjectPage extends Component {
                             Search
                         </Button>
                         {
-                            this.permission === Role.Admin &&
+                            auth.hasProjectPermission(this.project.projectKey, Permission.Admin) &&
                             <Button
                                 style={{float: "right"}}
                                 icon={<PlusOutlined />}
@@ -114,11 +130,14 @@ export default class ProjectPage extends Component {
                     </span>
                 }
                 renderItem={item => {
-                    return <List.Item>
+                    let actions = [];
+                    auth.hasProjectPermission(this.project.projectKey, Permission.Admin) && actions.push(<a className="edit" onClick={() => this.editItem(item)}>edit</a>)
+                    return <List.Item actions={actions}>
                         <List.Item.Meta
                             title={<ItemInfo item={item}/>}
+                            description={item.description || ""}
                         />
-                        <div>{item.description}</div>
+                        <ExpressionView topLevel expression={item.defaultResult}/>
                     </List.Item>
                 }}
             >
@@ -127,7 +146,7 @@ export default class ProjectPage extends Component {
     };
 
     loadProject = () => {
-        axios.get("/api/projects/" + this.props.params.projectKey, {redirectOnError: true})
+        axios.get("/api/projects/" + this.props.params.projectKey)
             .then((res) => this.project = res.data);
     };
 
@@ -143,6 +162,10 @@ export default class ProjectPage extends Component {
 
     addItem = () => {
         itemModal.add(this.project.projectKey, () => this.loadItems());
+    };
+
+    editItem = (item) => {
+        itemModal.edit(item, () => this.loadItems());
     };
 
     editProject = () => {

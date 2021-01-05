@@ -8,8 +8,10 @@ import {DataType, ExpType, Func} from "~/const";
 import editExpressionModal from "~/modals/editExpressionModal";
 import cs from "classnames";
 import moment from "moment";
+import BoolSvg from "~/assets/icons/bool.svg";
 import DateSvg from "~/assets/icons/date.svg";
 import DurationSvg from "~/assets/icons/duration.svg";
+import NumberSvg from "~/assets/icons/number.svg";
 import NumberListSvg from "~/assets/icons/number-list.svg";
 import QuoteLeftSvg from "~/assets/icons/quote-left.svg";
 import QuoteRightSvg from "~/assets/icons/quote-right.svg";
@@ -53,7 +55,7 @@ export default class ExpressionView extends Component {
                 let display = null;
                 switch (this.expression.returnType) {
                     case DataType.Bool:
-                        display = JSON.stringify(this.expression.value);
+                        display = <span><Icon component={BoolSvg} className="type-icon left"/>{JSON.stringify(this.expression.value)}</span>;
                         break;
                     case DataType.DateTime:
                         let mom = moment(this.expression.value);
@@ -62,7 +64,7 @@ export default class ExpressionView extends Component {
                                 content={"Local Time: " + mom.format("YYYY-MM-DD HH:mm:ss")}
                             >
                                 <span>
-                                <Icon component={DateSvg} className="type-icon"/>
+                                <Icon component={DateSvg} className="type-icon left"/>
                                 {mom.utc().format("YYYY-MM-DD HH:mm:ss")}
                                 </span>
                             </Popover>;
@@ -92,11 +94,11 @@ export default class ExpressionView extends Component {
 
                         display =
                             <Popover content={detailText}>
-                                <span><Icon component={DurationSvg} className="type-icon"/>{displayText}</span>
+                                <span><Icon component={DurationSvg} className="type-icon left"/>{displayText}</span>
                             </Popover>;
                         break;
                     case DataType.Number:
-                        display = this.expression.value;
+                        display = <span><Icon component={NumberSvg} className="type-icon left"/>{this.expression.value}</span>;
                         break;
                     case DataType.NumberList:
                         display =
@@ -106,12 +108,12 @@ export default class ExpressionView extends Component {
                                         <div key={index} className="text">{number}</div>)}
                                 </div> : "<Empty>"}
                             >
-                                <span><Icon component={NumberListSvg} className="type-icon"/>[...{this.expression.value.length}]</span>
+                                <span><Icon component={NumberListSvg} className="type-icon left"/>[...{this.expression.value.length}]</span>
                             </Popover>;
                         break;
                     case DataType.String:
                         display =
-                            <span><Icon component={QuoteLeftSvg}/>{this.expression.value}<Icon component={QuoteRightSvg}/></span>;
+                            <span><Icon component={QuoteLeftSvg} className="type-icon"/>{this.expression.value}<Icon component={QuoteRightSvg} className="type-icon"/></span>;
                         break;
                     case DataType.StringDict:
                         display = <Popover
@@ -124,7 +126,7 @@ export default class ExpressionView extends Component {
                             </div> : "<Empty>"}
                         >
                             <span>
-                                <Icon component={StringDictSvg} className="type-icon"/>
+                                <Icon component={StringDictSvg} className="type-icon left"/>
                                 {"{..." + Object.keys(this.expression.value).length + "}"}
                             </span>
                         </Popover>;
@@ -138,7 +140,7 @@ export default class ExpressionView extends Component {
                                 </div> : "<Empty>"}
                             >
                                 <span>
-                                    <Icon component={StringListSvg} className="type-icon"/>
+                                    <Icon component={StringListSvg} className="type-icon left"/>
                                     [...{this.expression.value.length}]
                                 </span>
                             </Popover>;
@@ -148,7 +150,7 @@ export default class ExpressionView extends Component {
             case ExpType.Var:
                 return <span {...editProps}>
                     <Popover content={"Data Type: " + this.expression.returnType}>
-                        <span><Icon component={VarSvg} className="type-icon"/>{this.expression.var}</span>
+                        <span><Icon component={VarSvg} className="type-icon left"/>{this.expression.var}</span>
                     </Popover>
                 </span>;
             case ExpType.Func:

@@ -12,6 +12,7 @@ import itemModal from "~/modals/itemModal/itemModal";
 import logo from "~/assets/imgs/logo.png";
 import updatePasswordModal from "~/modals/updatePasswordModal";
 import "./SHeader.less";
+import {Permission} from "~/const";
 
 @observer
 export default class SHeader extends Component {
@@ -31,7 +32,10 @@ export default class SHeader extends Component {
                         style={{lineHeight: "64px"}}
                     >
                         <Menu.Item key="1" onClick={() => global.history.push("/projects")}>Projects</Menu.Item>
-                        <Menu.Item key="2" onClick={() => global.history.push("/users")}>Users</Menu.Item>
+                        {
+                            auth.hasGlobalPermission(Permission.Admin) &&
+                            <Menu.Item key="2" onClick={() => global.history.push("/users")}>Users</Menu.Item>
+                        }
                     </Menu>}
             </div>
             {

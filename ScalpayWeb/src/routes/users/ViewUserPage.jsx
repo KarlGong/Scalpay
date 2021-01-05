@@ -1,4 +1,4 @@
-import {Breadcrumb, Button, Avatar, Descriptions} from "antd";
+import {Breadcrumb, Button, Avatar, Descriptions, Result} from "antd";
 import {EditOutlined, UserOutlined} from "@ant-design/icons";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
@@ -11,6 +11,7 @@ import "./ViewUserPage.less";
 import userModal from "~/modals/userModal";
 import Block from "~/layouts/Block";
 import AuditsView from "~/components/AuditsView";
+import {Permission} from "~/const";
 
 @observer
 export default class ViewUserPage extends Component {
@@ -24,10 +25,26 @@ export default class ViewUserPage extends Component {
     @observable loading = false;
 
     componentDidMount = () => {
-        this.loadUser();
+        if (this.checkPermission()) {
+            this.loadUser();
+        }
     };
 
+    checkPermission = () => {
+        return auth.hasGlobalPermission(Permission.Read);
+    }
+
     render() {
+        if (!this.checkPermission()) {
+            return <PageWrapper style={{background: "#f0f2f5", justifyContent: "center", alignItems: "center"}}>
+                <Result
+                    status="403"
+                    title="403"
+                    subTitle="Sorry, you are not authorized to access this page."
+                />
+            </PageWrapper>
+        }
+
         return <PageWrapper
             className="item-page"
             breadcrumb={<Breadcrumb>
@@ -39,9 +56,12 @@ export default class ViewUserPage extends Component {
                     <Avatar size={128} icon={<UserOutlined/>} style={{backgroundColor: "#87d068"}}/>
                 </div>
                 <div style={{marginTop: "16px"}}>
-                    <Button icon={<EditOutlined/>} onClick={() => this.editUser()}>
-                        Edit Profile
-                    </Button>
+                    {
+                        (auth.user.username === this.user.username || auth.hasGlobalPermission(Permission.Admin)) &&
+                        <Button icon={<EditOutlined/>} onClick={() => this.editUser()}>
+                            Edit Profile
+                        </Button>
+                    }
                 </div>
                 <Descriptions style={{marginTop: "20px"}} column={1}>
                     <Descriptions.Item label="Username">{this.user.username}</Descriptions.Item>
@@ -56,7 +76,7 @@ export default class ViewUserPage extends Component {
 
     loadUser = () => {
         this.loading = true;
-        axios.get("/api/users/" + this.props.params.username, {redirectOnError: true})
+        axios.get("/api/users/" + this.props.params.username)
             .then((res) => this.user = res.data)
             .finally(() => this.loading = false);
     };

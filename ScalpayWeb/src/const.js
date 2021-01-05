@@ -7,8 +7,7 @@ export const Role = {
 
 export const Permission = {
     Read: "Read",
-    Admin: "Admin",
-    None: "None"
+    Admin: "Admin"
 };
 
 export const ExpType = {

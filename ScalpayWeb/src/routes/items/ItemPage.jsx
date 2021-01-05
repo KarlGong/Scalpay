@@ -1,4 +1,4 @@
-import {Avatar, Breadcrumb, Button, Col, Layout, List, Row, Descriptions} from "antd";
+import {Avatar, Breadcrumb, Button, Col, Layout, List, Row, Descriptions, Result} from "antd";
 import {EditOutlined} from "@ant-design/icons";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
@@ -34,10 +34,26 @@ export default class ItemPage extends Component {
     @observable loading = false;
 
     componentDidMount = () => {
-        this.loadItem();
+        if (this.checkPermission()) {
+            this.loadItem();
+        }
     };
 
+    checkPermission = () => {
+        return auth.hasProjectPermission(this.props.params.projectKey, Permission.Read);
+    }
+
     render() {
+        if (!this.checkPermission()) {
+            return <PageWrapper style={{background: "#f0f2f5", justifyContent: "center", alignItems: "center"}}>
+                <Result
+                    status="403"
+                    title="403"
+                    subTitle="Sorry, you are not authorized to access this page."
+                />
+            </PageWrapper>
+        }
+
         let conditionWidth = 16;
         let resultWidth = 8;
 
@@ -57,11 +73,10 @@ export default class ItemPage extends Component {
                         description={this.item.description || ""}
                     />
                     {
-                        <span>
-                            <Button icon={<EditOutlined />} onClick={() => this.editItem()}>
-                                Edit Item
-                            </Button>
-                        </span>
+                        auth.hasProjectPermission(this.item.projectKey, Permission.Admin) &&
+                        <Button icon={<EditOutlined />} onClick={() => this.editItem()}>
+                            Edit Item
+                        </Button>
                     }
                 </List.Item>
             </div>
@@ -75,18 +90,21 @@ export default class ItemPage extends Component {
                     </Col>
                 </Row>
             </Block>
-            <Block name="Parameters">
-                {this.item.parameterInfos.map(info =>
-                    <Row key={info.name}>
-                        <Col span={4}>
-                            {info.name}
-                        </Col>
-                        <Col span={4}>
-                            {info.dataType}
-                        </Col>
-                    </Row>
-                )}
-            </Block>
+            {
+                this.item.parameterInfos.length > 0 &&
+                <Block name="Parameters">
+                    {this.item.parameterInfos.map(info =>
+                        <Row key={info.name}>
+                            <Col span={4}>
+                                {info.name}
+                            </Col>
+                            <Col span={4}>
+                                {info.dataType}
+                            </Col>
+                        </Row>
+                    )}
+                </Block>
+            }
             <Block name="Rules" className="rules">
                 <Row type="flex" align="middle" className="rule-header">
                     <Col span={conditionWidth}><b>Condition</b></Col>
@@ -113,7 +131,7 @@ export default class ItemPage extends Component {
 
     loadItem = () => {
         this.loading = true;
-        axios.get(`/api/projects/${this.item.projectKey}/items/${this.item.itemKey}`, {redirectOnError: true})
+        axios.get(`/api/projects/${this.item.projectKey}/items/${this.item.itemKey}`)
             .then((res) => {
                 res.data.rules.map(r => r.key = r.key || guid());
                 this.item = res.data;

@@ -1,4 +1,5 @@
 import {Form, Input, message, Drawer, Button, List, Row, Col, Select, Icon, Spin} from "antd";
+import {CloseCircleOutlined, PlusOutlined} from "@ant-design/icons";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, toJS, untracked, runInAction, action} from "mobx";
@@ -6,16 +7,17 @@ import axios from "axios";
 import {Permission} from "~/const";
 import {render, unmountComponentAtNode} from "react-dom";
 import debounce from "lodash.debounce";
-import "./permissionModal.less";
+import "./projectPermissionModal.less";
 import ProjectInfo from "~/components/ProjectInfo";
 import guid from "~/utils/guid";
+import UserInfo from "~/components/UserInfo";
 
 
 function open(projectKey) {
     const target = document.createElement("div");
     document.body.appendChild(target);
 
-    render(<PermissionModal projectKey={projectKey} afterClose={() => {
+    render(<ProjectPermissionModal projectKey={projectKey} afterClose={() => {
         unmountComponentAtNode(target);
         target.remove()
     }}/>, target);
@@ -23,7 +25,7 @@ function open(projectKey) {
 
 
 @observer
-class PermissionModal extends Component {
+class ProjectPermissionModal extends Component {
     static defaultProps = {
         projectKey: "",
         afterClose: () => {}
@@ -70,7 +72,7 @@ class PermissionModal extends Component {
                         notFoundContent={this.isFetchingUser ? <Spin size="small"/> : "No matching users found"}
                         placeholder="Add Users"
                         filterOption={false}
-                        value={toJS(this.selectedUsers)}
+                        value={this.selectedUsers}
                         onSearch={this.fetchUser}
                         onChange={(value) => this.selectedUsers = value}
                     >
@@ -80,10 +82,7 @@ class PermissionModal extends Component {
                     <Select className="permission-selector" onChange={value => this.selectedPermission = value}
                             defaultValue={this.selectedPermission}>
                         {
-                            Object.entries(Permission)
-                                .filter(([key, value]) => key !== Permission.None)
-                                .map(([key, value]) =>
-                                    <Select.Option key={value} value={value}>{key}</Select.Option>)
+                            Object.entries(Permission).map(([key, value]) => <Select.Option key={value} value={value}>{key}</Select.Option>)
                         }
                     </Select>
                     <Button className="add" type="primary" disabled={!this.selectedUsers.length}
@@ -93,7 +92,7 @@ class PermissionModal extends Component {
                     <List.Item key={projectPermission.key}>
                         <div className="permission">
                             <div className="user">
-                                {projectPermission.username}
+                                <UserInfo username={projectPermission.username}></UserInfo>
                             </div>
                             <Select
                                 className="permission-selector"
@@ -109,8 +108,7 @@ class PermissionModal extends Component {
                                             <Select.Option key={value} value={value}>{key}</Select.Option>)
                                 }
                             </Select>
-                            <Icon className="delete" type="close-circle"
-                                  onClick={() => this.deletePermission(projectPermission)}/>
+                            <CloseCircleOutlined className="delete" onClick={() => this.deletePermission(projectPermission)}/>
                         </div>
                     </List.Item>}
             />
@@ -121,7 +119,7 @@ class PermissionModal extends Component {
         this.isLoadingPermissions = true;
         axios.get(`/api/projects/${this.props.projectKey}/permissions?orderBy=username`)
             .then((res) =>
-                this.projectPermissions = res.data.map(p => {
+                this.projectPermissions = res.data.value.map(p => {
                     p.key = guid();
                     return p;
                 })
@@ -148,41 +146,41 @@ class PermissionModal extends Component {
 
     addPermissions = () => {
         if (!this.selectedUsers.length) return;
-        if (this.selectedUsers.length === 1) {
-            axios.post(`/api/projects/${this.props.projectKey}/permissions`, {
-                projectKey: this.props.projectKey,
-                username: this.selectedUsers[0],
-                permission: this.selectedPermission
-            }).then(res => {
-                this.loadPermissions();
-                message.success(<span><b>{this.selectedUsers[0]}</b> has been added.</span>);
-                this.selectedUsers = [];
-            });
-        } else {
-            Promise.all(
-                this.selectedUsers.map(user => {
-                    return axios.post(`/api/projects/${this.props.projectKey}/permissions`, {
+        Promise.all(
+            this.selectedUsers.map(user => {
+                if (this.projectPermissions.filter(p => p.username === user).length) { // permission is already existing
+                    return axios.put(`/api/projects/${this.props.projectKey}/permissions/${user}`, {
                         projectKey: this.props.projectKey,
-                        username: user
+                        username: user,
+                        permission: this.selectedPermission
                     })
-                })).then(res => {
-                this.loadPermissions();
-                message.success(<span><b>2 users</b> have been added.</span>);
-                this.selectedUsers = [];
-            });
-        }
+                }
+
+                return axios.post(`/api/projects/${this.props.projectKey}/permissions`, {
+                    projectKey: this.props.projectKey,
+                    username: user,
+                    permission: this.selectedPermission
+                })
+            })).then(res => {
+            this.loadPermissions();
+            message.success(<span>New permissions have been added.</span>);
+            this.selectedUsers = [];
+        });
     };
 
     updatePermission = (permission) => {
         axios.put(`/api/projects/${permission.projectKey}/permissions/${permission.username}`, permission)
-            .then(res => message.success(<span><b>{permission.username}</b> has been updated.</span>))
+            .then(res => {
+                this.loadPermissions();
+                message.success(<span>Permission has been updated.</span>);
+            })
     };
 
     deletePermission = (permission) => {
         axios.delete(`/api/projects/${permission.projectKey}/permissions/${permission.username}`)
             .then(res => {
                 this.loadPermissions();
-                message.success(<span><b>{permission.username}</b> has been removed.</span>);
+                message.success(<span>Permission has been removed.</span>);
             });
     }
 }

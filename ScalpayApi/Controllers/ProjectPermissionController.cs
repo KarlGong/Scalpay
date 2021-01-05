@@ -24,7 +24,7 @@ namespace Scalpay.Controllers
         {
             if (!await _permissionService.HasProjectPermissionAsync(projectKey, Permission.Admin))
             {
-                return Forbid("You have no permission to view project permissions.");
+                return StatusCode(403, "You have no permission to view project permissions.");
             }
 
             criteria.ProjectKey = projectKey;
@@ -36,7 +36,7 @@ namespace Scalpay.Controllers
         {
             if (!await _permissionService.HasProjectPermissionAsync(projectKey, Permission.Admin))
             {
-                return Forbid("You have no permission to add project permissions.");
+                return StatusCode(403, "You have no permission to add project permissions.");
             }
 
             ps.ProjectKey = projectKey;
@@ -48,7 +48,7 @@ namespace Scalpay.Controllers
         {
             if (!await _permissionService.HasProjectPermissionAsync(projectKey, Permission.Admin))
             {
-                return Forbid("You have no permission to update this project permissions.");
+                return StatusCode(403, "You have no permission to update this project permissions.");
             }
             
             ps.ProjectKey = projectKey;
@@ -61,7 +61,7 @@ namespace Scalpay.Controllers
         {
             if (!await _permissionService.HasProjectPermissionAsync(projectKey, Permission.Admin))
             {
-                return Forbid("You have no permission to delete this project permissions.");
+                return StatusCode(403, "You have no permission to delete this project permissions.");
             }
 
             await _projectPermissionService.DeleteProjectPermissionAsync(projectKey, username);

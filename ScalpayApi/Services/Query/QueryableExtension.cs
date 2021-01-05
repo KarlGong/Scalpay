@@ -11,13 +11,20 @@ namespace Scalpay.Services.Query
     {
         public static IQueryable<T> WithCriteria<T>(this IQueryable<T> queryable, Criteria<T> criteria)
         {
+            queryable = queryable.Where(criteria.ToWherePredicate());
+            
+            if (criteria.PageIndex.HasValue && criteria.PageSize.HasValue)
+            {
+                queryable = queryable.Skip(criteria.PageIndex.Value * criteria.PageSize.Value).Take(criteria.PageSize.Value);
+            }
+            
             if (!string.IsNullOrEmpty(criteria.OrderBy))
             {
                 queryable = queryable.OrderByMemberUsing(criteria.OrderBy,
                     criteria.Direction.Equals(OrderingDirection.Asc) ? "OrderBy" : "OrderByDescending");
             }
 
-            return queryable.Where(criteria.ToWherePredicate()).Skip(criteria.PageIndex * criteria.PageSize).Take(criteria.PageSize);
+            return queryable;
         }
 
         public static Task<int> CountAsync<T>(this IQueryable<T> queryable, Criteria<T> criteria)

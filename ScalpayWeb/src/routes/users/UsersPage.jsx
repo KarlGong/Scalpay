@@ -1,4 +1,4 @@
-import {Breadcrumb, Button, Input, List, Tooltip} from "antd";
+import {Breadcrumb, Button, Input, List, Result, Tooltip} from "antd";
 import {PlusOutlined, SearchOutlined, UserOutlined} from "@ant-design/icons";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
@@ -12,6 +12,7 @@ import userModal from "~/modals/userModal";
 import UserInfo from "~/components/UserInfo";
 import guid from "~/utils/guid";
 import {Permission, Role} from "~/const";
+import auth from "~/utils/auth";
 
 @observer
 export default class UsersPage extends Component {
@@ -27,10 +28,26 @@ export default class UsersPage extends Component {
     };
 
     componentDidMount = () => {
-        this.loadUsers();
+        if (this.checkPermission()) {
+            this.loadUsers();
+        }
     };
 
+    checkPermission = () => {
+        return auth.hasGlobalPermission(Permission.Admin);
+    }
+
     render() {
+        if (!this.checkPermission()) {
+            return <PageWrapper style={{background: "#f0f2f5", justifyContent: "center", alignItems: "center"}}>
+                <Result
+                    status="403"
+                    title="403"
+                    subTitle="Sorry, you are not authorized to access this page."
+                />
+            </PageWrapper>
+        }
+
         return <PageWrapper
             className="users-page"
             breadcrumb={<Breadcrumb>
@@ -74,8 +91,8 @@ export default class UsersPage extends Component {
                 renderItem={user => {
                     return <List.Item actions={[<a className="edit" onClick={() => this.editUser(user)}>edit</a>]}>
                         <List.Item.Meta
-                            title={<span><UserInfo username={user.username}/> - {user.fullName} {user.role === Role.Admin && <Tooltip title="Admin"><UserOutlined /></Tooltip>}</span>}
-                            description={user.email}
+                            title={<span>{user.role === Role.Admin && <Tooltip title="Admin"><UserOutlined /></Tooltip>} <UserInfo username={user.username}/></span>}
+                            description={<span>{user.fullName} - {user.email}</span>}
                         />
                     </List.Item>
                 }}
@@ -87,8 +104,7 @@ export default class UsersPage extends Component {
     loadUsers = () => {
         this.loading = true;
         axios.get("/api/users", {
-            params: this.criteria,
-            redirectOnError: true
+            params: this.criteria
         }).then(response => {
             this.users = response.data.value;
             this.totalCount = response.data.totalCount;

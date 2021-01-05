@@ -1,11 +1,11 @@
-import {Avatar, Breadcrumb, Button, Input, List} from "antd";
+import {Avatar, Breadcrumb, Button, Input, List, Result} from "antd";
 import {PlusOutlined, SearchOutlined, UserOutlined} from "@ant-design/icons";
 import React, {Component} from "react";
 import {observer} from "mobx-react";
 import {observable, untracked} from "mobx";
 import axios from "axios";
 import auth from "~/utils/auth";
-import {Role} from "~/const";
+import {Permission, Role} from "~/const";
 import "./ProjectsPage.less";
 import PageWrapper from "~/layouts/PageWrapper";
 import projectModal from "~/modals/projectModal";
@@ -26,10 +26,26 @@ export default class ProjectsPage extends Component {
     @observable totalCount = 0;
 
     componentDidMount = () => {
-        this.loadProjects();
+        if (this.checkPermission()) {
+            this.loadProjects();
+        }
     };
 
+    checkPermission = () => {
+        return auth.hasGlobalPermission(Permission.Read);
+    }
+
     render() {
+        if (!this.checkPermission()) {
+            return <PageWrapper style={{background: "#f0f2f5", justifyContent: "center", alignItems: "center"}}>
+                <Result
+                    status="403"
+                    title="403"
+                    subTitle="Sorry, you are not authorized to access this page."
+                />
+            </PageWrapper>
+        }
+
         return <PageWrapper
             className="projects-page"
             breadcrumb={<Breadcrumb>
@@ -68,7 +84,7 @@ export default class ProjectsPage extends Component {
                                 Search
                             </Button>
                             {
-                                auth.user.role === Role.Admin &&
+                                auth.hasGlobalPermission(Permission.Admin) &&
                                 <Button
                                     icon={<PlusOutlined/>}
                                     style={{float: "right"}}
@@ -82,8 +98,8 @@ export default class ProjectsPage extends Component {
                         <List.Item.Meta
                             avatar={<Avatar style={{backgroundColor: "#87d068"}} icon={<UserOutlined />}/>}
                             title={<ProjectInfo project={project}/>}
+                            description={project.description}
                         />
-                        <div>{project.description}</div>
                     </List.Item>
                 }}
             >
@@ -94,8 +110,7 @@ export default class ProjectsPage extends Component {
     loadProjects = () => {
         this.isLoading = true;
         axios.get("/api/projects", {
-            params: this.criteria,
-            redirectOnError: true
+            params: this.criteria
         }).then(res => {
             this.projects = res.data.value;
             this.totalCount = res.data.totalCount;

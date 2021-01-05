@@ -23,12 +23,14 @@ namespace Scalpay.Controllers
     [Route("api/auth")]
     public class AuthController : Controller
     {
-        private readonly IUserService _service;
+        private readonly IUserService _userService;
+        private readonly IProjectPermissionService _projectPermissionService;
         private readonly IConfiguration _configuration;
 
-        public AuthController(IUserService service, IConfiguration configuration)
+        public AuthController(IUserService userService, IProjectPermissionService projectPermissionService, IConfiguration configuration)
         {
-            _service = service;
+            _userService = userService;
+            _projectPermissionService = projectPermissionService;
             _configuration = configuration;
         }
 
@@ -49,7 +51,7 @@ namespace Scalpay.Controllers
             User user = null;
             try
             {
-                user = await _service.GetUserByUsernameAndPasswordAsync(ps.Username, ps.Password);
+                user = await _userService.GetUserByUsernameAndPasswordAsync(ps.Username, ps.Password);
             }
             catch (NotFoundException ex)
             {
@@ -65,7 +67,11 @@ namespace Scalpay.Controllers
                 Username = user.Username,
                 Email = user.Email,
                 FullName = user.FullName,
-                Role = user.Role
+                Role = user.Role,
+                ProjectPermissions = (await _projectPermissionService.GetProjectPermissionsAsync(new ProjectPermissionCriteria()
+                {
+                    Username = user.Username
+                })).Value
             });
         }
     }
