@@ -46,7 +46,7 @@
     "@svgr/webpack": "^5.5.0",
     "antd": "^4.9.4",
     "async-validator": "^1.8.5",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "classnames": "^2.2.5",
     "lodash.debounce": "^4.0.8",
     "mobx": "^5.15.7",
